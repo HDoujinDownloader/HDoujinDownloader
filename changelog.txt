@@ -1,0 +1,3047 @@
+-----------------------------------------------------------------------------------------------------------------------------------
+ Next: 1.17.9.33
+-----------------------------------------------------------------------------------------------------------------------------------
+
+[Release 1]
+- [NEW] Added support for 18lhplus.com
+- [NEW] Added support for hentainexus.com
+- [NEW] Added support for mangabone.com (NON-H)
+- [NEW] Added support for mangazuki.me (NON-H)
+- [FIX] Updates for deviantart.com (added support for RSS URLs)
+- [FIX] Updates for hitomi.la (updated algorithms)
+- [FIX] Updates for lhtranslation.net (updated algorithms)
+- [FIX] Updates for lhscan.net (updated algorithms)
+- [FIX] Updates for mangazuki.co (updated algorithms)
+- [FIX] Updates for simply-hentai.com (updated algorithms)
+- [MISC] Rewrote updater from scratch
+- [MISC] Moved DLLs into "lib" subdirectory
+- [MISC] Moved language files into "data" subdirectory
+- [MISC] Various improvements and bug fixes
+
+-----------------------------------------------------------------------------------------------------------------------------------
+ 1.15.9.32
+-----------------------------------------------------------------------------------------------------------------------------------
+
+[Release 311]
+- [FIX] Updates for artstation.com (updated algorithms)
+- [FIX] Updates for hitomi.la (updated algorithms)
+- [FIX] Updates for mangarock.com (updated algorithms)
+- [FIX] Updates for manhwahentai.com (updated algorithms)
+
+[Release 310]
+- [NEW] Added support for manamoa.net (NON-H)
+- [FIX] Updates for hgamecg.com (updated algorithms)
+- [FIX] Updates for mangabat.com (updated algorithms)
+- [FIX] Updates for mangadex.org (updated algorithms)
+- [FIX] Updates for mangapark.net (updated algorithms)
+- [FIX] Updates for mangapark.org (updated algorithms)
+- [FIX] Updates for pururin.io (updated algorithms)
+- [FIX] Added fix for new Cloudflare challenge
+- [MISC] When error logging is enabled, most logs written to single file instead of multiple
+
+[Release 309]
+- [NEW] Added support for flickr.com
+- [NEW] Added support for isekairaw.com (NON-H)
+- [NEW] Added support for manhwahentai.com
+- [FIX] Updates for kingsmanga.net (updated algorithms)
+- [FIX] Updates for luscious.net (fixed login)
+- [FIX] Updates for mangahere.cc (updated algorithms)
+- [FIX] Updates for sleepypandascans.co (updated algorithms)
+- [FIX] Updates for zerochan.net (updated algorithms)
+- [MISC] Various improvements and bug fixes
+
+[Release 308]
+- [NEW] Added support for cartoonmad.com (NON-H)
+- [NEW] Added support for gntai.xyz
+- [NEW] Added support for newgrounds.com
+- [FIX] Updates for japscan.cc (moved to japscan.to)
+- [FIX] Updates for mangadex.org (updated algorithms)
+- [FIX] Updates for manhwa.co (moved to sleepypandascans.co)
+- [FIX] Updates for merakiscans.com (updated algorithms)
+- [FIX] Updates for toonkor.blog (moved to toonkor.tv)
+- [FIX] Updates for vercomicsporno.com/vermangasporno.com (updated algorithms)
+
+[Release 307]
+- [FIX] Updates for hitomi.la (updated algorithms)
+
+[Release 306]
+- [NEW] Added support for manhwahand.com (NON-H)
+- [FIX] Updates for lhscan.net (updated algorithms)
+- [FIX] Updates for rawqq.com/rawqv.com (updated algorithms)
+
+[Release 305]
+- [NEW] Added support for comic.pixiv.net (NON-H)
+- [NEW] Added support dongmanmanhua.cn (NON-H)
+- [NEW] Added support for hocvientruyentranh.net (NON-H)
+- [NEW] Added support for gumua.com (NON-H)
+- [NEW] Added support for komikcast.com (NON-H)
+- [NEW] Added support for nettruyen.com (NON-H)
+- [NEW] Added support for readmanhua.net (NON-H)
+- [NEW] Added support for vncg.org
+- [NEW] Added support for yesmangasbr.com (NON-H)
+- [FIX] Updates for bato.to (updated algorithms)
+- [FIX] Updates for comic.naver.com (updated algorithms)
+- [FIX] Updates for exhentai.org (fixed issue with crawling search results)
+- [FIX] Updates for fanfox.net (updated algorithms)
+- [FIX] Updates for hiyobi.me (updated algorithms)
+- [FIX] Updates for lhscan.net (updated algorithms)
+- [FIX] Updates for mangadex.org (updated algorithms)
+- [FIX] Updates for manga-tr.com (updated algorithms)
+- [FIX] Updates for mangarock.com (updated algorithms)
+- [FIX] Updates for mangashiro.net (updated algorithms)
+- [FIX] Updates for puzzmos.com (updated algorithms)
+- [FIX] Updates for rawqq.com/rawqv.com (updated algorithms)
+- [FIX] Updates for toonkor.red (moved to toonkor.blog)
+- [FIX] Updates for tsumino.com (updated algorithms)
+- [FIX] Updates for tumangaonline.me (moved to tmofans.com)
+- [FIX] Updates for unionmangas.cc (moved to unionmangas.top)
+- [FIX] Find-and-replace rule "Type" field was not being saved properly
+- [FIX] Improved determining chapter number from chapter title
+- [FIX] Fixed issue with updating from bookmarks when "Download all chapters to single folder" enabled
+- [FIX] Fixed issue with "DateAdded" field not being loaded properly for some users
+- [MISC] Can now set download directory for multiple items via "Edit Information"
+- [MISC] Various improvements and bug fixes
+
+[Release 304]
+- [NEW] Added support for justhypno.com
+- [NEW] Added support for mangabat.com (NON-H)
+- [NEW] Added support for medibang.com (NON-H)
+- [NEW] Added support for rawqq.com (NON-H)
+- [NEW] Added support for sasaengworld.wordpress.com (NON-H)
+- [NEW] Added support for toomics.com (NON-H)
+- [NEW] Added tag blacklist (File > Options > Blacklists)
+- [NEW] Added per-site timing settings (File > Options > Timing)
+- [FIX] Updates for alphapolis.co.jp (updated algorithms)
+- [FIX] Updates for comicsfromhell.org (moved to comicsfromhell.net)
+- [FIX] Updates for fmhua.com (updated algorithms)
+- [FIX] Updates for nhentai.net (fixed login)
+- [FIX] Updates for lezhin.com (updated algorithms)
+- [FIX] Updates for lhscan.net (updated algorithms)
+- [FIX] Updates for panda.chaika.moe (updated algorithms)
+- [FIX] Updates for pururin.io (updated algorithms)
+- [FIX] Updates for rawneko.com (moved to trueneko.online)
+- [FIX] Updates for readmanga.me/mintmanga.com (updated algorithms)
+- [FIX] Fixed issue with removing selected queue items via context menu
+- [MISC] Various improvements and bug fixes
+
+[Release 303]
+- [NEW] Added support for mangapark.org (NON-H)
+- [FIX] Updates for lolhentai.net (updated algorithms)
+- [FIX] Updates for mangaindo.net (updated algorithms)
+- [FIX] Updates for myreadingmanga.info (updated algorithms)
+- [FIX] Updates for pixiv.net (updated algorithms)
+- [FIX] Updates for toonkor.art (moved to toonkor.red)
+- [MISC] Various improvements and bug fixes
+
+[Release 302]
+- [NEW] Added support for gufengmh.com (NON-H)
+- [FIX] Updates for asmhentai.com (updated algorithms)
+- [FIX] Updates for lezhin.com (updated algorithms)
+- [FIX] Updates for mangadex.org (updated algorithms)
+- [FIX] Updates for mangasail.com (moved to mangasail.co)
+- [FIX] Updates for tappytoon.com (updated algorithms)
+- [FIX] Updates for webtoon.daum.net (updated algorithms)
+- [MISC] Various improvements and bug fixes
+
+[Release 301]
+- [NEW] Added support for biamamscans.com (NON-H)
+- [FIX] Updates for mangadex.org (updated algorithms)
+- [FIX] Updates for myreadingmanga.info (updated algorithms)
+- [FIX] Updates for tumangaonline.me (updated algorithms)
+- [MISC] Various improvements and bug fixes
+
+[Release 300]
+- [NEW] Added support for 57mh.com (NON-H)
+- [NEW] Added support for mangamilk.com (NON-H)
+- [FIX] Updates for dm5.com (updated algorithms)
+- [FIX] Updates for pixiv.net (fixed downloading Ugoira animations)
+- [NEW] Added option to add collection entries from Tsumino to the queue individually
+- [NEW] Added %SERIES% token for folders
+- [MISC] Various improvements and bug fixes
+
+[Release 299]
+- [NEW] Added support for hatigarmscans.net (NON-H)
+- [NEW] Added support for mangamaster.net (NON-H)
+- [NEW] Added support for rawqv.com (NON-H)
+- [NEW] Added support for view-comic.com (NON-H)
+- [NEW] Added setting for delay between individual bookmark checks
+- [NEW] Added option to show notification if URL is skipped (File > Options > Behavior)
+- [FIX] Updates for digitalteam1.altervista.org (updated algorithms)
+- [FIX] Updates for hitomi.la (updated algorithms)
+- [FIX] Updates for imagefap.com (updated algorithms)
+- [FIX] Updates for kissmanga.com (updated algorithms)
+- [FIX] Updates for rawlh.com (moved to lhscan.net)
+- [FIX] Updates for for toonkor.com (moved to toonkor.art)
+- [FIX] Updates for tumangaonline.me (updated algorithms)
+- [FIX] Duplicate chapter checking is no longer case-sensitive
+- [MISC] Improved find-and-replace settings
+- [MISC] Various improvements and bug fixes
+
+[Release 298]
+- [NEW] Added setting for max number of galleries to scrape on hitomi.la when adding tags results pages
+- [FIX] Updates for hitomi.la (fixed adding tag results pages to the queue)
+
+[Release 297]
+- [FIX] Updates for 177mh.net (updated algorithms)
+- [FIX] Updates for hentaivn.net (updated algorithms)
+- [FIX] Updates for hitomi.la (updated algorithms)
+- [FIX] Updates for mangaku.web.id (moved to mangaku.in)
+- [FIX] Updates for niceoppai.net (updated algorithms)
+- [FIX] Updates for nekopost.net (updated algorithms)
+- [FIX] Updates for oremanga.com (updated algorithms)
+
+[Release 296]
+- [NEW] Added %CHAPTERS% token for folders
+- [NEW] Added support for porntrex.com
+- [FIX] Updates for gmanga.me (updated algorithms)
+- [FIX] Updates for hentaivn.net (updated algorithms)
+- [FIX] Updates for mangago.me (updated algorithms)
+- [FIX] Updates for mangahub.io (updated algorithms)
+- [FIX] Updates for mangaid.co (moved to mangaid.net)
+- [FIX] Updates for mh160.com (updated algorithms)
+- [FIX] Updates for pixiv.net (updated algorithms)
+- [FIX] Updates for tumangaonline.com (moved to tumangaonline.me)
+- [MISC] Various improvements and bug fixes
+
+[Release 295]
+- [NEW] Added support for erofus.com
+- [NEW] Added support for intrigue3d.com
+- [NEW] Added support for rawneko.com
+- [NEW] Added %VOLUMES% token for folders
+- [FIX] Updates for mh160.com (updated algorithms)
+- [FIX] Updates for pixiv.net (updated algorithms)
+- [FIX] Updates for shentai.xyz (updated algorithms)
+- [MISC] Running downloads again that have completed previously no longer count towards download limit
+
+[Release 294]
+- [NEW] Added support for timelessleaf.com (NON-H)
+- [NEW] Added %SUBTITLE% token for chapters
+- [FIX] Updates for mangadex.org (updated algorithms)
+- [FIX] Updates for myreadingmanga.info (updated algorithms)
+- [FIX] Updates for tumangaonline.com (updated algorithms)
+
+[Release 293]
+- [NEW] Added support for mangaindo.net (NON-H)
+- [NEW] Added support for titaniascans.com (NON-H)
+- [NEW] Added support for toonkor.com
+- [NEW] Added support for saladpuncher.com
+- [FIX] Updates for 177mh.com (moved to 177mh.net)
+- [FIX] Updates for hentai4manga.com (updated algorithms)
+- [FIX] Updates for hentai4doujin.com (updated algorithms)
+- [FIX] Updates for hitomi.la (updated algorithms)
+- [FIX] Updates for hiyobi.me (updated algorithms)
+- [FIX] Updates for myreadingmanga.info (updated algorithms)
+- [FIX] Updates for rawlh.com (updated algorithms)
+- [MISC] Various improvements and bug fixes
+
+[Release 292]
+- [NEW] Added support for mangatrue.com (NON-H)
+- [NEW] Added support for mingkyaa.com
+- [NEW] Added support for oldrawmanga.tk (NON-H)
+- [FIX] Updates for ikanman.com (moved to manhuagui.com)
+- [FIX] Updates for mangadex.org (updated algorithms)
+- [FIX] Updates for lezhin.com (updated algorithms)
+- [FIX] Updates for lhscans.com (moved to rawlh.com)
+
+[Release 291]
+- [FIX] Updates for mangakakalot.com (updated algorithms)
+- [FIX] Updated Cloudflare bypass procedure
+
+[Release 290]
+- [FIX] Updates for luscious.net (updated algorithms)
+- [FIX] Updates for zeroscans.com (updated algorithms)
+- [MISC] Various improvements and bug fixes
+
+[Release 289]
+- [FIX] Updates for japscan.cc (updated algorithms)
+- [MISC] Various improvements and bug fixes
+
+[Release 288]
+- [FIX] Updates for epikmanga.com (updated algorithms)
+- [FIX] Updates for heavenmanga.biz (moved to heavenmanga.site)
+- [FIX] Updates for luscious.net (updated algorithms)
+- [FIX] Updates for pixiv.net (updated algorithms)
+- [FIX] Updates for unionmangas.net (moved to unionmangas.cc)
+- [FIX] Updates for simply-hentai.com (added support for search result pages)
+- [NEW] Added support for doujin.io
+
+[Release 287]
+- [FIX] Updates for bamtoki.com (updated algorithms)
+- [FIX] Updates for lhtranslation.com (moved to lhtranslation.net)
+- [FIX] Updates for luscious.net (fixed login)
+- [FIX] Updates for mangadenizi.com (updated algorithms)
+- [FIX] Updates for mangadex.org (ignores chapters that haven't been uploaded yet)
+- [FIX] Updates for webtoons.com (updated algorithms)
+- [NEW] Added support for alltoon.org (NON-H)
+
+[Release 286]
+- [FIX] Updates for bamtoki.com (updated algorithms)
+- [FIX] Updates for dm5.com (updated algorithms)
+- [FIX] Updates for lezhin.com (updated algorithms)
+- [FIX] Updates for mangago.me (updated algorithms)
+- [FIX] Updates for mangahere.fun (updated algorithms)
+- [FIX] Updates for pecintakomik.com (updated algorithms)
+- [FIX] Updates for simply-hentai.com (updated algorithms)
+- [NEW] Added settings for automatic backups (File > Options > Backups)
+- [MISC] Various improvements and bug fixes
+
+[Release 285]
+- [NEW] Added support for comica.com (NON-H)
+- [FIX] Updates for mangadex.com (updated algorithms)
+- [FIX] Updates for japscan.com (moved to japscan.cc)
+- [FIX] Updates for rocaca.com (updated algorithms)
+- [FIX] Updates for yaddal.tv (updated algorithms)
+
+[Release 284]
+- [NEW] Added support for heavenmanga.biz (NON-H)
+- [NEW] Added support for yaddal.tv
+- [FIX] Updates for e-hentai.org/exhentai.org (could not add search results if thumbnail view is enabled)
+- [FIX] Updates for mangadex.com (moved to mangadex.org)
+- [FIX] Updates for nhentai.net (updated algorithms)
+- [FIX] Updates for perveden.com (updated algorithms)
+- [FIX] Updates for zeroscans.com (updated algorithms)
+
+[Release 283]
+- [FIX] Hotfix for unhandled exception appearing for certain users
+
+[Release 282]
+- [NEW] Added support for adulti01.com (NON-H)
+- [NEW] Added support for trashscanlations.com (NON-H)
+- [NEW] Added support for zeroscans.com (NON-H)
+- [FIX] Updates for bato.to (updated algorithms)
+- [FIX] Updates for exhentai.org (updated algorithms)
+- [FIX] Updates for hentai2read.com (updated algorithms)
+- [FIX] Updates for mangadex.com (updated algorithms)
+- [FIX] Updates for mangago.me (updated algorithms)
+- [FIX] Updates for mangahasu.com (moved to mangahasu.se)
+- [FIX] Updates for readcomicbooksonline.xyz (moved to readcomicbooksonline.org)
+- [FIX] Updates for readms.net (updated algorithms)
+- [FIX] Updates for yaoihavenreborn.com (updated algorithms)
+- [FIX] ComicInfo.xml conversion did not respect "Do not respect tag namespaces" setting
+- [MISC] Various improvements and bug fixes
+
+[Release 281]
+- [FIX] Updates for 8muses.com (updated algorithms)
+- [FIX] Updates for hentai2read.com (updated algorithms)
+- [FIX] Updates for mangadex.com (added login support)
+- [FIX] Updates for mangago.me (updated algorithms)
+- [FIX] Image modification settings now respected for .webp files
+- [MISC] Various improvements and bug fixes
+
+[Release 280]
+- [NEW] Added support for hiyobi.me
+- [NEW] Added support for (new) bato.to (NON-H)
+- [NEW] Added support for mangafox.fun (NON-H)
+- [NEW] Added support for mangahere.fun (NON-H)
+- [NEW] Added support for mangahub.io (NON-H)
+- [NEW] Added overtooning support for comic.naver.com
+- [NEW] Added image conversion rules (.webp -> .jpg by default) 
+- [FIX] Updates for allenscans.com (updated algorithms)
+- [FIX] Updates for mangadex.com (updated algorithms)
+- [FIX] Updates for mangafox.la (moved to fanfox.net)
+- [FIX] Updates for mangago.me (updated algorithms)
+- [FIX] Updates for mangazuki.co (updated algorithms)
+- [FIX] Updates for ninemanga.com (updated algorithms)
+- [FIX] Updates for rocaca.com (updated algorithms)
+- [FIX] Updates for tenmanga.com (updated algorithms)
+- [MISC] Various improvements and bug fixes
+
+[Release 279]
+- [FIX] Updates for mangago.me (updated algorithms)
+- [FIX] Updates for mangahasu.com (updated algorithms)
+
+[Release 278]
+- [NEW] Added support for 999comics.com (NON-H)
+- [NEW] Added support for digitalteam1.altervista.org (NON-H)
+- [NEW] Added support for digitalteamreader.netsons.org (NON-H)
+- [NEW] Added support for fgreader.com (NON-H)
+- [NEW] Added support for lolscans.com (NON-H)
+- [NEW] Added support for mangadex.com (NON-H)
+- [NEW] Added support for mangapark.net (NON-H)
+- [NEW] Added support for manhwa.co (NON-H)
+- [NEW] Added domain management tool
+- [NEW] Improved duplicate checking and added option to ignore titles
+- [FIX] Updates for hentailx.com (updated algorithms)
+- [FIX] Updates for mangago.me (updated algorithms)
+- [FIX] Updates for mangahasu.com (updated algorithms)
+- [FIX] Updates for marumaru.in (updated algorithms)
+- [FIX] Updates for pururin.us (moved to pururin.io)
+- [FIX] Updates for for readcomicbooksonline.net (moved to readcomicbooksonline.xyz)
+- [FIX] Updates for readmanga.me (updated algorithms)
+- [MISC] Various improvements and bug fixes
+
+[Release 277]
+- [NEW] Added support for allenscans.com (NON-H)
+- [NEW] Added support for tappytoon.com (NON-H)
+- [FIX] Updates for 8muses.com (updated algorithms)
+- [FIX] Updates for exhentai.org (galleries with banners didn't have metadata parsed properly)
+- [FIX] Updates for lezhin.com (updated algorithms)
+- [FIX] Updates for mangago.me (updated algorithms)
+- [FIX] Updates for mangahere.cc (updated algorithms)
+- [FIX] Updates for marumaru.in (updated algorithms)
+- [FIX] Updates for nekopost.net (updated algorithms)
+- [FIX] Enabling image modifications changed file format without changing extension
+- [MISC] Various improvements and bug fixes
+
+[Release 276]
+- [NEW] Added support for psychoplay.co (NON-H)
+- [NEW] Added support for readmha.com (NON-H)
+- [FIX] Updates for japscan.com (updated algorithms)
+- [FIX] Updates for mangafox.la (updated algorithms)
+- [FIX] Updates for mangago.me (fixed favicon)
+- [MISC] Various improvements and bug fixes
+
+[Release 275]
+- [NEW] Added support for manganelo.com (NON-H)
+- [FIX] Updates for baramangaonline.com (updated algorithms)
+- [FIX] Updates for japscan.com (updated algorithms)
+- [FIX] Updates for mangarock.com (updated algorithms)
+- [FIX] Updates for mangago.me (updated algorithms)
+- [FIX] Fixed resizing of the download area when adjusting toolstrip size
+- [FIX] Chapter numbers can now be determined for chapters with subtitles
+- [MISC] Failed chapters are now written to failed.txt
+- [MISC] Various improvements and bug fixes
+
+[Release 274]
+- [FIX] Updates for hbrowse.com (updated algorithms)
+- [FIX] Updates for itscan.info (updated algorithms)
+- [FIX] Updates for japscan.com (updated algorithms)
+- [FIX] Updates for lhtranslation.com (updated algorithms)
+- [FIX] Updates for mangahere.co (moved to mangahere.cc)
+- [FIX] Updates for mangapark.me (updated algorithms)
+
+[Release 273]
+- [FIX] Updates for mangafox.me (moved to mangafox.la)
+- [FIX] Updates for multporn.com (moved to multporn.net)
+- [FIX] Updates for mangatown.com (updated algorithms)
+- [FIX] Updates for thedoujin.com (updated algorithms)
+- [FIX] Updates for hleecker.tk (updated algorithms)
+- [FIX] Updates for 8muses.com (updated algorithms)
+- [FIX] Updates for tenmanga.com (updated algorithms)
+
+[Release 272]
+- [FIX] Updates for bato.to (fixed login)
+- [FIX] Updates for kumanga.com (updated algorithms)
+- [MISC] Various improvements and bug fixes
+
+[Release 271]
+- [FIX] Updates for lezhin.com (fixed login)
+- [FIX] Updates for hleecker.tk (updated algorithms)
+- [FIX] Updates for serimanga.com (updated algorithms)
+- [FIX] Updates for readmanga.today (moved to readmng.com)
+- [MISC] Various improvements and bug fixes
+
+[Release 270]
+- [FIX] Updates for mangatown.com (updated algorithms)
+- [FIX] Updates for 8muses.com (updated algorithms)
+- [FIX] Updates for 77mh.com (moved to 177mh.com)
+- [NEW] Added support for jb2448.info (and generic support for Piwigo galleries) (NON-H)
+- [FIX] "Skip duplicate chapters" was not respected if "Rename duplicate chapters" was disabled
+- [MISC] Various improvements and bug fixes
+
+[Release 269]
+- [NEW] Added support for mangarock.com (NON-H)
+- [FIX] Updates for mangahere.co (updated algorithms)
+- [FIX] Updates for mangastream.com (updated algorithms)
+- [FIX] Updates for lhtranslation.com (updated algorithms)
+- [FIX] Updates for mangazuki.co (updated algorithms)
+- [MISC] Various improvements and bug fixes
+
+[Release 268]
+- [FIX] Updates for mangafox.me (updated algorithms)
+- [FIX] Updates for hentaivn.net (updated algorithms)
+- [FIX] Updates for jaiminisbox.com (updated algorithms)
+- [FIX] "-pages" flag was not applied when loading URLs from files via CLI
+- [MISC] Various improvements and bug fixes
+
+[Release 267]
+- [NEW] Added support for lhscans.com (NON-H)
+- [FIX] Updates for hastareader.com (updated algorithms)
+- [FIX] Updates for doujins.com (updated algorithms)
+- [FIX] Updates for senmanga.com (updated algorithms)
+- [MISC] Various improvements and bug fixes
+
+[Release 266]
+- [FIX] Updates for tmohentai.com (updated algorithms)
+- [FIX] Updates for mangahome.com (updated algorithms)
+- [MISC] Various improvements and bug fixes
+
+[Release 265]
+- [NEW] Added support for panda.chaika.moe (metadata only)
+- [NEW] Added support for bulmahentai.com (NON-H)
+- [NEW] Added support for senku.io (NON-H)
+- [FIX] Updates for hastareader.com (updated algorithms)
+- [FIX] Updates for simply-hentai.com (updated algorithms)
+- [FIX] Updates for zerochan.net (updated algorithms)
+- [MISC] Various improvements and bug fixes
+
+[Release 264]
+- [FIX] Updates for mangahere.co (updated algorithms)
+
+[Release 263]
+- [NEW] Added support for falsepositivecomic.com (NON-H)
+- [NEW] Updates for nhentai.net (added login support; favorites pages can be added to queue)
+- [FIX] Updates for avasdemon.com (updated algorithms)
+- [FIX] Updates for hastareader.com (updated algorithms)
+- [FIX] Updates for mangahere.co (updated algorithms)
+- [FIX] Updates for mangashiro.net (updated algorithms)
+- [FIX] Updates for 77mh.com (updated algorithms)
+- [FIX] Updates for pixiv.net (some users could not add artist URLs)
+- [FIX] Updates for tumblr.com (blogs without titles couldn't be added to queue)
+- [FIX] Updates for hentai-foundry.com (%ORIG% token did not return correct filename)
+- [MISC] Revised Portuguese language file courtesy of shuichisama
+- [MISC] Various improvements and bug fixes
+
+[Release 262]
+- [FIX] Updates for mangahere.co (updated algorithms)
+- [FIX] Updates for mangafox.me (updated algorithms)
+
+[Release 261]
+- [NEW] Added support for hentai-comics.org
+- [NEW] Added support for rocaca.com (NON-H)
+- [FIX] Updates for hleecher.herokuapp.com (moved to hleecher.tk)
+- [FIX] Updates for hentaifromhell.org (updated algorithms)
+- [FIX] Updates for mangatown.com (updated algorithms)
+- [FIX] Updates for myreadingmanga.info (updated algorithms)
+- [FIX] Fixed issue with stale page cache being used when resuming paused downloads with multiple chapters
+- [MISC] Various improvements and bug fixes
+
+[Release 260]
+- [NEW] Added support for mangahasu.com (NON-H)
+- [FIX] Updates for kumanga.com (updated algorithms)
+- [FIX] Updates for mangastream.com (updated algorithms)
+- [FIX] Updates for bato.to (updated algorithms)
+- [FIX] Updates for tumangaonline.com (updated algorithms)
+- [FIX] Updates for marumaru.in (updated algorithms)
+- [MISC] Search box now takes focus when the filter panel is opened
+
+[Release 259]
+- [NEW] Basic information editor now shows "various" instead of blank with multiple items selected
+- [FIX] Updates for mangadoor.com (updated algorithms)
+- [FIX] Updates for tapas.io (added login support)
+- [FIX] Updates for readhentaimanga.com (fix for content with multiple chapters)
+- [MISC] Various improvements and bug fixes
+
+[Release 258]
+- [FIX] Updates for doujins.com (updated algorithms)
+- [FIX] Updates for 77mh.com (updated algorithms)
+- [FIX] Improved performance with very large queues
+- [MISC] Various improvements and bug fixes
+
+[Release 257]
+- [FIX] Updates for myreadingmanga.info (updated algorithms)
+
+[Release 256]
+- [NEW] Added support for merakiscans.com (NON-H)
+- [NEW] Added support for theyiffgallery.com (NON-H)
+- [NEW] Added support for kuaikanmanhua.com (NON-H)
+- [FIX] Updates for hentai2read.com (updated algorithms)
+- [FIX] Updates for mangaice.com (moved to mangadeep.com)
+- [FIX] Updates for hentai-id.tv (updated algorithms)
+- [FIX] Updates for mangago.me (fixed metadata)
+- [FIX] Fixed sorting bookmarks by "Last Updated"
+- [MISC] Various improvements and bug fixes
+
+[Release 255]
+- [NEW] Added support for hentaimanga.info
+- [NEW] Added support for kissmanga.io (NON-H)
+- [NEW] Added support for hastareader.com (NON-H)
+- [NEW] Added support for battlecomics.co.kr (NON-H)
+- [FIX] Updates for 77mh.com (updated algorithms)
+- [FIX] Updates for porncomix.info (updated algorithms)
+- [MISC] Added column for displaying website domain name
+- [MISC] Added "stop all above" to the context menu
+
+[Release 254]
+- [FIX] Updates for hentailx.com (updated algorithms)
+- [FIX] Updates for tomanga.xyz (updated algorithms)
+- [FIX] Updates for heymanga.me (updated algorithms)
+- [FIX] Updates for webtoons.com (added support for content under "/challenge/")
+- [MISC] Protocol is now ignored when comparing URLs (can be changed under "File > Options > Queue")
+- [MISC] Opening directories no longer creates multiple explorer.exe instances
+- [MISC] Various improvements and bug fixes
+
+[Release 253]
+- [FIX] Updates for hentai2read.com (updated algorithms)
+- [FIX] Updates for mangaeden.com/perveden.com (updated algorithms)
+
+[Release 252]
+- [NEW] Added support for postimg.org
+- [NEW] Added support for mcd.iosphe.re
+- [FIX] Updates for zerochan.net (updated algorithms)
+- [FIX] Updates for hentai.ms (moved to load.la)
+- [MISC] Various improvements and bug fixes
+
+[Release 251]
+- [FIX] Updates for mangago.me (updated algorithms, added option to download raws)
+- [FIX] Updates for 77mh.com (updated algorithms)
+- [FIX] Updates for hentai2read.com (updated algorithms)
+- [FIX] Updates for lezhin.com (updated algorithms, added support for library URLs)
+
+[Release 250]
+- [FIX] Updates for mangago.me (updated algorithms)
+- [FIX] Program now displays warning when running with insufficient write permissions (instead of exceptions)
+- [MISC] Various improvements and bug fixes
+
+[Release 249]
+- [FIX] Updates for epikmanga.com (updated algorithms)
+
+[Release 248]
+- [FIX] Updates for mangago.me (updated algorithms)
+- [FIX] Updates for iutruyentranh.com (updated algorithms)
+- [FIX] Updates for blogtruyen.com (updated algorithms)
+- [FIX] Updates for fmhua.com (updated algorithms)
+
+[Release 247]
+- [NEW] Added support for porncomixonline.net
+- [NEW] Added support for hleecher.herokuapp.com
+- [NEW] Added support for comicgt.com (NON-H)
+- [NEW] Added support for zerochan.net (NON-H)
+- [FIX] Updates for instagram.com (updated algorithms)
+- [FIX] Updates for furaffinity.net (fixed bookmark update issues)
+- [FIX] Updates for kissmanga.com (fixed downloading images with dead redirect URLs)
+- [FIX] Updates for fumanhua.net (moved to fmhua.com)
+- [FIX] Updates for epikmanga.com (updated algorithms)
+- [FIX] Updates for 8muses.com (added basic support for downloading sub-albums)
+- [FIX] Updates for tumblr.com (added detection for sites not using a Tumblr subdomain)
+- [NEW] Added setting for persistent download queue filter
+- [MISC] Various improvements and bug fixes
+
+[Release 246]
+- [FIX] Updates for pixiv.net (updated algorithms)
+
+[Release 245]
+- [NEW] Added support for artstation.com (NON-H)
+- [NEW] Added backup import/export (under "File")
+- [FIX] Updates for bamtoki.com (moved to bamtoki.me)
+- [FIX] Updates for myreadingmanga.info
+- [MISC] Various improvements and bug fixes
+
+[Release 244]
+- [NEW] Added support for oreno-erohon.com
+- [NEW] Added support for itascan.info (NON-H)
+- [NEW] Added (unofficial) support for planetrenders.net (NON-H)
+- [FIX] Updates for japscan.com (updated algorithms)
+- [FIX] Updates for mangaseeonline.us (updated algorithms)
+- [FIX] Updates for tsumino.com (updated algorithms)
+- [FIX] Updated Cloudflare bypass procedure
+
+[Release 243]
+- [NEW] Added support for 177pic.info
+- [FIX] Updates for hitomi.la (updated algorithms)
+- [FIX] Updates for mangastream.com (updated algorithms)
+- [FIX] Updates for goodmanga.net (updated algorithms)
+- [MISC] "Only convert successful downloads" now acknowledges per-chapter conversion
+- [MISC] Various improvements and bug fixes
+
+[Release 242]
+- [FIX] Updates for hentai.ms (updated algorithms)
+- [FIX] Updates for animephile.com (updated algorithms)
+- [FIX] Updates for furaffinity.net (updated algorithms)
+- [NEW] Added support for hentai-comic.com
+- [NEW] Added (unofficial) support for various webcomics (chainsawsuit.com)
+
+[Release 241]
+- [NEW] Added support for readcomicbooksonline.net (NON-H)
+- [NEW] Added support for find and replace patterns for formatting strings
+- [FIX] Updates for luscious.net (updated algorithms, added sort order option)
+- [FIX] Updates for tapas.io (updated algorithms)
+- [FIX] Updates for lezhin.com (updated algorithms)
+- [FIX] Updates for gomymanga.com (updated algorithms)
+- [FIX] Updates for lhtranslation.com (updated algorithms)
+- [MISC] Various improvements and bug fixes
+
+[Release 240]
+- [NEW] Added support for vk.com (albums)
+- [NEW] Added support for akaihentai.com (doujinshi only)
+- [NEW] Added (unofficial) support for various webcomics (ryan-a.com)
+- [FIX] Updates for jaiminisbox.com (updated algorithms)
+- [FIX] Updates comicsfromhell.org (updated algorithms)
+- [FIX] Updates mangaku.web.id (updated algorithms)
+
+[Release 239]
+- [NEW] Added support for vermangasporno.com
+- [NEW] Added support for mangaheat.com (NON-H)
+- [FIX] Updates for vercomicsporno.com (updated algorithms)
+- [FIX] Updates for ikanman.com (fixed page order for affected chapters)
+- [MISC] Various improvements and bug fixes
+
+[Release 238]
+- [NEW] Added %OTITLE% folder naming token (original title)
+- [NEW] Added option to use Japanese titles on e-hentai.org/exhentai.org
+- [FIX] Updates for pururin.us (updated algorithms)
+- [FIX] Updates for hentai-foundry.com (updated algorithms)
+- [MISC] Confirmation message is now displayed when deleting bookmarks with delete key
+- [MISC] Added options for dealing with missing Series information in metadata files
+- [MISC] Various improvements and bug fixes
+
+[Release 237]
+- [FIX] Updates for mangazuki.co (added support for raws.mangazuki.co)
+
+[Release 236]
+- [NEW] Added support for hentai-foundry.com
+- [NEW] Added support for ac.qq.com (NON-H)
+- [NEW] Added support for fastmangu.com (NON-H)
+- [FIX] Updates for readcomiconline.to (updated algorithms)
+- [FIX] Updates for eatmanga.com (updated algorithms)
+- [FIX] Updates for lovehentaimanga.com (updated algorithms)
+- [FIX] Updates for mangazuki.co (updated algorithms)
+- [FIX] Fixed intermittent "thread crashed" error when running a large number of simultaneous downloads
+- [FIX] Fixed issue with items "jumping around" when sorting by date added with auto-sort enabled
+- [MISC] Improved Cloudflare bypass support for certain websites
+- [MISC] Various improvements and bug fixes
+
+[Release 235]
+- [NEW] Added support for lhtranslation.com (NON-H)
+- [FIX] Updates for mangafap.com (updated algorithms)
+- [FIX] Updates for madokami.al (updated algorithms)
+- [MISC] Various improvements and bug fixes
+
+[Release 234]
+- [FIX] Updates for furaffinity.net (fixed downloading user-only galleries)
+- [FIX] Updates for mangaforall.com (moved to mangaf.co)
+- [FIX] Updates for tuku.cc (updated algorithms)
+- [FIX] Updates for hentaihunt.net (updated algorithms)
+- [NEW] Certain combination of settings would allow partially-failed downloads to be converted contrary to settings
+- [MISC] Various improvements and bug fixes
+
+[Release 233]
+- [NEW] Added support for bamtoki.com
+- [FIX] Updates for ikanman.com (updated algorithms)
+- [FIX] Updates for nxt-comics.com (updated algorithms)
+- [FIX] Updates for readhentaimanga.com (added support for search result pages)
+
+[Release 232]
+- [NEW] Added support for thefolenangel.wordpress.com
+- [NEW] Added support for mangaken.com (NON-H)
+- [NEW] Added support for mangakakalot.com (NON-H)
+- [FIX] Updates for twitter.com (partial fix for videos)
+- [FIX] Updates for mangazuki.co (updated algorithms)
+- [FIX] Fixed how sorting is handled for certain columns (Author, Artist, ...)
+- [FIX] Fixed issue with loading large queues with duplicate-checking enabled (since 231)
+- [MISC] Improved generic support to cover more websites
+- [MISC] Various improvements and bug fixes
+
+[Release 231]
+- [FIX] Updates for kissmanga.com (updated algorithms)
+- [FIX] Updates for lezhin.com (increased quality parameter)
+- [FIX] Updates for tapastic.com (moved to tapas.io)
+- [FIX] Addressed real-time sorting stability issues
+- [FIX] Improved duplicate detection and removal
+- [FIX] Fixed column width saving/restoring
+- [MISC] Various improvements and bug fixes
+
+[Release 230]
+- [FIX] Updates for hentai.ms (updated algorithms)
+- [FIX] Updates for multporn.com (updated algorithms)
+- [FIX] Updates for thatpervert.com (certain tag pages didn't work correctly)
+- [FIX] Updates for bato.to (some users couldn't add full manga to queue)
+- [FIX] Updates for chuiyao.com (updated algorithms)
+- [FIX] Updates for 8muses.com (added support for forum posts)
+- [FIX] Scheduler now stops attempting downloads when daily limit reached
+- [FIX] Adding galleries without titles and non-ASCII replacement enabled threw an exception
+
+[Release 229]
+- [FIX] Updates for imgur.com (updated algorithms)
+
+[Release 228]
+- [NEW] Added support for manga-spot.com (NON-H)
+- [NEW] Added support for thai-manga.com (NON-H)
+- [NEW] Added support for championscans.weebly.com (NON-H)
+- [FIX] Updates for eatmanga.com (moved to eatmanga.me)
+- [FIX] Updates for imgur.com (fixed missing titles for galleries from Reddit)
+- [MISC] Various improvements and bug fixes
+
+[Release 227]
+- [NEW] Added support for bobx.com
+- [FIX] Updates for pixiv.net (updated algorithms)
+- [FIX] Updates for mangastream.com (updated algorithms)
+- [FIX] Updates for asmhentai.com (updated algorithms)
+- [FIX] Updates for eatmanga.com (updated algorithms)
+- [FIX] Improved Cloudflare challenge solving procedure
+- [MISC] Added option to simplify gallery titles from e-hentai.org/exhentai.org
+- [MISC] Various improvements and bug fixes
+
+[Release 226]
+- [FIX] Updates for hakihome.com (updated algorithms)
+
+[Release 225]
+- [NEW] Added support for mangaonline.com.br (NON-H)
+- [FIX] Updates for kissmanga.com (updated algorithms)
+- [FIX] Updates for 8muses.com (updated algorithms)
+- [FIX] Updates for thespectrum.net (updated algorithms)
+- [FIX] Updates for webtoontr.com (updated algorithms)
+- [FIX] Updates for lolhentai.net (added support for home gallery)
+- [FIX] Updates for furaffinity.net (updated algorithms)
+- [FIX] Updates for leomanga.com (updated algorithms)
+- [FIX] Updates for heymanga.me (updated algorithms)
+- [FIX] Updates for tomanga.me (moved to tomanga.xyz)
+- [FIX] Updates for mangalife.me (moved to mangalife.us)
+- [FIX] Updated generic MyMangaCMS support
+- [FIX] Improved handling of bookmarks when fast bookmark checking is disabled
+
+[Release 224]
+- [FIX] Updates for kissmanga.com (updated algorithms)
+
+[Release 222/223]
+- [FIX] Updates for kissmanga.com (updated algorithms)
+- [MISC] Improved chapter number detection
+- [MISC] Various improvements and bug fixes
+
+[Release 221]
+- [NEW] Added support for comicextra.com (NON-H)
+- [NEW] Added support for manga-v2.mangavadisi.org (NON-H)
+- [FIX] Updates for zizki.com (added support for language subdomains)
+- [FIX] Updates for hentai2read.com (updated algorithms)
+- [FIX] Updates for thatpervert.com (updated algorithms)
+- [FIX] Updates for mangamint.com (moved to mangatail.com/mangasail.com)
+- [FIX] Updates for unionmangas.com.br (moved to unionmangas.net)
+- [MISC] Improved chapter number detection
+- [MISC] Minor UI changes
+
+[Release 220]
+- [NEW] Added support for mangaid.co (NON-H)
+- [NEW] Added support for rawmangaupdate.com (NON-H)
+- [NEW] Added support for serimanga.com (NON-H)
+- [NEW] Added support for manhua-tr.com (NON-H)
+- [NEW] Added support for webtoongarden.com (NON-H)
+- [NEW] Added option to choose bato.to image server
+- [NEW] Added generic "my Manga Reader CMS" detection
+- [FIX] Updates for mangago.me (updated algorithms)
+- [FIX] Updates for ehentai.org (fixed download of "Offensive For Everyone" galleries)
+- [FIX] Updates for mangaindo.web.id (updated algorithms)
+- [FIX] Updates for spottoon.com (updated algorithms)
+- [FIX] Fixed issue with bookmarks list display not fitting to the size of the panel if checking for bookmarks while in system tray
+- [MISC] Last sort order is now saved
+- [MISC] Various improvements and bug fixes
+
+[Release 219]
+- [NEW] Added support for mangabom.com (NON-H)
+- [NEW] Added option for real-time filtering
+- [NEW] Added %STATUS% folder naming token
+- [NEW] Added Turkish language file (courtesy of ekardon)
+- [NEW] Added French language file (courtesy of Kusefiru)
+- [FIX] Fixed issue with new bookmark downloads not getting all pages under certain conditions
+- [FIX] Fixed progress bar showing zero when grabbing pages for the next chapter
+- [MISC] Improved dynamic sorting of queue items
+
+[Release 218]
+- [NEW] Added image sizing options for twitter.com
+- [FIX] Updates for mangazuki.co (updated algorithms)
+- [FIX] Updates for mangaseeonline.net (moved to mangaseeonline.us)
+- [MISC] Relevant error is now displayed when captcha is encountered on kissmanga.com
+- [MISC] Fixed issue with next chapter being skipped if resuming a download with a chapter that failed during page-grabbing process
+- [MISC] Various improvements and bug fixes
+
+[Release 217]
+- [FIX] Updates for nhentai.net (updated algorithms)
+- [FIX] Updates for mangazuki.co (updated algorithms)
+- [MISC] Fixed exception when deleting last login
+- [MISC] Various improvements and bug fixes
+
+[Release 216]
+- [FIX] Updates for hentai2read.com (updated algorithms)
+- [MISC] Various improvements and bug fixes
+
+[Release 215]
+- [FIX] Updates for hentai-id.tv (updated algorithms)
+- [FIX] Updates for hentaifox.com (updated algorithms)
+- [FIX] Updates for deviantart.com ("All" and "Scraps" filters were stripped)
+- [MISC] Opening paths with special characters that have been replaced may open default download directory instead
+
+[Release 214]
+- [NEW] Added unofficial support for shigabooks.com (NON-H)
+- [NEW] Added "-pages" and "-chapters" CLI arguments (usage: "-pages=0-5,8")
+- [FIX] Updates for hentaibox.fr (updated algorithms)
+- [FIX] Updates for pururin.us (could not add galleries with blank titles)
+- [MISC] Started working on improvements to console-only interaction
+- [MISC] Updates for generic Wordpress support
+
+[Release 213]
+- [NEW] Added support for eromanga-sokuhou.com
+- [NEW] Added support for old.mangago.com (NON-H)
+- [NEW] Added support for translate.webtoons.com (NON-H)
+- [NEW] It is now possible to import multiple files at once
+- [FIX] Updates for e-hentai.org ("lofi" gallery URLs were not accepted)
+- [FIX] Updates for hentai.ms (updated algorithms)
+- [MISC] Filter searches now consider each keyword separately (to search for multiple tags)
+- [MISC] Added "Yes to All" and "No to All" options when moving manga to new folder when changing download directory
+- [MISC] Various improvements and bug fixes
+
+[Release 212]
+- [FIX] Updates for avasdemon.com (special images did not download)
+- [FIX] Updates for hentaifromhell.org (updated algorithms)
+- [FIX] Updates for comicsfromhell.org (updated algorithms)
+- [FIX] Updates for mangaforall.com (updated algorithms)
+- [MISC] Various improvements and bug fixes
+
+[Release 211]
+- [NEW] Added support for hentaicloud.com
+- [NEW] Added unofficial support for asmodrawscomics.com
+- [NEW] Added unofficial support for alwaysraininghere.com
+- [NEW] Added unofficial support for trickster-book.com
+- [NEW] Added unofficial support for avasdemon.com
+- [NEW] Added unofficial support for purpureanoxa.com
+- [FIX] Updates for hentai-free.org (updated algorithms)
+- [FIX] Updates for marumaru.in (updated algorithms)
+- [FIX] Updates for pixiv.net (updated algorithms)
+- [FIX] Updates for furaffinity.net (some galleries were not accepted)
+- [FIX] Updates for doujins.com (updated algorithms)
+- [MISC] Duplicate chapter/page ranges are now merged when checking for new chapters/pages
+
+[Release 210]
+- [FIX] Empty chapter list is ignored when updating bookmarks
+
+[Release 209]
+- [FIX] Updates for instagram.com (updated algorithms)
+- [FIX] Updates for funmanga.com (updated algorithms)
+- [FIX] Updates for oremanga.com (updated algorithms)
+- [FIX] Updates for mangamint.com (updated algorithms)
+- [FIX] Updates for komikfox.web.id (updated algorithms)
+- [FIX] Fixed bug that would cause certain chapters not to be converted
+- [MISC] Various improvements and bug fixes
+
+[Release 208]
+- [NEW] Added support for comicsporno.es
+- [NEW] Added support for hentai-free.org
+- [FIX] Updates for mangahere.co (updated algorithms)
+- [FIX] Updates for imagefap.com (improved URL acceptance)
+- [FIX] Fixed %ORIG% token for e-hentai.org
+- [MISC] Added Game CG content type
+- [MISC] Various improvements and bug fixes
+
+[Release 207]
+- [FIX] Updates for hentaichan.me (moved to henchan.me)
+- [FIX] Updates for hentairead.com (updated algorithms)
+- [NEW] Added status buttons to bookmarks context menu
+- [NEW] Added "Last Updated" column to bookmarks panel
+- [MISC] Various improvements and bug fixes
+
+[Release 206]
+- [FIX] Updates for alphapolis.co.jp (updated algorithms)
+- [FIX] Updates for aryion.com (fixed login)
+- [FIX] Attempting to use any of the new chapter tokens exclusively would cause the string to be reset when it loses focus
+- [MISC] Various improvements and bug fixes
+
+[Release 205]
+- [FIX] Updates for g.e-hentai.org (updated algorithms)
+- [FIX] Updates for 77mh.com (updated algorithms)
+- [FIX] Filtered rows could be selected under certain conditions
+- [MISC] Added %CHAPTER#1%, %CHAPTER#10%, %CHAPTER#100%, and %CHAPTER#1000% tokens
+
+[Release 204]
+- [FIX] Updates for mangafox.me (updated algorithms)
+- [MISC] Various improvements and bug fixes
+
+[Release 203]
+- [NEW] Added support for on-manga.com (NON-H)
+- [FIX] Updates for comic.naver.com (updated algorithms)
+- [FIX] Updates for mangafox.me (mobile URLs are accepted)
+- [FIX] Improved duplicate chapter handling
+
+[Release 202]
+- [NEW] Added support for r34comics.com
+- [NEW] Added support for pinaya.center
+- [NEW] Added support for mangarussia.com (NON-H)
+- [FIX] Updates for marumaru.in (updated algorithms)
+- [FIX] "Choose chapters" right-click action was not preserved after restarting the program
+- [MISC] Added option to consider empty chapters as failures
+- [MISC] The status field now shows which chapters failed, if any
+- [MISC] Various improvements and bug fixes
+
+[Release 201]
+- [FIX] Updates for marumaru.in (updated algorithms)
+
+[Release 200]
+- [NEW] Added support for mangacool.se (NON-H)
+- [NEW] Added support for tokusiro.com (NON-H)
+- [NEW] Added login support for mangatraders.biz
+- [FIX] Updates for mangago.me (updated algorithms)
+- [FIX] Updates for taad.com (updated algorithms)
+- [MISC] Various improvements and bug fixes
+
+[Release 199]
+- [NEW] Added option to check completed bookmarks for new chapters (Bookmarks Settings)
+- [FIX] Updates for luscious.net (page collection error for some galleries if not logged in)
+- [FIX] Updates for mangahead.com (moved to mangahead.me)
+- [FIX] Updates for murumaru.in (updated algorithms)
+
+[Release 198]
+- [FIX] Updates for spinybackmanga.com (updated algorithms)
+- [FIX] Updates for generic FoOlSlide support
+- [MISC] Various improvements and bug fixes
+
+[Release 197]
+- [NEW] Added support for ntruyen.info (NON-H)
+- [NEW] Added support for uptruyen.com (NON-H)
+- [NEW] Added "choose chapters" double-click action
+- [FIX] Updates for murumaru.in (added password support for wasabisyrup.com reader)
+- [FIX] Updates for truyentranhtuan.com (updated algorithms)
+- [FIX] Updates for senmanga.com (updated algorithms)
+- [MISC] Various improvements and bug fixes
+
+[Release 196]
+- [FIX] Updates for kissmanga.com (updated algorithms)
+
+[Release 195]
+- [FIX] Updates for pixiv.net (updated algorithms)
+- [FIX] Updates for murumaru.in (added support for wasabisyrup.com reader)
+- [MISC] Various improvements and bug fixes
+
+[Release 193/194]
+- [NEW] Added support for komikfox.web.id (NON-H)
+- [FIX] Updates for luscious.net (country-restricted content can now be downloaded)
+- [FIX] Updates for pixiv.net (updated login process)
+- [FIX] Updates for hentailxers.site (fixed support for various Blogspot readers)
+- [MISC] Added button to delete selected logins (in addition to using the Delete key)
+- [MISC] Various improvements and bug fixes
+
+[Release 192]
+- [NEW] Added login support for luscious.net
+- [FIX] Updates for madokami.al (updated algorithms)
+- [MISC] Various improvements and bug fixes
+
+[Release 191]
+- [NEW] Added support for mangashiro.net (NON-H)
+- [FIX] Updates for madokami.al (added support for light novels, audiobooks, etc)
+- [FIX] Updates for xcartx.com (updated algorithms)
+- [FIX] Fixed "pad" function returning blank in scripts
+- [FIX] Certain combination of settings prevented last chapter from being saved correctly
+- [MISC] Bato.to language now defaults to UI language unless specific languages chosen
+- [MISC] Various improvements and bug fixes
+
+[Release 190]
+- [NEW] Added support for xcartx.com
+- [NEW] Added support for komiku.net (NON-H)
+- [NEW] Added option to automatically clear completed bookmarks (Bookmarks Settings)
+- [NEW] Added option to delete download files from bookmarks context menu
+- [FIX] Updates for generic FoOlSlide support
+- [FIX] Page-mode bookmarks with indeteriminate initial page count will now be checked properly
+- [MISC] Various improvements and bug fixes
+
+[Release 189]
+- [NEW] Added support for kosmik.id (NON-H)
+- [NEW] Added support for 106.186.19.45 (NON-H)
+- [MISC] Added "#" column (row index)
+- [MISC] Expanded conditional tokens (added inequality, not-null)
+- [MISC] Various improvements and bug fixes
+
+[Release 188]
+- [FIX] Updates for furaffinity.net (updated algorithms)
+- [FIX] Updates for hentai2read.com (fixed adding content by tag)
+- [NEW] Added option for more thorough bookmark checking
+
+[Release 187]
+- [FIX] Updates for bato.to (updated algorithms)
+
+[Release 186]
+- [FIX] exhentai.org/g.e-hentai.org size preferences were not respected
+- [NEW] Bookmarks can now be searched and filtered by website
+- [NEW] Bookmarks can now be added/edited directly
+- [MISC] Added Alt+Enter shortcut to open information editor
+- [MISC] Various improvements and bug fixes
+
+[Release 185]
+- [FIX] Fixed %LANGUAGE% token
+- [FIX] Path uniqueness not honored if identical items start at the same time 
+
+[Release 184]
+- [FIX] Updates for hitomi.la (could not add galleries without titles to the queue)
+- [FIX] Updates for porncomix.wf (moved to porncomix.info)
+- [NEW] Added additional buttons to bookmarks context menu
+- [NEW] Added option to automatically purge old error logs (Options > Debug)
+- [NEW] Support for value-limited tokens (e.g., %ARTIST(3)% is the first three artists)
+
+[Release 183]
+- [FIX] Updates for hitomi.la (downloads not working for Korean users)
+- [FIX] Updates for luscious.net (updated algorithms)
+- [FIX] Updates for svscomics.org (moved to svscomics.com)
+- [FIX] Updates for mangaindo.web.id (updated algorithms)
+- [MISC] Added option to make Clipboard Monitor persistent across sessions
+- [MISC] Various improvements and bug fixes
+
+[Release 182]
+- [FIX] Updates for minitoon.net (updated algorithms)
+- [FIX] Updates for dangniao.com (updated algorithms)
+- [FIX] Updates for gmanga.me (updated algorithms)
+- [FIX] Updates for mangaforall.com (updated algorithms)
+
+[Release 181]
+- [NEW] Added support for spoup.net (NON-H)
+- [NEW] Added "Retry" option to context menu download status
+- [FIX] Updates for lezhin.com (updated algorithms)
+- [FIX] Updates for spinybackmanga.com (updated algorithms)
+
+[Release 180]
+- [FIX] Updates for lezhin.com (updated algorithms)
+- [FIX] Updates for hitomi.la (updated algorithms)
+- [MISC] Improved FMD favorites.ini import algorithm
+- [MISC] Various improvements and bug fixes
+
+[Release 179]
+- [NEW] Added support for h-manga.moe
+- [FIX] Updates for box-manga.com (updated algorithms)
+- [MISC] Various improvements and bug fixes
+
+[Release 178]
+- [NEW] Added support for hellven.net
+- [FIX] Updates for mangapark.me (updated algorithms)
+- [MISC] Added conversion error message if directory access is denied
+- [MISC] Languages are now ordered alphabetically
+
+[Release 177]
+- [FIX] Updates for myreadingmanga.info (updated algorithms)
+- [FIX] Updates for asmhentai.com (updated algorithms)
+- [MISC] Improved language parsing
+- [MISC] Various improvements and bug fixes
+
+[Release 176]
+- [NEW] Added option to specify character used to replace non-ASCII characters
+- [FIX] Updates for readmanga.today (updated algorithms)
+- [MISC] Filter panel categories can now be resized
+- [MISC] Various improvements and bug fixes
+
+[Release 175]
+- [NEW] Added support for overwatchhentaidb.net
+- [NEW] Added support for bzland.net
+- [NEW] Added generic support for sites that use the same theme as mangalife.org (mangatraders.biz, etc)
+- [NEW] Replaced filter window with improved filter panel
+- [FIX] Updates for erolord.com (updated algorithms)
+- [MISC] Improved bato.to language selection
+- [MISC] Various improvements and bug fixes
+
+[Release 174]
+- [NEW] Search results from luscious.net can now be added directly to the queue
+- [NEW] Added %TIMESTAMP% folder naming token; custom formats can be provided, e.g.: %TIMESTAMP(yyyy-MM-dd)%
+- [FIX] Updates for lolhentai.net (updated algorithms)
+- [MISC] Various improvements and bug fixes
+
+[Release 173]
+- [NEW] Added support for proxer.me
+- [FIX] Updates for hentaivn.net (updated algorithms)
+- [FIX] Updates for mangalife.org (updated algorithms)
+- [FIX] Updates for mangasee.co (moved to mangaseeonline.net)
+- [FIX] Pausing items through the context menu paused the entire queue
+- [MISC] Various improvements and bug fixes
+
+[Release 172]
+- [FIX] Updates for hentai.cafe (FoOlSlide summary pages can now be added directly to the queue)
+
+[Release 171]
+- [FIX] Updates for raw.senmanga.com (updated algorithms)
+
+[Release 170]
+- [NEW] Added detailed thumbnail generation options
+- [FIX] Updates for hentaivn.net (updated algorithms)
+- [FIX] Some manga would not add to the queue in Windows XP
+- [MISC] Minor UI design changes/improvements
+- [MISC] Various improvements and bug fixes
+
+[Release 169]
+- [FIX] Updates for readmanga.today (updated algorithms)
+
+[Release 167/168]
+- [FIX] Updates for exhentai.org (download at original size stopped working)
+- [FIX] Fixed language parsing when multiple languages are present
+
+[Release 166]
+- [NEW] Added support for bbotoon.com (and affiliated domains)
+- [FIX] Updates for readmanga.today (some single chapters could not be added to the queue)
+- [FIX] Updates for erolord.com (updated algorithms)
+- [MISC] Updates for pururin.us (separated English title/original title where relevant)
+- [MISC] Updates for tsumino.com (shows login required notification for user-only content)
+- [MISC] Various improvements and bug fixes
+
+[Release 165]
+- [FIX] Updates for hentaifromhell.org (updated algorithms)
+- [MISC] "Remove Duplicates" now checks for duplicate title (as well as URL)
+- [MISC] Various improvements and bug fixes
+
+[Release 164]
+- [FIX] Updates for lezhin.com (updated algorithms)
+- [MISC] "Reset and Requeue" now preserves download directory and selected chapters
+
+[Release 163]
+- [FIX] Updates for doujin-th.com (updated algorithms)
+- [FIX] Updates for hdarkzone.com (updated algorithms)
+
+[Release 162]
+- [FIX] Updates for nekopost.net (updated algorithms)
+- [FIX] Updates for porncomix.re (updated algorithms)
+- [FIX] Updates for marumaru.in (incorrect chapter count for some items)
+- [FIX] Error messages not shown correctly in some cases (generic message)
+- [MISC] Increased max simultaneous downloads to 50
+
+[Release 160/161]
+- [NEW] Added support for multporn.com
+- [NEW] Added additional image size options for g.e-hentai.org/exhentai.org (under Site-Specific Settings)
+- [FIX] Updates for manga-tr.com (updated algorithms)
+- [FIX] Fixed resuming of paused downloads from cached page list
+- [MISC] Various improvements and bug fixes
+
+[Release 159]
+- [FIX] Updates for manga-tr.com (updated algorithms)
+
+[Release 158]
+- [FIX] Updates for g.e-hentai.org ("Pages missing" error for some content)
+- [FIX] Updates for hentaihunt.net (updated algorithms)
+- [FIX] Updates for hentaiporns.net (updated algorithms)
+- [MISC] Various improvements and bug fixes
+
+[Release 157]
+- [FIX] Updates for hentaiporns.net (some pages would be missed in large galleries)
+
+[Release 156]
+- [MISC] Fixed error that can occur if error logging is enabled without correct write permissions
+
+[Release 155]
+- [NEW] Added support for hentaiporns.net
+- [FIX] Updates for imagefap.com (couldn't download beyond 999 images)
+- [FIX] Updates for mangalife.me (added alternate domain mangalife.org)
+- [MISC] Various improvements and bug fixes
+
+[Release 154]
+- [NEW] Added support for tomanga.me (NON-H)
+- [MISC] Various improvements and bug fixes
+
+[Release 153]
+- [FIX] Updates for hitomi.la (updated algorithms)
+- [FIX] Updates for g.e-hentai.org (hathperks should now be properly acknowledged)
+
+[Release 152]
+- [NEW] Added support for bangcartoons.com
+- [NEW] Added support for zingbox.me (NON-H)
+- [NEW] Added support for readmanga.eu (NON-H)
+- [FIX] Updates for readmanga.today (updated algorithms)
+- [FIX] Updates for mangafreak.me (moved to mangafreak.net)
+- [FIX] Updates for pixiv.net (Ugoria archives are now downloaded)
+- [MISC] Various improvements and bug fixes
+
+[Release 151]
+- [FIX] Updates for webtoons.com (motion comics could not be downloaded)
+- [FIX] Updates for myreadingmanga.info (updated algorithms)
+- [FIX] Updates for g.e-hentai.org (improved search result parsing)
+- [MISC] Added date metadata to epub files
+- [MISC] Various improvements and bug fixes
+
+[Release 150]
+- [NEW] Added support for dangniao.com (NON-H)
+- [NEW] Added support for kuman.com (NON-H)
+- [NEW] Added extended information editor (Edit Information > More Details)
+- [NEW] Search results from hitomi.la can now be directly added to queue
+- [MISC] Manga marked as "Dropped" is now checked for new chapters (in case series is picked up again)
+- [MISC] Added option to use full or basic titles from nhentai.net (under Site-Specific Settings)
+- [MISC] Added ability to generate info.txt files from the context menu
+- [MISC] Various improvements and bug fixes
+
+[Release 149]
+- [FIX] Updates for mh160.com (updated algorithms)
+- [MISC] Various improvements and bug fixes
+
+[Release 148]
+- [FIX] Updates for doujins.com (updated algorithms)
+
+[Release 147]
+- [NEW] Added experimental conditional token: %IF(x=y,true,false)%
+- [FIX] Updates for hitomi.la (updated algorithms)
+
+[Release 146]
+- [FIX] Some raw text files would fail to load
+
+[Release 145]
+- [FIX] Updates for hentaivn.net (could not add some individual chapters)
+- [FIX] Updates for imgur.com (could not download single images)
+- [FIX] Updates for kingsmanga.net (updated algorithms)
+- [FIX] Updates for manga24h.com (moved to manga24h.me)
+- [FIX] Updates for blogtruyen.com (updated algorithms)
+- [FIX] Updates for truyentranh8.net (updated algorithms)
+
+[Release 144]
+- [NEW] Added support for fapdu.com
+- [FIX] Updates for hgamecg.com (updated algorithms)
+
+[Release 143]
+- [FIX] Updates for hentairules.net (rewrote algorithms)
+- [FIX] Updates for hentai.cafe (multi-chapter content is now supported)
+- [FIX] Updates for doujinmode.net (updated algorithms)
+- [FIX] Updates for erolord.com (updated algorithms)
+
+[Release 142]
+- [FIX] Updates for hitomi.la (updated algorithms)
+- [FIX] Site-specific formatting for Tumblr was not respected
+
+[Release 141]
+- [NEW] Added support for remanba.com (NON-H)
+- [NEW] Added support for mangahome.com (NON-H)
+- [NEW] Added ability to download full Tumblr blogs
+- [FIX] Updates for mangaoku.net (updated algorithms)
+- [FIX] Updates for heymanga.xyz (moved to heymanga.me)
+- [FIX] Fixed search page enqueuing for nhentai
+
+[Release 140]
+- [FIX] Updates for mymanga.me (moved to gomymanga.com)
+- [MISC] Various improvements and bug fixes
+
+[Release 139]
+- [NEW] Added support for readcomics.tv (NON-H)
+- [FIX] Updates for myreadingmanga.info (updated algorithms)
+- [FIX] Updates for mangastream.com (updated algorithms)
+- [MISC] Various improvements and bug fixes
+
+[Release 138]
+- [NEW] Added support for world-hentai.com
+- [NEW] Added support for mapussy.com
+- [FIX] Updates for doujin-moe.us (moved to doujins.com)
+
+[Release 137]
+- [NEW] Added support for mangadoor.com (NON-H)
+- [NEW] It is now possible to use domains that aren't officially supported for custom tokens/site-specific formatting
+- [FIX] Updates for manga.life (moved to mangalife.me)
+- [FIX] Updates for gmanga.me (updated algorithms)
+- [FIX] Various bug fixes involving custom tokens
+- [MISC] Various improvements and bug fixes
+
+[Release 136]
+- [FIX] Updates for spottoon.com (fixed login)
+- [FIX] Updates for yomanga.co (improved URL acceptance)
+- [MISC] Added login notification for bato.to (displayed if adding user-only content w/o an account)
+
+[Release 135]
+- [FIX] Bookmark directories weren't generated properly under certain conditions
+- [MISC] Improved stop mark behavior
+
+[Release 134]
+- [FIX] Updates for hakihome.com (updated algorithms)
+- [FIX] List was not refreshed after clearing completed items
+
+[Release 133]
+- [NEW] Added support for zangsisi.net (NON-H)
+- [FIX] Updates for minitoon.net (updated algorithms)
+- [MISC] Various improvements and bug fixes
+
+[Release 132]
+- [NEW] Added support for epikmanga.com (NON-H)
+
+[Release 131]
+- [FIX] Updates for dm5.com (updated algorithms)
+- [FIX] Updates for yaoi.space (updated algorithms)
+- [FIX] Updates for hakihome.com (updated algorithms)
+- [MISC] Various improvements and bug fixes
+
+[Release 130]
+- [NEW] Added %INDEX% chapter naming token (refers to 0-based chapter index)
+- [FIX] Updates for imgur.com (updated algorithms)
+- [FIX] Chapters with identical formatted titles would overwrite each other
+- [MISC] Added "iTunesArtwork" file to iPad-optimized ePUBs
+- [MISC] Various improvements and bug fixes
+
+[Release 129]
+- [NEW] Added support for gravitytales.com (NON-H)
+- [FIX] Updates for hentaibeast.com (updated algorithms)
+- [FIX] EHentai/ExHentai 509 detection will now stop all queued/running downloads when 509 detected
+- [MISC] Various improvements and bug fixes
+
+[Release 128]
+- [FIX] Updates for pururin.us (updated algorithms)
+
+[Release 127]
+- [NEW] Added support for minitoon.net (NON-H)
+- [NEW] Added generic support for "adultphoto01pink" Wordpress sites
+- [FIX] Various updates for middleware support
+- [FIX] Updates for g.e-hentai.org (very large galleries would get "page collection error")
+
+[Release 126]
+- [NEW] Added support for svscomics.org
+- [NEW] Added support ben10porn.xyz
+- [NEW] Added (unofficial) support for instagram.com
+- [FIX] Updates for dm5.com (updated algorithms)
+- [MISC] Various improvements and bug fixes
+
+[Release 125]
+- [NEW] Added support for "middleware" (applications you can send manga metadata to)
+- [FIX] Updates for yaoihavenreborn.com (updated algorithms)
+- [FIX] Updates for webtoons.com (certain titles didn't work properly with bookmarks)
+- [FIX] Fixed issue with chapter numbering (in some regions)
+
+[Release 124]
+- [FIX] Updates for mangainn.me (moved to mangainn.net)
+- [FIX] Updates for mangaonline.to (updated algorithms)
+- [MISC] Various improvements and bug fixes
+
+[Release 123]
+- [NEW] Added CSV as info file format
+- [FIX] Updates for 8muses.com (updated algorithms)
+- [MISC] Various improvements and bug fixes
+
+[Release 121/122]
+- [NEW] Added support for pururin.us
+- [NEW] Added history (disabled by default)
+- [FIX] Updates for komikid.com (updated algorithms)
+- [FIX] Updates for mangacanblog.com (updated algorithms; added support for additional affiliated domains)
+- [FIX] Updates for g.e-hentai.org/exhentai.org (updated algorithms)
+- [MISC] Various improvements and bug fixes
+
+[Release 119/120]
+- [FIX] Language file-related fixes
+
+[Release 118]
+- [NEW] Added support animeitor.com
+- [NEW] Added Korean language file (courtesy of Metrics Spec)
+- [FIX] Updates for zizki.com (updated algorithms)
+- [FIX] Updates for marumaru.in (minor updates for URL acceptance and chapter parsing)
+
+[Release 117]
+- [NEW] Added support funmanga.com (NON-H)
+- [NEW] Added support sunday-webry.com (NON-H)
+- [FIX] Updates for marumaru.in (updated algorithms)
+
+[Release 116]
+- [FIX] Updates for thedoujin.com (added alternate URL: d.trinitylock.com)
+- [FIX] Updates for manga-tr.com (updated algorithms)
+
+[Release 115]
+- [FIX] Updates for hyassin.com (updated algorithms)
+- [MISC] Various improvements and bug fixes
+
+[Release 114]
+- [NEW] Added support aacomic.com (NON-H)
+- [NEW] Added support for hyassin.com (NON-H)
+- [NEW] Added support for comic.ck101.com (NON-H)
+- [MISC] Various improvements and bug fixes
+
+[Release 113]
+- [FIX] Updates for comixhere.ru (updated algorithms)
+- [FIX] Updates for alphapolis.co.jp (updated algorithms)
+- [FIX] Updates for comicsfromhell.org (updated algorithms)
+
+[Release 112]
+- [NEW] Added support for manhua.djmz.com (NON-H)
+- [NEW] Added support for kukudm.com (NON-H)
+- [NEW] Added login support for twitter.com
+- [FIX] Updates for mangavadisi.org (updated algorithms)
+- [FIX] Updates for fumanhua.net (updated algorithms)
+
+[Release 111]
+- [NEW] Added support for yaoichan.me
+- [NEW] Added support for mangachan.me (NON-H)
+- [NEW] Added (unofficial) support twitter.com (NON-H)
+- [FIX] Updates for gameofscanlation.moe (updated algorithms)
+- [FIX] Updates for readmanga.me (updated algorithms)
+- [MISC] Updated generic FoOlSlide support (supports more metadata fields)
+- [MISC] Various improvements and bug fixes
+
+[Release 110]
+- [NEW] Added new command line arguments (-rdir)
+- [MISC] Various improvements and bug fixes
+
+[Release 109]
+- [NEW] Added new download completion actions to scheduler (sleep, hibernate, log off, lock, exit program)
+- [NEW] Added optional system tray notifications
+- [NEW] Added new command line arguments (-dir, -dir-reset)
+- [FIX] Updates for madokami.com (NON-H) (URL changed to madokami.al)
+- [MISC] Added new error message (disk full)
+- [MISC] Various improvements and bug fixes
+
+[Release 108]
+- [NEW] Added support for hentaivn.net
+
+[Release 107]
+- [NEW] Added download delay setting
+- [FIX] Updates for hentaifox.com (updated algorithms)
+- [MISC] Updates for CBW conversion metadata (added AlternateSeries and Inker/Colorist)
+- [MISC] Various improvements and bug fixes
+
+[Release 106]
+- [FIX] Updates for tsumino.com (some content couldn't be downloaded)
+- [NEW] Added generic support for "glossy-bright" Wordpress sites
+- [NEW] Added option to generate folder thumbnail (folder.jpg)
+- [NEW] Added FMD Bookmarks import support
+- [FIX] Fixed copying URLs with Ctrl+C
+- [MISC] Various improvements and bug fixes
+
+[Release 105]
+- [FIX] Updates for luscious.net (updated algorithms)
+
+[Release 103/104]
+- [NEW] Added support for ikanman.com (NON-H)
+- [NEW] Added support for mangaindo.web.id (NON-H)
+- [FIX] Updates for hgamecg.com (updated algorithms)
+- [FIX] Download status was blank after completion if using multi-format conversion with "None" and "CBW"
+- [MISC] Various improvements and bug fixes
+
+[Release 102]
+- [NEW] Added support for pomfpomf.moe
+- [NEW] Added support for hentailx.com
+- [NEW] Added support for view-comic.com
+- [FIX] Updates for mangafox.me (some old chapter URLs would not be accepted)
+- [FIX] Updates for yomanga.co (fixed image duplication/ordering issues)
+- [FIX] Updates for tsumino.com (updated algorithms)
+- [FIX] Updates for chuixue.com (moved to chuiyao.com)
+- [FIX] Updates for hentaifox.com (updated algorithms)
+- [FIX] Updates for asmhentai.com (updated algorithms)
+- [FIX] Updates for exhentai.org (updated to support https)
+- [FIX] Updates for guromanga.com (fixed language preference setting)
+
+[Release 101]
+- [NEW] Added support for hentailx.net
+- [NEW] Added generic Wordpress support (please submit non-working Wordpress URLs!)
+- [FIX] Updates for animea.net (updated algorithms)
+- [FIX] Outdated URLs are changed to current URLs when importing bookmarks
+- [MISC] Added option to choose image server on hitomi.la
+- [MISC] Various minor improvements and bug fixes
+
+[Release 100]
+- [FIX] Updates for hentaii.xxx (updated algorithms)
+- [FIX] Fixed error that can occur when saving to paths with certain characters
+- [MISC] Added option to disable download directory updating for pending queue items
+- [MISC] Various minor improvements and bug fixes
+
+[Release 99]
+- [NEW] Added support for shentai.xyz
+- [NEW] Added generic Blogspot support (please submit non-working Blogspot URLs!)
+- [FIX] Updates for heymanga.xyz (updated algorithms)
+- [FIX] Updates for hentailxers.site (updated to support new URLs)
+
+[Release 98]
+- [NEW] Added support for picsurge.com
+- [NEW] Added support for toofy.me (NON-H)
+- [FIX] Updates for nhentai.net (fixed adding search result pages)
+- [MISC] Various minor improvements and bug fixes
+
+[Release 97]
+- [FIX] Updates for alphapolis.co.jp (fixed page ordering)
+- [FIX] Updates for imgur.com (albums without title will use album id)
+
+[Release 96]
+- [FIX] Updates for hentaihunt.net (updated algorithms)
+- [MISC] Various minor improvements and bug fixes
+
+[Release 95]
+- [NEW] Added support for alphapolis.co.jp (NON-H)
+- [NEW] Adding new chapters from Bookmarks updates the "Date Added" value of the entry (to allow sorting by new chapters)
+- [FIX] Updates for furaffinity.net (fixed login)
+- [FIX] Updates for hentaihunt.net (updated algorithms)
+- [FIX] Updates for exhentai.org (artist name not present in some titles)
+- [MISC] Changing the download directory will now change the download directory for all non-started items in the queue
+
+[Release 94]
+- [FIX] Updates for egscans.com (updated algorithms)
+- [FIX] Updates for comic.naver.com (.swf files are downloaded; user-only content can now be downloaded)
+- [FIX] Open first/last chapter didn't work for converted chapters
+- [FIX] Changelog link in updater now works
+
+[Release 93]
+- [NEW] Added support for gogomanga.co (NON-H)
+- [NEW] Added support for marumaru.in (NON-H)
+- [NEW] Added options to open first/last chapter in reader to the context menu
+- [NEW] Added option to change toolstrip size (File > Options > Accessibility)
+- [NEW] Added login support for comic.naver.com
+- [FIX] Updates for japscan.com (updated algorithms)
+- [FIX] Updates for hentaihunt.net (updated algorithms; updated for damimage.com gallerires)
+- [MISC] Pressing Ctrl+C with queue items highlighed will now copy their URLs
+- [MISC] Pressing Ctrl+V with the queue focused will add copied URLs to the download queue
+- [MISC] Various minor improvements and bug fixes
+
+[Release 92]
+- [FIX] Updates for hentaihunt.net (updated for imgclick.net gallerires)
+
+[Release 91]
+- [NEW] Added support for mangaonline.to (NON-H)
+- [NEW] Added CBW conversion support
+- [FIX] Updates for crunchyroll.com (chapters not named properly in some regions)
+- [FIX] Updates for manga-joy.com (updated algorithms)
+- [FIX] Updates for mangasaurus.com (updated algorithms)
+- [MISC] Various minor improvements and bug fixes
+
+[Release 90]
+- [NEW] Added (unofficial) support for cosplay-toriko.com
+- [NEW] Added support for leomanga.com (NON-H)
+- [NEW] Added option to skip duplicate chapters
+- [FIX] Updates for mangapanda.com (updated algorithms)
+- [FIX] Updates for mangainn.me (updated algorithms)
+- [FIX] Updates for tumangaonline.com (updated algorithms)
+- [MISC] Various minor improvements and bug fixes
+
+[Release 89]
+- [FIX] Updates for hentailxers.site (updated supported URLs)
+- [FIX] Updates for 77mh.com (updated algorithms)
+
+[Release 88]
+- [NEW] Added support for kumanga.com (NON-H)
+- [NEW] Added generic support for all FoOlSlide-based sites (can be disabled under Options)
+- [NEW] Added 7Z conversion support
+- [FIX] Updates for senmanga.com (updated algorithms)
+
+[Release 87]
+- [FIX] Updated Cloudflare bypass procedure
+
+[Release 86]
+- [FIX] Updates for furaffinity.net (added captcha support for login)
+- [FIX] Updates for gameofscanlation.moe (updated algorithms)
+- [FIX] Updates for otakumole.ch (updated algorithms; no longer shares login details with mangalator.ch)
+- [FIX] Updates for hentailxers.site (updated to support new reader URLs)
+- [NEW] Added support for new command-line arguments
+
+[Release 82/83/84/85]
+- [FIX] Updates for lezhin.com (updated algorithms; added option for automatic locale changing)
+- [FIX] Updated Cloudflare bypass procedure
+- [FIX] Code refactoring
+
+[Release 81]
+- [FIX] Updates for japscan.com (updated algorithms)
+- [FIX] Updated Cloudflare bypass procedure
+
+[Release 80]
+- [NEW] Added support for lermangas.com (NON-H)
+- [FIX] Updates for hentailxers.site (changed URL)
+- [FIX] ZIP header would end up corrupt when updating existing archives
+- [MISC] Various minor improvements and bug fixes
+
+[Release 79]
+- [NEW] Added support for sekaimanga.net (NON-H)
+- [FIX] Updates for myreadingmanga.info (couldn't add series pages)
+- [FIX] Updates for gmanga.com (updated algorithms)
+
+[Release 78]
+- [NEW] Added support for otscans.com (NON-H)
+- [NEW] Added support for japanread.net (NON-H)
+
+[Release 77]
+- [FIX] Pressing Ctrl+A while using a filter no longer selects all rows (only filtered rows)
+- [MISC] Filter textbox now gets focus immediately when opened
+
+[Release 76]
+- [NEW] Option to mark Bookmarks that haven't been updated in x weeks as "Dropped"
+- [NEW] Added ability to specify download directories under site-specific formatting
+- [FIX] Updates for bato.to (updated algorithms)
+- [FIX] Updates for tsumino.com (fetches "Original Title" information)
+
+[Release 75]
+- [FIX] Updates for mngcow.co (updated algorithms)
+
+[Release 74]
+- [FIX] General Blogspot-based update ("Content Warning" will always be skipped)
+
+[Release 73]
+- [FIX] Updates for hentailxers.blogspot.com (updated algorithms)
+
+[Release 72]
+- [FIX] Updates for nhentai.net (didn't get tags properly for some doujins)
+- [NEW] Added ComicInfo.xml as a metadata format (for ComicRack)
+- [MISC] Overriding the %TITLE% token now shows the custom title in the download queue
+- [MISC] Various minor improvements and bug fixes
+
+[Release 71]
+- [FIX] Updates for webtoons.com (invalid chapter count)
+- [FIX] Bookmarks downloaded to wrong directory under certain conditions
+- [FIX] Improved shift-click selection when selecting chapters
+- [FIX] Can now re-title entries using F2 key
+- [MISC] Manually editing a title takes precedence over overriding the %TITLE% token with custom tokens
+- [MISC] Various minor improvements and bug fixes
+
+[Release 70]
+- [NEW] Can now select ranges of chapters by shift-clicking
+- [FIX] Updates for readcomiconline.me (moved to readcomiconline.to)
+- [FIX] Updates for mangadenizi.com (updated algorithms)
+- [FIX] "Convert chapters individually" is honored when coverting via the context menu
+
+[Release 69]
+- [FIX] Updates for baixarhentai.net (updated algorithms)
+
+[Release 68]
+- [NEW] Added option to disable directory overwrites for manga with the same title
+- [NEW] Added %TYPE% folder naming token
+- [FIX] Updates for myreadingmanga.info (updated algorithms)
+- [FIX] Empty folders no longer count towards download limit
+- [FIX] Fixed problem with adding page-tracking items from Bookmarks to the queue when it doesn't already exist
+- [MISC] Bookmarks marked as "Completed" are no longer checked for new chapters
+
+[Release 67]
+- [NEW] Added support for hiper.cool
+- [MISC] Brought back the "Tags" column
+
+[Release 66]
+- [NEW] Added support for baixarhentai.net
+- [FIX] Updates for heymanga.xyz (updated algorithms)
+- [MISC] Various minor improvements and bug fixes
+
+[Release 65]
+- [NEW] Added support for hentaihousext.com
+- [NEW] Added support for megahentaicomics.com
+- [NEW] Added support for revistasequadrinhos.com
+- [NEW] Added support for tmohentai.com
+- [FIX] Updates for heymanga.xyz (updated algorithms)
+- [FIX] Updates for imgur.com (updated algorithms)
+
+[Release 64]
+- [NEW] Added support for heymanga.xyz (NON-H)
+- [NEW] Added support for puzzmos.com (NON-H)
+- [MISC] Adding option to show confirmation dialog when removing entries from the queue
+- [MISC] Removing an entry with the "Delete" key now shows confirmation dialog
+- [MISC] Improved error handling
+
+[Release 63]
+- [FIX] Updates for doujin-moe.us (added login support)
+
+[Release 62]
+- [FIX] Updates for yomanga.co (updated algorithms)
+- [MISC] Corrupt/invalid favicon files are detected and deleted (to be replaced with valid favicons)
+
+[Release 61]
+- [NEW] Added option to rename chapters with identical titles (enabled by default)
+- [MISC] Directory creation errors will now create error log files (if Diagnostics enabled)
+
+[Release 60]
+- [NEW] Added support for webtoontr.com (NON-H)
+- [NEW] Bookmarks can now be used to track new pages (in addition to chapters)
+- [NEW] Added %PARODY%, %TRANSLATOR%, %SCANLATOR%, and %CIRCLE% folder naming tokens
+- [MISC] A failed chapter will no longer abort a download, will report "Some chapters failed" at end of download
+- [MISC] Changed default chapter naming string to %CHAPTER#% - %TITLE%
+
+[Release 59]
+- [FIX] Updates for eatmanga.com (.png images failed to download)
+- [FIX] Updates for readcomiconline.com (moved to readcomiconline.me)
+
+[Release 58]
+- [FIX] Updates for japscan.com (updated algorithms)
+- [FIX] Updates for manga-tr.com (updated algorithms)
+- [FIX] Updates for hentai2read.com (chapters with '@' symbols in the title did not have title parsed correctly)
+- [FIX] Updates for lezhin.com (fixed login)
+- [FIX] Updates for thehentaiworld.com (updated algorithms)
+- [FIX] Updates for hentaichan.ru (moved to hentaichan.me)
+
+[Release 57]
+- [FIX] Updates for manga-tr.com (updated algorithms, added login support)
+- [FIX] Fixed potential crash when deleting files from a restarted download while Transfer Rate column is visible
+
+[Release 56]
+- [FIX] Updates for manga-tr.com (updated algorithms)
+- [FIX] Improved ISP filtering detection (added Internet Sehat)
+- [FIX] Fixed potential crash when downloading a specific range of chapters
+- [FIX] Improved range parsing
+
+[Release 55]
+- [FIX] Updates for vechai.info (updated algorithms)
+- [NEW] Added support for webtoon.daum.net (NON-H)
+- [NEW] Added support for page.kakao.com (NON-H)
+- [NEW] Added support for komikstation.com (NON-H)
+- [NEW] Added support for mangashoujo.com (NON-H)
+- [NEW] Added support for mangacode.com (NON-H)
+- [NEW] Added support for ngomik.com (NON-H)
+
+[Release 54]
+- [NEW] Added support for dm5.com (NON-H)
+- [FIX] Updates for hitomi.la (added reader URL support so 403'd content can still be downloaded)
+- [FIX] Updates for raw.senmanga.com (improved URL validation)
+- [MISC] Various improvements and bug fixes
+
+[Release 53]
+- [NEW] Added support for mangapoi.net (NON-H)
+- [FIX] Fixed a few issues with the scripting system
+
+[Release 52]
+- [NEW] Added support for tsumino.com (updated algorithms)
+- [MISC] Various improvements and bug fixes
+
+[Release 51]
+- [FIX] Updates for hitomi.la (updated algorithms)
+- [MISC] Entries with "Tsumino_Web" cookie errors are automatically re-queued when downloads are started again
+- [MISC] Various improvements and bug fixes
+
+[Release 50]
+- [NEW] Added support for mangastream.to (NON-H) 
+- [NEW] Added "Transfer Rate" column
+- [FIX] Updates for tsumino.com (updated algorithms)
+- [FIX] Moving entries to the top/bottom peformed a swap instead of insertion
+- [FIX] Sorting by the Progress Bar column did not always sort correctly
+- [MISC] Various improvements and bug fixes
+
+[Release 49]
+- [NEW] Added support for chuixue.com (NON-H)
+- [NEW] Added support for image blacklisting (Settings > Downloads > Data and Backup > Filtering)
+- [NEW] It is now possible to use more information (author, artist, parody, etc) for tag-based organization
+- [FIX] Updates for mh160.com (updated algorithms)
+- [MISC] Can now sort by progress bar column
+
+[Release 48]
+- [NEW] Added support for baidu.com galleries
+- [NEW] Updated German/Portuguese translation files (courtest of mllhild)
+- [FIX] Updates for mangas.zlx.com.br (updated algorithms)
+- [FIX] Could not enable "download at original size" after login update
+
+[Release 47]
+- [FIX] Adding new chapters from bookmarks did not acknowledge default download status
+- [FIX] Skipping chapters while converting chapters individually would convert whole manga folder
+- [MISC] Various improvements and bug fixes
+
+[Release 46]
+- [NEW] Added support for readcomiconline.com (NON-H)
+- [FIX] Updates for myreadingmanga.info (adding by tag skipped first item)
+- [FIX] Updates for yuri-ism.net (updated algorithms)
+- [FIX] Parsing chapter # from title now accounts for decimal values
+
+[Release 45]
+- [FIX] Updates for yomanga.co (updated algorithms)
+
+[Release 44]
+- [NEW] Added ability to specify delay between galleries when scraping galleries from g.e-hentai.org/exhentai.org
+- [NEW] You can now jump to specific Bookmarks by typing the title
+- [FIX] Updates for mangastream.com (updated algorithms)
+- [FIX] Updates for raw.senmanga.com (updated algorithms)
+- [MISC] Wait times are now stored as floating point values instead of integers
+
+[Release 41/42/43]
+- [NEW] Added support for demonicscans.com (NON-H)
+- [FIX] Bookmarks timed auto-checking didn't remember time correctly
+- [FIX] If another timed Bookmark check was triggered during a check, it would cancel it and start over
+
+[Release 40]
+- [NEW] Added support for sinnergate.com
+- [NEW] Added support for spottoon.com (NON-H)
+- [FIX] Updates for gameofscanlation.moe (updated algorithms)
+- [FIX] Updates for palcomix.com (updated algorithms)
+- [FIX] Fixed potential crash when trying to convert a directory that doesn't exist
+
+[Release 39]
+- [FIX] Updates for japan-shin.com (updated algorithms)
+- [FIX] Fixed crash when coverting chapters inidividually and using chapter range
+- [FIX] Various bug/stability fixes
+- [MISC] Minor GUI changes/fixes
+
+[Release 35/36/37/38]
+- [FIX] Updates for bato.to (updated algorithms)
+- [FIX] Various bug/stability fixes
+- [MISC] Added bookmark removal options to the context menu
+
+[Release 34]
+- [NEW] Added support for abandonedkittenscans.mokkori.fr (NON-H)
+- [NEW] Added new options to bookmarks settings
+- [FIX] Updates for 4chan.org (updated algorithms)
+- [FIX] Improved appearance of interface in high-constrast mode
+- [MISC] Added "Author" and "Artist" columns
+- [MISC] Minor GUI changes/fixes
+
+[Release 33]
+- [NEW] Added support for hentype.com
+- [NEW] Added support for 4chan.org
+- [NEW] Added support for 3asq.info (NON-H)
+- [NEW] Major improvements to Chapter Tracker (Now Bookmarks)
+- [FIX] Updates for asmhentai.com (updated algorithms)
+- [FIX] Updates for lezhin.com (updated algorithms, added login support)
+- [MISC] Major GUI refactoring
+
+[Release 32]
+- [FIX] Updates for erolord.com (updated algorithms)
+
+[Release 31]
+- [FIX] Updates for hentaihere.com (updated algorithms)
+- [FIX] Updates for dynasty-scans.com (updated algorithms)
+- [FIX] Updates for yuri-ism.net (updated algorithms)
+- [FIX] Adding new chapters from the chapter tracker for an existing entry did not update chapter range
+- [MISC] Improved Spanish translation courtesy of SkullBrigade
+
+[Release 28/29/30]
+- [FIX] Fixed potential crash when loading default columns
+- [MISC] Program can now check multiple update/activation servers in the event that one is unavailable
+
+[Release 26/27]
+- [NEW] Added support for tumangaonline.com (NON-H)
+- [FIX] Updates for pixiv.net (didn't always get fill-sized images successfully)
+
+[Release 25]
+- [FIX] Updates for pixiv.net (didn't always get full-size images)
+- [MISC] Queue items with the same title are now marked as duplicates (if enabled)
+
+[Release 24]
+- [FIX] Updates for pixiv.net (fixed login)
+
+[Release 21/22/23]
+- [NEW] Added support for underworld-scans.blogspot.com
+- [NEW] Added support for overworld-scans.blogspot.com (NON-H)
+- [FIX] Updates for bato.to (updated algorithms)
+- [FIX] Updates for hentai2read.com (didn't correctly fetch chapters for some content)
+
+[Release 20]
+- [NEW] Added unofficial support for dragonball-multiverse.com (NON-H)
+- [FIX] Updates for pixiv.net (updated algorithms; improved URL acceptance)
+
+[Release 18/19]
+- [FIX] Updates for neumanga.tv (updated algorithms)
+- [MISC] Debugging fixes/changes
+
+[Release 17]
+- [FIX] Downloads removed from the queue while downloading would sometimes continue downloading
+- [MISC] Now displays error message when download folder cannot be created
+
+[Release 16]
+- [FIX] Updates for hentai2read.com (updated algorithms)
+- [FIX] Updates for hentaihere.com (fixed chapter ordering)
+
+[Release 15]
+- [FIX] Updates for doujinmode.com (moved to doujinmode.net)
+
+[Release 14]
+- [FIX] Updates for nhentai.net (adding pages by tag wasn't working anymore)
+
+[Release 13]
+- [NEW] It is now possible to specify formatting strings on a site-by-site basis
+- [NEW] Added support for slideshare.net (NON-H)
+- [NEW] Added support for mangabackup.com (NON-H)
+- [NEW] Added support for mymangaonline.us (NON-H)
+- [NEW] Added support for umbalamanga.com (NON-H)
+
+[Release 11/12]
+- [NEW] Added support for eyeonmanga.com (NON-H)
+- [NEW] Added support for mangaice.com (NON-H)
+- [FIX] Updates for academyvn.com (updated algorithms)
+- [FIX] Updates for unionmangas.com.br (updated algorithms)
+- [FIX] Updates for sukahentai.com (updated algorithms)
+- [FIX] Updates for komikhentai.com (updated algorithms)
+- [FIX] Updates for senmanga.com (updated algorithms, fixed raw.senmanga.com support)
+- [FIX] Updates for madokami.com (added login support)
+- [FIX] Updates for manga-tr.com (updated algorithms)
+- [FIX] Updates for gameofscanlation.moe (updated algorithms)
+- [NEW] Added option to remove manga title from chapter title
+
+[Release 10]
+- [FIX] Updates for mangacow.co (moved to mngcow.co)
+- [FIX] Updates for lezhin.com (some pages would fail)
+- [MISC] Updates to URL parsing for some sites (to alleviate specific URL requirements)
+
+[Release 9]
+- [MISC] Improved program appearance in high-contrast mode
+
+[Release 8]
+- [FIX] Updates for goodmanga.net (could not add individual chapters)
+- [FIX] General parsing updates (could not see description/author information for some websites)
+
+[Release 7]
+- [FIX] Updates for mangabase.co (moved to mangabase.net)
+- [FIX] Updates for perveden.com (updated algorithms)
+- [FIX] Updates for gameofscanlation.moe (updated algorithms)
+
+[Release 5/6]
+- [NEW] Added ability to add gallery listing URLs from exhentai.org
+- [NEW] Added login support for tsumino.com
+- [FIX] Updates for br.mangahost.com (updated algorithms)
+- [FIX] Updates for curse-hell.net (updated algorithms)
+- [MISC] Improved sorting by title for titles with numeric values
+- [MISC] Improved duplicate detection
+
+[Release 4]
+- [FIX] Update for readhentaimanga.com (updated algorithms)
+- [FIX] Fixed crash that occurred when importing manga with chapters from 1.15.9.32
+- [FIX] Various other bug fixes
+
+[Release 3]
+- [NEW] Added support for curse-hell.net
+- [NEW] Added option to specify WinRAR directory
+- [FIX] ePUB conversion via context menu was not working
+- [FIX] Queue entries with page/chapter ranges did not transfer over properly from 1.15.9.32
+- [MISC] It is now possible to convert downloads through the context menu even if the status is not "Completed"
+- [MISC] Links in "About" text are now clickable
+- [MISC] Centered the progress bar percentage
+
+[Release 2]
+- [FIX] Download process got stuck at "Grabbing pages"
+
+-----------------------------------------------------------------------------------------------------------------------------------
+ 1.16.9.32
+-----------------------------------------------------------------------------------------------------------------------------------
+
+[Release 37]
+- [FIX] Updates for imgur.com (improved/updated algorithms)
+
+[Release 36]
+- [NEW] Added support for hentaifox.com
+
+[Release 33/34/35]
+- [FIX] ePUB conversion failed when using original image dimensions
+- [FIX] Various ePUB conversion fixes
+
+[Release 32]
+- [NEW] Added support for palcomix.com
+- [NEW] Added option to split wide images in EPUB conversion
+- [FIX] Updates for bato.to (updated to support SSL)
+- [MISC] Improved ePUB conversion
+
+[Release 31]
+- [FIX] When converting to PDF with multiple chapters, sometimes the chapters were out of order
+
+[Release 28/29/30]
+- [FIX] Updates for tsumino.com (improved cookie expiration detection)
+- [FIX] Fixed issue with trying to start downloads before serial key verification
+
+[Release 27]
+- [NEW] Added support for hentai-ddl.org
+- [NEW] Added support for spinybackmanga.com (NON-H)
+- [NEW] Added viewport options for ePUB conversion
+- [FIX] Improved SSL handling for systems using versions of .NET too old to handle it correctly on its own
+- [MISC] Improved config.ini save/load times
+
+[Release 26]
+- [FIX] Updates for 8muses.com (improved/updated algorithms)
+- [FIX] Some requests were sent with a blank user-agent (since Release 21)
+- [FIX] Repeating failed requests would sometimes (ironically) fail
+- [FIX] Improved SSL handling for systems using versions of .NET too old to handle it correctly on its own
+
+[Release 25]
+- [FIX] Updates for mangafox.me (improved/updated algorithms)
+- [MISC] Artist/author information are now considered tags when organizing by tags
+- [MISC] Updated ISP site filtering detection
+
+[Release 24]
+- [NEW] Added ePUB conversion settings (device, reading direction)
+- [NEW] Added ePUB conversion option to the context menu
+- [NEW] Added option to delete files and dequeue item in download queue to context menu
+- [FIX] Updates for hentairules.net (improved/updated algorithms)
+- [FIX] Updates for tsumino.com (adding URL with # caused first page to be downloaded repeatedly)
+- [MISC] When "Show Stats" is enabled, download stats will now show in tooltip of system tray icon
+
+[Release 23]
+- [NEW] Added support for authrone.com (NON-H)
+- [FIX] Chapter Tracker wasn't working correctly after Release 17
+
+[Release 22]
+- [FIX] Updates for yomanga.co (improved/updated algorithms)
+- [MISC] Improved ePUB conversion support (resulting files look better on Apple devices)
+
+[Release 21]
+- [NEW] Added ePUB conversion support
+- [FIX] Updates for tsumino.com (fixed crash when trying to download)
+- [MISC] Removed custom user agent setting (primarily because it's next to useless)
+
+[Release 20]
+- [NEW] Added support for gmanga.me (NON-H)
+- [MISC] Default user agent is now hidden
+
+[Release 19]
+- [FIX] Updates for g.e-hentai.org/exhentai.org (509 error always showed when downloading images at original size)
+- [MISC] Internal changes in preparation for future updates
+
+[Release 18]
+- [FIX] Updates for tsumino.com (fixed artist/tag retrieval)
+- [FIX] "Add From List" truncated the last URL if a large number URLs were added using this method
+- [NEW] Clipboard Monitor now supports newline-delimited lists of URLs
+
+[Release 17]
+- [FIX] Updates for gameofscanlation.moe (improved/updated algorithms)
+- [FIX] Updates for vercomicsporno.com (improved/updated algorithms)
+- [NEW] Added support for mymangaonline.net (NON-H)
+- [NEW] Added support for mangafever.net (NON-H)
+- [NEW] Added "show information" as double-click action
+- [NEW] Added the option to sort chapters in ascending or descending order
+- [NEW] Added "Default" button to the download information editor to restore default download directory
+- [NEW] Added button to remove all duplicate entries to the context menu (under "Clear All...")
+- [NEW] Added support for extra chapter information (language, scanlator, translator, uploader, etc) with naming tokens
+
+[Release 15/16]
+- [FIX] Updates for hitomi.la (sometimes if artist is N/A, it will contain incorrect info)
+- [FIX] Improved long path handling
+
+[Release 14]
+- [FIX] Updates for nhentai.net (duplicate content was allowed to be added when adding from tags)
+- [FIX] Could not use chapter range (problem caused by previous update)
+
+[Release 13]
+- [FIX] Sometimes when attempting to fix long paths, truncation cuts off chapter directory
+- [FIX] Fixed issues with download queue recovery (after crash)
+
+[Release 12]
+- [NEW] Added support for mtoscans.com (NON-H)
+- [FIX] Updates for tsumino.com (improved download process; now shows error if cookie expired)
+- [FIX] Potential error message when selecting chapters
+- [FIX] Fixed potential crash when moving converted files to a new directory
+- [MISC] Settings are now saved to recovery file upon program crash
+
+[Release 11]
+- [FIX] Updates for vercomicsporno.com (improved/updated algorithms)
+
+[Release 10]
+- [NEW] Added support for doujinmode.com
+- [NEW] If you specify a new download directory that doesn't already exist, you will be prompted to create it
+- [NEW] Added option to moved converted downloads to a different directory
+- [FIX] Updates for hentai2read.com (fixed chapter parsing for some older content)
+- [FIX] Updates for mangafox.me (updated watermark detection)
+- [FIX] Multi-conversion settings did not save correctly
+- [MISC] Can now check for common web blockers to detect if ISP is blocking requests to given website
+- [MISC] Error is now shown when trying to download from tsumino.com without required cookies
+
+[Release 9]
+- [NEW] Added Hungarian language file (courtesy of Sprogis)
+- [NEW] Added support for lezhin.com (NON-H)
+- [FIX] Program will give up on retries if download is stopped
+- [FIX] Improved proxy processing/verification
+- [MISC] Improved updater (sometimes wouldn't wait for program to close; can now write error logs)
+
+[Release 8]
+- [FIX] Updates for tsumino.com (supports multiple artists, updated favicon retrieval, updated title processing)
+- [FIX] Special characters were not being replaced properly during file conversion
+
+[Release 7]
+- [MISC] General maintenance; preparation for new features
+- [MISC] Added ability to write local error logs for failed conversions (when Diagnostics enabled)
+
+[Release 6]
+- [FIX] Updates for hentai.cafe (Artist info was being assigned to Author info)
+- [MISC] Removed support for fakku.net (site is now subscription-only)
+
+[Release 5]
+- [FIX] Updates for furaffinity.net (some users could not log in)
+
+[Release 4]
+- [FIX] Updates for gameofscanlation.moe (updated algorithms)
+- [MISC] Error logs can now be generated for failed login attempts
+
+[Release 3]
+- [FIX] Crash when selecting "Download" directly from the context menu
+
+[Release 2]
+- [FIX] Updates for erolord.com (updated algorithms)
+- [FIX] Updates for gameofscanlation.moe (incorrect page count for some content)
+- [FIX] Updated %VOLUME#% token processing (enhanced volume detection)
+
+-----------------------------------------------------------------------------------------------------------------------------------
+ 1.15.9.32
+-----------------------------------------------------------------------------------------------------------------------------------
+
+- [FIX] Updates for hime-doujins.com (improved/updated algorithms)
+- [FIX] Updates for imgur.com (improved/updated algorithms)
+- [FIX] Updates for yuri-ism.com (improved/updated algorithms)
+- [FIX] Updates for yomanga.co (improved/updated algorithms)
+- [FIX] Updates for manga.life (improved/updated algorithms)
+- [FIX] Updates for bato.to (improved/updated algorithms)
+- [FIX] Updates for mangafap.com (improved/updated algorithms)
+- [FIX] Updates for komikid.com (improved/updated algorithms)
+- [FIX] Updates for mangapark.me (improved/updated algorithms)
+- [FIX] Updates for mangatraders.org (improved/updated algorithms)
+- [FIX] Updates for mangareader.net (improved/updated algorithms)
+- [FIX] Updates for mh160.com (improved/updated algorithms)
+- [FIX] Updates for fumanhua.net (improved/updated algorithms)
+- [FIX] Updates for eatmanga.com (improved/updated algorithms)
+- [FIX] Updates for mangasee.co (pages wouldn't download for newer manga)
+- [FIX] Updates for mangasee.co (sometimes pages missing for certain manga)
+- [FIX] Updates for taadd.com (no chapters listed for "mature" manga)
+- [FIX] Updates for exhentai.org ("%ORIG%" token returned nothing in some cases)
+- [FIX] Updates for myreadingmanga.info (chapters were ignored)
+- [FIX] Updates for gameofscanlation.moe (improved/updated algorithms)
+- [FIX] Updates for hentai.ms (could not download galleries)
+- [FIX] Updates for hentaigamecg.com (improved/updated algorithms)
+- [FIX] Updates for hentaifromhell.org (updated to support stooorage.com galleries)
+- [FIX] Updates for hakihome.com (updated to reflect site changes)
+- [FIX] Updates for hentai.cafe (couldn't add content with invalid "Read Online" URLs)
+- [FIX] Updates for mangahere.co (couldn't download from Spanish version of site)
+- [FIX] Updates for ninemanga.com (improved/updated algorithms)
+- [FIX] Updates for mangapark.me (improved/updated algorithms)
+- [FIX] Updates for japscan.com (improved/updated algorithms)
+- [FIX] Updates for g.e-hentai.org (faster downloading for "offensive for all" galleries)
+- [FIX] Updates for g.e-hentai.org ("pages missing" error after page 39 on "offensive for all" galleries)
+- [FIX] Updates for tsumino.com (updated algorithms)
+- [FIX] Updates for imagefap.com (occassional "Pages missing" errors)
+- [FIX] Updates for kingsmanga.net (updated algorithms)
+- [FIX] Updates for mangafox.me (page-grabbing error on last chapter)
+- [FIX] Updates for furaffinity.net (updated algorithms, added login support)
+- [FIX] Updates for erolord.com (updated algorithms)
+- [FIX] Updates for lolhentai.net (updated algorithms)
+- [FIX] Updates for yaoifox.com (updated algorithms/URL to yaoi.space)
+- [FIX] Updated mangafox.me watermark detections
+- [FIX] Scripts could not access Cloudflare-protected sites
+- [FIX] Fixed error that could occur when loading settings in certain regions
+- [FIX] Fixed problem in Windows 10 where the download directory folder browser dialog would only show Desktop
+- [FIX] Improved handling of very long paths (>255 characters)
+- [FIX] "Open in Reader" context menu button caused crash
+- [FIX] If "Wait for downloads to finish" was enabled, the program wouldn't close after clicking "Cancel"
+- [FIX] HTTP requests would fail if retry value set to 0
+- [FIX] Program would crash if it didn't have write privileges for config file (now shows warning)
+- [FIX] Changed how downloads are handled; downloads should be quicker and less error-prone
+- [FIX] Decreased memory footprint (fixed a memory leak)
+- [FIX] Fixed bug where window would be invisible upon next run if closed while minimized
+- [FIX] Fixed crash when using "Show Stats" when downloads have custom chapter range
+- [FIX] Conversions didn't work properly when using custom tokens
+- [FIX] Fixed crash when trying to open the download filter while it's already open
+- [FIX] Updating an existing ZIP archive corrupted last file in the archive
+- [NEW] Added support for hentai.cafe
+- [NEW] "Non-H" tag was not properly applied on some sites
+- [NEW] Added support for nxt-comics.com
+- [NEW] Added support for hentaihere.com
+- [NEW] Added (experimental) support for tsumino.com
+- [NEW] Added (general)support for imgchili.net/imgchili.com galleries
+- [NEW] Added support for hgamecg.com
+- [NEW] Added support for mahenku.blogspot.com
+- [NEW] Added support for vesquare.jinja-modoki.com
+- [NEW] Added support for aryion.com
+- [NEW] Added support for asmhentai.com
+- [NEW] Added support for doujinshi.rocks
+- [NEW] Added support for nekopost.net (NON_H)
+- [NEW] Added support for wiemanga.com (NON-H)
+- [NEW] Added support for fumanhua.net (NON-H)
+- [NEW] Added support for neumanga.tv (NON-H)
+- [NEW] Added support for tuku.cc (NON-H)
+- [NEW] Added support for mangahop.com (NON-H, formerly mangacap.com)
+- [NEW] Added support for openmanga.co (NON-H)
+- [NEW] Added support for mymangaonline.com (NON-H)
+- [NEW] Added support for submanga.org (NON-H)
+- [NEW] Added support for truyentranhonline.vn (NON-H)
+- [NEW] Added support for mymanga.me (NON-H)
+- [NEW] Added support for mangas.net.br (NON-H)
+- [NEW] Added support for mangasproject.zlx.com.br (NON-H)
+- [NEW] Added support for mangareader.zlx.com.br (NON-H)
+- [NEW] Added support for niceoppai.net (NON-H)
+- [NEW] Added support for bezdalfamily.net (NON-H)
+- [NEW] Added support for mangathai.com (NON-H)
+- [NEW] Added support for oremanga.com (NON-H)
+- [NEW] Added support for nipponanime.net (NON-H)
+- [NEW] Added support for mangadenizi.com (NON-H)
+- [NEW] Added support for mintmanga.com (NON-H)
+- [NEW] Added support for webtoons.com (NON-H)
+- [NEW] Added support for tapastic.com (NON-H)
+- [NEW] Added support for gomanga.co (NON-H)
+- [NEW] Added support for box-manga.com (NON-H)
+- [NEW] Added support for mangakoi.com (NON-H)
+- [NEW] Added support for mangapark.xyz (NON-H)
+- [NEW] Added support for lonemanga.com (NON-H)
+- [NEW] Added support for casanovascans.com (NON-H)
+- [NEW] Added support for read.yagami.me (NON-H)
+- [NEW] Added image formatting options (Settings > Downloads > Image Format...)
+- [NEW] Added context menu option to delete downloaded files (removes files, resets download)
+- [NEW] Added option to close to tray/minimize to tray
+- [NEW] Added option to specify reader directory
+- [NEW] Program now remembers window location
+- [NEW] Added auto-sort option (downloads sorted as new items are added to queue)
+- [NEW] Added duplication-detection option
+- [NEW] Can now control casing of information labels in info file
+- [NEW] Added ability to choose what happens on double-click (open folder, open in reader, nothing)
+- [NEW] Added %CHAPTER#% page formatting token
+- [NEW] Added %VOLUME#% chapter formatting token
+- [NEW] Added option to start chapter numbering at 1
+- [NEW] Added option to attempt to parse chapter number from chapter title (instead of numbering them sequentially)
+- [NEW] Added ability to mark cookies as "Persistent" (retained when program is closed)
+- [MISC] Downloading Fakku Books/Subscription content has been disabled due to a request from FAKKU
+- [MISC] Updates to Cookie Editor; it's now more intuitive to use
+- [MISC] Favicon requests are now sent with cookies
+- [MISC] "Show Stats" is now a persistent setting
+- [MISC] Updated URLs to reflect domain change
+- [MISC] Minor UI fixes (font changes, etc)
+- [MISC] Crashes now generate log files
+- [MISC] Various fixes and optimizations
+- [MISC] Added a completion percentage to stat display
+- [MISC] Program is now better at detecting failed pages
+- [MISC] Borderless dialog windows have fade-in animation
+- [MISC] Added "Choose Chapters..." to the context menu
+- [MISC] Scheduler no longer requires end time
+- [MISC] Custom tokens are now parsed before default tokens (to enable overriding of default tokens)
+- [MISC] Custom tokens are now able to be used for chapter title formatting
+- [MISC] Titles and custom tokens now have automatic encoding-repair
+- [MISC] Image formatting settings now do not affect GIFs
+
+[1.14.9.32]
+- [FIX] Updates for hitomi.la (improved/updated algorithms)
+- [FIX] Updates for senmanga.com/ero.senmanga.com (improved/updated algorithms)
+- [FIX] Updates for g.e-hentai.org/exhentai.org (improved 509 error detection)
+- [FIX] Updates for g.e-hentai.org/exhentai.org (program wouldn't make use of enhanced viewing privilages)
+- [FIX] Updates for 8muses.com (improved/updated algorithms)
+- [FIX] Updates for manga.life (improved/updated algorithms)
+- [FIX] Updates for hakihome.com (improved/updated algorithms)
+- [FIX] Updates for hentairules.net (improved/updated algorithms)
+- [FIX] Updates for fakku.net (experimental download support for paid content)
+- [FIX] Updates for mangafox.me (updated watermark removal algorithm)
+- [FIX] Updates for mangadoom.co (improved/updated algorithms)
+- [FIX] Updates for taadd.com (improved/updated algorithms)
+- [FIX] Updates for ninemanga.com (improved/updated algorithms)
+- [FIX] Updates for deliciousmangas.com (improved/updated algorithms)
+- [FIX] Updates for mangareader.net (improved/updated algorithms)
+- [FIX] Updates for pururin.com (returned blank artist info for doujins with multiple artists)
+- [FIX] Updates for hentai.ms (improved/updated algorithms)
+- [FIX] Fixed problem where paid users could potentially see the "Downloads remanining" text (did not affect downloading)
+- [FIX] Fixed occassional "pages missing" error after pausing/unpausing a download
+- [FIX] Various stability fixes/improvements
+- [FIX] Fixed bug where daily download limit would not reset for users using B.E. time
+- [FIX] Fixed bug where an error could occassionally be encountered when sorting by 'Pages'
+- [NEW] Added support for kimi-h.net
+- [NEW] Added support for truyen18.org
+- [NEW] Added support for comicspornogratis.es
+- [NEW] Added support for ihentaimanga.com
+- [NEW] Added support for sukahentai.com
+- [NEW] Added support for doujinshentai.me
+- [NEW] Added support for hentaicorner.fr
+- [NEW] Added support for unlimited.fap.works
+- [NEW] Added support for gs-uploader.jpn.org
+- [NEW] Added support for vesquare.jinja-modoki.com
+- [NEW] Added support for aryion.com
+- [NEW] Added support for japscan.com (NON-H)
+- [NEW] Added support for gameofscanlation.moe (NON-H)
+- [NEW] Added support for yomanga.co (NON-H)
+- [NEW] Added support for manga.madokami.com (NON-H)
+- [NEW] Added support for reader.shoujosense.com (NON-H)
+- [NEW] Added support for truyentranh8.net (NON-H)
+- [NEW] Added support for manga.anitr.com (NON-H)
+- [NEW] Added support for manga-tr.com (NON-H)
+- [NEW] Added %MTITLE% chapter folder formatting token (manga title)
+- [NEW] Added %TAGSORT% folder formatting token (used to specify where to apply tag organization subfolders)
+- [NEW] Added option to automatically remove mangafox.me watermark
+- [NEW] Major updates to the scripting system; see help documentation on website
+- [NEW] It is now possible to define tokens using scripts
+- [NEW] It is now possible to view current session download stats via "Help > View Stats"
+- [NEW] Added "Downloading" as a new default download status
+- [MISC] Updated Indonesian language file (courtesy of Stemzha)
+- [MISC] Download list is saved when items are added
+- [MISC] Existing .ZIP/.CBZ archives are now updated instead of overwritten
+- [MISC] Various bug fixes and optimizations
+
+[1.14.9.31]
+- [FIX] Updates for perveden.com/mangaeden.com (improved/updated algorithms)
+- [FIX] Updates for deviantart.com (smaller versions of "mature" images were downloaded)
+- [FIX] Updates for deviantart.com (added login support; added option to always download at original size)
+- [FIX] Updates for mangahere.co (manga with only one chapter showed error; updated algorithms)
+- [FIX] Updates for nhentai.net (updated page-grabbing algorithm)
+- [FIX] When converting to .RAR/.CBR and deleting downloaded files, archive would not be created 
+- [FIX] Rearranging downloads could randomly cause downloader to confuse two manga with one another
+- [FIX] When using a folder formatting string with multiple directories, directories could potentially contain double backslashes for blank tokens
+- [FIX] Fixed major problem where creating archives with subfolders would result in empty archives
+- [FIX] Information text files were not included in archives
+- [FIX] Fixed potential crash when using custom directory structure containing invalid characters
+- [FIX] General stability updates, various bug fixes
+- [FIX] Fixed problem where daily download limit would not reset for some users
+- [FIX] Naming tokens that include vertical lines were being "fixed" incorrectly
+- [FIX] Fixed bug when loading window size from settings where columns would not be resized
+- [FIX] Fixed bug where program would hang after switching displays
+- [FIX] Fixed unhandled exception that occurred when updating from a release prior to release 12 to release 13/14
+- [FIX] Updates for Cloudflare-protected sites
+- [FIX] Fixed problem where the program would not start for some users
+- [FIX] Fixed "Some failed" error that occurred when downloading from sites with Cloudflare protection with file size verification enabled
+- [FIX] "Reset all failed" did not reset downloads with failed pages
+- [FIX] "Wait on 509" time for g.e-hentai.org was not saved to settings
+- [FIX] Specifying a page range would result in "Invalid Page Count" error
+- [FIX] If downloads are waiting (bandwidth restrictions) their waiting status can be removed by resetting them
+- [FIX] Downloads will automatically start waiting if another download from the same domain is waiting
+- [NEW] Added support for zkomik.com
+- [NEW] Added support for saruu.sextgem.com
+- [NEW] Added support for komikhentai.net
+- [NEW] Added support for hentainesia.com
+- [NEW] Added support for readmanga.me (NON-H)
+- [NEW] Added support for adultmanga.ru (NON-H)
+- [NEW] Added support for selfmanga.ru (NON-H)
+- [NEW] Added support for twcomic.com (NON-H)
+- [NEW] Added support for mangaku.web.id (NON-H)
+- [NEW] Added support for manga.life (NON-H)
+- [NEW] Added support for comicmaya.com (NON-H)
+- [NEW] Added support for mangaindo.id (NON-H)
+- [NEW] Added support for vechai.info (NON-H)
+- [NEW] Added option to only convert successfully-completed downloads (enabled by default)
+- [NEW] Added option to save all chapter pages to a single folder (instead of creating subfolders)
+- [NEW] Added "%TAGS%" page/folder-naming token
+- [NEW] Added download filter (Downloads > Filter...)
+- [NEW] Added option to fix long chapter titles on bato.to (i.e., chapters ending with "...")
+- [MISC] Remembers window dimensions
+- [MISC] Added "daily downloads remaining" display
+- [MISC] Resetting a download no longer resets selected pages/chapters
+
+[1.14.9.30]
+- [FIX] Updates for deviantart.com (occasional duplicates, download at original size, download GIFs)
+- [FIX] Updates for g.e-hentai.org/exhentai.org (uncommon error where wrong pages would be downloaded; minor artist extraction bug)
+- [FIX] Updates for g.e-hentai.org (pages were not properly retrieved for some users)
+- [FIX] Updates for mangatown.com (retrieves author/artist/desc information)
+- [FIX] Updates for pururin.com (added Cloudflare protection bypass; can be toggled under Site-Specific Settings)
+- [FIX] Updates for pururin.com (fixed large file size of downloaded images) 
+- [FIX] Updates for 77mh.com (chapter-grabbing failed on some manga)
+- [FIX] Updates for mangahere.co (improved/updated algorithms)
+- [FIX] UI now looks much better in high contrast mode
+- [FIX] Updates for mangatraders.org (updated page-grabbing algorithm)
+- [FIX] Pixiv.net login settings were not saved
+- [FIX] Fixed potential crash when viewing manga with blank chapters in Chapter Chooser
+- [NEW] Updates for nhentai.net (can add search pages to the download list)
+- [NEW] Added support for hentairead.com
+- [NEW] Added support for 2hentai.com
+- [NEW] Added support for hentaibox.net
+- [NEW] Added support for narutobase.net (NON-H)
+- [NEW] Added support for mangabase.co (NON-H)
+- [NEW] Added support for mangacat.me (NON-H)
+- [NEW] Added support for mangatown.net (NON-H)
+- [NEW] Added support for readpanda.net (NON-H)
+- [NEW] Added support for mangachrome.com (NON-H)
+- [NEW] Added support for mangacrazy.net (NON-H)
+- [NEW] Added support for mh160.com (NON-H)
+- [NEW] Added support for academyvn.com (NON-H)
+- [NEW] Added support for mangaframe.com (NON-H)
+- [NEW] Added support for manga-lib.pl (NON-H)
+- [NEW] Added support for isharemanga.com (NON-H)
+- [NEW] Added support for i-komik.com (NON-H)
+- [NEW] Option to wait a specified amount of time when receiving 509 errors on g.e-hentai.org/exhentai.org
+- [NEW] Reloads image on g.e-hentai.org/exhentai.org if image is unavailable
+- [NEW] Artist name parsing/title removal is now optional on g.e-hentai.org/exhentai.org
+- [NEW] Option to verify file size after download
+- [NEW] Added pause button to toolbar
+- [NEW] Added "move to top" and "move to bottom" buttons to toolbar
+- [NEW] Formatting strings are no longer automatically "fixed"; backslashes are allowed in folder strings
+- [MISC] Updated Chinese Simplified/Traditional language files (courtesy of Mengpangwang)
+- [MISC] Various UI fixes
+- [MISC] "Reset All Failed" now also resets downloads with failed pages
+
+[1.14.9.29]
+- [FIX] Updates for kissmanga.com (updated chapter-grabbing algorithm)
+- [FIX] Updates for mangacow.co (updated page-grabbing algorithm)
+- [FIX] Updates for readmanga.today (updated page-grabbing algorithm)
+- [FIX] Updates for g.e-hentai.org (could not download from user-only galleries)
+- [FIX] Updates for mangabb.eu (updated URL from mangabb.me)
+- [FIX] Improved/fixed bugs in activation system
+- [FIX] Fixed problem with URLs containing directories ending with periods
+- [FIX] Updater did not delete update files correctly
+- [NEW] Added support for hentaihunt.net
+- [NEW] Added support for hentaistack.com
+- [NEW] Added support for ero-senin.pl
+- [NEW] Added support for baramangaonline.com
+- [NEW] Added support for iutruyentranh.com (NON-H)
+- [NEW] Added support for otakumole.ch (NON-H)
+- [NEW] Added support for pixiv.net (NON-H)
+- [NEW] Added support for mangascouts.org (NON-H)
+- [NEW] Added support for komikid.com (NON-H)
+- [NEW] Added support for manga-tube.org (NON-H)
+- [NEW] Added support for mabuns.web.id (NON-H)
+- [NEW] Added support for mangacankomik.com, mangacankomik.net, mangacankomik.blogspot.com, and mangacanblog.com (NON-H)
+- [NEW] Added support for pecintakomik.com (NON-H)
+- [NEW] Added support for centraldemangas.org (NON-H)
+- [NEW] Added support for mangavadisi.org (NON-H)
+- [NEW] Added support for mangaturk.com (NON-H)
+- [NEW] Added support for acelemanga.tk (NON-H)
+- [NEW] Added support for manga24h.com (NON-H)
+- [NEW] Added support for vnsharing.info (NON-H)
+- [NEW] Added support for mangapt.net (NON-H)
+- [NEW] Added support for mangafreak.me (NON-H)
+- [NEW] Can now edit user agent string
+- [NEW] Can now manually edit/add login cookies (useful if automatic login doesn't work)
+- [NEW] Improved login system; logins now support proxies
+- [NEW] Added language support for Arabic
+- [NEW] Added Chapter Tracker
+- [MISC] Various UI fixes
+- [MISC] Refactored sections of code
+- [MISC] Updated language file version, 90% of UI now translatable
+
+[1.14.9.28]
+- [NEW] Added support for m-c-x.ohentai.com
+- [NEW] Added support for watchhentaistream.com
+- [NEW] Added support for animextremist.com (NON-H)
+- [NEW] Added support for mangachapter.me (NON-H)
+- [NEW] Added support for mentalmanga.com (NON-H)
+- [NEW] Added support for mymanga.io (NON-H)
+- [NEW] Added support for s2smanga.com (NON-H)
+- [NEW] Can now create chapter range by selecting chapters by name (Edit Information > Choose)
+- [NEW] Can now alter how info.txt files are formatted (Settings > Save to > Information > Edit..)
+
+[1.13.9.28]
+- [FIX] Updates for hentairules.net (some older galleries could not be downloaded)
+- [FIX] Updates for hentaifromhell.org (updated to reflect Imagebam changes)
+- [FIX] Updates for thehentaiworld.com (doujins could not be downloaded)
+- [FIX] Updates for g.e-hentai.org/exhentai.org (downloading at original size would fail if no original size link)
+- [FIX] Updates for g.e-hentai.org/exhentai.org (.jpg file extension was always assumed due to previous update)
+- [FIX] Updates for bato.to (couldn't download single-page doujins; grabs additional info)
+- [FIX] Unable to open old download lists
+- [FIX] Fixed potential infinite loop when grabbing tags
+- [FIX] Fixed sorting by page count
+- [NEW] Updates for g.e-hentai.org/exhentai.org (can now download images at original size)
+- [NEW] Updates for manga-joy.com (updated page-grabbing algorithm)
+- [NEW] Updates for mangafox.me (updated page-grabbing algorithm)
+- [NEW] Updates for myreadingmanga.info (updated page-grabbing algorithm)
+- [NEW] Updates for pornxxxcomics.com (updated to reflect site changes)
+- [NEW] Updates for mangapark.com (URL is now mangapark.me)
+- [NEW] Added support for nxtcomics.com
+- [NEW] Added support for hentailxers.blogspot.com
+- [NEW] Added support for hentaigamecg.com
+- [NEW] Added support for hmangasearcher.com
+- [NEW] Added support for hentai4manga.com
+- [NEW] Added support for hcomicbook.com
+- [NEW] Added support for manga.ae (NON-H)
+- [NEW] Added support for al-manga.com (NON-H)
+- [NEW] Added support for manga-ar.net (NON-H)
+- [NEW] Added support for mangakaka.com (NON-H)
+- [NEW] Added support for readmanga.today (NON-H)
+- [NEW] Added support for mangacap.com (NON-H)
+- [NEW] Added support for mangaforall.com (NON-H)
+- [NEW] Added stop mark, to stop downloading at specified point
+- [NEW] Option to clear completed downloads automatically
+- [NEW] Option to backup download list at program start
+- [NEW] Can start/run downloads without GUI via CLI (experimental)
+- [NEW] Can now save manga info to archive comments (ZIP/CBZ only)
+- [NEW] Updated ZIP/CBZ creation algorithm
+- [MISC] Long URLs are shown on status bar when adding to list (truncated)
+- [MISC] "failed.txt" file is deleted if download is completed successfully
+- [MISC] Improved RAM management
+- [MISC] Improved proxy support
+- [MISC] Remembers column widths
+- [MISC] Fixed various column organization issues
+- [MISC] Fixed status bar issues
+- [MISC] Fixed threading issues
+- [MISC] Preparation for consolidation of XP/WIN(7/8) versions
+
+[1.13.9.27]
+- [FIX] Updates for exhentai.org (not all images downloaded for large galleries)
+- [FIX] Updates for kissmanga.com (some manga showed chapter count as 0)
+- [FIX] Updates for simply-hentai.com (images sometimes repeated)
+- [FIX] Updates for simply-hentai.com (can now add entire series to queue)
+- [FIX] Updates for hitomi.la (URLs with escape codes would fail to download)
+- [FIX] Updates for hitomi.la (Some users report corrupted images when downloading from https version of site)
+- [FIX] Updates for luscious.net (Sometimes thumbnails would be downloaded; occassional page-grabbing error)
+- [FIX] Updates for dochentai.com (updated to reflect site updates)
+- [FIX] Updates for perveden.com (incorrect chapter count; added artist/desc info)
+- [FIX] Updates for mangaeden.com (couldn't download; added artist/desc info)
+- [FIX] Updates for mangafox.me ("Some failed" message showed sometimes even if no pages failed)
+- [FIX] Updates for pururin.com ("%ORIG%" started pages at 0 instead of 1)
+- [FIX] Updates for hentairules.net (some galleries would not download)
+- [FIX] Updates for fakku.net (login support in light of recent site changes; option to select # of tag pages to browse)
+- [FIX] ZIP conversion in XP version not working properly
+- [FIX] Editing ranges for partially-downloaded item now resets progress
+- [FIX] Wrong %ORIG% when downloading from g.e-hentai.org/exhentai.org
+- [FIX] Crash when writing text information files if download fails entirely
+- [FIX] Updated Spanish language translation
+- [NEW] Added support for redhawkscans.com (NON-H)
+- [NEW] Added support for mangashare.com (NON-H)
+- [NEW] Added support for unixmanga.co (NON-H)
+- [NEW] Added support for thespectrum.net (NON-H)
+- [NEW] Added support for mangalator.ch (NON-H)
+- [NEW] Added support for mangamint.com (NON-H)
+- [NEW] Added support for mangasee.co (NON-H)
+- [NEW] Added support for mangacow.co (NON-H)
+- [NEW] Added support for japan-shin.com (NON-H)
+- [NEW] Added support for guromanga.com (NON-H)
+- [NEW] Added support for 17kk.cc (NON-H)
+- [NEW] Added support for comicmad.com (NON-H)
+- [NEW] Added support for hellocomic.com (NON-H)
+- [NEW] Added login support for hentaichan.ru
+- [NEW] Added option to create text file with missing/failed pages (if any)
+- [NEW] Added CBR conversion support (WinRAR required)
+- [NEW] Added CBZ conversion support to XP version
+- [NEW] Added ability to choose visible columns
+- [NEW] Paused manga retains grabbed-pages
+- [NEW] Option to start page count at 1
+- [NEW] Added folder naming token %PAGES%
+- [NEW] Program can now run in system tray 
+- [NEW] Right-click selects rows
+- [NEW] Double-click opens download directory
+- [MISC] Reworked login system; logins can be retried if failed
+- [MISC] "Completed (Some Failed)" message shows at end if any pages fail
+- [MISC] Increased max simultaneous downloads to 20
+- [MISC] Retitled main window to "HDoujin Downloader"
+- [MISC] Fixed tab order
+- [MISC] UI items resize to fit when changing language (needs work)
+
+[1.13.9.26]
+- [FIX] Updates for pornsource.org (sometimes downloaded thumbnails)
+- [FIX] Updates for porncomix.wf (sometimes downloaded thumbnails)
+- [FIX] Updates for g.e-hentai.org (403 errors, not all images downloaded for large galleries)
+- [FIX] Updates for g.e-hentai.org (retrieves artist information)
+- [FIX] Updates for exhentai.org (retrieves artist information)
+- [FIX] Updates for exhentai.org (some galleries could not be added)
+- [FIX] Updates for simply-hentai.com (stuck on page-grabbing for some doujins)
+- [FIX] Updates for zizki.com (updated to reflect site updates)
+- [FIX] Potential error when converting to PDF through context menu if incorrect dll is found
+- [FIX] PDF default conversion setting not saved
+- [FIX] Error when adding from sites with description support when description is empty
+- [NEW] Added support for nude-moon.com
+- [NEW] Added support for hentaichan.ru
+- [NEW] Added support for comixhere.ru
+- [NEW] Added support for comicsfromhell.org
+- [NEW] Now possible to customize folder names
+- [NEW] Added %AUTHOR||ARTIST% and %ARTIST||AUTHOR% tokens
+- [NEW] Added "Stop All Below" to context menu
+- [MISC] Removes URL from input box even if item already exists in queue
+- [MISC] Default download delay on g.e-hentai.org is 2 seconds
+
+[1.13.9.25]
+- [FIX] Updates for luscious.net (page-grabbing error)
+- [FIX] Updates for zizki.com (page count zero)
+- [FIX] Updates for pururin.com (blank description when N/A)
+- [FIX] Updates for simply-hentai.com (updated to reflect site updates)
+- [FIX] Updates for g.e-hentai.org (page URLs in comments could cause problems)
+- [FIX] 'ScriptsEnabled' would revert to False on restart
+- [NEW] Supports proxies with username/password authentication
+- [NEW] Added support for pornsource.org
+- [NEW] Added support for furaffinity.net
+- [NEW] Added support for crazymanga.me (NON-H)
+- [NEW] Added support for mangastream.com (NON-H)
+- [NEW] Added desc/author/artist support to nhentai.net, hbrowse.com, hitomi.la
+- [NEW] Can now specify how many times to retry failed downloads
+- [NEW] Added %AUTHOR% and %ARTIST% page-naming tokens
+- [NEW] Added PDF conversion support (pdfsharp.dll required)
+- [MISC] Added description/author/artist information to more sites
+- [MISC] Underscores in tags now replaced with spaces
+- [MISC] Improved RAM management
+- [MISC] Script engine updated (see Script Editor changelog for details)
+
+[1.12.9.25]
+- [FIX] Updates for luscious.net (invalid page count on some URLs)
+- [FIX] Updates for mangapanda.com (Incorrect page count)
+- [FIX] Updates for hentaifromhell.org (Couldn't download from "gallery2" galleries)
+- [FIX] Updates for mangafox.me (Only half of pages downloaded)
+- [FIX] Updates for mangafox.me (Single-chapter manga wouldn't download)
+- [FIX] Updates for hentai2read.com (Updated to reflect site updates)
+- [FIX] Updates for hentairules.net (Incorrect page count)
+- [FIX] Updates for mangahere.co (Incorrect page images)
+- [FIX] Updates for hitomi.la (Couldn't get pages from new reader URLs)
+- [FIX] Information editor does not strip invalid characters from titles
+- [FIX] Tag files wouldn't be saved if doujin had invalid characters in title
+- [NEW] Added support for yaoifox.com
+- [NEW] Added support for vercomicsporno.com
+- [NEW] Added support for porncomics.info
+- [NEW] Added support for hipercool.net
+- [NEW] Added support for erolord.com
+- [NEW] Added support for ecchitail.blogspot.com (NON-H) 
+- [NEW] Added support for animagoldd.blogspot.com.br (NON-H) 
+- [NEW] Added support for animeai.net (NON-H) 
+- [NEW] Now supports author, artist, and description
+- [NEW] Can save info.txt files containing doujin information
+- [MISC] No longer uses system proxy by default
+- [MISC] Minimum number of simultaneous downloads is 1
+
+[1.11.9.25]
+- [FIX] Updates for luscious.net (Updated to reflect site updates)
+- [FIX] Updates for myreadingmanga.info (Some doujins shown as having 0 pages)
+- [FIX] Updates for g.e-hentai.org  (Updated to reflect site changes)
+- [NEW] Site-specific settings for luscious.net (image server, image size)
+- [NEW] Added ability to use g.e-hentai.org account
+- [NEW] Added support for mangago.com (NON-H) 
+- [NEW] Added support for deviantart.com (NON-H)
+- [NEW] Added support for mangabox.me (NON-H)
+- [NEW] Added support for mangahead.com (NON-H)
+- [NEW] Added support for unionmangas.com.br (NON-H)
+- [NEW] Added support for gao-subs.com (NON-H)
+- [NEW] Added support for mangafap.com
+- [NEW] Added support for lolhentai.net
+- [NEW] Added support for muchohentai.com
+- [NEW] Surprise!
+
+[1.11.9.24]
+- [FIX] Updates for senmanga.com (images wouldn't download)
+- [FIX] Updates for hitomi.la (Updated to reflect site updates)
+- [FIX] Updates for hentaii.xxx (Updated to reflect site updates)
+- [NEW] Added support for mangasaurus.com (NON-H)
+- [NEW] Added support for ninemanga.com (NON-H)
+- [NEW] Added support for taadd.com (NON-H)
+
+[1.11.9.23]
+- [FIX] Program would have problems opening certain directories
+- [FIX] Program would not properly process scripts for sites outside support list
+- [FIX] Updates for zizki.com (Updated to reflect site updates)
+- [FIX] Updates for nhentai.net (Inaccurate page count)
+- [NEW] Added support for porncomix.re
+- [NEW] Added support for pornxxxcomics.com
+- [NEW] Added support for xxcomics.net
+- [NEW] Added support for 8muses.com
+- [NEW] Added support for mangatraders.org (NON-H)
+- [NEW] Added support for eatmanga.com (NON-H)
+- [NEW] Added support for tumblr.com (NON-H) (Generic support; should work with most doujin blogs)
+- [MISC] "Attempt to fix paths longer than 255 characters" is now enabled by default
+
+[1.11.9.22]
+- [FIX] Program crashed when trying to download a chapter outside the array of chapters (now shows error)
+- [FIX] Program would not open directories containing commas when opened via "Open Directory"
+- [FIX] Updates for mangahere.co (Couldn't download some manga when added from chapter listings)
+- [FIX] "Help" button did not open help page (as of version 1.8.9.18)
+- [FIX] Can now successfully decode GZIP-compressed web responses (should fix all connectivity issues on  bato.to, pururin.com, and kissmanga.com)
+- [FIX] Replacing special characters with underscores prevented long paths from being truncated properly
+- [NEW] It is now possible to manually add site support through the scripting feature
+- [NEW] Added support for doujin-th.com
+- [NEW] Added support for hdarkzone.com
+- [NEW] Added support for 2th.me
+- [NEW] Added support for dojin2.com
+- [NEW] Added support for holylolikingdom.net (NON-H)
+- [NEW] Added support for kingsmanga.net (NON-H)
+- [NEW] Added support for mangajoy.com (NON-H)
+- [NEW] Added support for anymanga.com (NON-H)
+
+[1.10.9.22]
+- [FIX] Added error handling in the event of an invalid page count
+- [FIX] Couldn't check for updates
+- [FIX] Chapters containing encoded invalid characters would cause program to crash
+- [FIX] Downloads would sometimes hang when zipping individual chapters
+- [FIX] Updates for hentai.ms (updated page-grabbing code)
+- [FIX] Updates for g.e-hentai.org (Page grabbing error on 'Offensive For All' galleries in certain regions)
+- [FIX] Updates for animephile.com (Pages greater than 99 would not download)
+- [FIX] Updates for bato.to (Can now specify preferred language under Site-Specific Settings)
+- [FIX] Updates for fakku.net (Updated to reflect site updates)
+- [FIX] Updates for animephile.com (Can now download galleries, and sets of volumes)
+- [NEW] Added language support for Russian
+- [NEW] Added support for porncomix.wf
+- [NEW] Added support for hentai.pink
+- [NEW] Added support for blogtruyen.com (NON-H)
+- [MISC] Added release info to update version information
+
+[1.10.9.21]
+- [FIX] Updates for kissmanga.com (inaccurate chapter count, added tag support)
+- [FIX] Updates for kissmanga.com (updated page-grabbing code)
+- [FIX] Added user agent string to web requests
+- [FIX] 'Abort URL Processing' sometimes unusuable (when it should be)
+- [FIX] The "move files to new directory" dialog would show up even if download directory has not been changed
+- [FIX] Tags were deleted when editing multiple entries
+- [NEW] Added download scheduler (Settings > Downloads > Queuing > Scheduling...)
+- [NEW] Added ability to choose page/chapter ranges to download (Right-Click > Edit Information)
+- [NEW] Added support for pbx.wwoec.com
+
+[1.9.9.21]
+- [FIX] Updates for zizki.com (updated page-grabbing process)
+- [FIX] Updates for hitomi.la (couldn't download game CGs/artist CGs)
+- [NEW] Added support for brasilhentai.com
+- [NEW] Added support for tusmangas.net (NON-H)
+- [NEW] Added support for mangatank.com (NON-H)
+- [NEW] Added support for v2012.mangapark.com (NON-H)
+- [NEW] Added support for br.mangahost.com (NON-H)
+
+[1.9.9.20]
+- [FIX] Updates for thedoujin.com (couldn't add doujins without titles)
+- [FIX] Updates for hentaifromhell.org (added tag support)
+- [FIX] Updates for hentaifromhell.org (updated title-grabbing process)
+- [FIX] Updates for hentaifromhell.org (only first five pages downloaded)
+- [FIX] Updates for hitomi.la (incorrect title when adding manga/CGs)
+- [FIX] Now compliant with languages using non-ASCII characters
+- [FIX] Fail-safe added during chapter conversion to prevent accidental deletion
+- [FIX] Long paths would sometimes be ignored
+- [FIX] Minor UI modifications
+- [FIX] Updated language file format; additional elements of the UI now translatable
+- [FIX] Error-handling for when selected language file no longer exists
+- [NEW] Added language support for Chinese (Traditional)
+- [NEW] Added language support for Chinese (Simplified)
+- [NEW] Added language support for Japanese
+- [NEW] Added 'Copy URL' to context menu; can be used to copy lists of URLs
+- [NEW] Added support for myhentaicomics.com
+- [NEW] Added support for hhhhhh.eu
+- [NEW] Added support for bato.to (NON-H)
+
+[1.9.9.19]
+- [FIX] Updates for mangareader.net (updated to work with alternate page URL format)
+- [FIX] Program crashes when "Pages missing" error is encountered (since previous update)
+- [FIX] Duplicate tags are now ignored
+- [FIX] Chapters containing special characters would not be converted individually
+- [FIX] Updates for mangatown.com (Updated title parsing)
+- [FIX] Abort chapter conversion when chapter title is blank
+- [FIX] Chapters containing encoded invalid characters would cause program to crash
+- [NEW] Added support for manga.hakihome.com
+- [NEW] Added support for hitomi.la
+- [NEW] Added support for imgur.com
+
+[1.9.9.18]
+- [FIX] Updates for luscious.net ("page collection error" occurred occured with some doujins)
+- [FIX] Updates for luscious.net (“page collection error” occurred when downloading image galleries)
+- [FIX] Updates for mangatown.com (incorrect chapter names; pages sometimes missing)
+- [FIX] Updates for thedoujin.com (heavy optimization during page collection)
+- [FIX] Prevented potentional errors during conversion
+- [FIX] Setting "Bypass chapter formatting if only one chapter" changed incorrect setting
+- [NEW] Option to replace special characters with underscores (Under Save to > Naming)
+- [NEW] Option to convert chapters individually (Under Naming > Chapter Settings...)
+- [NEW] Ability to define chapter folder structure (Under Naming > Chapter Settings...)
+- [NEW] New page naming token %ORIG% -- Replaced with original file name
+- [NEW] Added support for mangayes.com (NON-H)
+- [NEW] Added support for managseries.org
+- [NEW] Added support for 69ani.me
+- [NEW] Added support for e-hentai.org (classic)
+- [NEW] Added support for imagefap.com
+- [NEW] Added support for omorashi.org
+- [NEW] Added support for smdc-translations.com
+- [MISC] Entering invalid page naming structure reverts to previous setting
+- [MISC] Entered tags are parsed for readability
+
+[1.8.9.18]
+- [FIX] Updates for g.e-hentai.org (problem occurred in some regions when grabbing page count)
+- [FIX] Updates for mangahere.co (page-grabbing error after downloading last chapter)
+- [FIX] Updates for nhentai.net (zero page count when added to queue from viewing page)
+- [FIX] Updates for hentaibox.fr (couldn't add doujins due to layout modifications)
+- [FIX] Updates for luscious.net ("pages missing" error occurred)
+- [NEW] Added support for animea.net (NON-H)
+- [NEW] Added support for ecchi-manga.net (NON-H)
+- [NEW] Added support for mangawall.com (NON-H)
+- [NEW] Added support for yurimanga.net
+
+[1.8.9.17]
+- [FIX] Updates for myreadingmanga.info (updated for new layout, added tag support)
+- [FIX] Updates for g.e-hentai.org (updated download process for "Offensive for everyone" galleries)
+- [FIX] Updates for mangafox.me (last page downloaded twice)
+- [NEW] Added support for goodmanga.net (NON-H)
+- [NEW] Added support for mangapark.com (NON-H)
+- [NEW] Added support for senmanga.com (NON-H)
+
+[1.8.9.16]
+- [NEW] Added button for favicon directory selection
+- [FIX] Updates for vanillahentai.com (couldn't add doujins due to layout modifications)
+- [FIX] Updates for hentaimangaonline.com (updated title retrieval)
+- [FIX] Updates for hentaimangaonline.com (added tag support)
+- [MISC] Added additional tooltips
+- [MISC] Minor UI adjustments
+- [MISC] Internal changes for XP version
+
+[1.8.9.15]
+- [FIX] Fixed potential unhandled exception when adding URLs via command line parameters
+- [FIX] Favicons would not be downloaded (as of 1.8.9.14)
+- [NEW] Ability to specify how many pages to browse when adding from gallery listings on g.e-hentai.org (Site Specific Settings)
+
+[1.8.9.14]
+- [FIX] Updates for nhentai.com (thumbnails would be downloaded for some doujins)
+- [FIX] Potential error when aborting URL processing
+- [FIX] Updates for mangahere.co (added tag support)
+- [FIX] Updates for mangahere.co (some doujins wouldn't download properly)
+- [NEW] Added support for egscans.com (NON-H)
+- [NEW] Added language support for Portuguese (translated by Nogaredo)
+- [NEW] Command line support (takes list of URLs as parameters)
+
+[1.8.9.13]
+- [FIX] Fixed problem where animated GIFs would have the wrong file extension
+- [FIX] Fixed problem where doujins where sometimes added more than once
+- [FIX] Updates for dynasty-scans.com (updated title retrieval)
+- [FIX] Updates for hakihome.com (last page was excluded from download)
+- [FIX] Updates for hakihome.com (added tag support)
+- [FIX] Updates for perveden.com (updated page-grabbing code)
+- [FIX] Updates for hentai-rules.com (long doujins/turboimagehost galleries would not download properly)
+- [FIX] Updates for mangafox.me (added tag support)
+- [FIX] Updates for nhentai.net (added tag support)
+- [FIX] Error handling upon conversion failure
+- [NEW] Ability to set delay between page downloads globally (Under Settings > Downloads)
+- [NEW] Ability to abort URL processing (Right-Click Status Bar > Abort URL Processing)
+- [NEW] Ability to load custom language files, for testing purposes or otherwise
+- [NEW] Added support for tenmanga.com (NON-H)
+- [MISC] Entered Non-H tag(s) parsed and formatted for readability
+
+[1.8.9.12]
+- [FIX] Updates for g.e-hentai.org (updated title retrieval)
+- [NEW] Updates for g.e-hentai.org (Ability to add entire listings to queue)
+- [NEW] Option to tag all non-H doujins with specified tag(s) for sorting (Under Settings > Save to > Tags)
+- [NEW] Site-specific settings menu (Under Settings > Downloads > Site Specific Settings...)
+- [NEW] Ability to set delay between page downloads on g.e-hentai.org (Under Settings > Downloads > Site Specific Settings...)
+- [NEW] Ability to force download entries to start, ignoring settings (Set Download Status > Downloading)
+- [MISC] Removed leftover debugging code
+- [MISC] Minor icon changes
+
+[1.7.9.12]
+- [FIX] Directories generated from tags are checked for validity
+- [FIX] Updates for animephile.com (Some doujins wouldn't download correctly)
+- [FIX] Updates for colorhentaimangas.com (tag support)
+- [FIX] Updates for hentai.ms (tag support)
+- [NEW] Option to ignore chapter formatting for doujins with single chapters (Under Settings > Save to > Naming)
+- [NEW] %PAGE% token now automatically pads page numbers with zeroes when necessary; %PAGE1% accomplishes its previous functionality
+- [NEW] Added support for mangareader.net (NON-H)
+- [NEW] Added support for mangainn.me (NON-H)
+- [NEW] Added support for mangabb.me (NON-H)
+- [NEW] Added support for dynasty-scans.com (NON-H)
+- [MISC] Removed leftover debugging code
+- [MISC] Minor UI changes
+
+[1.7.9.11]
+- [FIX] Program crashed when downloading from certain sites (due to new tag support update)
+- [FIX] Updates for perveden.com (tag support)
+- [FIX] Updates for doujin-moe.us (tag support)
+- [NEW] Option to automatically attempt to fix file paths longer than 255 characters (Under Settings > Save to > Naming)
+
+[1.7.9.10]
+- [FIX] Removing download entries while downloads with chapters are running could cause program to crash
+- [FIX] Improved support for URLs containing Unicode escape codes
+- [FIX] The download directory for individual entries would not change if it did not already exist
+- [FIX] Resuming downloads containing chapters would sometimes result in page collection error
+- [FIX] Updates for luscious.net (page collection error)
+- [NEW] Tag data support for major hentai sites (g.e-hentai.org, fakku.net, pururin.com, luscious.net, thedoujin.com)
+- [NEW] Ability to save doujin tags to text file
+- [NEW] Ability to organize doujins in folders based on their tags
+- [NEW] Option to save doujins as .RAR archives (if WinRAR is installed)
+- [NEW] Added language support for Vietnamese
+- [NEW] Added support for truyentranhtuan.com (Non-H)
+- [NEW] Added support for deliciousmanga.com (Non-H)
+- [NEW] Added support for mangadoom.co (NON-H)
+- [MISC] Separate .NET 4.0 version for Windows XP users
+
+[1.6.9.10]
+- [NEW] Added support for zizki.com
+
+[1.6.9.9]
+- [FIX] "Save to" directory is set to default directory when loading download lists if the directory loaded does not exist
+- [FIX] Updates for pururin.com (Heavy optimization/fixes)
+- [FIX] Updates for fakku.net (doujins with accented characters in title would not download)
+- [FIX] Updates for fakku.net (doujins from listings can now be added-- ie: adding links containing tags will add all doujins listed to queue)
+- [NEW] Added support for minihentai.org
+- [NEW] Added support for mangatown.com (Non-H)
+- [NEW] Added support for mangapanda.com (Non-H)
+- [NEW] Download queue is saved to config.ini every time a doujin is successfully downloaded (to prevent loss if program crashes during download session)
+- [NEW] Added page-naming tokens %PAGE10%, %PAGE1000%
+- [MISC] Various optimizations when adding doujins to queue
+
+[1.6.8.9]
+- [FIX] For some sites, only half the chapters of a doujin would be downloaded
+- [FIX] Updates for g.e-hentai.org (updated page-grabbing code)
+- [NEW] Added support for incesthentai.net
+- [NEW] Added support for futanarisplash.com
+- [NEW] Added support for hentai4.me
+- [NEW] Added support for mangaeden.com (Non-H)
+- [NEW] Added support for mangafox.me (Non-H)
+- [MISC] Non-H sites are listed separately in the supported site list
+
+[1.6.7.9]
+- [FIX] Updates for perveden.com (updated page-grabbing code)
+- [FIX] Updates for hentai2read.com (can now add doujins from mobile site (m.hentai2read.com))
+- [NEW] Added support for mangahere.co (Non-H)
+- [NEW] Added support for xcomics4you.com
+- [NEW] Added support for kissmanga.com (Non-H)
+- [MISC] Internal code organization
+
+[1.6.7.8]
+- [FIX] Updates for g.e-hentai.org (updated title retrieval)
+- [FIX] Updates for g.e-hentai.org (updated page-grabbing code)
+- [NEW] Added button to display page-naming tokens (could previously only be viewed on hover)
+- [NEW] Added page-naming token %CHAPTER%, use to add chapter title (if applicable) to page name
+- [NEW] Added support for ohtori.nu
+- [NEW] Added support for hentaigratuit.org
+- [NEW] Added support for narutohentaigalleries.com
+- [NEW] Added support for sohentai.com
+- [MISC] New default page structure %TITLE%_%PAGE100%
+
+[1.6.6.8]
+- [FIX] Updates for hbrowse.com (chapters were not downloaded correctly)
+- [FIX] Downloading doujins with multiple chapters wasn't working after 1.6.6.7
+- [FIX] File path length verification improved; no more errors when file paths are too long
+
+[1.6.6.7]
+- [FIX] Removing download entries while downloads are running could cause program to crash
+- [FIX] Slight modifications to Clipboard Monitor (some sites still, on rare occassions, added doujins repetitively)
+- [NEW] Added support for vanillahentai.com
+- [NEW] Added support for manganude.com
+
+[1.6.5.7]
+- [FIX] Updates for g.e-hentai.org (galleries with content warnings could not be added)
+
+[1.6.5.6]
+- [FIX] Updates for hentaimangaonline.com (couldn't add doujins due to layout modifications)
+- [FIX] Updates for hentaimangaonline.com (can now add doujin from viewing page URL)
+- [FIX] Updates for hentaimangaonline.com (updated title retrieval)
+- [FIX] Updates for hentai-id.tv (couldn't add doujins due to layout modifications)
+- [FIX] Updates for hentaisd.tv (couldn't add doujins due to layout modifications)
+- [FIX] Updates for hentai.ms (couldn't add doujins due to layout modifications)
+- [FIX] Updates for personahentai.com (couldn't add doujins due to layout modifications)
+- [FIX] Updates for yuri-ism.net (updated chapter title retrieval)
+- [FIX] Updates for yuri-ism.net (couldn't add doujins due to layout modifications)
+- [FIX] Updates for ryuutama.com (updated title retrieval)
+- [FIX] Updates for ver-manga.net (would try to add invalid URLs when using Clipboard Monitor)
+- [FIX] Updates for simply-hentai.com (updated title retrieval)
+- [FIX] Updates for 1piecehentai.com (updated title retrieval)
+- [FIX] Updates for hentai-ita.com (updated title retrieval)
+- [FIX] Updates for hentaifromhell.org (updated title retrieval)
+- [FIX] Updates for hentaifromhell.org (couldn't add doujins from blog post URL)
+- [FIX] Updates for mangawindow.com (couldn't add manga from summary page URL)
+- [FIX] Updates for primehentai.com (would try to add invalid URLs when using Clipboard Monitor)
+- [FIX] Updates for dochentai.com (couldn't add doujins due to layout modifications)
+- [FIX] Updates for codegeassxxx.com (some doujins were shown as having zero pages)
+- [FIX] Updates for hentaifr.net (would try to add invalid URLs when using Clipboard Monitor)
+- [FIX] Updates for doujinlife.com (wrong URL added to URL field)
+- [FIX] Updates for doujinlife.com (wrong page count added to page count field)
+- [FIX] Adding queue "x remaining" shown in status bar now updates in real time
+- [NEW] Entries in download queue can now be rearranged
+- [NEW] UI language can be changed under 'Help > Change Language...'
+- [NEW] Added language support for French, German, Spanish, Italian, and Indonesian
+- [NEW] Added support for hentai-manga.net
+- [NEW] Added support for junkuchan.org
+- [NEW] Added support for hentaibunny.com
+- [MISC] Favicon default directory now in lowercase
+- [MISC] 'Start All Downloads' toolstrip icon changed to avoid confusion with rearrangement buttons
+
+[1.5.4.6]
+- [FIX] Updates for thedoujin.com (updated title retrieval)
+- [FIX] Fixed corrupted encoding of Japanese/unicode characters
+- [FIX] Opening download directory with "Open Directory" would not work if title contained illegal characters
+- [NEW] Added support for hentai-id.tv
+- [NEW] Added support for hentaisd.tv
+- [NEW] Added support for allhentai.ru
+- [NEW] Added support for doujinroom.com
+- [NEW] Added support for hentai.tl
+- [NEW] Added support for ff12hentai.com
+- [NEW] Added support for hentaibusty.com
+- [NEW] Added support for hentaijuggs.com
+
+[1.5.3.6]
+- [FIX] Updates for g.e-hentai.org (fixed "Page Collection Error" after 39 pages)
+- [FIX] Corrupted favicons are automatically deleted
+- [NEW] Favicons are shown when download queues are loaded (if they exist)
+- [MISC] Default favicon directory is now program directory
+
+[1.5.3.5]
+- [FIX] Additional error-handling when invalid URLs added
+- [FIX] Invalid/corrupt download entries in config.ini are skipped (so the rest of the list can still load)
+- [FIX] Updates for fakku.net (updated page retrieval)
+- [FIX] Updates for atsuifeet.blogspot.nl (updated title retrieval)
+- [NEW] .CBZ conversion support
+- [NEW] Added support for yaoihavenreborn.com
+- [NEW] Added support for sweetyaoiparadise.blogspot.ca
+- [NEW] Added support for yuri-ism.com
+- [NEW] Added support for readhentaidoujinshi.com
+
+[1.5.2.5]
+- [FIX] Removed leftover debugging code
+- [NEW] Added support for mangakawaiifeet.tumblr.com
+- [NEW] Added support for atsuifeet.blogspot.nl
+- [NEW] Added support for animefootfetish.blogspot.ca
+- [NEW] Added support for milkyhentai.com
+- [NEW] Added support for hentairing.com
+- [NEW] Added support for hime-doujins.com
+- [NEW] Added support for hentaischool.com
+- [NEW] Added support for deliciousdoujinshi.com
+- [NEW] Added support for nhentai.net
+
+[1.4.2.5]
+- [FIX] Updates for thedoujin.com (program would hang when given invalid URL)
+- [FIX] Updates for animephile.com (updated title retrieval)
+- [FIX] Updates for 1piecehentai.com (updated with respect to new layout)
+- [FIX] Updates for doujindaily.com (program would process invalid URLs)
+- [FIX] Updates for pururin.com (program would throw error when recieving 403 error upon connection)
+- [FIX] Clipboard Monitor: Doujins were sometimes added more than once (only occurred on thedoujin.com)
+- [FIX] Clipboard Monitor: Doujins were added repetitively if the Clipboard Monitor was enabled in more than one simultaneous instance of the program
+- [NEW] Added support for ver-manga.net
+
+[1.3.2.4]
+- [FIX] Error occurred when resetting a download with chapters
+- [FIX] Fixed slight problem with some of the titles of doujins from fakku.net
+- [FIX] Error occurred when trying to read pages from nonexistent chapters
+- [NEW] Proxies can now be used for downloading
+- [NEW] New page formatting tag %PAGE100% numbers pages starting at 000
+- [NEW] Unicode/Japanese characters now supported
+- [NEW] Added support for eshentaionline.com
+- [NEW] Added support for animehentaimangas.com
+- [NEW] Added support for dochentai.com
+- [NEW] Added support for manga12.com
+- [NEW] Added support for hentai-ita.com
+- [NEW] Added support for submanga.com
+- [NEW] Added support for mangaboxes.com
+- [MISC] Double-click no longer opens download folder; can often cause unwanted results while navigating list (right-click > Open Directory does this instead)
+
+[1.2.2.4]
+- [FIX] Removed leftover debugging code
+- [FIX] Additional directory checks when creating .ZIP files
+- [FIX] Fixed errors when trying to move doujin while download is in progress
+- [FIX] Fixed doujin being moved to incorrect directory when changing directories
+- [FIX] "File > Exit" was not functional
+- [NEW] Settings/list are now contained in config.ini created in program directory; added portability of settings
+- [NEW] Download entries now open the download folder when double-clicked
+- [NEW] Download queue is saved when starting downloads in case things go aury
+- [MISC] Lightened the color of the placeholder favicon
+
+[1.1.2.3]
+- [FIX] "Page Collection Error" when trying to download certain doujins from luscious.net
+- [MISC] Changed text displayed when checking for updates
+
+[1.1.2.2]
+- [FIX] "Clear All... > Completed Downloads" did not remove all completed entries under certain conditions
+- [FIX] Added filepath length checks
+- [FIX] Downloads greater than 31 rows down the list do not download
+- [NEW] Added support for hentai4u.org
+- [NEW] Added support for g6hentai.com
+- [NEW] Added support for hentaibox.fr
+- [NEW] Added support for finalxxxfantasy.com
+- [NEW] Added support for futahentai.com
+- [NEW] Added support for xxxyuna.com
+- [NEW] Added support for ff7hentai.com
+- [NEW] Added support for codegeassxxx.com
+- [NEW] Added support for doujinlife.com
+- [NEW] Added support for doujinpage.com
+- [NEW] Added support for thehentaiworld.com
+- [NEW] Added support for simply-hentai.com
+- [NEW] Added support for mangaray.com
+- [NEW] Added support for hentaifamed.com
+- [NEW] Added support for gurrenhentai.com
+
+[1.0.2.1]
+
+- [FIX] Update download queue when the status of a download is changed
+- [FIX] Updated update-checking system
+- [FIX] Removed leftover debugging code
+- [FIX] Added error-handling for when doujin has zero chapters
+- [MISC] Download dir/title should not be able to be changed during download in progress (has no effect)
+- [MISC] Change about text from "the one provided above" to "the email address provided above"
