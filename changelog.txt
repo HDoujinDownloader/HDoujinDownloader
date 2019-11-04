@@ -2,6 +2,25 @@
  Next: 1.17.9.33
 -----------------------------------------------------------------------------------------------------------------------------------
 
+[Release 3]
+- [NEW] Added support for hentaihand.com
+- [NEW] Added support for hentailxx.com
+- [NEW] Added support for mangakatana.com (NON-H)
+- [NEW] Added support for manhwa18.com
+- [NEW] Added support for porncomix.one
+- [FIX] Updates for 8muses.com (updated algorithms)
+- [FIX] Updates for hitomi.la (updated algorithms)
+- [FIX] Updates for mangabat.com (updated algorithms)
+- [FIX] Updates for mangazuki.me (added mangazuki.club, mangazuki.info)
+- [FIX] Updates for porncomix.info (moved to bestporncomix.com)
+- [FIX] Updates for readmng.com (updated algorithms)
+- [FIX] Updates for simply-hentai.com (updated algorithms)
+- [FIX] Updates for tsumino.com (updated algorithms)
+- [FIX] Updates for webtoon.daum.net (updated algorithms)
+- [FIX] Fixed EPUB conversion error introduced in Release 1
+- [FIX] Fixed issue causing updater to report successful update as failed
+- [FIX] Fixed issue with "Add New Login" form showing duplicate entries
+
 [Release 2]
 - [FIX] Updates for hitomi.la (updated algorithms)
 
