@@ -2,6 +2,30 @@
  Next: 1.17.9.33
 -----------------------------------------------------------------------------------------------------------------------------------
 
+[Release 4]
+- [NEW] Added support for allporncomic.com
+- [NEW] Added support for getmanhwa.co (NON-H)
+- [NEW] Added support for manga-here.club (NON-H)
+- [NEW] Added support for manhwa.club (NON-H)
+- [NEW] Added support for onemanhua.com (NON-H)
+- [FIX] Updates for ac.qq.com (updated algorithms)
+- [FIX] Updates for bestporncomix.com (updated algorithms)
+- [FIX] Updates for e-hentai.org/exhentai.org (could not add search results to queue)
+- [FIX] Updates for hentaifox.com (updated algorithms)
+- [FIX] Updates for hitomi.la (updated algorithms, added "prefer webp" option)
+- [FIX] Updates for lezhin.com (updated algorithms)
+- [FIX] Updates for manga-tr.com (updated algorithms)
+- [FIX] Updates for mangahasu.se (updated algorithms)
+- [FIX] Updates for mangahub.io (updated algorithms)
+- [FIX] Updates for mangakatana.com (updated algorithms)
+- [FIX] Updates for mintmanga.com (moved to mintmanga.live)
+- [FIX] Fixed error occuring when formatting string is custom token evaluating to nothing
+- [FIX] Fixed issue with importing text files with URLs containing "|"
+- [FIX] Fixed issue with updater not downloading modules correctly
+- [FIX] Fixed crash on startup when .NET Framework 4.5 is not available
+- [MISC] Added "substring(string, startIndex)" overload for scripts
+- [MISC] "substring" now returns entire string if the given length is beyond the end of the string
+
 [Release 3]
 - [NEW] Added support for hentaihand.com
 - [NEW] Added support for hentailxx.com
