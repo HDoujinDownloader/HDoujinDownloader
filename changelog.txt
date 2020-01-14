@@ -2,6 +2,9 @@
 1.18.9.32
 -----------------------------------------------------------------------------------------------------------------------------------
 
+[Release 2]
+- [FIX] Updates for e-hentai.org (fixed bug introduced with last update)
+
 [Release 1]
 - [FIX] Updates for hitomi.la (updated algorithms)
 - [FIX] Updates for imagefap.com (updated algorithms)
