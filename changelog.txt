@@ -1,5 +1,21 @@
 -----------------------------------------------------------------------------------------------------------------------------------
- Next: 1.17.9.33
+1.18.9.32
+-----------------------------------------------------------------------------------------------------------------------------------
+
+[Release 1]
+- [FIX] Updates for hitomi.la (updated algorithms)
+- [FIX] Updates for imagefap.com (updated algorithms)
+- [FIX] Updates for imgur.com (updated algorithms)
+- [FIX] Updates for luscious.net (fixed basic albums)
+- [FIX] Updates for mangadex.org  (moved to mangadex.cc)
+- [FIX] Updates for tapas.io (updated algorithms)
+- [FIX] Added fix for new Cloudflare challenge (cf-tool)
+- [NEW] Added new external module system (lua and old scripts supported)
+- [MISC] Removed obselete "Scripts" tab from settings (replaced by Module Browser)
+- [MISC] Moved updater to "bin/updater.exe"
+
+-----------------------------------------------------------------------------------------------------------------------------------
+1.17.9.32
 -----------------------------------------------------------------------------------------------------------------------------------
 
 [Release 4]
