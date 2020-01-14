@@ -67,8 +67,15 @@ function ParseChapters(json, output)
         chapterNumber = chapterJson['chapter']
         chapterSubtitle = CleanChapterTitle(chapterJson['title'])
 
-        if(not volumeNumber:empty() and not chapterNumber:empty()) then
-            chapterInfo.Title = FormatString("Vol. {0} Ch. {1}", volumeNumber, chapterNumber)
+        -- Not all chapters have chapter and volume numbers, and not all chapters have titles.
+        -- Ex: https://mangadex.org/title/23747/sekkaku-cheat (no volume numbers, no titles)
+
+        if(not chapterNumber:empty()) then
+            chapterInfo.Title = FormatString("Ch. {0}",  chapterNumber)
+        end
+
+        if(not volumeNumber:empty()) then
+            chapterInfo.Title = FormatString("Vol. {0} {1}", volumeNumber, chapterInfo.Title):trim()
         end
 
         if(not chapterSubtitle:trim():empty()) then
@@ -85,7 +92,7 @@ function ParseChapters(json, output)
         chapterInfo.Volume = volumeNumber
         chapterInfo.ScanlationGroup = chapterJson['group_name']
         chapterInfo.Language = chapterJson['lang_code']
-       
+
         uploadTimestamp = chapterJson['timestamp'].ToNumber()
 
         if(uploadTimestamp <= os.time() and (acceptAny or userLanguages.Contains(GetLanguageId(chapterInfo.Language)))) then
