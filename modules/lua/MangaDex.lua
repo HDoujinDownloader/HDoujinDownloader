@@ -39,7 +39,7 @@ function GetInfo() -- required
         info.Status = doc:regex('>(?:Pub\\. status|Status):.+?">([^<]+)', 1)
         info.Summary = json['manga']['description']
         info.Type = json['manga']['lang_name']
-        info.Adult = json['manga']['hentai'] ~= 0
+        info.Adult = tonumber(json['manga']['hentai']) ~= 0
         info.ChapterCount = ParseChapters(json, ChapterList.New())
 
     end
