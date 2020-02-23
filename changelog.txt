@@ -1,6 +1,39 @@
 -----------------------------------------------------------------------------------------------------------------------------------
+1.19.9.32
+-----------------------------------------------------------------------------------------------------------------------------------
+
+[Release 1]
+- [NEW] Added support for mangaseinen.com (NON-H)
+- [NEW] Added support for timelessleaf.com (NON-H)
+- [NEW] Added generic support for various other sites
+- [NEW] Added various new features to the Lua API (settings, logins, DOM, etc.)
+- [NEW] Added log viewer (Tools > Log Viewer)
+- [NEW] Added new settings for module repositories (sandboxing, disable automatic updates)
+- [FIX] Updates for loveheaven.net (updated algorithms)
+- [FIX] Updates for luscious.net (updated algorithms)
+- [FIX] Updates for mangalife.us (updated algorithms)
+- [FIX] Updates for manganelo.com (updated algorithms)
+- [FIX] Updates for pixiv.net (updated algorithms)
+- [FIX] Updates for tsumino.com (updated algorithms)
+- [FIX] Updates for zerochan.com (updated algorithms)
+- [FIX] Fixed error when updater could not be located
+- [FIX] Fixed updater not being properly renamed after updating
+- [MISC] Improved module synchronization
+- [MISC] Improved cookie editor UI
+- [MISC] Improved load times for large download queues
+- [MISC] Various improvements and bug fixes
+
+-----------------------------------------------------------------------------------------------------------------------------------
 1.18.9.32
 -----------------------------------------------------------------------------------------------------------------------------------
+
+[Release 3]
+- [FIX] Updates for mangadex.org (moved to mangadex.org)
+- [FIX] Fixed issue with some sites no longer adding correctly after last update (e.g. tsumino.com)
+- [FIX] Fixed error when attempting to download extra modules through the updater when updater is not present
+- [FIX] Fixed issue with repository synchronization occassionally failing
+- [FIX] Fixed issue with updater not being properly renamed after updating
+- [MISC] Various improvements and bug fixes
 
 [Release 2]
 - [FIX] Updates for e-hentai.org (fixed bug introduced with last update)
