@@ -2,6 +2,9 @@
 1.19.9.32
 -----------------------------------------------------------------------------------------------------------------------------------
 
+[Release 2]
+- [FIX] Fixed bug introduced with last update causing some queue items not to be loaded correctly
+
 [Release 1]
 - [NEW] Added support for mangaseinen.com (NON-H)
 - [NEW] Added support for timelessleaf.com (NON-H)
