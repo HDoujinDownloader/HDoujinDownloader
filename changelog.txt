@@ -9,6 +9,7 @@
 - [NEW] Added various new features to the Lua API (settings, logins, DOM, etc.)
 - [NEW] Added log viewer (Tools > Log Viewer)
 - [NEW] Added new settings for module repositories (sandboxing, disable automatic updates)
+- [FIX] Updates for japscan.co (updated algorithms)
 - [FIX] Updates for loveheaven.net (updated algorithms)
 - [FIX] Updates for luscious.net (updated algorithms)
 - [FIX] Updates for mangalife.us (updated algorithms)
