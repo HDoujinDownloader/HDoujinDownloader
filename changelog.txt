@@ -2,6 +2,9 @@
 1.19.9.32
 -----------------------------------------------------------------------------------------------------------------------------------
 
+[Release 3]
+- [FIX] Fixed issue with JSON deserialization not unescaping strings under certain circumstances
+
 [Release 2]
 - [FIX] Fixed bug introduced with last update causing some queue items not to be loaded correctly
 
