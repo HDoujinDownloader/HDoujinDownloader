@@ -1,0 +1,47 @@
+function Register()
+
+    module.Name = "ReadMangaToday"
+    module.Language = 'English'
+
+    module.Domains.Add('readmng.com')
+    module.Domains.Add('readmanga.today')
+
+end
+
+function GetInfo()
+
+    info.Title = dom.SelectValue('//h1')
+    info.AlternativeTitle = dom.SelectValue('//dt[contains(text(), "Alternative Name")]/following-sibling::dd')
+    info.Status = dom.SelectValue('//dt[contains(text(), "Status")]/following-sibling::dd')
+    info.Tags = dom.SelectValues('//dt[contains(text(), "Categories")]/following-sibling::*[1]/a')
+    info.Type = dom.SelectValue('//dt[contains(text(), "Type")]/following-sibling::dd')
+    info.Summary = dom.SelectValue('//li[contains(@class, "movie-detail")]/p')
+    info.Author = dom.SelectValue('//li[contains(text(), "Author")]/preceding-sibling::li')
+    info.Artist = dom.SelectValue('//li[contains(text(), "Artist")]/preceding-sibling::li')
+ 
+    if(isempty(info.Title)) then
+        info.Title = tostring(dom.Title):after(' - Read'):trim()
+    end
+
+end
+
+function GetChapters()
+
+    for node in dom.SelectElements('//ul[contains(@class, "chp_lst")]/li/a') do
+
+        chapters.Add(node.GetAttribute('href'), node.ChildNodes[1])
+
+    end
+
+    chapters.Reverse()
+
+end
+
+function GetPages()
+    
+    local doc = http.Get(url)
+    local pagesJson = Json.New(doc:regex('var\\s*images\\s*=\\s*(\\[.+?\\])', 1))
+
+    pages.AddRange(pagesJson.SelectTokens('[*].url'))
+
+end
