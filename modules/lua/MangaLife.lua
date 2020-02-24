@@ -64,7 +64,9 @@ function GetPages()
     local title = GetIndexName()
     local currentChapterJson = Json.New(doc:regex('(?i)CurChapter\\s*=\\s*({.+?})', 1))
     local currentPathName = doc:regex('(?i)CurPathName\\s*=\\s*"(.+?)"', 1)
-    local chapterNumber = tostring(currentChapterJson['Chapter']):sub(2, -2) -- "100010" -> "0001"
+    local chapter = tostring(currentChapterJson['Chapter'])
+    local chapterNumber = chapter:sub(2, -2) -- "100010" -> "0001"
+    local fractionalPart = (chapter:sub(-1) != "0") and ('.'..chapter:sub(-1)) or ''
     local pageCount = tonumber(currentChapterJson['Page'])
  
     for i = 1, pageCount do
@@ -72,11 +74,15 @@ function GetPages()
         -- Page URLs are of the following form:
         -- https://<currentPathName>/manga/<title>/<chapterNumber:0000>-<pageNumber:000>.png
         
+        -- If the chapter number is fractional, the fractional component needs to be appended to the chapter number.
+        -- e.g. "0013.5-001.png"
+
         local pageUrl = FormatString(
-            '//{0}/manga/{1}/{2}-{3:D2}.png', 
+            '//{0}/manga/{1}/{2}{3}-{4:000}.png', 
             currentPathName, 
             title, 
-            chapterNumber, 
+            chapterNumber,
+            fractionalPart,
             i
         )
         
@@ -100,9 +106,9 @@ function ChapterUrlEncode(e)
     local pageOne = doc:regex('(?i)PageOne\\s*=\\s*"(.+?)"', 1)
     local indexNumber = tonumber(e:sub(1, 1)) -- first digit
     local chapterNumber = tonumber(e:sub(2, -2)) -- between first and last digits
-    local fractionalNumber = tonumber(e:sub(-1)) -- last digit
+    local fractionalPart = tonumber(e:sub(-1)) -- last digit
     local index = (indexNumber != 1) and ('-index-'..indexNumber) or ''
-    local fractional = (fractionalNumber != 0) and ('.'..fractionalNumber) or ''
+    local fractional = (fractionalPart != 0) and ('.'..fractionalPart) or ''
 
     return FormatString(
         '-chapter-{0}{1}{2}{3}.html', 
