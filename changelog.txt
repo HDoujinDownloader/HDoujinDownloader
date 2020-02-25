@@ -2,6 +2,12 @@
 1.19.9.32
 -----------------------------------------------------------------------------------------------------------------------------------
 
+[Release 4]
+- [FIX] Updates for jaiminisbox.com (updated algorithms)
+- [NEW] Added various new features to the Lua API
+- [MISC] Added lua module for readmng.com
+- [MISC] Various improvements and bug fixes
+
 [Release 3]
 - [FIX] Fixed issue with JSON deserialization not unescaping strings under certain circumstances
 
