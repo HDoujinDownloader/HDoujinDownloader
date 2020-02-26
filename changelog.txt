@@ -2,6 +2,14 @@
 1.19.9.32
 -----------------------------------------------------------------------------------------------------------------------------------
 
+[Release 5]
+- [NEW] Added support for disasterscans.com (NON-H)
+- [NEW] Added support for heavenmanga.org and related websites
+- [NEW] Added support for various scanlation sites
+- [FIX] Updates for mangahub.io and related sites (updated algorithms)
+- [FIX] Updates for hentaifox.com (updated algorithms)
+- [MISC] Various improvements and bug fixes
+
 [Release 4]
 - [FIX] Updates for jaiminisbox.com (updated algorithms)
 - [NEW] Added various new features to the Lua API
