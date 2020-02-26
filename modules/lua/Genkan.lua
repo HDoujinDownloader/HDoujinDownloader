@@ -30,7 +30,15 @@ end
 
 function GetChapters()
 
-    chapters.AddRange(dom.SelectElements('//div[contains(@class, "p-4")]//div[contains(@class, "flex")]/a[1]'))
+    for node in dom.SelectElements('//div[contains(@class, "p-4")]//div[contains(@class, "flex")]') do
+
+        local chapterUrl = node.SelectValue('a/@href')
+        local chapterNumber = node.SelectValue('preceding-sibling::span')
+        local chapterName = node.SelectValue('a')
+
+        chapters.Add(chapterUrl, 'Chapter '..chapterNumber..' - '..chapterName)
+
+    end
 
     chapters.Reverse()
 
