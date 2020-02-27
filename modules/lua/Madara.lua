@@ -7,6 +7,7 @@ function Register()
     module.Language = 'English'
 
     module.Domains.Add('disasterscans.com', 'Disaster Scans')
+    module.Domains.Add('toonily.com', 'Toonily')
 
 end
 
@@ -21,7 +22,10 @@ function GetInfo()
     info.DateReleased = dom.SelectValue('//div[contains(h5/text(), "Release")]/following-sibling::div')
     info.Status = dom.SelectValue('//div[contains(h5/text(), "Status")]/following-sibling::div')
     info.Summary = dom.SelectValue('//div[contains(@class, "description-summary")]')
-    info.Scanlator = 'Disaster Scans'
+
+    if(module.GetName(url):endswith('Scans')) then
+        info.Scanlator = module.GetName(url)
+    end
 
 end
 
