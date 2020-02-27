@@ -7,8 +7,11 @@ function Register()
     -- Japanese raws
 
     module.Domains.Add('hanascan.com', 'HanaScan.com')
+    module.Domains.Add('lhscan.net', 'LoveHeaven')
+    module.Domains.Add('lhscans.com', 'LoveHeaven')
     module.Domains.Add('loveheaven.net', 'LoveHeaven')
     module.Domains.Add('mangahato.com', 'MangaHato')
+    module.Domains.Add('rawlh.com', 'LoveHeaven')
     
     module.Language = 'Japanese'
 
@@ -20,6 +23,7 @@ function Register()
 
     module.Domains.Add('18lhplus.com', '18LHPlus')
     module.Domains.Add('lhtranslation.net', 'LHTranslation')
+    module.Domains.Add('mangabone.com', 'MangaBone')
     module.Domains.Add('manhwa18.*', 'Manhwa18.com') -- manhwa18.net, manhwa18.com
     module.Domains.Add('manhwascan.com', 'Manhwascan') -- not 100% English
 
