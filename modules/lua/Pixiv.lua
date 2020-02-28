@@ -145,10 +145,12 @@ function GetChapters()
     while json['illusts'].Count() > 0 and offset < 5000 do
 
         for artwork in json['illusts'] do
-  
-            local id = tostring(artwork['id'])
 
-            chapters.Add('/artworks/'..id)
+            local id = tostring(artwork['id'])
+            local title = tostring(artwork['title'])
+
+            chapters.Add('/artworks/'..id, title)
+
 
         end
 
