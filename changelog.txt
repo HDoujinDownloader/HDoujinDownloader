@@ -2,6 +2,13 @@
 1.19.9.32
 -----------------------------------------------------------------------------------------------------------------------------------
 
+[Release 6]
+- [NEW] Added support for toonily.com (NON-H)
+- [NEW] Added additional domains to generic modules
+- [FIX] Fixed chapter title for Genkan-based websites
+- [FIX] Fixed potential crash after deleting specific DLLs
+- [MISC] Various improvements and bug fixes
+
 [Release 5]
 - [NEW] Added support for disasterscans.com (NON-H)
 - [NEW] Added support for heavenmanga.org and related websites
