@@ -1,10 +1,10 @@
 function Register()
 
-    local module = Module.New()
+    -- Japanese raws
+
+    module = Module.New()
 
     module.Name = 'LoveHeaven'
-
-    -- Japanese raws
 
     module.Domains.Add('hanascan.com', 'HanaScan.com')
     module.Domains.Add('lhscan.net', 'LoveHeaven')
@@ -94,6 +94,29 @@ function GetPages()
         else
             pages.Add(node.GetAttribute('src')) -- everything else
         end
+
+    end
+
+end
+
+function Login()
+
+    if(not http.Cookies.Contains('userName')) then
+
+        local dom = Dom.New(http.Get(url))
+        local formAction = dom.SelectValue('//form[@id="signin_form"]/@action')
+
+        http.PostData.Add('email', username)
+        http.PostData.Add('password', password)
+        http.PostData.Add('isRemember', 1)
+        
+        local response = http.PostResponse(formAction)
+
+        if(not response.Cookies.Contains('userName')) then
+            Fail(Error.LoginFailed)
+        end
+
+        global.SetCookies(response.Cookies)
 
     end
 
