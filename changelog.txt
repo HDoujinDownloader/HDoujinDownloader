@@ -2,6 +2,10 @@
 1.19.9.32
 -----------------------------------------------------------------------------------------------------------------------------------
 
+[Release 7]
+- [FIX] Updates for loveheaven.net (added login support)
+- [MISC] Various improvements and bug fixes
+
 [Release 6]
 - [NEW] Added support for toonily.com (NON-H)
 - [NEW] Added additional domains to generic modules
