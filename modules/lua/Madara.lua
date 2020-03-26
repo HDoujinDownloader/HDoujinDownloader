@@ -19,8 +19,9 @@ function Register()
 
     module.Language = 'Turkish'
 
+    module.Domains.Add('araznovel.com', 'ArazNovel')
     module.Domains.Add('mangawow.com', 'MangaWOW')
-
+    
     RegisterModule(module)
 
 end
@@ -31,11 +32,12 @@ function GetInfo()
     info.AlternativeTitle = dom.SelectValue('//div[contains(h5/text(), "Alternative") or contains(h5/text(), "Diğer Adları")]/following-sibling::div')
     info.Author = dom.SelectValues('//div[contains(h5/text(), "Author(s)") or contains(h5/text(), "Auth.") or contains(h5/text(), "Yazar")]/following-sibling::div//a')
     info.Artist = dom.SelectValues('//div[contains(h5/text(), "Artist") or contains(h5/text(), "Çizer")]/following-sibling::div//a')
-    info.Tags = dom.SelectValues('//div[contains(h5/text(), "Genre") or contains(h5/text(), "Kategori")]/following-sibling::div//a')
-    info.Type = dom.SelectValue('//div[contains(h5/text(), "Type")]/following-sibling::div')
-    info.DateReleased = dom.SelectValue('//div[contains(h5/text(), "Release")]/following-sibling::div')
-    info.Status = dom.SelectValue('//div[contains(h5/text(), "Status")]/following-sibling::div')
+    info.Tags = dom.SelectValues('//div[contains(h5/text(), "Genre") or contains(h5/text(), "Kategori") or contains(h5/text(), "Tür")]/following-sibling::div//a')
+    info.Type = dom.SelectValue('//div[contains(h5/text(), "Type") or contains(h5/text(), "Tip")]/following-sibling::div')
+    info.DateReleased = dom.SelectValue('//div[contains(h5/text(), "Release") or contains(h5/text(), "Yayınlanma")]/following-sibling::div')
+    info.Status = dom.SelectValue('//div[contains(h5/text(), "Status") or contains(h5/text(), "Durum")]/following-sibling::div')
     info.Summary = dom.SelectValue('//div[contains(@class, "description-summary")]//p')
+    info.Adult = not isempty(dom.SelectValue('//h1/span[contains(@class, "adult")]'))
 
     if(module.GetName(url):endswith('Scans')) then
         info.Scanlator = module.GetName(url)
@@ -57,9 +59,39 @@ end
 
 function GetChapters()
 
-    chapters.AddRange(dom.SelectElements('//div[contains(@class, "listing-chapters")]//li/a'))
+    -- Sometimes chapters are grouped into volumes (araznovel.com).
 
-    chapters.Reverse()
+    local volumeNodes = dom.SelectElements('//ul[contains(@class, "sub-chap")]')
+
+    if(volumeNodes.Count() > 0) then
+
+        -- We need to get them per-volume or else the ordering will be messed up.
+        -- For example, Volume 1 might have Chapters 10 -> 1, and Volume 2 20 -> 11.
+        -- We need to reverse each group separately.
+
+        for i = 0, volumeNodes.Count() - 1 do
+
+            local volumeNode = volumeNodes[i]
+
+            local chapterList = ChapterList.New()
+
+            chapterList.AddRange(volumeNode.SelectElements('li/a'))
+
+            chapterList.Reverse()
+
+            for j = 0, chapterList.Count() - 1 do
+                chapters.Add(chapterList[j])
+            end
+
+        end
+
+    else
+
+        chapters.AddRange(dom.SelectElements('//div[contains(@class, "listing-chapters")]//li/a'))
+
+        chapters.Reverse()
+
+    end
 
 end
 
