@@ -2,6 +2,16 @@
 1.19.9.32
 -----------------------------------------------------------------------------------------------------------------------------------
 
+[Release 8]
+- [NEW] Added support for readmanhwa.com (NON-H)
+- [FIX] Updates for hentai-id.tv (updated algorithms)
+- [FIX] Updates for hgamecg.com (updated algorithms)
+- [FIX] Updates for niceoppai.net (updated algorithms)
+- [FIX] Updates for readmanga.me (updated algorithms)
+- [FIX] Updates for toomics.com (updated algorithms)
+- [FIX] Backup archives did not include JSON files
+- [MISC] Various improvements and bug fixes
+
 [Release 7]
 - [FIX] Updates for loveheaven.net (added login support)
 - [MISC] Various improvements and bug fixes
