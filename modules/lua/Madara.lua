@@ -43,16 +43,32 @@ function GetInfo()
         info.Scanlator = module.GetName(url)
     end
 
-    -- Sometimes we need to get the title in a different way (www.porncomixonline.net).
-
     if(isempty(info.Title)) then
-        info.Title = dom.SelectValue('//h3')
+
+        -- Sometimes we need to get the title in a different way (www.porncomixonline.net).
+        -- We purposefully look under the "post-title" div because, for western comics on the same website, "//h3" returns an incorrect title.
+        -- This selector won't work for western comics (which are picked up in the following case), but does work for manga.
+
+        info.Title = dom.SelectValue('//div[contains(@class, "post-title")]/h3')
+
     end
 
-    -- Reader galleries don't always have a title, so we'll use the title of the selected chapter (www.porncomixonline.net).
+    if(isempty(info.Title)) then
+
+        -- If the user added a reader URL, we may need to get the title in a different way (Western comics on www.porncomixonline.net).
+        -- This case is not part of the Madara theme, but a special case for porncomixonline.net, where western comics use a notably different layout.
+
+        info.Title = dom.SelectValue('//h2')
+        info.Tags = dom.SelectValues('//div[@class="item-tags"]//li')
+
+    end
 
     if(isempty(info.Title)) then
+
+        -- Reader galleries don't always have a title, so we'll use the title of the selected chapter if we need to.
+
         info.Title = dom.SelectValue('//li[@class="active"]')
+
     end
 
 end
@@ -66,8 +82,7 @@ function GetChapters()
     if(volumeNodes.Count() > 0) then
 
         -- We need to get them per-volume or else the ordering will be messed up.
-        -- For example, Volume 1 might have Chapters 10 -> 1, and Volume 2 20 -> 11.
-        -- We need to reverse each group separately.
+        -- For example, Volume 1 might have Chapters 10 -> 1, and Volume 2 20 -> 11. We need to reverse each group separately.
 
         for i = 0, volumeNodes.Count() - 1 do
 
@@ -111,10 +126,18 @@ function GetPages()
 
         pages.AddRange(dom.SelectValues('//div[contains(@class, "reading-content")]//img/@data-src'))
 
-        -- Sometimes the image URLs are in "src" instead of "data-src" (mangawow.com).
+        -- Sometimes the image URLs are in the "src" attribute (mangawow.com).
 
         if(pages.Count() <= 0) then
             pages.AddRange(dom.SelectValues('//div[contains(@class, "reading-content")]//img/@src'))
+        end
+
+        -- Sometimes the image URLs are in the "href" attribute under "entry-content" (Western comics on www.porncomixonline.net).
+        -- This isn't part of the Madara theme, but it appears this site hasn't updated all of their galleries to use the Madara reader.
+        -- e.g. https://www.porncomixonline.net/comicsbase/westerncomics/ (all galleries under this category)
+
+        if(pages.Count() <= 0) then
+            pages.AddRange(dom.SelectValues('//div[contains(@class, "entry-content")]//figure/a/@href'))
         end
 
     end
