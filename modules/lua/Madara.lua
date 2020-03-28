@@ -10,6 +10,7 @@ function Register()
     module.Language = 'English'
 
     module.Domains.Add('disasterscans.com', 'Disaster Scans')
+    module.Domains.Add('mangastream.cc', 'MangaStream')
     module.Domains.Add('porncomixonline.net', 'Porncomix')
     module.Domains.Add('toonily.com', 'Toonily')
 
