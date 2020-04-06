@@ -4,6 +4,7 @@ function Register()
     module.Language = 'Spanish'
     module.Adult = true
 
+    module.Domains.Add('chochox.com', 'ChoChoX')
     module.Domains.Add('vermangasporno.com', 'Ver Mangas Porno')
     module.Domains.Add('vercomicsporno.com', 'Ver Comics Porno')
 
@@ -15,6 +16,12 @@ function GetInfo()
     info.Artist = info.Title:regex('^\\[([^\\\\]+)\\]', 1)
     info.Tags = dom.SelectValues('//div[contains(@id, "tagsin")]//a')
 
+    -- We may need to get the tags a little differently for some posts (chochox.com).
+
+    if(isempty(info.Tags)) then
+        info.Tags = dom.SelectValues('//a[@rel="tag"]')
+    end
+
 end
 
 function GetPages()
@@ -22,5 +29,11 @@ function GetPages()
     -- Using "//img" instead of "/img" is necessary, as some galleries have the images in a nested "p" tag.
 
     pages.AddRange(dom.SelectValues('//div[contains(@class, "comicimg")]//img/@data-src'))
+
+    -- We may need to get the tags a little differently for some posts (chochox.com).
+
+    if(pages.Count() <= 0) then
+       pages.AddRange(dom.SelectValues('//div[contains(@class, "wp-content")]//img/@src')) 
+    end
 
 end
