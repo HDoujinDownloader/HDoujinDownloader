@@ -46,7 +46,7 @@ function GetInfo()
     if(isempty(info.Title)) then
         info.Title = CleanTitle(dom.Title)
     end
-    
+
     -- There might not be any chapters listed, and just a "read online" link (h-chan.me).
     -- In that case, just go to the reader.
 
@@ -60,7 +60,11 @@ function GetInfo()
 end
 
 function GetChapters()
-    chapters.AddRange(ParseChapters(dom))
+
+    for chapter in ParseChapters(dom) do
+        chapters.Add(chapter)
+    end
+
 end
 
 function GetPages()
