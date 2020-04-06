@@ -88,7 +88,7 @@ function ParseChapters(json, output)
 
         end
 
-        chapterInfo.Url = FormatString('chapter/{0}', chapterJson.Key)
+        chapterInfo.Url = FormatString('/chapter/{0}', chapterJson.Key)
         chapterInfo.Volume = volumeNumber
         chapterInfo.ScanlationGroup = chapterJson['group_name']
         chapterInfo.Language = chapterJson['lang_code']
