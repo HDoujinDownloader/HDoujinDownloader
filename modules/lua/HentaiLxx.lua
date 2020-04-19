@@ -1,0 +1,39 @@
+function Register()
+
+    module.Name = 'HentaiLXX'
+    module.Language = 'Vietnamese'
+    module.Adult = true
+
+    module.Domains.Add('hentailxx.com', 'HentaiLXX')
+
+end
+
+function GetInfo()
+
+    info.Title = dom.SelectValue('//h1')
+    info.Author = dom.SelectValues('//div[contains(text(),"Tác giả")]/following-sibling::div/a')
+    info.Status = dom.SelectValue('//div[contains(text(),"Tình trạng")]/following-sibling::div')
+    info.Tags = dom.SelectValues('//div[contains(text(),"Thể loại")]/following-sibling::div/a')
+    info.Summary = dom.SelectValue('//p')
+
+    -- Get the title from the reader.
+
+    if(isempty(info.Title)) then
+        info.Title = dom.SelectValue('//h4')
+    end
+
+end
+
+function GetChapters()
+
+    chapters.AddRange(dom.SelectElements('//div[@id="listChuong"]//a'))    
+
+    chapters.Reverse()
+
+end
+
+function GetPages()
+
+    pages.AddRange(dom.SelectValues('//div[@id="image"]//img/@src'))
+
+end
