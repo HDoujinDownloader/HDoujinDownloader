@@ -50,6 +50,7 @@ end
 
 function GetPages()
 
+    local baseUrl = RegexReplace(url, '\\/(?:\\d+\\.html)?$', '') .. '/'
     local pageCount = tonumber(ParsePageCount())
 
     for i = 1, pageCount do
@@ -57,6 +58,12 @@ function GetPages()
         local imageUrl = dom.SelectValue('//div[contains(@class,"read_img")]/a/img/@src')
         local nextPageUrl = dom.SelectValue('//a[contains(@class,"next_page")]/@href')
 
+        -- Annoying workaround for bug involving relative URIs in v1.19.9.32-r.8.
+
+        if(not nextPageUrl:startsWith('/')) then
+            nextPageUrl = baseUrl .. nextPageUrl
+        end
+        
         pages.Add(imageUrl)
 
         if(not isempty(nextPageUrl)) then
