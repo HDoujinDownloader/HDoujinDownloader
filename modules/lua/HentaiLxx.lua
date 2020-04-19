@@ -34,6 +34,8 @@ end
 
 function GetPages()
 
-    pages.AddRange(dom.SelectValues('//div[@id="image"]//img/@src'))
+    -- The "not(@target)" part is there to avoid downloading the ad image at the end of the post.
+
+    pages.AddRange(dom.SelectValues('//div[@id="content_chap"]//img[not(@target)]/@src'))
 
 end
