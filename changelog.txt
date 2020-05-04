@@ -2,6 +2,51 @@
 1.19.9.32
 -----------------------------------------------------------------------------------------------------------------------------------
 
+[Release 9]
+- [NEW] Added "%ID%" formatting string token
+- [NEW] Added preview to formatting strings
+- [NEW] Added support for araznovel.com (NON-H)
+- [NEW] Added support for chochox.com
+- [NEW] Added support for comicsmanics.com
+- [NEW] Added support for earlymanga.net (NON-H)
+- [NEW] Added support for freeadultcomix.com
+- [NEW] Added support for imhentai.com
+- [NEW] Added support for mangajar.com (NON-H)
+- [NEW] Added support for mangasloth.com (NON-H)
+- [NEW] Added support for mangawow.com (NON-H)
+- [NEW] Added support for manhwamanga.net
+- [NEW] Added support for mavimanga.com (NON-H)
+- [NEW] Added support for xlecx.org
+- [NEW] Added user agent setting
+- [NEW] Significant improvements to formatting string parsing
+- [FIX] Updated cf-tool (updated to work with new Cloudflare challenges)
+- [FIX] Updates for epikmanga.com (updated algorithms)
+- [FIX] Updates for furaffinity.net (updated algorithms)
+- [FIX] Updates for h-chan.me (updated algorithms)
+- [FIX] Updates for hentai2read.com (updated algorithms)
+- [FIX] Updates for hentailxx.com (updated algorithms)
+- [FIX] Updates for hentairead.com (updated algorithms)
+- [FIX] Updates for hentaivn.net (updated algorithms)
+- [FIX] Updates for hitomi.la (added character metadata)
+- [FIX] Updates for jaiminisbox.com (updated algorithms)
+- [FIX] Updates for manga-chan.me (updated algorithms)
+- [FIX] Updates for mangabat.com (moved to mangawk.com)
+- [FIX] Updates for mangadex.org (updated login support)
+- [FIX] Updates for mangakakalot.com (updated algorithms)
+- [FIX] Updates for mangakatana.com (updated algorithms)
+- [FIX] Updates for mangapark.net (updated algorithms)
+- [FIX] Updates for mangastream.cc (updated algorithms)
+- [FIX] Updates for mangatown.com (updated algorithms)
+- [FIX] Updates for porncomixonline.net (updated algorithms)
+- [FIX] Updates for rawdevart.com (updated algorithms)
+- [FIX] Updates for readmng.com (updated algorithms)
+- [FIX] Updates for serimanga.com (updated algorithms)
+- [FIX] Updates for vercomicsporno.com (updated algorithms)
+- [FIX] Updates for vermangasporno.com (updated algorithms)
+- [FIX] Updates for yaoi-chan.me (updated algorithms)
+- [MISC] Updated libraries
+- [MISC] Various improvements and bug fixes
+
 [Release 8]
 - [NEW] Added support for readmanhwa.com (NON-H)
 - [FIX] Updates for hentai-id.tv (updated algorithms)
