@@ -34,7 +34,7 @@ function GetChapters()
 
         chapter.Url = chapterNode.SelectValue('td/a/@href')
         chapter.Title = chapterNode.SelectValue('td/a')
-        --chapter.Translator = chapterNode.SelectValue('td[2]')
+        chapter.Translator = chapterNode.SelectValue('td[2]')
 
         if(not isempty(chapter.Url)) then
             chapters.Add(chapter)
