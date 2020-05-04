@@ -2,7 +2,7 @@ function Register()
    
     module.Name = 'FoOlSlide'
 
-    module.Domains.Add('jaiminisbox.com', 'Jaimini\'s Box')
+    --module.Domains.Add('jaiminisbox.com', 'Jaimini\'s Box')
     
 end
 
