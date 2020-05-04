@@ -54,6 +54,43 @@ function GetPages() -- required
     ParsePages(GetJsonFromApi(url), pages)
 end
 
+function Login()
+    
+    if(not http.Cookies.Contains('mangadex_session')) then
+
+        http.Referer = 'https://'..module.Domain..'/login'
+
+        -- Make an initial request to get session cookie(s).
+
+        http.Get(http.Referer)
+
+        -- Build multipart form data.
+
+        local formData = MultipartFormData.New()
+
+        formData.Add('login_username', username)
+        formData.Add('login_password', password)
+        formData.Add('two_factor', '')
+        formData.Add('remember_me', '1')
+
+        -- Make the login request.
+
+        http.Headers['accept'] = '*/*'
+        http.Headers['content-type'] = formData.ContentType
+        http.Headers['x-requested-with'] = 'XMLHttpRequest'
+
+        local response = http.PostResponse('https://'..module.Domain..'/ajax/actions.ajax.php?function=login', formData)
+
+        if(not response.Cookies.Contains('mangadex_session')) then
+            Fail(Error.LoginFailed)
+        end
+
+        global.SetCookies(response.Cookies)
+
+    end
+
+end
+
 function ParseChapters(json, output)
  
     local userLanguages = global.GetSetting('sssMangadexPreferredLanguages'):split(',')
