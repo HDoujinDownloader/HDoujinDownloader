@@ -3,6 +3,7 @@ function Register()
     module.Name = 'Манга-тян'
     module.Language = 'Russian'
 
+    module.Domains.Add('exhentai-dono.me', 'Хентай-тян!')
     module.Domains.Add('h-chan.me', 'Хентай-тян!')
     module.Domains.Add('manga-chan.me', 'Манга-тян')
     module.Domains.Add('yaoi-chan.me', 'Яой-тян')
@@ -10,6 +11,8 @@ function Register()
 end
 
 function GetInfo()
+
+    info.Url = SetDevelopmentAccessParameter(info.Url)
 
     info.Title = dom.SelectValue('//h1')
     info.AlternativeTitle = dom.SelectValue('//td[contains(text(), "Другие названия")]/following-sibling::td'):split(';')
@@ -52,7 +55,9 @@ function GetInfo()
 
     if(ParseChapters().Count() <= 0) then
 
-        info.Url = GetRoot(info.Url):trim('/')..dom.SelectValue('//a[contains(text(), "Читать онлайн")]/@href')
+        info.Url = dom.SelectValue('//a[contains(text(), "Читать онлайн")]/@href')
+        info.Url = SetDevelopmentAccessParameter(info.Url)
+
         info.PageCount = ParsePages(info.Url).Count()
 
     end
@@ -68,7 +73,11 @@ function GetChapters()
 end
 
 function GetPages()
+
+    url = SetDevelopmentAccessParameter(url)
+
     pages.AddRange(ParsePages(url))
+
 end
 
 function CleanTitle(title)
@@ -77,6 +86,29 @@ function CleanTitle(title)
         :before('&raquo;')
         :before('читать онлайн')
         :before('онлайн')
+
+end
+
+function Login()
+
+    if(http.Cookies.Empty()) then
+
+        http.Referer = 'https://'..module.Domain..'/index.php'
+
+        http.PostData.Add('login', 'submit')
+        http.PostData.Add('login_name', username)
+        http.PostData.Add('login_password', password)
+        http.PostData.Add('image', 'Вход')
+        
+        local response = http.PostResponse('https://'..module.Domain..'/index.php')
+
+        if(not response.Cookies.Contains('dle_user_id')) then
+            Fail(Error.LoginFailed)
+        end
+
+        global.SetCookies(response.Cookies)
+
+    end
 
 end
 
@@ -103,5 +135,21 @@ function ParsePages(url)
     pageList.AddRange(pagesJson)
 
     return pageList
+
+end
+
+function SetDevelopmentAccessParameter(url)
+
+    if(GetDomain(url) == 'exhentai-dono.me' and isempty(GetParameter(url, 'development_access'))) then
+
+        -- We need to add the "development_access" URI parameter to get the reader to load on this domain.
+
+        url = SetParameter(url, 'development_access', 'true')
+
+        dom = Dom.New(http.Get(url))
+
+    end
+
+    return url
 
 end
