@@ -30,6 +30,12 @@ function GetPages()
 
     pages.AddRange(dom.SelectValues('//div[contains(@class, "comicimg")]//img/@data-src'))
 
+    -- Update (May 12th, 2020): We need to use another way of getting images for newer posts.
+
+    if(pages.Count() <= 0) then
+        pages.AddRange(dom.SelectValues('//div[contains(@class, "comicimg")]//img/@data-lazy-src'))
+    end
+
     -- We may need to get the tags a little differently for some posts (chochox.com).
 
     if(pages.Count() <= 0) then
