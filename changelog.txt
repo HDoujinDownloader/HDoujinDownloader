@@ -2,6 +2,14 @@
 1.19.9.32
 -----------------------------------------------------------------------------------------------------------------------------------
 
+[Release 10]
+- [NEW] Added support for gotofap.org
+- [FIX] Fixed error occurring when tag organization is enabled and formatting string contains certain characters
+- [FIX] Updates for ac.qq.com (updated algorithms)
+- [FIX] Updates for gntai.xyz (moved to gntai.net)
+- [FIX] Updates for onemanhua.com (moved to ohmanhua.com)
+- [FIX] Updates for vermangasporno.com (updated algorithms)
+
 [Release 9]
 - [NEW] Added "%ID%" formatting string token
 - [NEW] Added preview to formatting strings
