@@ -5,6 +5,7 @@ function Register()
     module.Adult = true
 
     module.Domains.Add('3dcomixsex.com', '3D Comix Sex')
+    module.Domains.Add('porncomix.pro', 'Porn Comix')
     module.Domains.Add('xxx3dcomix.com')
 
 end
