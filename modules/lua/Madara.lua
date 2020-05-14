@@ -12,6 +12,7 @@ function Register()
     module.Domains.Add('disasterscans.com', 'Disaster Scans')
     module.Domains.Add('hentairead.com', 'HentaiRead')
     module.Domains.Add('mangastream.cc', 'MangaStream')
+    module.Domains.Add('mangatx.com', 'Mangatx')
     module.Domains.Add('porncomixonline.net', 'Porncomix')
     module.Domains.Add('toonily.com', 'Toonily')
 
@@ -74,6 +75,14 @@ function GetInfo()
         -- Reader galleries don't always have a title, so we'll use the title of the selected chapter if we need to.
 
         info.Title = dom.SelectValue('//li[@class="active"]')
+
+    end
+
+    if(isempty(info.Summary)) then
+
+        -- Some sites don't have a nested "p" element in the description (e.g. mangatx.com).
+
+        info.Summary = dom.SelectValue('//div[contains(@class, "description-summary")]/div')
 
     end
 
