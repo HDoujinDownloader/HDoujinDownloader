@@ -45,4 +45,8 @@ function GetPages()
 
     pages.AddRange(dom.SelectValues('//div[@id="owl_container"]//img/@data-src'))
 
+    -- Some of the image hosts will 403 with a referer.
+
+    pages.Referer = ''
+
 end
