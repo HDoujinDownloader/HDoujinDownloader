@@ -7,6 +7,7 @@ function Register()
     module.Name = 'LoveHeaven'
 
     module.Domains.Add('hanascan.com', 'HanaScan.com')
+    module.Domains.Add('kisslove.net', 'KissLove')
     module.Domains.Add('lhscan.net', 'LoveHeaven')
     module.Domains.Add('lhscans.com', 'LoveHeaven')
     module.Domains.Add('loveheaven.net', 'LoveHeaven')
@@ -87,13 +88,21 @@ function GetPages()
 
     for node in dom.SelectElements('//img[contains(@class,"chapter-img")]') do
         
+        local imageUrl = "";
+
         if(not node.GetAttribute('data-original'):empty()) then
-            pages.Add(node.GetAttribute('data-original')) -- manhwa18.com, etc.
+            imageUrl = node.GetAttribute('data-original') -- manhwa18.com, etc.
         elseif(not node.GetAttribute('data-src'):empty()) then
-            pages.Add(node.GetAttribute('data-src')) -- mangahato.com
+            imageUrl = node.GetAttribute('data-src') -- mangahato.com
         else
-            pages.Add(node.GetAttribute('src')) -- everything else
+            imageUrl = node.GetAttribute('src') -- everything else
         end
+
+        if(not imageUrl:startsWith('http')) then
+            imageUrl = DecodeBase64(imageUrl) -- loveheaven.net
+        end
+
+        pages.Add(imageUrl)
 
     end
 
