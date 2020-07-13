@@ -5,6 +5,7 @@ function Register()
 
     module.Domains.Add('manga4life.com')
     module.Domains.Add('mangalife.us')
+    module.Domains.Add('mangasee123.com', 'MangaSee')
 
 end
 
