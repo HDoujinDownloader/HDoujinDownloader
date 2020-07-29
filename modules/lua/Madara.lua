@@ -13,6 +13,7 @@ function Register()
     module.Domains.Add('hentairead.com', 'HentaiRead')
     module.Domains.Add('mangastream.cc', 'MangaStream')
     module.Domains.Add('mangatx.com', 'Mangatx')
+    module.Domains.Add('manytoon.com', 'ManyToon')
     module.Domains.Add('porncomixonline.net', 'Porncomix')
     module.Domains.Add('toonily.com', 'Toonily')
 
