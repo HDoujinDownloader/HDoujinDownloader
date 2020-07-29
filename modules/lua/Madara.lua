@@ -13,6 +13,7 @@ function Register()
     module.Domains.Add('hentairead.com', 'HentaiRead')
     module.Domains.Add('mangastream.cc', 'MangaStream')
     module.Domains.Add('mangatx.com', 'Mangatx')
+    module.Domains.Add('manhwahentai.me', 'ManhwaHentai.me')
     module.Domains.Add('manytoon.com', 'ManyToon')
     module.Domains.Add('porncomixonline.net', 'Porncomix')
     module.Domains.Add('toonily.com', 'Toonily')
@@ -87,6 +88,8 @@ function GetInfo()
 
     end
 
+    info.Title = CleanTitle(info.Title)
+
 end
 
 function GetChapters()
@@ -157,5 +160,16 @@ function GetPages()
         end
 
     end
+
+end
+
+function CleanTitle(title)
+
+    return tostring(title)
+        :beforelast(' - Webtoon ') -- Remove " - Webtoon Manhwa Hentai" suffix (manhwahentai.me)
+        :beforelast(' &#8211; Webtoon ') -- Remove " — Webtoon Manhwa Hentai" suffix (manhwahentai.me)
+        :trim()
+        :trim(' Manhwa Hentai') -- Remove " Manhwa Hentai" suffix (manhwahentai.me)
+        :trim()
 
 end
