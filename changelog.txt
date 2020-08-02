@@ -1,3 +1,32 @@
+[v2020.8.1.0]
+
+- [NEW] Added support for 3dcomixsex.com
+- [NEW] Added support for hentaime.net
+- [NEW] Added support for manga1000.com (NON-H)
+- [NEW] Added support for manga11.com (NON-H)
+- [NEW] Added support for mangaowl.net (NON-H)
+- [NEW] Added support for mangatx.com (NON-H)
+- [NEW] Added support for manhuared.com (NON-H)
+- [NEW] Added support for manhwahentai.me
+- [NEW] Added support for manytoon.com (NON-H)
+- [NEW] Added support for porncomix.pro
+- [NEW] Added support for xxx3dcomix.com
+- [NEW] Added support for yaoimangaonline.com
+- [NEW] Added %GID%, %PUBLISHER%, %CONVENTION%, and %MAGAZINE% folder formatting tokens
+- [NEW] Added support for arbitrary padding for formatting string tokens (e.g. "%PAGE(000)%" -> "001")
+- [FIX] Updates for gotofap.org (updated algorithms)
+- [FIX] Updates for japscan.co (updated algorithms)
+- [FIX] Updates for kissmanga.com (updated algorithms)
+- [FIX] Updates for loveheaven.net (updated algorithms)
+- [FIX] Updates for mangahato.com (moved to kisslove.net)
+- [FIX] Updates for mangaseeonline.us (moved to mangasee123.com)
+- [FIX] Updates for nhentai.net (updated algorithms)
+- [FIX] Improved Cloudflare challenge interaction
+- [FIX] Improved file path length checking
+- [MISC] Moved options to "Tools > Preferences"
+- [MISC] Updated libraries
+- [MISC] Various improvements and bug fixes
+
 -----------------------------------------------------------------------------------------------------------------------------------
 1.19.9.32
 -----------------------------------------------------------------------------------------------------------------------------------
