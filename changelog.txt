@@ -1,4 +1,4 @@
-[v2020.8.1.0]
+[v2020.8.1.1]
 
 - [NEW] Added support for 3dcomixsex.com
 - [NEW] Added support for hentaime.net
@@ -20,6 +20,7 @@
 - [FIX] Updates for loveheaven.net (updated algorithms)
 - [FIX] Updates for mangahato.com (moved to kisslove.net)
 - [FIX] Updates for mangaseeonline.us (moved to mangasee123.com)
+- [FIX] Updates for myreadingmanga.info (updated algorithms)
 - [FIX] Updates for nhentai.net (updated algorithms)
 - [FIX] Improved Cloudflare challenge interaction
 - [FIX] Improved file path length checking
