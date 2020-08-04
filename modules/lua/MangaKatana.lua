@@ -28,14 +28,14 @@ end
 
 function GetPages()
 
-    -- Pages are stored in the "ytaw" array, with the URLs revsersed.
+    -- Pages are stored in the "ytaw" array.
 
     local pagesArray = tostring(dom):regex('var\\s*ytaw=\\s*(\\[.+?\\])', 1)
     local pagesJson = Json.New(pagesArray)
 
-    for obfuscatedPageUrl in pagesJson do
+    for pageJson in pagesJson do
 
-        local pageUrl = tostring(obfuscatedPageUrl):reverse()
+        local pageUrl = tostring(pageJson)
 
         -- Skip the OpenSocial proxy.
 
