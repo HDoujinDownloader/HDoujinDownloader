@@ -80,7 +80,7 @@ function Login()
         http.Headers['x-requested-with'] = 'XMLHttpRequest'
 
         local response = http.PostResponse('https://'..module.Domain..'/ajax/actions.ajax.php?function=login', formData)
-
+        
         if(not response.Cookies.Contains('mangadex_session')) then
             Fail(Error.LoginFailed)
         end
@@ -92,14 +92,15 @@ function Login()
 end
 
 function ParseChapters(json, output)
- 
-    local userLanguages = global.GetSetting('sssMangadexPreferredLanguages'):split(',')
-    local acceptAny = userLanguages.Count() <= 0 or userLanguages.Contains(GetLanguageId("all"))
+
+    local sssMangadexPreferredLanguages = global.GetSetting('sssMangadexPreferredLanguages')
+    local userLanguages = sssMangadexPreferredLanguages:split(',')
+    local acceptAny = isempty(sssMangadexPreferredLanguages) or userLanguages.Count() <= 0 or userLanguages.Contains(GetLanguageId("all"))
 
     for chapterJson in json['chapter'] do
 
         chapterInfo = ChapterInfo.New()
-
+        
         volumeNumber = chapterJson['volume']
         chapterNumber = chapterJson['chapter']
         chapterSubtitle = CleanChapterTitle(chapterJson['title'])
@@ -131,7 +132,7 @@ function ParseChapters(json, output)
         chapterInfo.Language = chapterJson['lang_code']
         
         local uploadTimestamp = tonumber(chapterJson['timestamp'])
-
+        
         if(uploadTimestamp <= os.time() and (acceptAny or userLanguages.Contains(GetLanguageId(chapterInfo.Language)))) then
             output.Add(chapterInfo)
         end
