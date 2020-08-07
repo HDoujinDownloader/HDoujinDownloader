@@ -1,3 +1,20 @@
+[v2020.8.7.0]
+
+- [FIX] Fixed Cloudflare settings resetting to default after restart
+- [FIX] Fixed Cloudflare error message not appearing for some solvers
+
+[v2020.8.5.0]
+
+- [FIX] Fixed issue with some image URLs no longer working properly
+- [MISC] Chapter language for MangaDex is now "All" by default
+- [MISC] "Convert chapters individually" is now enabled by default
+
+[v2020.8.4.0]
+
+- [FIX] Updates for mangadex.org (updated algorithms)
+- [FIX] Updates for mangakatana.com (updated algorithms)
+- [FIX] Fixed issue with some relative image URLs no longer working properly
+
 [v2020.8.1.1]
 
 - [NEW] Added support for 3dcomixsex.com
