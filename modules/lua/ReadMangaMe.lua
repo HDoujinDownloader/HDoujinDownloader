@@ -4,8 +4,9 @@ function Register()
 
     module.Language = 'Russian'
 
-    module.Domains.Add('readmanga.me', 'ReadManga.me')
     module.Domains.Add('mintmanga.live', 'MintManga.com')
+    module.Domains.Add('readmanga.live', 'ReadManga.me')
+    module.Domains.Add('readmanga.me', 'ReadManga.me')
 
 end
 
