@@ -1,3 +1,8 @@
+[v2020.8.8.0]
+
+- [FIX] Updates for hitomi.la (updated algorithms)
+- [FIX] Updates for readmanga.me (moved to readmanga.live)
+
 [v2020.8.7.0]
 
 - [FIX] Fixed Cloudflare settings resetting to default after restart
