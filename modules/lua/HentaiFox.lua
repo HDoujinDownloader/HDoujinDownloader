@@ -32,13 +32,24 @@ function GetPages()
 
     dom = dom.New(http.Get(url))
 
-    local pageCount = GetPageCount()
     local imageDir = dom.SelectValue('//input[@name="image_dir"]/@value')
     local galleryId = dom.SelectValue('//input[@name="gallery_id"]/@value')
 
-    for i = 1, pageCount do
+    local thumbnailsJsonStr = tostring(dom):regex("var\\s*g_th\\s*=\\s*\\$\\.parseJSON\\('(.+?)'\\);", 1)
+    local thumbnailsJson = Json.New(thumbnailsJsonStr)
 
-        pages.Add(FormatString('//i.{0}/{1}/{2}/{3}.jpg', module.Domain, imageDir, galleryId, i))
+    for key in thumbnailsJson.Keys do
+
+        local pageNumber = key
+        local pageExtension = tostring(thumbnailsJson[key]):split(',').First()
+
+        if(pageExtension == 'p') then
+            pageExtension = '.png'
+        else
+            pageExtension = '.jpg'
+        end
+
+        pages.Add(FormatString('//i.{0}/{1}/{2}/{3}{4}', module.Domain, imageDir, galleryId, pageNumber, pageExtension))
 
     end
 
