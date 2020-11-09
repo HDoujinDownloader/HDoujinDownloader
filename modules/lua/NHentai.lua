@@ -38,9 +38,9 @@ function GetInfo()
         -- Get the gallery's tags.
 
         info.Tags = GetTagsFromTagGroup('Tags')
-        info.Circle = GetTagsFromTagGroup('Groups')
-        info.Artist = GetTagsFromTagGroup('Artists')
-        info.Parody = GetTagsFromTagGroup('Parodies')
+        info.Circle = tostring(GetTagsFromTagGroup('Groups')):title()
+        info.Artist = tostring(GetTagsFromTagGroup('Artists')):title()
+        info.Parody = tostring(GetTagsFromTagGroup('Parodies')):title()
         info.Characters = GetTagsFromTagGroup('Characters')
         info.Language = GetTagsFromTagGroup('Languages')
         info.Type = GetTagsFromTagGroup('Categories')
