@@ -16,7 +16,6 @@ function GetInfo()
 
 	info.Title = json['title']
 	info.OriginalTitle = json['japanese_title']
-	info.Type = json['type']
 	info.Language = json['language']
 	info.Tags = json.SelectValues('tags[*].tag')
 	
@@ -34,6 +33,7 @@ function GetInfo()
 	info.Series = dom.SelectValues('//td[contains(text(),"Series")]/following-sibling::*//a')
 	info.Artist = dom.SelectValues('//h2//a')
 	info.Characters = dom.SelectValues('//td[contains(text(),"Characters")]/following-sibling::*//a')
+	info.Type = dom.SelectValues('//td[contains(text(),"Type")]/following-sibling::*//a')
 	info.Parody = info.Series
 
 end
