@@ -29,11 +29,11 @@ function GetInfo()
 
 	-- Some information (group, series, artist, characters) is only available directly on the gallery page.
 
-	info.Circle = dom.SelectValues('//td[contains(text(),"Group")]/following-sibling::*//a')
-	info.Series = dom.SelectValues('//td[contains(text(),"Series")]/following-sibling::*//a')
-	info.Artist = dom.SelectValues('//h2//a')
+	info.Circle = tostring(dom.SelectValues('//td[contains(text(),"Group")]/following-sibling::*//a')):title()
+	info.Series = tostring(dom.SelectValues('//td[contains(text(),"Series")]/following-sibling::*//a')):title()
+	info.Artist = tostring(dom.SelectValues('//h2//a')):title()
 	info.Characters = dom.SelectValues('//td[contains(text(),"Characters")]/following-sibling::*//a')
-	info.Type = dom.SelectValues('//td[contains(text(),"Type")]/following-sibling::*//a')
+	info.Type = tostring(dom.SelectValues('//td[contains(text(),"Type")]/following-sibling::*//a')):title()
 	info.Parody = info.Series
 
 end
