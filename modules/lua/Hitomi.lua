@@ -11,9 +11,22 @@ end
 
 function GetInfo()
 
+	-- If we're being redirected, follow the redirect to the final page (URLs without gallery title redirect to URLs with gallery titles).
+	-- It's important to follow the redirect in order to get all metadata fields.
+
+	local redirectUrl = dom.SelectValue('//meta[@http-equiv="refresh"]/@content'):after('url=')
+
+	if(not isempty(redirectUrl)) then
+		
+		url = redirectUrl
+		dom = Dom.New(http.Get(url))
+
+	end
+
 	local galleryId = GetGalleryId(url)
 	local json = GetGalleryJson(galleryId)
 
+	info.Url = url
 	info.Title = json['title']
 	info.OriginalTitle = json['japanese_title']
 	info.Language = json['language']
