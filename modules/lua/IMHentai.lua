@@ -24,13 +24,26 @@ function GetPages()
 
     local loadDir = dom.SelectValue('//input[@id="load_dir"]/@value')
     local loadId = dom.SelectValue('//input[@id="load_id"]/@value')
-    local galleryId = dom.SelectValue('//input[@id="gallery_id"]/@value')
+    local galleryId = tonumber(dom.SelectValue('//input[@id="gallery_id"]/@value'))
 
     -- The JSON object has the filenames as the key; the value is a 3-tuple starting with a letter that indicates the file type.
 
     local imagesJson = Json.New(tostring(dom):regex("g_th\\s*=\\s*\\$\\.parseJSON\\('(.+?)'\\)", 1))
 
-    local imageServer = tonumber(galleryId) <= 274825 and 'm1' or 'm2'
+    -- The logic that selects an image server is in main.js.
+
+    
+    local imageServer = 'm4'
+
+    if(galleryId > 0 and galleryId <= 274825) then
+        imageServer = 'm1'
+    elseif(galleryId > 274825 and galleryId <= 403818) then
+        imageServer = 'm2'
+    elseif(galleryId > 403818 and galleryId <= 527143) then
+        imageServer = 'm3'
+    elseif(galleryId > 527143) then
+        imageServer = 'm4'
+    end
 
     for key in imagesJson.Keys do
 
