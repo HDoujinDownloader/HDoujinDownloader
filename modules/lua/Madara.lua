@@ -44,7 +44,7 @@ function GetInfo()
     info.Type = dom.SelectValue('//div[contains(h5/text(), "Type") or contains(h5/text(), "Tip")]/following-sibling::div')
     info.DateReleased = dom.SelectValue('//div[contains(h5/text(), "Release") or contains(h5/text(), "Yayınlanma")]/following-sibling::div')
     info.Status = dom.SelectValue('//div[contains(h5/text(), "Status") or contains(h5/text(), "Durum")]/following-sibling::div')
-    info.Summary = dom.SelectValue('//div[contains(@class, "description-summary")]//p')
+    info.Summary = dom.SelectValues('//div[contains(@class, "description-summary")]//p'):join('\n\n') -- note that some content has multiple paragraphs (e.g. on astrallibrary.net)
     info.Adult = not isempty(dom.SelectValue('//h1/span[contains(@class, "adult")]'))
     info.Language = dom.SelectValues('//div[contains(h5/text(), "Language")]/following-sibling::div//a')
 
