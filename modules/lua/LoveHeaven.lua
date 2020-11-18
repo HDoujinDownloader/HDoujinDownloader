@@ -27,6 +27,7 @@ function Register()
     module.Domains.Add('mangabone.com', 'MangaBone')
     module.Domains.Add('manhwa18.*', 'Manhwa18.com') -- manhwa18.net, manhwa18.com
     module.Domains.Add('manhwascan.com', 'Manhwascan') -- not 100% English
+    module.Domains.Add('manhwasmut.com', 'ManhwaSmut')
 
     module.Language = 'English'
 
@@ -57,6 +58,10 @@ function GetInfo()
 
         info.Summary = dom.SelectValue('//div[@class="row"]//p[not(@*)]/text()')
 
+        if(isempty(info.Summary)) then -- manhwasmut.com
+            info.Summary = dom.SelectValue('//div[contains(@class,"detail")]/div[contains(@class,"content")]')
+        end
+
         if(info.Title:endswith(' - RAW')) then
             info.Language = 'Japanese'
         else
@@ -66,10 +71,14 @@ function GetInfo()
 
         end
 
-        info.Title = info.Title:before(' - RAW'):title()
+        info.Title = CleanTitle(info.Title):title()
 
-        if(GetDomain(url):contains('18')) then
+        if(module.Domain:contains('18')) then
             info.Adult = true
+        end
+
+        if(module.Domain:contains('manhwa')) then
+            info.Type = 'Manhwa'
         end
 
     end
@@ -137,6 +146,7 @@ function CleanTitle(title)
         :after('You are watching ')
         :beforelast(' Online at ')
         :beforelast(', Read ')
+        :beforelast(' - RAW')
         :trim()
         :title()
 
