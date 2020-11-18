@@ -16,7 +16,7 @@ function GetInfo()
         -- Added from reader.
         
         local json = GetImagesJson()
-
+        
         info.Title = json.SelectValue('comic.title') .. ' - ' .. json.SelectValue('chapter.name')
         info.Summary = json.SelectValue('comic.description')
         info.Tags = json.SelectValue('tags[*].slug')
@@ -27,7 +27,7 @@ function GetInfo()
         -- Added from summary.
 
         local json = GetSummaryJson()
-        
+
         info.Title = json['title']
         info.Summary = json['description']
         info.Status = json['status']
@@ -81,9 +81,11 @@ end
 
 function GetSummaryJson()
 
+    -- The "nsfw" parameter is required to access NSFW content (404 error otherwise).
+
     local slug = url:regex('\\/webtoon\\/([^\\/]+)', 1)
 
-    return GetApiJson(GetApiBase()..'comics/'..slug)   
+    return GetApiJson(GetApiBase()..'comics/'..slug..'?nsfw=true')   
 
 end
 
@@ -91,7 +93,7 @@ function GetChaptersJson()
 
     local slug = url:regex('\\/webtoon\\/([^\\/]+)', 1)
 
-    return GetApiJson(GetApiBase()..'comics/'..slug..'/chapters')   
+    return GetApiJson(GetApiBase()..'comics/'..slug..'/chapters?nsfw=true')   
 
 end
 
@@ -99,6 +101,6 @@ function GetImagesJson()
 
     local slug = url:regex('\\/webtoon\\/([^\\/]+\\/[^\\/]+)', 1)
 
-    return GetApiJson(GetApiBase()..'comics/'..slug..'/images')   
+    return GetApiJson(GetApiBase()..'comics/'..slug..'/images?nsfw=true')   
 
 end
