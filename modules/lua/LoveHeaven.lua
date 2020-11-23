@@ -87,7 +87,7 @@ end
 
 function GetChapters()
 
-    chapters.AddRange(dom.SelectElements('//a[@class="chapter"]'))
+    chapters.AddRange(dom.SelectElements('//a[@class="chapter" and not(@href="#")]'))
 
     chapters.Reverse()
 
