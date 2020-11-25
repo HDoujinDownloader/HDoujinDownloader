@@ -111,7 +111,15 @@ function GetPages()
             imageUrl = DecodeBase64(imageUrl) -- loveheaven.net
         end
 
-        pages.Add(imageUrl)
+        local page = PageInfo.New(imageUrl)
+
+        -- manhwa.club will respond with a 403 error for other referers.
+
+        if(GetDomain(imageUrl) == 'manhwa.club') then
+            page.Referer = GetRoot(imageUrl)
+        end
+
+        pages.Add(page)
 
     end
 
