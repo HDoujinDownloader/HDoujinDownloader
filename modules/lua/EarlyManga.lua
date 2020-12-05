@@ -8,7 +8,8 @@ function Register()
     module.Domains.Add('astrallibrary.net', 'Astral Library')
     module.Domains.Add('earlymanga.net', 'EarlyManga')
     module.Domains.Add('earlymanga.website', 'EarlyManga')
-
+    module.Domains.Add('hiperdex.com', 'Hiperdex')
+    
 end
 
 function GetChapters()
