@@ -5,11 +5,12 @@ function Register()
     module.Name = 'EarlyManga'
     module.Language = 'English'
 
+    module.Domains.Add('aloalivn.com', 'Aloalivn.com')
     module.Domains.Add('astrallibrary.net', 'Astral Library')
     module.Domains.Add('earlymanga.net', 'EarlyManga')
     module.Domains.Add('earlymanga.website', 'EarlyManga')
     module.Domains.Add('hiperdex.com', 'Hiperdex')
-    
+
 end
 
 function GetChapters()
