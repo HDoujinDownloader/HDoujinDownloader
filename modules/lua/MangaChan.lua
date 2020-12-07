@@ -2,16 +2,20 @@ function Register()
 
     module.Name = 'Манга-тян'
     module.Language = 'Russian'
+    module.Adult = true
 
     module.Domains.Add('exhentai-dono.me', 'Хентай-тян!')
     module.Domains.Add('h-chan.me', 'Хентай-тян!')
     module.Domains.Add('henchan.pro', 'Хентай-тян!')
+    module.Domains.Add('hentai-chan.pro', 'Хентай-тян!')
     module.Domains.Add('manga-chan.me', 'Манга-тян')
     module.Domains.Add('yaoi-chan.me', 'Яой-тян')
 
 end
 
 function GetInfo()
+
+    FailIfLoginRequired()
 
     info.Url = SetDevelopmentAccessParameter(info.Url)
 
@@ -23,11 +27,22 @@ function GetInfo()
     info.Tags = dom.SelectValues('//td[contains(text(), "Тэги")]/following-sibling::td//a')
     info.Translator = dom.SelectValues('//td[contains(text(), "Переводчики")]/following-sibling::td//a')
     info.Summary = dom.SelectValue('//div[@id="description"]/text()[1]')
+    info.Parody = dom.SelectValues('//div[contains(text(),"Аниме/манга") or contains(text(), "Серия")]/following-sibling::div')
+    info.Circle = dom.SelectValues('//div[contains(text(),"Цикл/Группа")]/following-sibling::div')
+    info.Language = dom.SelectValues('//div[contains(text(),"Язык")]/following-sibling::div')
 
     -- We might need to get a few fields differently (h-chan.me).
 
+    if(isempty(info.Type)) then
+        info.Type = dom.SelectValues('//div[contains(text(),"Тип")]/following-sibling::div')
+    end
+
     if(isempty(info.Author)) then
-        info.Author = dom.SelectValue('//div[contains(text(), "Автор")]/following-sibling::div')
+        info.Author = dom.SelectValues('//div[contains(text(), "Автор")]/following-sibling::div')
+    end
+
+    if(isempty(info.Status)) then
+        info.Status = dom.SelectValues('//div[contains(text(),"Статус (Томов)")]/following-sibling::div')
     end
 
     if(isempty(info.Tags)) then
@@ -35,15 +50,12 @@ function GetInfo()
     end
 
     if(isempty(info.Translator)) then
-        info.Translator = dom.SelectValue('//div[contains(text(), "Переводчик")]/following-sibling::div')
+        info.Translator = dom.SelectValues('//div[contains(text(), "Переводчик")]/following-sibling::div')
     end
 
     if(isempty(info.Summary)) then
         info.Summary = dom.SelectValue('//div[@id="description"]')
     end
-
-    info.Language = dom.SelectValue('//div[contains(text(), "Язык")]/following-sibling::div')
-    info.Parody = dom.SelectValue('//div[contains(text(), "Серия")]/following-sibling::div')
 
      -- We might not have a title yet if added from the reader.
 
@@ -131,6 +143,8 @@ function ParsePages(url)
 
     doc = http.Get(url)
 
+    FailIfLoginRequired()
+
     local pagesJson = Json.New(doc:regex('"fullimg":\\s*(\\[.+?\\])', 1))
 
     pageList.AddRange(pagesJson)
@@ -152,5 +166,13 @@ function SetDevelopmentAccessParameter(url)
     end
 
     return url
+
+end
+
+function FailIfLoginRequired()
+
+    if(tostring(dom):contains('Гости не могут просматривать этот раздел.')) then
+        Fail(Error.LoginRequired)
+    end
 
 end
