@@ -7,6 +7,7 @@ function Register()
     module.Name = 'LoveHeaven'
 
     module.Domains.Add('hanascan.com', 'HanaScan.com')
+    module.Domains.Add('kissaway.net', 'KissAway')
     module.Domains.Add('kisslove.net', 'KissLove')
     module.Domains.Add('lhscan.net', 'LoveHeaven')
     module.Domains.Add('lhscans.com', 'LoveHeaven')
@@ -46,12 +47,18 @@ function GetInfo()
     elseif(url:contains('/manga-')) then
 
         -- Added from summary page.
-
-        info.Title = tostring(dom.GetElementsByTagName('h1')[0])
+        
+        info.Title = dom.SelectValue('//h1')
         info.AlternativeTitle = dom.SelectValue('//li[descendant::i[contains(@class,"fa-clone")]]/text()'):after(':'):trim()
         info.Author = dom.SelectValues('//li[descendant::i[contains(@class,"fa-users")]]//a/text()')
         info.Tags = dom.SelectValues('//li[descendant::i[contains(@class,"fa-tags")]]//a/text()')
         info.Status = dom.SelectValue('//li[descendant::i[contains(@class,"fa-spinner")]]//a/text()')
+
+        -- Sometimes the title is a different element (e.g. kissaway.net).
+
+        if(isempty(info.Title)) then
+            info.Title = dom.SelectValue('//h3')
+        end
 
         -- Careful with getting the summary-- It's a little bit different across some sites.
         -- Ex: loveheaven.net vs hanascan.com
