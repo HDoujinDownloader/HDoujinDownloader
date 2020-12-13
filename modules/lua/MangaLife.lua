@@ -67,6 +67,7 @@ function GetPages()
     local currentChapterJson = Json.New(doc:regex('(?i)CurChapter\\s*=\\s*({.+?})', 1))
     local currentPathName = doc:regex('(?i)CurPathName\\s*=\\s*"(.+?)"', 1)
     local chapter = tostring(currentChapterJson['Chapter'])
+    local directory = tostring(currentChapterJson['Directory'])
     local chapterNumber = chapter:sub(2, -2) -- "100010" -> "0001"
     local fractionalPart = (chapter:sub(-1) != "0") and ('.'..chapter:sub(-1)) or ''
     local pageCount = tonumber(currentChapterJson['Page'])
@@ -74,19 +75,20 @@ function GetPages()
     for i = 1, pageCount do
 
         -- Page URLs are of the following form:
-        -- https://<currentPathName>/manga/<title>/<chapterNumber:0000>-<pageNumber:000>.png
+        -- https://<currentPathName>/manga/<title>/<directory?>/<chapterNumber:0000>-<pageNumber:000>.png
         
         -- If the chapter number is fractional, the fractional component needs to be appended to the chapter number.
         -- e.g. "0013.5-001.png"
 
-        local pageUrl = FormatString(
-            '//{0}/manga/{1}/{2}{3}-{4:000}.png', 
-            currentPathName, 
-            title, 
-            chapterNumber,
-            fractionalPart,
-            i
-        )
+        local pageUrl = '//'..currentPathName..'/manga/'..title..'/'
+
+        -- Some uploads have a "Directory" after the manga title (e.g. OPM), but not all of them do.
+
+        if(not isempty(directory)) then
+            pageUrl = pageUrl..directory..'/'
+        end
+
+        pageUrl = pageUrl..chapterNumber..fractionalPart..'-'..FormatString('{0:000}', i)..'.png'
         
         pages.Add(pageUrl)
 
