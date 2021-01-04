@@ -12,6 +12,7 @@ function Register()
     module.Domains.Add('lhscan.net', 'LoveHeaven')
     module.Domains.Add('lhscans.com', 'LoveHeaven')
     module.Domains.Add('loveheaven.net', 'LoveHeaven')
+    module.Domains.Add('lovehug.net', 'LoveHug')
     module.Domains.Add('mangahato.com', 'MangaHato')
     module.Domains.Add('rawlh.com', 'LoveHeaven')
     
@@ -38,15 +39,17 @@ end
 
 function GetInfo()
 
-    if(url:contains('/read-')) then
+    if(url:contains('/read-') or not isempty(url:regex('\\/\\d+\\/\\d+\\/$'))) then
 
         -- Added from chapter page.
+        -- Update (2021-01-04): lovehug.net uses URLs of the form "lovehug.net/(\d+)/(\d+)".
 
         info.Title = CleanTitle(dom.Title)
 
-    elseif(url:contains('/manga-')) then
+    elseif(url:contains('/manga-') or not isempty(url:regex('\\/\\d+\\/$'))) then
 
         -- Added from summary page.
+        -- Update (2021-01-04): lovehug.net uses URLs of the form "lovehug.net/(\d+)/".
         
         info.Title = dom.SelectValue('//h1')
         info.AlternativeTitle = dom.SelectValue('//li[descendant::i[contains(@class,"fa-clone")]]/text()'):after(':'):trim()
@@ -96,6 +99,16 @@ function GetChapters()
 
     chapters.AddRange(dom.SelectElements('//a[@class="chapter" and not(@href="#")]'))
 
+    -- lovehug.net does not have the class attribute "chapter" on chapter nodes.
+
+    if(isempty(chapters)) then
+
+        for chapterNode in dom.SelectElements('//ul[contains(@class,"list-chapters")]/a') do
+            chapters.Add(chapterNode.SelectValue('@href'), chapterNode.SelectValue('@title'))
+        end
+
+    end
+
     chapters.Reverse()
 
 end
@@ -110,6 +123,8 @@ function GetPages()
             imageUrl = node.GetAttribute('data-original') -- manhwa18.com, etc.
         elseif(not node.GetAttribute('data-src'):empty()) then
             imageUrl = node.GetAttribute('data-src') -- mangahato.com
+        elseif(not node.GetAttribute('data-pagespeed-lazy-src'):empty()) then
+            imageUrl = node.GetAttribute('data-pagespeed-lazy-src') -- lovehug.net
         else
             imageUrl = node.GetAttribute('src') -- everything else
         end
@@ -157,12 +172,18 @@ end
 
 function CleanTitle(title)
 
-    return tostring(title)
+    -- e.g. "Read MANGA TITLE (MANGA) - RAW"
+    -- e.g. "MANGA TITLE (MANGA) - RAW chap 1 latest - WebsiteName - Manga Online"
+
+    title = RegexReplace(title, '(^(?:Read\\s)|(?:(?:\\(.+?\\))?\\s-\\sRAW|latest\\s-\\s.+?\\s-\\sManga Online)$)', '')
+
+    title = tostring(title)
         :after('You are watching ')
         :beforelast(' Online at ')
         :beforelast(', Read ')
-        :beforelast(' - RAW')
         :trim()
         :title()
+
+    return title
 
 end
