@@ -11,12 +11,23 @@ function Register()
 
     module.Domains.Add('disasterscans.com', 'Disaster Scans')
     module.Domains.Add('hentairead.com', 'HentaiRead')
+    module.Domains.Add('mangapl.com', 'MangaPL')
     module.Domains.Add('mangastream.cc', 'MangaStream')
     module.Domains.Add('mangatx.com', 'Mangatx')
     module.Domains.Add('manhwahentai.me', 'ManhwaHentai.me')
+    module.Domains.Add('manytoon.club', 'ManyToon')
     module.Domains.Add('manytoon.com', 'ManyToon')
     module.Domains.Add('porncomixonline.net', 'Porncomix')
+    module.Domains.Add('readfreecomics.com', 'ReadFreeComics')
     module.Domains.Add('toonily.com', 'Toonily')
+
+    RegisterModule(module)
+
+    module = module.New()
+
+    module.Language = 'Korean'
+
+    module.Domains.Add('manhwaraw.com', 'ManhwaRaw')
 
     RegisterModule(module)
 
@@ -146,9 +157,10 @@ function GetPages()
         pages.AddRange(dom.SelectValues('//div[contains(@class, "reading-content")]//img/@data-src'))
 
         -- Sometimes the image URLs are in the "src" attribute (mangawow.com).
+        -- We get images with the "id" attribute specifically, because some sites have ad images (manytoon.club, readfreecomics.com).
 
         if(pages.Count() <= 0) then
-            pages.AddRange(dom.SelectValues('//div[contains(@class, "reading-content")]//img/@src'))
+            pages.AddRange(dom.SelectValues('//div[contains(@class, "reading-content")]//img[@id]/@src'))
         end
 
         -- Sometimes the image URLs are in the "href" attribute under "entry-content" (Western comics on www.porncomixonline.net).
