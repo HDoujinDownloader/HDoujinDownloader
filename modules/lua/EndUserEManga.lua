@@ -5,6 +5,7 @@ function Register()
     module.Name = 'eManga (EndUser)'
     module.Language = 'English'
 
+    module.Domains.Add('kissmangas.com', 'KissManga')
     module.Domains.Add('manganelo.online', 'MangaNelo.online')
     module.Domains.Add('manganelo.today', 'MangaNelo.Today')
     module.Domains.Add('manganelos.com', 'MangaNelos.com')
