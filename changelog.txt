@@ -1,3 +1,47 @@
+[v2021.1.18.0]
+
+- [NEW] Added FlareSolverr integration
+- [NEW] Added options for downloading exhentai galleries from mirror sites
+- [NEW] Added support for aloalivn.com
+- [NEW] Added support for astrallibrary.net
+- [NEW] Added support for hentai-img.com
+- [NEW] Added support for kissmanga.link
+- [NEW] Added support for kissmanga.org
+- [NEW] Added support for kissmangas.com
+- [NEW] Added support for language-based blacklisting
+- [NEW] Added support for lectormanga.com
+- [NEW] Added support for lectortmo.com
+- [NEW] Added support for mangas.in
+- [NEW] Added support for manhuaplus.com
+- [NEW] Added support for manhuaus.com
+- [NEW] Added support for readm.org
+- [NEW] Added support for redgifs.com
+- [NEW] Added support for tappytoon.com
+- [FIX] Fixed Lua module repository sometimes not being initialized
+- [FIX] Updated for manga4life.com (updated algorithms)
+- [FIX] Updates for 177pic.info (updated algorithms)
+- [FIX] Updates for asmhentai.com (updated algorithms)
+- [FIX] Updates for bato.to (updated algorithms)
+- [FIX] Updates for h-chan.me (moved to henchan.pro)
+- [FIX] Updates for henchan.pro (moved to hentai-chan.pro)
+- [FIX] Updates for hentaifox.com (fixed PNGs failing)
+- [FIX] Updates for hentainexus.com (updated algorithms)
+- [FIX] Updates for hiperdex.com (updated algorithms)
+- [FIX] Updates for hitomi.la (updated algorithms)
+- [FIX] Updates for hiyobi.me (updated algorithms)
+- [FIX] Updates for imhentai.com (updated image server selection logic)
+- [FIX] Updates for japscan.co (moved to japscan.se)
+- [FIX] Updates for kisslove.net (moved to kissaway.net)
+- [FIX] Updates for loveheaven.net (moved to lovehug.net)
+- [FIX] Updates for mangafreak.net (updated algorithms)
+- [FIX] Updates for manganelo.today (moved to manganelos.com)
+- [FIX] Updates for mangareader.net (updated algorithms)
+- [FIX] Updates for manhwa18.com (updated algorithms)
+- [FIX] Updates for manhwasmut.com (fixed 403 error for some images)
+- [FIX] Updates for nhentai.net (fixed casing for some metadata fields)
+- [FIX] Updates for readmanhwa.com (fixed nsfw galleries)
+- [MISC] Various improvements and bug fixes
+
 [v2020.8.8.0]
 
 - [FIX] Updates for hitomi.la (updated algorithms)
