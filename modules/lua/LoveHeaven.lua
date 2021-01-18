@@ -129,7 +129,7 @@ function GetPages()
             imageUrl = node.GetAttribute('src') -- everything else
         end
 
-        if(not imageUrl:startsWith('http')) then
+        if(isempty(imageUrl:regex('(^https?:|\\.(?:jpg|png)$)'))) then
             imageUrl = DecodeBase64(imageUrl) -- loveheaven.net
         end
 
