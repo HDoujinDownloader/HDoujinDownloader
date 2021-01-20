@@ -1,4 +1,9 @@
-[v2021.1.18.0]
+[v2021.1.20.0]
+
+- [FIX] Updates for r34comics.com (updated algorithms)
+- [MISC] Splash screen no longer stays on top of other windows
+
+[v2021.1.18.1]
 
 - [NEW] Added FlareSolverr integration
 - [NEW] Added options for downloading exhentai galleries from mirror sites
