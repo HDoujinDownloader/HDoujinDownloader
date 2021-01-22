@@ -44,7 +44,11 @@ function GetInfo()
         -- Added from chapter page.
         -- Update (2021-01-04): lovehug.net uses URLs of the form "lovehug.net/(\d+)/(\d+)".
 
-        info.Title = CleanTitle(dom.Title)
+        info.Title = dom.SelectValues('//div[contains(@class,"chapter-content-top")]//li[position()>2]'):join(' - ')
+
+        if(not info.Title:contains(' - ')) then -- lovehug.net doesn't have enough breadcrumbs, so we only get the last part
+            info.Title = CleanTitle(dom.Title)
+        end
 
     elseif(url:contains('/manga-') or not isempty(url:regex('\\/\\d+\\/$'))) then
 
@@ -129,7 +133,7 @@ function GetPages()
             imageUrl = node.GetAttribute('src') -- everything else
         end
 
-        if(isempty(imageUrl:regex('(^https?:|\\.(?:jpg|png)$)'))) then
+        if(not imageUrl:contains('.')) then
             imageUrl = DecodeBase64(imageUrl) -- loveheaven.net
         end
 
