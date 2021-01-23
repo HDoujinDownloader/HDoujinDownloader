@@ -59,6 +59,13 @@ end
 
 function GetPages()
 
+    -- The site won't offer up pages unless we provide an Accept-Language header.
+
+    http.Referer = url
+    http.Headers['Accept-Language'] = "en-US,en;q=0.5"
+    
+    dom = dom.New(http.Get(url))
+
     -- To get the pages, we need to make a GET request to "chapterfun.ashx" with the chapter parameters.
     -- It will respond with Dean Edwards packed JS, which when unpacked reveals the image files.
     -- Each request can yield one or more images, so we need to do this until we get all of them.
@@ -69,10 +76,6 @@ function GetPages()
     local DM5_VIEWSIGN_DT = GetVariableValue('DM5_VIEWSIGN_DT')
     local DM5_VIEWSIGN = GetVariableValue('DM5_VIEWSIGN')
     
-    -- The site won't offer up pages unless we provide an Accept-Language header.
-
-    http.Headers['Accept-Language'] = "en-US,en;q=0.5"
-
     -- Sometimes we don't get a response when querying for the pages, so make more than one attempt.
 
     local maxQueryAttempts = 5
