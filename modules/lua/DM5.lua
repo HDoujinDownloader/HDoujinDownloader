@@ -69,6 +69,10 @@ function GetPages()
     local DM5_VIEWSIGN_DT = GetVariableValue('DM5_VIEWSIGN_DT')
     local DM5_VIEWSIGN = GetVariableValue('DM5_VIEWSIGN')
     
+    -- The site won't offer up pages unless we provide an Accept-Language header.
+
+    http.Headers['Accept-Language'] = "en-US,en;q=0.5"
+
     -- Sometimes we don't get a response when querying for the pages, so make more than one attempt.
 
     local maxQueryAttempts = 5
