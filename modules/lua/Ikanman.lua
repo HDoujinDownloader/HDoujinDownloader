@@ -12,6 +12,8 @@ end
 
 function GetInfo()
 
+    GetFromMainDomainIfMobileDomain()
+
     local titleDiv = dom.SelectElement('//div[h1]')
     local subtitle = titleDiv.SelectValue('h2') -- chapters only
 
@@ -28,10 +30,13 @@ function GetInfo()
     info.Status = dom.SelectValue('//strong[contains(text(),"漫画状态")]/following-sibling::span')
     info.Summary = dom.SelectValue('//div[@id="intro-all"]')
     info.Adult = not isempty(dom.SelectValue('//input[@id="__VIEWSTATE"]'))
+    info.Url = url
 
 end
 
 function GetChapters()
+
+    GetFromMainDomainIfMobileDomain()
 
     local chapterBlocks = GetChapterBlocks()
 
@@ -59,6 +64,8 @@ end
 
 function GetPages()
 
+    GetFromMainDomainIfMobileDomain()
+
     -- The image data is an LZString-compressed base64 string obfuscated using Dean Edward's packer.
     -- A "splic" method is called on the string, which performs the decompression (decompressFromBase64).
 
@@ -82,7 +89,37 @@ function GetPages()
     local imageData = Json.New(unpackedImageData:regex('imgData\\(({.+?})\\)', 1))
 
     for file in imageData.SelectValues('files[*]') do
-        pages.Add('https://i.hamreus.com'..tostring(imageData['path'])..file..'?cid='..tostring(imageData['cid'])..'&md5='..tostring(imageData['sl']['m']))
+
+        local page = PageInfo.New()
+        local baseUrl = 'https://i.hamreus.com'..tostring(imageData['path'])..file
+
+        page.Url = baseUrl..'?e='..tostring(imageData['sl']['e'])..'&m='..tostring(imageData['sl']['m'])
+
+        -- Some galleries will accept image URLs with the "cid" and "md5" parameters in additional to the "e" and "m" parameters (the newer format), the latter of which works universally.
+        -- We'll add the old format as a backup URL just in case the primary URL doesn't work.
+
+        page.BackupUrls.Add(baseUrl..'?cid='..tostring(imageData['cid'])..'&md5='..tostring(imageData['sl']['m']))
+
+        pages.Add(page)
+
+    end
+
+    -- The referer must be from the domain "www.manhuagui.com", NOT just "manhuagui.com", even though galleries can be accessed through either (otherwise we get a 403).
+
+    pages.Referer = "https://www.manhuagui.com/"
+
+end
+
+function GetFromMainDomainIfMobileDomain()
+
+    if(GetHost(url):startsWith('m.')) then
+
+        url = RegexReplace(url, '\\/\\/m\\.', '//')
+
+        Log("Redirecting to "..url)
+
+        dom = dom.New(http.Get(url))
+
     end
 
 end
