@@ -1,3 +1,5 @@
+LZStringDownloadUrl = 'https://raw.githubusercontent.com/pieroxy/lz-string/master/libs/lz-string.min.js'
+
 function Register()
 
     module.Name = '看漫画'
@@ -25,12 +27,13 @@ function GetInfo()
     info.Author = dom.SelectValues('//strong[contains(text(),"漫画剧情")]/following-sibling::a')
     info.Status = dom.SelectValue('//strong[contains(text(),"漫画状态")]/following-sibling::span')
     info.Summary = dom.SelectValue('//div[@id="intro-all"]')
+    info.Adult = not isempty(dom.SelectValue('//input[@id="__VIEWSTATE"]'))
 
 end
 
 function GetChapters()
 
-    local chapterBlocks = dom.SelectElements('//div[contains(@class,"chapter-list")]/ul')
+    local chapterBlocks = GetChapterBlocks()
 
     for i = 0, chapterBlocks.Count() - 1 do
 
@@ -63,7 +66,7 @@ function GetPages()
 
     -- Download the LZString utility. 
 
-    js.Execute(http.Get('https://raw.githubusercontent.com/pieroxy/lz-string/master/libs/lz-string.min.js'))
+    js.Execute(http.Get(LZStringDownloadUrl))
 
     -- Add the "splic" method to the string class.
 
@@ -81,5 +84,29 @@ function GetPages()
     for file in imageData.SelectValues('files[*]') do
         pages.Add('https://i.hamreus.com'..tostring(imageData['path'])..file..'?cid='..tostring(imageData['cid'])..'&md5='..tostring(imageData['sl']['m']))
     end
+
+end
+
+function GetChapterBlocks()
+
+    -- 18+ content has the chapter list stored as an LZString-compressed string in the "__VIEWSTATE" element.
+    -- This element will not be present for other content, and the chapters can be read directly.
+    
+    local rootElement = dom
+    local compressedChapterBlocks = dom.SelectValue('//input[@id="__VIEWSTATE"]/@value')
+
+    if(not isempty(compressedChapterBlocks)) then
+
+        local js = JavaScript.New()
+
+        js.Execute(http.Get(LZStringDownloadUrl))
+
+        local uncompressedChapterBlocks = tostring(js.Execute('LZString.decompressFromBase64("'..compressedChapterBlocks..'")'))
+
+        rootElement = Dom.New(uncompressedChapterBlocks)
+
+    end
+
+    return rootElement.SelectElements('//div[contains(@class,"chapter-list")]/ul')
 
 end
