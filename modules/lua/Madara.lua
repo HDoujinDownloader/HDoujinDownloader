@@ -29,6 +29,14 @@ function Register()
 
     module.Domains.Add('manhwaraw.com', 'ManhwaRaw')
 
+    module = module.New()
+
+    module.Language = 'Thai'
+
+    module.Domains.Add('dokimori.com', 'DokiMori')
+    
+    RegisterModule(module)
+
     RegisterModule(module)
 
     module = module.New()
@@ -154,8 +162,14 @@ function GetPages()
 
     else
 
-        pages.AddRange(dom.SelectValues('//div[contains(@class, "reading-content")]//img/@data-src'))
+        pages.AddRange(dom.SelectValues('//div[input[@id="wp-manga-current-chap"]]//img/@src'))
 
+        -- This method works for most sites, but it can potentially match undesired divs ("reading-content-wrap", "related-reading-wrap") (dokimori.com).
+
+        if(pages.Count() <= 0) then
+            pages.AddRange(dom.SelectValues('//div[contains(@class, "reading-content")]//img/@data-src'))
+        end
+        
         -- Sometimes the image URLs are in the "src" attribute (mangawow.com).
         -- We get images with the "id" attribute specifically, because some sites have ad images (manytoon.club, readfreecomics.com).
 
