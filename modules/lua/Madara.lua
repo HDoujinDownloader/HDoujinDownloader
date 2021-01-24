@@ -29,13 +29,13 @@ function Register()
 
     module.Domains.Add('manhwaraw.com', 'ManhwaRaw')
 
+    RegisterModule(module)
+
     module = module.New()
 
     module.Language = 'Thai'
 
     module.Domains.Add('dokimori.com', 'DokiMori')
-    
-    RegisterModule(module)
 
     RegisterModule(module)
 
