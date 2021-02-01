@@ -11,6 +11,7 @@ function Register()
     module.Domains.Add('earlymanga.website', 'EarlyManga')
     module.Domains.Add('hiperdex.com', 'Hiperdex')
     module.Domains.Add('kissmanga.link', 'KissManga')
+    module.Domains.Add('mangarockteam.com', 'Manga Rock Team')
     module.Domains.Add('manhuaplus.com', 'ManhuaPLus')
     module.Domains.Add('manhuaus.com', 'Manhuaus.com')
 
