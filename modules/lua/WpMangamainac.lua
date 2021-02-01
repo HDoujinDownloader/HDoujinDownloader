@@ -34,15 +34,7 @@ end
 function GetPages()
 
     for pageUrl in dom.SelectValues('//div[contains(@class,"img_container")]//img/@src') do
-
-        -- Skip the Twitter advertisement banner.
-
-        if(not pageUrl:startsWith('https://cdn.imageart.online/')) then
-
-            pages.Add(pageUrl)
-
-        end
-
+        pages.Add(pageUrl)
     end
 
 end
