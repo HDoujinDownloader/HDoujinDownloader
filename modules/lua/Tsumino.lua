@@ -48,7 +48,7 @@ function GetInfo() -- required
 
         info.Title = title:before('/'):trim()
         info.OriginalTitle = title:after('/'):trim()
-        info.Tags = ParseBookData(doc, 'Tag')
+        info.Tags = dom.SelectValues('//div[@id="Tag"]/a[contains(@class,"book-tag")]')
         info.Artist = ParseBookData(doc, 'Artist')
         info.Circle = ParseBookData(doc, 'Group')
         info.Parody = ParseBookData(doc, 'Parody')
