@@ -29,14 +29,20 @@ end
 
 function GetChapters()
 
-    local chapterNodes = dom.SelectElements('//div[@id="chapters"]//li[contains(@class,"upload-link")]')
+    local chapterNodes = dom.SelectElements('//li[contains(@class,"upload-link")]')
     
     chapterNodes.Reverse()
     
     for chapterNode in chapterNodes do
 
         local chapterTitle = chapterNode.SelectValue('.//h4')
-        local uploadNodes = chapterNode.SelectElements('.//li')
+        local uploadNodes = chapterNode.SelectElements('(.//div[@class="row"])[.//span[contains(@class,"fa-play")]]')
+
+        -- One-shots won't have a chapter title, and we'll need to get the upload nodes differently (all one-shots only have one node?).
+
+        if(isempty(chapterTitle)) then
+            chapterTitle = "Capítulo 1.00"
+        end
 
         for i=0,uploadNodes.Count() - 1 do
 
@@ -57,14 +63,20 @@ end
 
 function GetPages()
 
-    -- Follow the redirect and get the final viewer URL.
+    -- Set the Referer to blank, because we won't be redirected to the right page if it isn't.
 
+    http.Referer = ''
+
+    dom = dom.New(http.Get(url))
+
+    -- Follow the redirect and get the final viewer URL.
+    
     url = dom.SelectValue('//meta[@property="og:url"]/@content')
 
     -- Switch to "cascade" mode so we can easily access all of the images.
 
     url = RegexReplace(url, '\\/(?:cascade|paginated)$', '/cascade')
-
+    
     dom = dom.New(http.Get(url))
 
     pages.AddRange(dom.SelectValues('//img/@data-src'))
