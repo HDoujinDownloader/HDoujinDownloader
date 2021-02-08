@@ -129,6 +129,8 @@ function GetPages()
             imageUrl = node.GetAttribute('data-src') -- mangahato.com
         elseif(not node.GetAttribute('data-pagespeed-lazy-src'):empty()) then
             imageUrl = node.GetAttribute('data-pagespeed-lazy-src') -- lovehug.net
+        elseif(not node.GetAttribute('data-aload'):empty()) then
+            imageUrl = node.GetAttribute('data-aload') -- lovehug.net (Since Feb. 7th, 2021)
         else
             imageUrl = node.GetAttribute('src') -- everything else
         end
