@@ -216,6 +216,35 @@ function AddAuthorizationHeader(http)
 
 end
 
+function GetAppVersion()
+
+    local appStoreUrl = 'https://play.google.com/store/apps/details?id=jp.pxv.android&hl=en_US&gl=US'
+    local appVersion = '5.0.234'
+
+    if(isempty(module.Data['App-Version'])) then
+
+        -- Set the default app version so we have something to use even if we fail to get the latest version.
+
+        module.Data['App-Version'] = appVersion
+
+        Log('Getting latest app version from '..appStoreUrl)
+
+        local dom = Dom.New(http.Get(appStoreUrl))
+
+        appVersion = dom.SelectValue('//div[contains(text(),"Current Version")]/following-sibling::*')
+
+        Log('Got app version: '..appVersion)
+
+        if(not isempty(appVersion)) then
+            module.Data['App-Version'] = appVersion
+        end
+
+    end
+
+    return module.Data['App-Version']
+
+end
+
 function PrepareHttpForAuthorization(http)
 
     -- Add all of the necessary common headers to the http object passed in to perform authorization.
@@ -227,12 +256,26 @@ function PrepareHttpForAuthorization(http)
     local xClientTimeHeader = os.date("!%Y-%m-%dT%T+00:00")
     local xClientHashHeader = MD5(xClientTimeHeader..loginSecret):lower()
 
+    -- The user agent, and the app version in particular, are very important!
+    -- If we try to authorize with an outdated app version in the user agent, it will respond with a 403 error.
+    -- See https://github.com/upbit/pixivpy/issues/140
+
+    local appOSVersion = '4.4.2'
+    local appVersion = GetAppVersion()
+
+    http.Headers.Add('User-Agent', 'PixivAndroidApp/'..appVersion..' (Android '..appOSVersion..'; R831T)')
+    http.Headers.Add('Accept-Language', 'en_US')
+    http.Headers.Add('App-OS', 'android')
+    http.Headers.Add('App-OS-Version', appOSVersion)
+    http.Headers.Add('App-Version', appVersion)
     http.Headers.Add('X-Client-Time', xClientTimeHeader)
     http.Headers.Add('X-Client-Hash', xClientHashHeader)
 
     http.PostData.Add('client_id', clientId)
     http.PostData.Add('client_secret', clientSecret)
-    http.PostData.Add('get_secure_url', 1) 
+    http.PostData.Add('device_token', 'pixiv')
+    http.PostData.Add('get_secure_url', 'true')
+    http.PostData.Add('include_policy', 'true')
 
 end
 
