@@ -1,3 +1,35 @@
+[v2021.2.7.0]
+
+- [NEW] Added additional JSON serialization options (Preferences > Advanced settings)
+- [NEW] Added additional PDF conversion options (Preferences > Advanced settings)
+- [NEW] Added support for asurascans.com
+- [NEW] Added support for dokimori.com
+- [NEW] Added support for hentaiser.com
+- [NEW] Added support for mangarockteam.com
+- [NEW] Added support for manhwas.men
+- [NEW] Added support for methodscans.com
+- [NEW] Added support for newtoki94.com
+- [NEW] Added support for skscans.com
+- [NEW] Added support for webtoon.xyz
+- [FIX] Fixed "wait for downloads to finish" dialog sometimes showing repeatedly
+- [FIX] Fixed error when renaming files after extracting archives
+- [FIX] Fixed issue with PDF conversion sometimes resulting in corrupted images
+- [FIX] Updates for Updates for lectortmo.com (fixed some galleries not working)
+- [FIX] Updates for dm5.com (fixed chapters not found for mature content)
+- [FIX] Updates for dm5.com (fixed images not downloading)
+- [FIX] Updates for exhentai.org (fixed "reload failed" increasing image limit consumption)
+- [FIX] Updates for exhentai.org (removed login unnecessary cookies)
+- [FIX] Updates for hentainexus.com (added publisher metadata)
+- [FIX] Updates for lolhentai.net (updated algorithms)
+- [FIX] Updates for lovehug.net (updated image URL attribute)
+- [FIX] Updates for mangasail.co (updated algorithms)
+- [FIX] Updates for manhuagui.com (fixed referer)
+- [FIX] Updates for manhwa18.com (fixed page grabber error on some chapters)
+- [FIX] Updates for nude-moon.net (added login support)
+- [FIX] Updates for pixiv.net (updated login process)
+- [FIX] Updates for tsumino.com (fixed missing tags)
+- [MISC] Redesigned metadata file preferences UI
+
 [v2021.1.20.0]
 
 - [FIX] Updates for r34comics.com (updated algorithms)
