@@ -131,6 +131,8 @@ function GetPages()
             imageUrl = node.GetAttribute('data-pagespeed-lazy-src') -- lovehug.net
         elseif(not node.GetAttribute('data-aload'):empty()) then
             imageUrl = node.GetAttribute('data-aload') -- lovehug.net (Since Feb. 7th, 2021)
+        elseif(not node.GetAttribute('data-srcset'):empty()) then
+            imageUrl = node.GetAttribute('data-srcset') -- lovehug.net (Since Feb. 7th, 2021)
         else
             imageUrl = node.GetAttribute('src') -- everything else
         end
