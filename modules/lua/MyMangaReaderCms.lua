@@ -5,6 +5,16 @@ function Register()
 
     module.Name = 'my Manga Reader CMS'
 
+    -- English
+
+    module = Module.New()
+
+    module.Language = 'English'
+
+    module.Domains.Add('readcomicsonline.ru', 'Read Comics Online')
+    
+    RegisterModule(module)
+
     -- Korean
 
     module = Module.New()
@@ -29,20 +39,24 @@ end
 
 function GetInfo()
 
-    info.Title = dom.SelectValue('//h2[contains(@class,"widget-title")]')
+    info.Title = dom.SelectValue('//h2[contains(@class,"widget-title") or contains(@class,"listmanga-header")]')
     info.Status = dom.SelectValue('//div[contains(@class,"manga-name")]/a')
     info.Type = dom.selectValue('//dt[contains(text(), "Tipo") or contains(text(), "Type")]/following-sibling::dd')
     info.OriginalTitle = dom.selectValue('//dt[contains(text(), "Nombres")]/following-sibling::dd')
     info.AlternativeTitle = dom.selectValue('//dt[contains(text(), "Other names")]/following-sibling::dd')
     info.Author = dom.selectValue('//dt[contains(text(), "Autor")]/following-sibling::dd')
     info.Artist = dom.selectValue('//dt[contains(text(), "Artista")]/following-sibling::dd')
-    info.DateReleased = dom.selectValue('//dt[contains(text(), "Publicación")]/following-sibling::dd')
-    info.Tags = dom.selectValues('//dt[contains(text(), "Género")]/following-sibling::dd//a')
+    info.DateReleased = dom.selectValue('//dt[contains(text(), "Publicación") or contains(text(), "Date of release")]/following-sibling::dd')
+    info.Tags = dom.selectValues('//dt[contains(text(), "Género") or contains(text(), "Tags")]/following-sibling::dd//a')
     info.Adult = not isempty(dom.SelectValue('//i[contains(@class,"adult")]'))
     info.Summary = dom.SelectValues('//h5/following-sibling::p'):join('\n')
 
     if(isempty(info.Title)) then
         info.Title = dom.Title:before(' - ')
+    end
+
+    if(isempty(info.Title)) then
+        info.Status = dom.SelectValue('//dt[contains(text(), "Status")]/following-sibling::dd') -- readcomicsonline.ru
     end
 
 end
@@ -77,6 +91,8 @@ function GetPages()
 
     if(module.Domain == 'mangas.in') then
         baseUrl = tostring(dom):regex("[^\\/]jQuery\\('\\.scan-page'\\)\\.attr\\('src',\\s*'([^']+)", 1)
+    elseif(module.Domain == 'readcomicsonline.ru') then
+        baseUrl = tostring(dom):regex("array\\.push\\('(.+?)'\\s*\\+\\s*pages", 1)
     end
 
     for image in Json.New(images) do
@@ -90,7 +106,7 @@ function GetPages()
             imageUrl = DecodeUriComponent(DecodeBase64(imageUrl:after('//')))
         end
 
-        pages.Add(GetRooted(imageUrl, baseUrl))
+        pages.Add(GetRooted(imageUrl, GetRooted(baseUrl, url)))
 
     end
 
