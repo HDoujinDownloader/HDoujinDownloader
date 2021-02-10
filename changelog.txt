@@ -1,4 +1,12 @@
+[v2021.2.10.0]
+
+- [NEW] Added basic mimetype detection
+- [NEW] Added support for readcomicsonline.ru
+- [FIX] Updates for toomics.com (fixed missing pages)
+- [MISC] Various improvements and bug fixes
+
 [v2021.2.8.0]
+
 - [FIX] Updates for exhentai.org (fixed some images failing)
 - [FIX] Updates for lovehug.net (updated image URL attribute)
 
