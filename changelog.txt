@@ -1,3 +1,10 @@
+[v2021.2.11.0]
+
+- [FIX] Fixed modules not updating if replaced by outdated version
+- [FIX] Updates for hentailxx.com (moved to lxhentai.com)
+- [FIX] Updates for nhentai.net (fixed adding favorites to queue)
+- [MISC] Various improvements and bug fixes
+
 [v2021.2.10.0]
 
 - [NEW] Added basic mimetype detection
