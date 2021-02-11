@@ -130,7 +130,7 @@ end
 
 function EnqueueAllGalleries()
 
-    for galleryUrl in dom.SelectValues('//div[contains(@class,"index-container")][last()]/div[contains(@class,"gallery")]/a/@href') do
+    for galleryUrl in dom.SelectValues('//div[contains(@class,"container")][last()]//div[contains(@class,"gallery")]/a/@href') do
         Enqueue(galleryUrl)
     end
 
