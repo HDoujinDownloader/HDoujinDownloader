@@ -5,15 +5,16 @@ function Register()
     module.Adult = true
 
     module.Domains.Add('hentailxx.com', 'HentaiLXX')
+    module.Domains.Add('lxhentai.com', 'Hentailxx.com')
 
 end
 
 function GetInfo()
 
     info.Title = dom.SelectValue('//h1')
-    info.Author = dom.SelectValues('//div[contains(text(),"Tác giả")]/following-sibling::div/a')
+    info.Author = dom.SelectValues('//div[contains(text(),"Tác giả")]/following-sibling::div[1]/a')
     info.Status = dom.SelectValue('//div[contains(text(),"Tình trạng")]/following-sibling::div')
-    info.Tags = dom.SelectValues('//div[contains(text(),"Thể loại")]/following-sibling::div/a')
+    info.Tags = dom.SelectValues('//div[*[contains(@class,"fa-tags")] and contains(text(),"Thể loại")]/following-sibling::div/a')
     info.Summary = dom.SelectValue('//p')
 
     -- Get the title from the reader.
