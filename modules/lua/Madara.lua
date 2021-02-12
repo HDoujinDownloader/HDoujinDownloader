@@ -173,16 +173,20 @@ function GetPages()
 
         pages.AddRange(dom.SelectValues('//div[input[@id="wp-manga-current-chap"]]//img/@src'))
 
+        if(isempty(pages)) then
+            pages.AddRange(dom.SelectValues('//div[input[@id="wp-manga-current-chap"]]//img/@data-src')) -- webtoon.xyz
+        end
+
         -- This method works for most sites, but it can potentially match undesired divs ("reading-content-wrap", "related-reading-wrap") (dokimori.com).
 
-        if(pages.Count() <= 0) then
+        if(isempty(pages)) then
             pages.AddRange(dom.SelectValues('//div[contains(@class, "reading-content")]//img/@data-src'))
         end
         
         -- Sometimes the image URLs are in the "src" attribute (mangawow.com).
         -- We get images with the "id" attribute specifically, because some sites have ad images (manytoon.club, readfreecomics.com).
 
-        if(pages.Count() <= 0) then
+        if(isempty(pages)) then
             pages.AddRange(dom.SelectValues('//div[contains(@class, "reading-content")]//img[@id]/@src'))
         end
 
@@ -190,7 +194,7 @@ function GetPages()
         -- This isn't part of the Madara theme, but it appears this site hasn't updated all of their galleries to use the Madara reader.
         -- e.g. https://www.porncomixonline.net/comicsbase/westerncomics/ (all galleries under this category)
 
-        if(pages.Count() <= 0) then
+        if(isempty(pages)) then
             pages.AddRange(dom.SelectValues('//div[contains(@class, "entry-content")]//figure/a/@href'))
         end
 
