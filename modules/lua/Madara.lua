@@ -108,6 +108,14 @@ function GetInfo()
 
     end
 
+    if(isempty(info.Language)) then
+
+        -- Some sites have the language as part of the title (e.g. hmanhwa.com, "Title [Language]").
+
+        info.Language = info.Title:trim():regex('\\[(.+?)\\]$', 1)
+
+    end
+
     info.Title = CleanTitle(info.Title)
 
 end
