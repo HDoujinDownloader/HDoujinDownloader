@@ -35,6 +35,16 @@ function Register()
 
     RegisterModule(module)
 
+    -- Turkish
+
+    module = Module.New()
+
+    module.Language = 'Turkish'
+
+    module.Domains.Add('mangadenizi.com', 'MangaDenizi')
+
+    RegisterModule(module)
+
 end
 
 function GetInfo()
@@ -43,11 +53,11 @@ function GetInfo()
     info.Status = dom.SelectValue('//div[contains(@class,"manga-name")]/a')
     info.Type = dom.selectValue('//dt[contains(text(), "Tipo") or contains(text(), "Type")]/following-sibling::dd')
     info.OriginalTitle = dom.selectValue('//dt[contains(text(), "Nombres")]/following-sibling::dd')
-    info.AlternativeTitle = dom.selectValue('//dt[contains(text(), "Other names")]/following-sibling::dd')
-    info.Author = dom.selectValue('//dt[contains(text(), "Autor")]/following-sibling::dd')
-    info.Artist = dom.selectValue('//dt[contains(text(), "Artista")]/following-sibling::dd')
-    info.DateReleased = dom.selectValue('//dt[contains(text(), "Publicación") or contains(text(), "Date of release")]/following-sibling::dd')
-    info.Tags = dom.selectValues('//dt[contains(text(), "Género") or contains(text(), "Tags")]/following-sibling::dd//a')
+    info.AlternativeTitle = dom.selectValue('//dt[contains(text(), "Other names") or contains(text(), "Diğer Adları")]/following-sibling::dd')
+    info.Author = dom.selectValue('//dt[contains(text(), "Autor") or contains(text(), "Yazar")]/following-sibling::dd')
+    info.Artist = dom.selectValue('//dt[contains(text(), "Artista") or contains(text(), "Sanatçı")]/following-sibling::dd')
+    info.DateReleased = dom.selectValue('//dt[contains(text(), "Publicación") or contains(text(), "Date of release") or contains(text(), "Yayınlanma Tarihi")]/following-sibling::dd')
+    info.Tags = dom.selectValues('//dt[contains(text(), "Género") or contains(text(), "Tags") or contains(text(), "Kategoriler") or contains(text(), "Etiketler")]/following-sibling::dd//a')
     info.Adult = not isempty(dom.SelectValue('//i[contains(@class,"adult")]'))
     info.Summary = dom.SelectValues('//h5/following-sibling::p'):join('\n')
 
@@ -55,10 +65,10 @@ function GetInfo()
         info.Title = dom.Title:before(' - ')
     end
 
-    if(isempty(info.Title)) then
-        info.Status = dom.SelectValue('//dt[contains(text(), "Status")]/following-sibling::dd') -- readcomicsonline.ru
+    if(isempty(info.Status)) then
+        info.Status = dom.SelectValue('//dt[contains(text(), "Status") or contains(text(), "Durum")]/following-sibling::dd') -- mangadenizi.com, manhwas.men, readcomicsonline.ru, ...
     end
-
+    
 end
 
 function GetChapters()
@@ -91,7 +101,7 @@ function GetPages()
 
     if(module.Domain == 'mangas.in') then
         baseUrl = tostring(dom):regex("[^\\/]jQuery\\('\\.scan-page'\\)\\.attr\\('src',\\s*'([^']+)", 1)
-    elseif(module.Domain == 'readcomicsonline.ru') then
+    elseif(module.Domain == 'readcomicsonline.ru' or module.Domain == 'mangadenizi.com') then
         baseUrl = tostring(dom):regex("array\\.push\\('(.+?)'\\s*\\+\\s*pages", 1)
     end
 
