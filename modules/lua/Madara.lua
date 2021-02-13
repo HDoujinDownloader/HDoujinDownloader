@@ -46,6 +46,7 @@ function Register()
 
     module.Domains.Add('araznovel.com', 'ArazNovel')
     module.Domains.Add('mangawow.com', 'MangaWOW')
+    module.Domains.Add('mangawow.net', 'MangaWOW')
     
     RegisterModule(module)
 
