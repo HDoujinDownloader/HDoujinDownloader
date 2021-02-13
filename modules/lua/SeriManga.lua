@@ -11,7 +11,7 @@ function GetInfo()
 
     info.Title = dom.SelectValue('//div[contains(@class, "name")]')
     info.AlternativeTitle = dom.SelectValue('//div[contains(@class, "sub-text")]'):split(',')
-    info.Summary = dom.SelectValues('//h3[contains(text(), "KONUSU")]/following-sibling::p')
+    info.Summary = dom.SelectValues('//h3[contains(text(), "KONUSU")]/following-sibling::p'):join()
     info.Type = dom.SelectValue('//span[contains(text(), "Nedir")]/following-sibling::text()')
     info.DateReleased = dom.SelectValue('//span[contains(text(), "Yayınlanma Yılı")]/following-sibling::text()')
     info.Status = dom.SelectValue('//span[contains(text(), "Yayınlanması")]/following-sibling::div')
@@ -49,7 +49,13 @@ function GetChapters()
             local title = chapterNode.SelectValue('span[2]')
             local url = chapterNode.SelectValue('@href')
 
-            chapters.Add(url, number..' - '..title)
+            if(not isempty(title)) then
+                title = number..' - '..title
+            else
+                title = number
+            end
+
+            chapters.Add(url, title)
 
         end
 
