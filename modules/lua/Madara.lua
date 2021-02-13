@@ -19,6 +19,7 @@ function Register()
     module.Domains.Add('manytoon.com', 'ManyToon')
     module.Domains.Add('porncomixonline.net', 'Porncomix')
     module.Domains.Add('readfreecomics.com', 'ReadFreeComics')
+    module.Domains.Add('skymanga.co', 'skymanga')
     module.Domains.Add('toonily.com', 'Toonily')
     module.Domains.Add('webtoon.xyz', 'Webtoon XYZ')
 
