@@ -31,9 +31,8 @@ function GetPages()
     local imagesJson = Json.New(tostring(dom):regex("g_th\\s*=\\s*\\$\\.parseJSON\\('(.+?)'\\)", 1))
 
     -- The logic that selects an image server is in main.js.
-
     
-    local imageServer = 'm4'
+    local imageServer = 'm5'
 
     if(galleryId > 0 and galleryId <= 274825) then
         imageServer = 'm1'
@@ -41,8 +40,10 @@ function GetPages()
         imageServer = 'm2'
     elseif(galleryId > 403818 and galleryId <= 527143) then
         imageServer = 'm3'
-    elseif(galleryId > 527143) then
+    elseif(galleryId > 527143 and galleryId <= 632481) then
         imageServer = 'm4'
+    elseif(galleryId > 632481) then
+        imageServer = 'm5'
     end
 
     for key in imagesJson.Keys do
