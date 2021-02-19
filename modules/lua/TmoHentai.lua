@@ -34,6 +34,10 @@ function GetPages()
 
     dom = Dom.New(http.Get(readerUrl))
 
-    pages.AddRange(dom.SelectValues('//img[contains(@class,"content-image")]/@src'))
+    pages.AddRange(dom.SelectValues('//img[contains(@class,"content-image")]/@data-original'))
+
+    if(isempty(pages)) then
+        pages.AddRange(dom.SelectValues('//img[contains(@class,"content-image")]/@src'))
+    end
 
 end
