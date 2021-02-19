@@ -25,10 +25,12 @@ function Register()
     module = Module.New()
 
     module.Domains.Add('18lhplus.com', '18LHPlus')
+    module.Domains.Add('heroscan.com', 'HeroScan')
     module.Domains.Add('lhtranslation.net', 'LHTranslation')
     module.Domains.Add('mangabone.com', 'MangaBone')
     module.Domains.Add('manhwa18.*', 'Manhwa18.com') -- manhwa18.net, manhwa18.com
-    module.Domains.Add('manhwascan.com', 'Manhwascan') -- not 100% English
+    module.Domains.Add('manhwascan.com', 'Manhwascan') -- not 100% English, moved to manhuascan.com
+    module.Domains.Add('manhuascan.com', 'ManhuaScan')
     module.Domains.Add('manhwasmut.com', 'ManhwaSmut')
 
     module.Language = 'English'
