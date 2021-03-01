@@ -18,6 +18,8 @@ function GetInfo()
     info.Summary = dom.SelectValues('//div[contains(@class,"entry-content")]/p'):join('\n')
     info.Tags = dom.SelectValues('//span[contains(@class,"post_tag")]//a')
 
+    module.Name = info.Title
+
 end
 
 function GetChapters()
