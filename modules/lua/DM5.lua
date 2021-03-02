@@ -83,7 +83,7 @@ function GetPages()
     for i = 1, DM5_IMAGE_COUNT do
 
         local queryUrl = FormatString('/m{0}/chapterfun.ashx?cid={0}&page={1}&key=&language=1&gtk=6&_cid={0}&_mid={2}&_dt={3}&_sign={4}',
-            DM5_CID, pages.Count(), COMIC_MID, DM5_VIEWSIGN_DT, DM5_VIEWSIGN)
+            DM5_CID, pages.Count() + 1, COMIC_MID, DM5_VIEWSIGN_DT, DM5_VIEWSIGN)
 
         for j = 0, maxQueryAttempts - 1 do
 
