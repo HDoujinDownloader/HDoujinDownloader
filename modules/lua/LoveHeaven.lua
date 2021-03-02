@@ -55,13 +55,19 @@ function GetInfo()
     elseif(url:contains('/manga-') or not isempty(url:regex('\\/\\d+\\/$'))) then
 
         -- Added from summary page.
-        -- Update (2021-01-04): lovehug.net uses URLs of the form "lovehug.net/(\d+)/".
+        -- Update (4/1/2021): lovehug.net uses URLs of the form "lovehug.net/(\d+)/".
         
         info.Title = dom.SelectValue('//h1')
         info.AlternativeTitle = dom.SelectValue('//li[descendant::i[contains(@class,"fa-clone")]]/text()'):after(':'):trim()
         info.Author = dom.SelectValues('//li[descendant::i[contains(@class,"fa-users")]]//a/text()')
         info.Tags = dom.SelectValues('//li[descendant::i[contains(@class,"fa-tags")]]//a/text()')
         info.Status = dom.SelectValue('//li[descendant::i[contains(@class,"fa-spinner")]]//a/text()')
+
+        -- Update (1/3/2021): lovehug.net got rid of the title element (h1), so we need to get the title from the breadcrumbs instead.
+
+        if(isempty(info.Title)) then
+            info.Title = dom.SelectValue('(//ol//span[@itemprop="name"])[last()]')
+        end
 
         -- Sometimes the title is a different element (e.g. kissaway.net).
 
@@ -185,7 +191,7 @@ function CleanTitle(title)
     -- e.g. "Read MANGA TITLE (MANGA) - RAW"
     -- e.g. "MANGA TITLE (MANGA) - RAW chap 1 latest - WebsiteName - Manga Online"
 
-    title = RegexReplace(title, '(^(?:Read\\s)|(?:(?:\\(.+?\\))?\\s-\\sRAW|latest\\s-\\s.+?\\s-\\sManga Online)$)', '')
+    title = RegexReplace(title, '(?i)(^(?:Read\\s)|(?:(?:\\(.+?\\))?\\s-\\sRAW|latest\\s-\\s.+?\\s-\\sManga Online)$)', '')
 
     title = tostring(title)
         :after('You are watching ')
