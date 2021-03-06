@@ -4,6 +4,7 @@ function Register()
     module.Adult = true
 
     module.Domains.Add('imhentai.com', 'IMHentai')
+    module.Domains.Add('imhentai.xxx', 'IMHentai')
 
 end
 
