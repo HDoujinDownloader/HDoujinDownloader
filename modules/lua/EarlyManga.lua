@@ -1,45 +1,54 @@
-require "Madara"
+-- EarlyManga is very similar to MangaDex, minus the API.
 
 function Register()
 
     module.Name = 'EarlyManga'
-    module.Language = 'English'
+    module.Language  = 'English'
 
-    module.Domains.Add('aloalivn.com', 'Aloalivn.com')
-    module.Domains.Add('astrallibrary.net', 'Astral Library')
-    module.Domains.Add('earlymanga.net', 'EarlyManga')
-    module.Domains.Add('earlymanga.website', 'EarlyManga')
-    module.Domains.Add('hiperdex.com', 'Hiperdex')
-    module.Domains.Add('hmanhwa.com', 'hManhwa')
-    module.Domains.Add('kissmanga.link', 'KissManga')
-    module.Domains.Add('mangarockteam.com', 'Manga Rock Team')
-    module.Domains.Add('manhuaplus.com', 'ManhuaPLus')
-    module.Domains.Add('manhuaus.com', 'Manhuaus.com')
+    module.Domains.Add('earlymanga.org', 'EarlyManga')
 
+end
+
+function GetInfo()
+
+    info.Title = dom.SelectValue('//span[contains(@class,"mx-1")]')
+    info.Type = dom.SelectValue('//span[contains(@class,"flag")]/@title')
+    info.AlternativeTitle = dom.SelectValues('//li[contains(@class,"alt-name")]/span')
+    info.Author = dom.SelectValues('//div[contains(text(),"Author")]/following-sibling::div/a')
+    info.Artist = dom.SelectValues('//div[contains(text(),"Artist")]/following-sibling::div/a')
+    info.Tags = dom.SelectValues('//div[contains(text(),"Demographic") or contains(text(),"Format") or contains(text(),"Genre") or contains(text(),"Theme")]/following-sibling::div/a')
+    info.Status = dom.SelectValue('//div[contains(text(),"Pub. status")]/following-sibling::div')
+    info.Summary = dom.SelectValues('//div[contains(text(),"Description")]/following-sibling::div[last()]/text()').Join('\n\n')
+    
 end
 
 function GetChapters()
 
-    -- We need to make a POST request to get the chapters list.
+    for page in Paginator.New(http, dom, '//li[@aria-current="page"]/following-sibling::li/a/@href') do
+    
+        local chapterNodes = page.SelectElements('//div[@id="chapters"]//div[contains(@class,"chapter-row") and .//@href]')
 
-    local mangaParameters = tostring(dom):regex('var\\s*manga\\s*=\\s*({.+?};)', 1)
-    local mangaJson = Json.New(mangaParameters)  
+        for i = 0, chapterNodes.Count() - 1 do
 
-    if(isempty(mangaJson['chapter_slug'])) then
+            local chapterNode = chapterNodes[i]
+            local chapter = ChapterInfo.New()
 
-        http.Headers['x-requested-with'] = 'XMLHttpRequest'
-    
-        http.PostData['action'] = 'manga_get_chapters'
-        http.PostData['manga'] = mangaJson['manga_id']
-    
-        local endpoint = 'https://'..module.Domain..'/wp-admin/admin-ajax.php'
-    
-        dom = Dom.New(http.Post(endpoint))
-    
-        chapters.AddRange(dom.SelectElements('//li[contains(@class,"wp-manga-chapter")]/a'))
-    
-        chapters.Reverse()
+            chapter.Url = chapterNode.SelectValue('.//a[not(@style)]/@href')
+            chapter.Title = chapterNode.SelectValue('.//a[not(@style)]')
+            chapter.Language = chapterNode.SelectValue('.//span[contains(@class,"flag")]/@title')
+
+            chapters.Add(chapter)
+
+        end
 
     end
+
+    chapters.Reverse()
+
+end
+
+function GetPages()
+
+    pages.AddRange(dom.SelectValues('//div[contains(@class,"chapter-images")]/img/@src'))
 
 end
