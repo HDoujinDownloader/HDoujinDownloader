@@ -7,6 +7,7 @@ function Register()
     module.Domains.Add('mangawk.com', 'MangaWK')
     module.Domains.Add('mangakakalot.com', 'Mangakakalot')
     module.Domains.Add('manganelo.com', 'Manganelo')
+    module.Domains.Add('manganelo.tv', 'Manganelo')
     
 end
 
@@ -15,10 +16,10 @@ function GetInfo()
     FollowRedirect()
 
     info.Title = tostring(dom.GetElementsByTagName('h1')[0]):title()
-    info.AlternativeTitle = dom.SelectValue('//td[contains(text(), "Alternative")]/following-sibling::td/text()')
-    info.Author = dom.SelectValues('//td[contains(text(), "Author")]/following-sibling::td/a/text()')
-    info.Status = dom.SelectValue('//td[contains(text(), "Status")]/following-sibling::td/text()')
-    info.Tags = dom.SelectValues('//td[contains(text(), "Genres")]/following-sibling::td/a/text()')
+    info.AlternativeTitle = dom.SelectValue('//td[contains(., "Alternative")]/following-sibling::td/text()')
+    info.Author = dom.SelectValues('//td[contains(., "Author")]/following-sibling::td/a/text()')
+    info.Status = dom.SelectValue('//td[contains(., "Status")]/following-sibling::td/text()')
+    info.Tags = dom.SelectValues('//td[contains(., "Genres")]/following-sibling::td/a/text()')
     info.Summary = dom.SelectValue('//div[contains(@class, "info-description") or contains(@id, "noidungm")]'):after('Description :')
 
     -- The following cases apply specifically to Mangakakalot (mangakakalot.com).
@@ -54,6 +55,12 @@ end
 function GetPages()
 
     pages.AddRange(dom.SelectValues('//div[contains(@class, "chapter-reader") or contains(@class, "vung-doc") or contains(@class, "vung_doc")]/img/@src'))
+
+    -- Update (09/03/2021): We need to use the data-src attribute for Manganelo (manganelo.tv).
+
+    if(isempty(pages)) then
+        pages.AddRange(dom.SelectValues('//div[contains(@class, "chapter-reader")]/img/@data-src'))
+    end
 
 end
 
