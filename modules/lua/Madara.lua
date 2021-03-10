@@ -11,6 +11,7 @@ function Register()
 
     module.Domains.Add('disasterscans.com', 'Disaster Scans')
     module.Domains.Add('hentairead.com', 'HentaiRead')
+    module.Domains.Add('manga18fx.com', 'Manga18fx')
     module.Domains.Add('mangapl.com', 'MangaPL')
     module.Domains.Add('mangastream.cc', 'MangaStream')
     module.Domains.Add('mangatx.com', 'Mangatx')
@@ -66,7 +67,7 @@ function GetInfo()
     info.Type = dom.SelectValue('//div[contains(h5/text(), "Type") or contains(h5/text(), "Tip")]/following-sibling::div')
     info.DateReleased = dom.SelectValue('//div[contains(h5/text(), "Release") or contains(h5/text(), "Yayınlanma")]/following-sibling::div')
     info.Status = dom.SelectValue('//div[contains(h5/text(), "Status") or contains(h5/text(), "Durum")]/following-sibling::div')
-    info.Summary = dom.SelectValues('//div[contains(@class, "description-summary")]//p'):join('\n\n') -- note that some content has multiple paragraphs (e.g. on astrallibrary.net)
+    info.Summary = dom.SelectValues('//div[contains(@class, "description-summary") or contains(@class, "dsct")]//p'):join('\n\n') -- note that some content has multiple paragraphs (e.g. on astrallibrary.net)
     info.Adult = not isempty(dom.SelectValue('//h1/span[contains(@class, "adult")]'))
     info.Language = dom.SelectValues('//div[contains(h5/text(), "Language")]/following-sibling::div//a')
 
@@ -151,7 +152,7 @@ function GetChapters()
 
     else
 
-        chapters.AddRange(dom.SelectElements('//div[contains(@class, "listing-chapters")]//li/a'))
+        chapters.AddRange(dom.SelectElements('//div[contains(@class, "listing-chapters") or @id="chapterlist"]//li/a'))
 
         chapters.Reverse()
 
@@ -190,6 +191,10 @@ function GetPages()
 
         if(isempty(pages)) then
             pages.AddRange(dom.SelectValues('//div[contains(@class, "reading-content")]//img[@id]/@src'))
+        end
+
+        if(isempty(pages)) then
+            pages.AddRange(dom.SelectValues('//div[contains(@class,"read-content")]/img/@src')) -- manga18fx.com
         end
 
         -- Sometimes the image URLs are in the "href" attribute under "entry-content" (Western comics on www.porncomixonline.net).
