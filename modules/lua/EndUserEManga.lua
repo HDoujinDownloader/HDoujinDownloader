@@ -9,6 +9,7 @@ function Register()
     module.Domains.Add('manganelo.online', 'MangaNelo.online')
     module.Domains.Add('manganelo.today', 'MangaNelo.Today')
     module.Domains.Add('manganelos.com', 'MangaNelos.com')
+    module.Domains.Add('mangastream.mobi', 'MangaStream')
 
 end
 
