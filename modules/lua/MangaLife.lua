@@ -65,7 +65,7 @@ function GetPages()
 
     local title = GetIndexName()
     local currentChapterJson = Json.New(doc:regex('(?i)CurChapter\\s*=\\s*({.+?})', 1))
-    local currentPathName = doc:regex('(?i)CurPathName\\s*=\\s*"(.+?)"', 1)
+    local currentPathName = doc:regex('(?i)(?:CurPathName|justgiveupalready)\\s*=\\s*"(.+?)"', 1)
     local chapter = tostring(currentChapterJson['Chapter'])
     local directory = tostring(currentChapterJson['Directory'])
     local chapterNumber = chapter:sub(2, -2) -- "100010" -> "0001"
