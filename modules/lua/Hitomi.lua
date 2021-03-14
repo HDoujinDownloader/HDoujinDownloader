@@ -7,6 +7,7 @@ function Register()
 
 	module.Settings.AddCheck('Use friendly filenames', true)
         .WithToolTip('If enabled, the original filename will be a friendly name based on the file metadata instead of the file hash.')
+	module.Settings.AddCheck('Include gender symbols in tags', false)
 
 end
 
@@ -36,7 +37,7 @@ function GetInfo()
 		info.Title = json['title']
 		info.OriginalTitle = json['japanese_title']
 		info.Language = json['language']
-		info.Tags = json.SelectValues('tags[*].tag')
+		info.Tags = GetTags(json)
 		
 		if(isempty(info.Title)) then
 			info.Title = 'Gallery '..GetGalleryId(galleryId)
@@ -158,5 +159,37 @@ function GetNozomiAddress(url)
 	local nozomiExtension = '.nozomi'
 
 	return '//'..domain..'/'..filePath:before('.html')..nozomiExtension
+
+end
+
+function GetTags(json)
+
+	local tags = List.New()
+	local tagNodes = json.SelectTokens('tags[*]')
+
+	for tagNode in tagNodes do
+
+		local tagStr = tagNode.SelectValue('tag')
+
+		if(toboolean(module.Settings['Include gender symbols in tags'])) then
+
+			local isFemale = not isempty(tagNode.SelectValue('female'))
+			local isMale = not isempty(tagNode.SelectValue('male'))
+
+			if(isFemale) then
+				tagStr = tagStr..' ♀'
+			end
+
+			if(isMale) then
+				tagStr = tagStr..' ♂'
+			end
+
+		end
+
+		tags.Add(tagStr)
+
+	end
+
+	return tags
 
 end
