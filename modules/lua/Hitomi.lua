@@ -158,7 +158,7 @@ function GetNozomiAddress(url)
 	local filePath = DecodeUriComponent(url:after(module.Domain..'/'))
 	local nozomiExtension = '.nozomi'
 
-	return '//'..domain..'/'..filePath:before('.html')..nozomiExtension
+	return 'https://'..domain..'/'..filePath:before('.html')..nozomiExtension
 
 end
 
