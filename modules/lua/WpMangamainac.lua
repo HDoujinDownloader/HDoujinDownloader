@@ -9,6 +9,7 @@ function Register()
     module.Adult = false
 
     module.Domains.Add('onepiecechapters.com', 'TCB Scans')
+    module.Domains.Add('readshingekinokyojin.com', 'Read Shingeki no kyojin Manga Online')
 
 end
 
@@ -43,6 +44,6 @@ function CleanTitle(title)
 
     title = tostring(title):trim()
 
-    return RegexReplace(title, 'Manga$', '')
+    return RegexReplace(title, '^Read|Manga(?: Online)?$', '')
 
 end
