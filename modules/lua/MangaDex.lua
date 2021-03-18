@@ -1,57 +1,133 @@
-function Register() -- required
-
-    local module = Module.New()
+function Register()
 
     module.Name = 'MangaDex'
+
     module.Domains.Add('mangadex.org')
     module.Domains.Add('mangadex.cc')
     module.Domains.Add('mangadex.com')
 
-    RegisterModule(module)
-
-    global.SetCookie('.' .. module.Domains.First(), "mangadex_h_toggle", "1")
+    global.SetCookie(module.Domains.First(), 'mangadex_h_toggle', '1')
 
 end
 
-function GetInfo() -- required
+function GetInfo()
 
-    local json = GetJsonFromApi(url)    
+    local apiEndpoint = GetMangaOrChapterApiEndpoint(url)
+    local json = Json.New(http.Get(apiEndpoint))
 
     if(url:contains('/chapter/')) then
 
         -- Added from chapter page.
 
-        info.Title = CleanChapterTitle(doc:between('<title>', '</title>'))
-        info.Series = info.Title:regex('\\((.+?)\\)$', 1)
-        info.Language = json['lang_name']
-        info.PageCount = ParsePages(json, PageList.New())
+        info.Title = CleanChapterTitle(dom.Title)
+        info.Series = json.SelectValue('data.mangaTitle')
+        info.Language = json.SelectValue('data.language')
+        info.PageCount = json.SelectValues('data.pages[*]').Count()
 
     elseif(url:contains('/manga/') or url:contains('/title/')) then
 
         -- Added from summary page.
         -- Update (August 27th, 2018): URLs now use "/title/" instead of "/manga/".
 
-        info.Title = json['manga']['title']
-        info.AlternativeTitle = doc:between('>Alt name(s):<', '</ul>'):betweenmany('</span>', '</li>')
-        info.Author = json['manga']['author']
-        info.Artist = json['manga']['artist']
-        info.Tags = doc:between('>Genre:<', '</div>'):regexmany("'>([^<]+)", 1)
-        info.Status = doc:regex('>(?:Pub\\. status|Status):.+?">([^<]+)', 1)
-        info.Summary = json['manga']['description']
-        info.Type = json['manga']['lang_name']
-        info.Adult = tonumber(json['manga']['hentai']) ~= 0
-        info.ChapterCount = ParseChapters(json, ChapterList.New())
+        info.Title = json.SelectValue('data.title')
+        info.AlternativeTitle = json.SelectValues('data.altTitles[*]')
+        info.Author = json.SelectValues('data.author[*]')
+        info.Artist = json.SelectValues('data.artist[*]')
+        info.Language = json.SelectValue('data.publication.language')
+        info.Tags = dom.SelectValues('//a[contains(@href,"/genre")]')
+        info.Status = dom.SelectValue('//div[contains(text(),"status:") or contains(text(),"Status:")]/following-sibling::div')
+        info.Summary = json.SelectValue('data.description')
+        info.Type = json.SelectValue('data.publication.language')
+        info.Adult = toboolean(json.SelectValue('data.isHentai'))
 
     end
 
 end
 
-function GetChapters() -- required
-    ParseChapters(GetJsonFromApi(url), chapters)
+function GetChapters()
+
+    local apiEndpoint = GetMangaOrChapterApiEndpoint(url)..'chapters'
+    local json = Json.New(http.Get(apiEndpoint))
+
+    local sssMangadexPreferredLanguages = global.GetSetting('sssMangadexPreferredLanguages')
+    local userLanguages = sssMangadexPreferredLanguages:split(',')
+    local acceptAny = isempty(sssMangadexPreferredLanguages) or userLanguages.Count() <= 0 or userLanguages.Contains(GetLanguageId("all"))
+    
+    for chapterJson in json['data']['chapters'] do
+        
+        chapterInfo = ChapterInfo.New()
+        
+        volumeNumber = chapterJson['volume']
+        chapterNumber = chapterJson['chapter']
+        chapterSubtitle = CleanChapterTitle(chapterJson['title'])
+        
+        -- Not all chapters have chapter and volume numbers, and not all chapters have titles.
+        -- Ex: https://mangadex.org/title/23747/sekkaku-cheat (no volume numbers, no titles)
+
+        if(not isempty(chapterNumber)) then
+            chapterInfo.Title = FormatString("Ch. {0}",  chapterNumber)
+        end
+
+        if(not isempty(volumeNumber)) then
+            chapterInfo.Title = FormatString("Vol. {0} {1}", volumeNumber, chapterInfo.Title):trim()
+        end
+
+        if(not isempty(chapterSubtitle:trim())) then
+
+            if(not isempty(chapterInfo.Title)) then
+                chapterInfo.Title = chapterInfo.Title .. ' - '
+            end
+
+            chapterInfo.Title = chapterInfo.Title .. chapterSubtitle
+
+        end
+
+        chapterInfo.Url = FormatString('/chapter/{0}', chapterJson['id'])
+        chapterInfo.Volume = volumeNumber
+        chapterInfo.Language = chapterJson['language']
+
+        local groupId = chapterJson.SelectValues('groups[*]').First()
+
+        if(not isempty(groupId)) then
+            chapterInfo.ScanlationGroup = json.SelectValue("data.groups[?(@.id == "..groupId..")].name")
+        end
+
+        local uploadTimestamp = tonumber(chapterJson['timestamp'])
+        
+        if(uploadTimestamp <= os.time() and (acceptAny or userLanguages.Contains(GetLanguageId(chapterInfo.Language)))) then
+            chapters.Add(chapterInfo)
+        end
+       
+    end
+
+    chapters.Reverse()
+
 end
 
-function GetPages() -- required
-    ParsePages(GetJsonFromApi(url), pages)
+function GetPages()
+
+    local apiEndpoint = GetMangaOrChapterApiEndpoint(url)
+    local json = Json.New(http.Get(apiEndpoint))
+
+    local server = json.SelectValue('data.server')
+    local serverFallback = json.SelectValue('data.serverFallback')
+    local hash = json.SelectValue('data.hash')
+
+    for filename in json.SelectValues('data.pages[*]') do
+
+        if(not isempty(filename)) then
+
+            local pageInfo = PageInfo.New()
+
+            pageInfo.Url = FormatString('{0}{1}/{2}', server, hash, filename)
+            pageInfo.BackupUrls.Add(FormatString('{0}{1}/{2}', serverFallback, hash, filename))
+            
+            pages.Add(pageInfo)
+
+        end
+
+    end
+
 end
 
 function Login()
@@ -91,93 +167,20 @@ function Login()
 
 end
 
-function ParseChapters(json, output)
+function GetApiEndpoint(url)
 
-    local sssMangadexPreferredLanguages = global.GetSetting('sssMangadexPreferredLanguages')
-    local userLanguages = sssMangadexPreferredLanguages:split(',')
-    local acceptAny = isempty(sssMangadexPreferredLanguages) or userLanguages.Count() <= 0 or userLanguages.Contains(GetLanguageId("all"))
-
-    for chapterJson in json['chapter'] do
-
-        chapterInfo = ChapterInfo.New()
-        
-        volumeNumber = chapterJson['volume']
-        chapterNumber = chapterJson['chapter']
-        chapterSubtitle = CleanChapterTitle(chapterJson['title'])
-
-        -- Not all chapters have chapter and volume numbers, and not all chapters have titles.
-        -- Ex: https://mangadex.org/title/23747/sekkaku-cheat (no volume numbers, no titles)
-
-        if(not isempty(chapterNumber)) then
-            chapterInfo.Title = FormatString("Ch. {0}",  chapterNumber)
-        end
-
-        if(not isempty(volumeNumber)) then
-            chapterInfo.Title = FormatString("Vol. {0} {1}", volumeNumber, chapterInfo.Title):trim()
-        end
-
-        if(not isempty(chapterSubtitle:trim())) then
-
-            if(not isempty(chapterInfo.Title)) then
-                chapterInfo.Title = chapterInfo.Title .. ' - '
-            end
-
-            chapterInfo.Title = chapterInfo.Title .. chapterSubtitle
-
-        end
-
-        chapterInfo.Url = FormatString('/chapter/{0}', chapterJson.Key)
-        chapterInfo.Volume = volumeNumber
-        chapterInfo.ScanlationGroup = chapterJson['group_name']
-        chapterInfo.Language = chapterJson['lang_code']
-        
-        local uploadTimestamp = tonumber(chapterJson['timestamp'])
-        
-        if(uploadTimestamp <= os.time() and (acceptAny or userLanguages.Contains(GetLanguageId(chapterInfo.Language)))) then
-            output.Add(chapterInfo)
-        end
-       
-    end
-
-    output.Reverse()
-
-    return output.Count()
+    return '//api.'..module.Domain..'/v2/'
 
 end
 
-function ParsePages(json, output)
+function GetMangaOrChapterApiEndpoint(url)
 
-    local server = json['server']
-    local hash = json['hash']
-
-    for filename in json['page_array'] do
-
-        if(not isempty(filename)) then
-
-            pageUrl = FormatString('{0}{1}/{2}', server, hash, filename)
-
-            output.Add(PageInfo.New(pageUrl))
-            
-        end
-
-    end
-
-    return output.Count()
-
-end
-
-function GetApiUrl(url)
-
-    local apiPath = url
+    local path = url
         :regex('\\/((?:title|manga|chapter)\\/\\d+)', 1)
         :replace('title/', 'manga/')
 
-    return FormatString('{0}api/{1}/', GetRoot(url), apiPath)
+    return GetApiEndpoint(url)..path..'/'
 
-end
-
-function GetJsonFromApi(url)
-    return Json.New(HttpGet(GetApiUrl(url)))
 end
 
 function CleanChapterTitle(title)
