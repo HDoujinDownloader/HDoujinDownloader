@@ -1,30 +1,46 @@
 function Register()
 
-    module.Name = "Nekopost"
-    module.Domain = "nekopost.net"
-    module.Language = "Thai"
+    module.Name = 'Nekopost'
+    module.Domain = 'nekopost.net'
+    module.Language = 'Thai'
 
 end
 
 function GetInfo() 
 
-    info.Title = tostring(dom.Title):beforelast(' | ')
-    info.Author = dom.SelectValue('//td[contains(text(), "Author")]/following-sibling::td')
-    info.Artist = dom.SelectValue('//td[contains(text(), "Author")]/following-sibling::td')
-    info.DateReleased = dom.SelectValue('//td[contains(text(), "Release Date")]/following-sibling::td')
-    info.Tags = dom.SelectValues('(//div[span[contains(text(), "Category")]])[1]/a')
+    local json = GetGalleryJson()
+
+    info.Status = json.SelectValue('projectInfo.np_status')
+    info.Title = json.SelectValue('projectInfo.np_name')
+    info.Adult = json.SelectValue('projectInfo.np_flag_mature') ~= 'N'
+    info.Summary = json.SelectValue('projectInfo.np_info')
+    info.DateReleased = json.SelectValue('projectInfo.np_created_date')
+    info.Author = json.SelectValue('projectInfo.author_name')
+    info.Artist = json.SelectValue('projectInfo.artist_name')
+    info.Tags = json.SelectValue('projectCategoryUsed[*].npc_name')
+
+    if(info.Status == '1') then
+        info.Status = 'ongoing'
+    else
+        info.Status = 'completed'
+    end
 
 end
 
 function GetChapters()
 
-    for element in dom.SelectElements('//table[contains(@class, "my-table")]//td') do
+    local galleryId = GetGalleryId()
+    local json = GetGalleryJson()
 
-        local chapterNumber = element.SelectValue('b')
-        local chapterTitle = element.SelectValue('a')
-        local chapterUrl = element.SelectValue('a/@href')
+    for chapterNode in json.SelectTokens('projectChapterList[*]') do
 
-        chapters.Add(chapterUrl, chapterNumber .. ' - ' .. chapterTitle)
+        local chapterNumber = tostring(chapterNode['nc_chapter_no'])
+        local chapterName = tostring(chapterNode['nc_chapter_name'])
+
+        local chapterTitle = 'Ch.'..chapterNumber..' - '..chapterName
+        local chapterUrl = url:trim('/')..'/'..chapterNumber
+        
+        chapters.Add(chapterUrl, chapterTitle)
 
     end
 
@@ -34,126 +50,81 @@ end
 
 function GetPages()
 
-    doc = http.Get(url)
+    local json = GetChapterJson()
 
-    local projectJson = GetProjectJson(doc)
-    local pageList = GetPagesFromProjectJson(doc, projectJson)
+    local galleryId = json.SelectValue('projectId')
+    local chapterId = json.SelectValue('chapterId')
 
-    pages.AddRange(pageList)
+    for filename in json.SelectValues('pageItem[*].fileName') do
 
-end
+        local imageUrl = GetChapterApiEndpoint()..'collectManga/'..galleryId..'/'..chapterId..'/'..filename
 
-function GetJsonFolder(projectId)
-
-    local temp = (projectId / 1000) - (mod(projectId, 1000) / 1000)
-
-    if(mod(projectId, 1000) ~= 0) then
-        temp = temp + 1
-    end
-
-    temp = temp * 1000
-    temp = "000000" .. tostring(temp)
-
-    return temp:sub(temp:len() - 5)
-
-end
-
-function GetBaseFileUrl(doc)
-
-    return doc:regex('base_file_url\\s*=\\s*\"(.+?)\"', 1)
-
-end
-
-function GetProjectId(doc)
-
-    return tonumber(doc:regex('projectId\\s*=\\s*\"(\\d+)\"', 1))
-
-end
-
-function GetProjectJson(doc)
-
-    -- Get the JSON file containing the "project" (manga) information.
-    -- e.g. www.nekopost.net/file_server/collectJson/<jsonFolder>/<projectId>/<projectId>dtl.json?<runningTime>
-
-    local baseFileUrl = GetBaseFileUrl(doc)
-    local projectId = GetProjectId(doc)
-    
-    local jsonFolder = GetJsonFolder(projectId)
-    
-    local year = os.date('%Y')
-    local month = os.date('%m'):after('0')
-    local day = os.date('%d'):after('0')
-    local hour = os.date('%I'):after('0')
-    local minute = os.date('%M'):after('0')
-
-    local runningTime = year .. month .. day .. hour .. minute
-
-    local jsonPath = baseFileUrl .. 'collectJson/' .. jsonFolder .. '/' .. projectId .. '/' .. projectId .. 'dtl.json?' .. runningTime
-
-    http.Headers['x-requested-with'] = 'XMLHttpRequest'
-    http.Headers['accept'] = 'application/json'
-    
-    return Json.New(http.Get(jsonPath))
-
-end
-
-function GetPagesFromProjectJson(doc, projectJson)
-
-    -- Get the JSON file containing the chapter information. There are two types: "datafile" (df) and "database" (db).
-    -- e.g. www.nekopost.net/file_server/collect<type>/<projectId>/<chapterId>/<dataFile>.json
-    -- e.g. www.nekopost.net/reader/loadChapterContent/<projectId>/<chapterId>
-    
-    local baseFileUrl = GetBaseFileUrl(doc)
-    local projectId = GetProjectId(doc)
-
-    local projectFolder = 'collect'
-    local chapterNo = doc:regex('chapterNo\\s*=\\s*\"(.+?)\"', 1) -- Can be fractional (e.g. "0.1")
-    local chapterId = projectJson.SelectValue("chapterList[?(@.nc_chapter_no=='"..chapterNo.."')].nc_chapter_id")
-    local npType = projectJson.SelectValue('info.np_type')
-    local ncDataFile = projectJson.SelectValue("chapterList[?(@.nc_chapter_no=='"..chapterNo.."')]..nc_data_file")
-    local gblChapterType = not isempty(ncDataFile) and "df" or "db"
-
-    if(npType == 'm') then
-        projectFolder = projectFolder .. 'Manga'
-    elseif(npType == 'n') then
-        projectFolder = projectFolder .. 'Novel'
-    elseif(npType == 'd') then
-        projectFolder = projectFolder .. 'Doujin'
-    end
-
-    local chapterPathFolder = baseFileUrl .. projectFolder .. '/' .. projectId .. '/' .. chapterId .. '/'
-
-    local dfTargetUrl = chapterPathFolder .. ncDataFile
-    local dbTargetUrl =  'reader/loadChapterContent/' .. projectId .. '/' .. chapterNo
-    local targetUrl = (gblChapterType == 'df') and dfTargetUrl or dbTargetUrl
-
-    http.Headers['x-requested-with'] = 'XMLHttpRequest'
-    http.Headers['accept'] = 'application/json'
-
-    local chapterJson = Json.New(http.Get(targetUrl))
-
-    -- Convert the image filenames into full image paths here, since we have all the variables to work with.
-
-    projectFolder = baseFileUrl .. projectFolder .. '/' .. projectId .. '/' .. chapterId .. '/'
-    
-    local filenames = (gblChapterType == 'df') and chapterJson.SelectValues('pageItem[*].fileName') or chapterJson.SelectValues('[*][*].value_url')
-
-    local pageList = List.New()
-
-    for filename in filenames do
-
-        local filePath = projectFolder .. filename
-
-        pageList.Add(filePath)
+        pages.Add(imageUrl)
 
     end
 
-    return pageList
+end
+
+function GetGalleryId()
+
+    return tostring(url):regex('\\/(?:comic|manga)\\/(\\d+)', 1)
 
 end
 
-function mod(a, b)
+function GetChapterId()
 
-    return a - (math.floor(a / b) * b)
+    return tostring(url):regex('\\/(?:comic|manga)\\/\\d+\\/(\\d+)', 1)
+
+end
+
+function GetGalleryApiEndpoint()
+
+    return '//tuner.'..module.Domain..'/ApiTest/'
+
+end
+
+function GetChapterApiEndpoint()
+
+    return 'https://fs.'..module.Domain..'/'
+
+end
+
+function GetGalleryJson()
+
+    local apiEndpoint = GetGalleryApiEndpoint()..'getProjectDetailFull/'..GetGalleryId()
+    local json = Json.New(http.Get(apiEndpoint)) 
+
+    return json
+
+end
+
+function GetChapterJson()
+
+    local galleryId = GetGalleryId()
+    local chapterId = GetChapterId()
+    local galleryJson = GetGalleryJson()
+
+    -- Find the chapter id of the current chapter.
+
+    for chapterNode in galleryJson.SelectTokens('projectChapterList[*]') do
+
+        if(tostring(chapterNode['nc_chapter_no']) == chapterId) then
+
+            chapterId = tostring(chapterNode['nc_chapter_id'])
+
+            local apiEndpoint = GetChapterApiEndpoint()..'collectManga/'..galleryId..'/'..chapterId..'/'..galleryId..'_'..chapterId..'.json'
+            local json = Json.New(http.Get(apiEndpoint)) 
+        
+            return json
+
+        end
+
+    end
+
+end
+
+function CleanTitle(title)
+
+    return RegexReplace(tostring(title), '^.+?:', '')
 
 end
