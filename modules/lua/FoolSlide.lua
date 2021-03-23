@@ -2,11 +2,19 @@ function Register()
    
     module.Name = 'FoOlSlide'
 
-    --module.Domains.Add('jaiminisbox.com', 'Jaimini\'s Box')
+    module = Module.New()
+
+    module.Language = 'English'
+
+    module.Domains.Add('rosesquadscans.aishiteru.org', 'Rose Squad Scans')
     
+    RegisterModule(module)
+
 end
 
 function GetInfo()
+
+    BypassMatureContentWarning()
 
     info.Title = dom.SelectValue('//h1')
     info.Author = dom.SelectValue('//div[@class="info"]/*[contains(text(), "Author")]/following-sibling::text()'):after(': ')
@@ -17,6 +25,8 @@ end
 
 function GetChapters()
 
+    BypassMatureContentWarning()
+
     chapters.AddRange(dom.SelectElements('//div[@class="list"]//div[@class="title"]/a'))
 
     chapters.Reverse()
@@ -25,17 +35,32 @@ end
 
 function GetPages()
 
-    local doc = http.Get(url)
-    local pageContent = doc:regex('var\\s*pages\\s*=\\s*(.+?)\\s*;', 1)
+    BypassMatureContentWarning()
 
-    if(pageContent:contains('atob(')) then
+    local pageArray = tostring(dom):regex('var\\s*pages\\s*=\\s*(.+?)\\s*;', 1)
+
+    if(pageArray:contains('atob(')) then
 
         -- Pages are base64 encoded.
 
-        pageContent = DecodeBase64(pageContent:between('atob("', '")'))
+        pageArray = DecodeBase64(pageArray:between('atob("', '")'))
 
     end
 
-    pages.AddRange(Json.New(pageContent).SelectValues('[*].url'))
+    pages.AddRange(Json.New(pageArray).SelectValues('[*].url'))
+
+end
+
+function BypassMatureContentWarning()
+
+    local isMatureContent = dom.SelectElements('//form//input[@name="adult"]').Count() > 0
+
+    if(isMatureContent) then
+
+        http.PostData['adult'] = 'true'
+
+        dom = dom.New(http.Post(url))
+
+    end
 
 end
