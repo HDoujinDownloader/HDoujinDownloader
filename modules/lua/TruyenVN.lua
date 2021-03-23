@@ -13,7 +13,7 @@ function GetInfo()
     info.Author = dom.SelectValue('//span[contains(text(),"Tác giả")]/following-sibling::a')
     info.Status = dom.SelectValue('//span[contains(text(),"Tình trạng")]/following-sibling::text()')
     info.Tags = dom.SelectValues('//div[contains(@class,"genre")]/a')
-    info.Summary = dom.SelectValue('//div[contains(@class,"detail-content")]//p')
+    info.Summary = dom.SelectValue('//strong[contains(text(),"Cảnh báo độ tuổi:")]/following-sibling::text()')
 
 end
 
