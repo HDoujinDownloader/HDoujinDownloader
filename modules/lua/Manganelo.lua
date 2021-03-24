@@ -5,6 +5,7 @@ function Register()
 
     module.Domains.Add('mangabat.com', 'Mangabat.com')
     module.Domains.Add('mangawk.com', 'MangaWK')
+    module.Domains.Add('mangakakalot.city', 'Mangakakalot')
     module.Domains.Add('mangakakalot.com', 'Mangakakalot')
     module.Domains.Add('manganelo.com', 'Manganelo')
     module.Domains.Add('manganelo.tv', 'Manganelo')
@@ -24,20 +25,24 @@ function GetInfo()
 
     -- The following cases apply specifically to Mangakakalot (mangakakalot.com).
 
-    if(isempty(info.AlternativeTitle)) then
+    if(isempty(info.AlternativeTitle)) then -- mangakakalot.com
         info.AlternativeTitle = dom.SelectValue('//h2[contains(@class, "alternative")]')
     end
 
-    if(isempty(info.Author)) then
+    if(isempty(info.Author)) then -- mangakakalot.com
         info.Author = dom.SelectValues('//li[contains(text(), "Author")]//a')
     end
 
-    if(isempty(info.Status)) then
+    if(isempty(info.Author)) then -- mangakakalot.city
+        info.Author = dom.SelectValue('//li[contains(text(), "Author")]'):after(':')
+    end
+
+    if(isempty(info.Status)) then -- mangakakalot.com
         info.Status = dom.SelectValue('//li[contains(text(), "Status")]'):after(':')
     end
 
-    if(isempty(info.Tags)) then
-        info.Tags = dom.SelectValues('//li[contains(text(), "Genres")]//a')
+    if(isempty(info.Tags)) then -- mangakakalot.com
+        info.Tags = dom.SelectValues('//li[contains(text(), "Genre") or contains(text(), "Genres")]//a')
     end
 
 end
@@ -60,6 +65,16 @@ function GetPages()
 
     if(isempty(pages)) then
         pages.AddRange(dom.SelectValues('//div[contains(@class, "chapter-reader")]/img/@data-src'))
+    end
+
+    -- Update (23/03/2021): The images are stored in an array on mangakakalot.city.
+
+    if(isempty(pages)) then
+
+        local pageArray = dom.SelectValue('//p[@id="arraydata"]')
+
+        pages.AddRange(pageArray:split(','))
+
     end
 
 end
