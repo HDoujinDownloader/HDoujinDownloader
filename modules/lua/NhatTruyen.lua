@@ -3,7 +3,8 @@ function Register()
     module.Name = 'NhatTruyen'
     module.Language = 'Vietnamese'
 
-    module.Domains.Add('nhattruyen.com')
+    module.Domains.Add('nettruyen.com', 'NetTruyen')
+    module.Domains.Add('nhattruyen.com', 'NhatTruyen')
     
 end
 
