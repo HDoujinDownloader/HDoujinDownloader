@@ -1,6 +1,7 @@
 function Register()
 
     module.Name = '4chan'
+    module.Strict = false
 
     module.Domains.Add('4chan.org')
     module.Domains.Add('4channel.org')
@@ -10,11 +11,19 @@ end
 
 function GetInfo()
 
-    info.Title = dom.SelectValue('//span[contains(@class,"subject")]')
-    info.Author = dom.SelectValue('//div[contains(@class,"thread")]//span[@class="name"]')
-    info.Summary = dom.SelectValue('//*[contains(@class,"postMessage")]')
-    info.Tags = dom.SelectValue('//div[contains(@class,"boardTitle")]')
-    info.DateReleased = dom.SelectValue('//span[contains(@class,"dateTime")]/text()[1]')
+    if(doc:startsWith('{')) then
+
+        GetMetadataFromJson(doc)
+
+    else
+
+        info.Title = dom.SelectValue('//span[contains(@class,"subject")]')
+        info.Author = dom.SelectValue('//div[contains(@class,"thread")]//span[@class="name"]')
+        info.Summary = dom.SelectValue('//*[contains(@class,"postMessage")]')
+        info.Tags = dom.SelectValue('//div[contains(@class,"boardTitle")]')
+        info.DateReleased = dom.SelectValue('//span[contains(@class,"dateTime")]/text()[1]')
+
+    end
 
     if(isempty(info.Title)) then
         info.Title = GetThreadId(url)
@@ -35,5 +44,17 @@ end
 function GetThreadId(url)
 
     return tostring(url):regex('\\/thread\\/(\\d+)', 1)
+
+end
+
+function GetMetadataFromJson(jsonStr)
+
+    local json = Json.New(jsonStr)
+
+    info.Title = json.SelectValue('posts[*].sub')
+    info.Author = json.SelectValue('posts[*].name')
+    info.Summary = json.SelectValue('posts[*].com')
+    info.PageCount = json.SelectValues('posts[*].filename').Count()
+    info.Tags = '/'..url:between(module.Domain..'/', '/')..'/' -- board
 
 end
