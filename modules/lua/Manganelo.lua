@@ -7,6 +7,7 @@ function Register()
     module.Domains.Add('mangawk.com', 'MangaWK')
     module.Domains.Add('mangakakalot.city', 'Mangakakalot')
     module.Domains.Add('mangakakalot.com', 'Mangakakalot')
+    module.Domains.Add('mangakakalot.tv', 'Mangakakalot')
     module.Domains.Add('manganelo.com', 'Manganelo')
     module.Domains.Add('manganelo.tv', 'Manganelo')
     
@@ -64,7 +65,7 @@ function GetPages()
     -- Update (09/03/2021): We need to use the data-src attribute for Manganelo (manganelo.tv).
 
     if(isempty(pages)) then
-        pages.AddRange(dom.SelectValues('//div[contains(@class, "chapter-reader")]/img/@data-src'))
+        pages.AddRange(dom.SelectValues('//div[contains(@class, "chapter-reader") or @id="vungdoc"]/img/@data-src'))
     end
 
     -- Update (23/03/2021): The images are stored in an array on mangakakalot.city.
