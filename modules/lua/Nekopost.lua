@@ -54,7 +54,7 @@ function GetPages()
 
     local galleryId = json.SelectValue('projectId')
     local chapterId = json.SelectValue('chapterId')
-
+   
     for filename in json.SelectValues('pageItem[*].fileName') do
 
         local imageUrl = GetChapterApiEndpoint()..'collectManga/'..galleryId..'/'..chapterId..'/'..filename
@@ -73,19 +73,19 @@ end
 
 function GetChapterId()
 
-    return tostring(url):regex('\\/(?:comic|manga)\\/\\d+\\/(\\d+)', 1)
+    return tostring(url):regex('\\/(?:comic|manga)\\/\\d+\\/([\\d\\.]+)', 1)
 
 end
 
 function GetGalleryApiEndpoint()
 
-    return '//tuner.'..module.Domain..'/ApiTest/'
+    return '//tuner.'..GetDomain(module.Domain)..'/ApiTest/'
 
 end
 
 function GetChapterApiEndpoint()
 
-    return 'https://fs.'..module.Domain..'/'
+    return '//fs.'..GetDomain(module.Domain)..'/'
 
 end
 
@@ -114,7 +114,7 @@ function GetChapterJson()
 
             local apiEndpoint = GetChapterApiEndpoint()..'collectManga/'..galleryId..'/'..chapterId..'/'..galleryId..'_'..chapterId..'.json'
             local json = Json.New(http.Get(apiEndpoint)) 
-        
+
             return json
 
         end
