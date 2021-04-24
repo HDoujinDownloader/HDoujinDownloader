@@ -3,6 +3,7 @@ function Register()
     module.Name = 'MangaReader'
     module.Language = 'English'
 
+    module.Domains.Add('flamescans.org', 'Flame Scans')
     module.Domains.Add('readkomik.com', 'ReadKomik')
 
 end
@@ -15,6 +16,7 @@ function GetInfo()
     info.Type = dom.SelectValue('//div[@class="imptdt" and contains(text(),"Type")]/*[last()]')
     info.Publisher = dom.SelectValue('//div[@class="imptdt" and contains(text(),"Serialization")]/*[last()]')
     info.Author = dom.SelectValue('//div[@class="imptdt" and contains(text(),"Author")]/*[last()]')
+    info.Artist = dom.SelectValue('//div[@class="imptdt" and contains(text(),"Artist")]/*[last()]')
 
 end
 
