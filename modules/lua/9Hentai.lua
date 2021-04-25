@@ -48,8 +48,8 @@ function GetGalleryJson()
     http.Headers['x-csrf-token'] = dom.SelectValue('//meta[@name="csrf-token"]/@content')
     http.Headers['x-requested-with'] = 'XMLHttpRequest'
 
-    if(not isempty(http.Cookies['XSRF-TOKEN'])) then
-        http.Headers['x-xsrf-token'] = http.Cookies['XSRF-TOKEN']
+    if(not isempty(http.Cookies.GetCookie('XSRF-TOKEN'))) then
+        http.Headers['x-xsrf-token'] = http.Cookies.GetCookie('XSRF-TOKEN')
     end
     
     local json = http.Post(apiEndpoint, '{"id":'..GetGalleryId()..'}')
