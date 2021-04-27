@@ -8,6 +8,7 @@ function Register()
     module.Domains.Add('bulumanga.net', 'BuluManga')
     module.Domains.Add('heavenmanga.org', 'Heaven Manga')
     module.Domains.Add('holymanga.net', 'Holy Manga')
+    module.Domains.Add('mytoon.net', 'MyToon')
 
     RegisterModule(module)
 
