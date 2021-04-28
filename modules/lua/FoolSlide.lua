@@ -7,6 +7,7 @@ function Register()
     module.Language = 'English'
 
     module.Domains.Add('rosesquadscans.aishiteru.org', 'Rose Squad Scans')
+    module.Domains.Add('zandynofansub.aishiteru.org', 'Zandy no Fansub')
     
     RegisterModule(module)
 
@@ -17,9 +18,11 @@ function GetInfo()
     BypassMatureContentWarning()
 
     info.Title = dom.SelectValue('//h1')
-    info.Author = dom.SelectValue('//div[@class="info"]/*[contains(text(), "Author")]/following-sibling::text()'):after(': ')
-    info.Artist = dom.SelectValue('//div[@class="info"]/*[contains(text(), "Artist")]/following-sibling::text()'):after(': ')
-    info.Summary = dom.SelectValue('//div[@class="info"]/*[contains(text(), "Synopsis")]/following-sibling::text()'):after(': ')
+    info.Author = dom.SelectValue('//div[@class="info"]//*[contains(text(), "Author")]/following-sibling::text()'):after(': ')
+    info.Artist = dom.SelectValue('//div[@class="info"]//*[contains(text(), "Artist")]/following-sibling::text()'):after(': ')
+    info.Summary = dom.SelectValue('//div[@class="info"]//*[contains(text(), "Synopsis")]/following-sibling::text()'):after(': ')
+    info.Status = dom.SelectValue('//div[@class="info"]//*[contains(text(), "Status")]/following-sibling::text()'):after(': ')
+    info.Tags = dom.SelectValue('//div[@class="info"]//*[contains(text(), "Genre")]/following-sibling::text()'):after(': ')
 
 end
 
