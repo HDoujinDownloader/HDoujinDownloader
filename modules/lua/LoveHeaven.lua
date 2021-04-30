@@ -9,6 +9,7 @@ function Register()
     module.Domains.Add('hanascan.com', 'HanaScan.com')
     module.Domains.Add('kissaway.net', 'KissAway')
     module.Domains.Add('kisslove.net', 'KissLove')
+    module.Domains.Add('ksgroupscans.com', 'KSGroupScans')
     module.Domains.Add('lhscan.net', 'LoveHeaven')
     module.Domains.Add('lhscans.com', 'LoveHeaven')
     module.Domains.Add('loveheaven.net', 'LoveHeaven')
@@ -82,6 +83,10 @@ function GetInfo()
 
         if(isempty(info.Summary)) then -- manhwasmut.com
             info.Summary = dom.SelectValue('//div[contains(@class,"detail")]/div[contains(@class,"content")]')
+        end
+
+        if(isempty(info.Summary)) then -- ksgroupscans.com
+            info.Summary = dom.SelectValue('//div[contains(@class,"summary-content")]')
         end
 
         if(info.Title:endswith(' - RAW')) then
