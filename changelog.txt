@@ -1,3 +1,17 @@
+As of version 2021.5.1.0, the changelog will only contain updates made to the HDoujin Downloader application.
+For module updates, see: https://github.com/HDoujinDownloader/HDoujin-Downloader/tree/master/modules/lua
+
+[2021.5.1.0]
+
+- [FIX] Fixed FlareSolverr plugin failing on some websites
+- [FIX] Fixed broken modules not being reloaded after initial sync
+- [FIX] Fixed crash when WebDriver.dll is missing
+- [FIX] Fixed images sometimes being duplicated in multiple formats
+- [FIX] Fixed stale modules sometimes being downloaded when syncing
+- [MISC] Improved metadata parsing
+- [MISC] Improved mirror finding process for ExHentai
+- [MISC] Various improvements and bug fixes
+
 [v2021.2.11.0]
 
 - [FIX] Fixed modules not updating if replaced by outdated version
