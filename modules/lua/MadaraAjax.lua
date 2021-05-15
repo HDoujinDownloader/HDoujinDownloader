@@ -22,6 +22,7 @@ function Register()
     module.Domains.Add('manhuaus.com', 'Manhuaus.com')
     module.Domains.Add('nightcomic.com', 'Night Comic')
     module.Domains.Add('porncomixinfo.net', 'Porn Comics')
+    module.Domains.Add('pornwha.com', 'Pornwha')
 
 end
 
