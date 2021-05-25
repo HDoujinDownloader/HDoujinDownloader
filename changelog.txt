@@ -1,7 +1,15 @@
 As of version 2021.5.1.0, the changelog will only contain updates made to the HDoujin Downloader application.
 For module updates, see: https://github.com/HDoujinDownloader/HDoujin-Downloader/tree/master/modules/lua
 
-[2021.5.14.0-rc1]
+[2021.5.25.0-rc3]
+
+- [NEW] Metadata is now written to PDFs
+- [FIX] Fixed description getting modified when editing metadata
+- [FIX] Improved Cloudflare IUAM handling
+- [FIX] Improved handling of broken text encodings
+- [MISC] Various improvements and bug fixes
+
+[2021.5.14.0-rc2]
 
 - [FIX] Fixed some requests failing due to unsupported cryptographic protocols
 - [FIX] FlareSolverr is now downloaded on-demand if it's not already present
