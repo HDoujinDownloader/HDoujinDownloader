@@ -4,12 +4,14 @@ function Register()
     module.Language = 'English'
 
     module.Domains.Add('mangabat.com', 'Mangabat.com')
-    module.Domains.Add('mangawk.com', 'MangaWK')
     module.Domains.Add('mangakakalot.city', 'Mangakakalot')
     module.Domains.Add('mangakakalot.com', 'Mangakakalot')
     module.Domains.Add('mangakakalot.tv', 'Mangakakalot')
+    module.Domains.Add('manganato.com', 'Manganato')
     module.Domains.Add('manganelo.com', 'Manganelo')
     module.Domains.Add('manganelo.tv', 'Manganelo')
+    module.Domains.Add('mangawk.com', 'MangaWK')
+    module.Domains.Add('readmanganato.com', 'Manganato')
 
     module.Settings.AddCheck('Try other image servers', true)
         .WithToolTip('If enabled, the image URLs from the alternative image server(s) will be used as backup.')
