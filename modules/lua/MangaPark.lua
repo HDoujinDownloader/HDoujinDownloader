@@ -4,6 +4,7 @@ function Register()
     module.Language = 'English'
 
     module.Domains.Add('mangapark.net', 'MangaPark')
+    module.Domains.Add('v2.mangapark.net', 'MangaPark')
 
     -- Set the "set" cookie so that 18+ content is visible.
 
