@@ -1,8 +1,10 @@
 function Register()
 
     module.Name = 'Nekopost'
-    module.Domain = 'nekopost.net'
     module.Language = 'Thai'
+
+    module.Domains.Add('nekopost.net')
+    module.Domains.Add('www.nekopost.net')
 
 end
 
