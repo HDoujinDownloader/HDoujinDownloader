@@ -7,6 +7,7 @@ function Register()
     module.Language = 'English'
 
     module.Domains.Add('asurascans.com', 'Asura Scans')
+    module.Domains.Add('www.asurascans.com', 'Asura Scans')
 
 end
 
@@ -44,6 +45,13 @@ end
 function GetPages()
 
     pages.AddRange(dom.SelectValues('//div[@id="readerarea"]//img/@data-src'))
+
+    -- asurascans.com
+    -- Make sure to ignore any ad GIFs.
+
+    if(isempty(pages)) then
+        pages.AddRange(dom.SelectValues('//div[@id="readerarea"]//img[@class]/@src'))
+    end
 
 end
 
