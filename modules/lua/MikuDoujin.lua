@@ -20,6 +20,14 @@ function GetInfo()
 
 end
 
+function GetChapters()
+
+    chapters.AddRange(dom.SelectElements('//td/a'))
+
+    chapters.Reverse()
+
+end
+
 function GetPages()
 
     pages.AddRange(dom.SelectValues('//div[@id="manga-content"]/img/@data-src'))
