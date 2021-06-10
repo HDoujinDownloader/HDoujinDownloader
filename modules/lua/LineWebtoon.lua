@@ -63,7 +63,7 @@ function GetChapters()
 
     for page in Paginator.New(http, dom, '//div[contains(@class,"paginate")]/a[@href="#"]/following-sibling::a/@href') do
     
-        local chapterNodes = page.SelectElements('//div[contains(@class,"detail_lst")]//ul//a')
+        local chapterNodes = page.SelectElements('//div[contains(@class,"detail_lst")]//ul//a[span[contains(@class,"subj")]]')
 
         for i = 0, chapterNodes.Count() - 1 do
 
