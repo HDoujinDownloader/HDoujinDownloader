@@ -63,12 +63,6 @@ function GetInfo()
         info.Tags = dom.SelectValues('//li[descendant::i[contains(@class,"fa-tags")]]//a/text()')
         info.Status = dom.SelectValue('//li[descendant::i[contains(@class,"fa-spinner")]]//a/text()')
 
-        -- Update (1/3/2021): lovehug.net got rid of the title element (h1), so we need to get the title from the breadcrumbs instead.
-
-        if(isempty(info.Title)) then
-            info.Title = dom.SelectValue('(//ol//span[@itemprop="name"])[last()]')
-        end
-
         -- Sometimes the title is a different element (e.g. kissaway.net).
 
         if(isempty(info.Title)) then
