@@ -12,33 +12,25 @@ end
 
 function GetInfo()
 
-    local apiEndpoint = GetMangaOrChapterApiEndpoint(url)
-    local json = Json.New(http.Get(apiEndpoint))
+    local json = GetGalleryJson()
 
-    if(url:contains('/chapter/')) then
+    info.Title = json.SelectValue('data.attributes.title.*')
+    info.AlternativeTitle = json.SelectValues('data.attributes.altTitles.*')
+    info.Summary = json.SelectValue('data.attributes.description.*')
+    info.Tags = json.SelectValues('data.attributes.tags[*].attributes.name.*')
+    info.DateReleased = json.SelectValue('data.attributes.year')
+    info.Type = json.SelectValue('data.attributes.originalLanguage')
+    info.Status = json.SelectValue('data.attributes.status')
+    info.Adult = json.SelectValue('data.attributes.contentRating') ~= 'safe'
+    info.Author = GetRelationshipNames('author', json.SelectValues("relationships[?(@.type=='author')].id"))
+    info.Artist = GetRelationshipNames('author', json.SelectValues("relationships[?(@.type=='artist')].id"))
 
-        -- Added from chapter page.
+    -- Get chapter metadata.
 
-        info.Title = CleanChapterTitle(dom.Title)
-        info.Series = json.SelectValue('data.mangaTitle')
-        info.Language = json.SelectValue('data.language')
-        info.PageCount = json.SelectValues('data.pages[*]').Count()
+    if(isempty(info.Title) and url:contains('/chapter/')) then
 
-    elseif(url:contains('/manga/') or url:contains('/title/')) then
-
-        -- Added from summary page.
-        -- Update (August 27th, 2018): URLs now use "/title/" instead of "/manga/".
-
-        info.Title = json.SelectValue('data.title')
-        info.AlternativeTitle = json.SelectValues('data.altTitles[*]')
-        info.Author = json.SelectValues('data.author[*]')
-        info.Artist = json.SelectValues('data.artist[*]')
-        info.Language = json.SelectValue('data.publication.language')
-        info.Tags = dom.SelectValues('//a[contains(@href,"/genre")]')
-        info.Status = dom.SelectValue('//div[contains(text(),"status:") or contains(text(),"Status:")]/following-sibling::div')
-        info.Summary = json.SelectValue('data.description')
-        info.Type = json.SelectValue('data.publication.language')
-        info.Adult = toboolean(json.SelectValue('data.isHentai'))
+        info.Title = GetChapterTitle(json)
+        info.PageCount = json.SelectValues('data.attributes.data[*]').Count()
 
     end
 
@@ -46,151 +38,182 @@ end
 
 function GetChapters()
 
-    local apiEndpoint = GetMangaOrChapterApiEndpoint(url)..'chapters'
-    local json = Json.New(http.Get(apiEndpoint))
+    local uuid = GetGalleryUuid()
+    local offset = 0
+    local limit = 100
+    local total = 0
 
     local sssMangadexPreferredLanguages = global.GetSetting('sssMangadexPreferredLanguages')
     local userLanguages = sssMangadexPreferredLanguages:split(',')
     local acceptAny = isempty(sssMangadexPreferredLanguages) or userLanguages.Count() <= 0 or userLanguages.Contains(GetLanguageId("all"))
-    
-    for chapterJson in json['data']['chapters'] do
-        
-        chapterInfo = ChapterInfo.New()
-        
-        volumeNumber = chapterJson['volume']
-        chapterNumber = chapterJson['chapter']
-        chapterSubtitle = CleanChapterTitle(chapterJson['title'])
-        
-        -- Not all chapters have chapter and volume numbers, and not all chapters have titles.
-        -- Ex: https://mangadex.org/title/23747/sekkaku-cheat (no volume numbers, no titles)
+    local groupUuids = List.New()
 
-        if(not isempty(chapterNumber)) then
-            chapterInfo.Title = FormatString("Ch. {0}",  chapterNumber)
+    repeat
+
+        local apiEndpoint = GetApiEndpoint() .. 'chapter?manga=' .. uuid .. '&limit=' .. limit .. '&offset=' .. offset
+        local json = Json.New(http.Get(apiEndpoint))
+        local chapterNodes = json.SelectTokens('results[*]')
+
+        if(chapterNodes.Count() <= 0) then
+            break
         end
 
-        if(not isempty(volumeNumber)) then
-            chapterInfo.Title = FormatString("Vol. {0} {1}", volumeNumber, chapterInfo.Title):trim()
-        end
+        for chapterNode in chapterNodes do
 
-        if(not isempty(chapterSubtitle:trim())) then
+            local volumeNumber = tostring(chapterNode.SelectValue('data.attributes.volume'))
 
-            if(not isempty(chapterInfo.Title)) then
-                chapterInfo.Title = chapterInfo.Title .. ' - '
+            if(volumeNumber == 'null') then
+                volumeNumber = ''
             end
 
-            chapterInfo.Title = chapterInfo.Title .. chapterSubtitle
+            local chapter = ChapterInfo.New()
+
+            chapter.Title = GetChapterTitle(chapterNode)
+            chapter.Url = '/chapter/' .. chapterNode.SelectValue('data.id')
+            chapter.Language = chapterNode.SelectValue('data.attributes.translatedLanguage')
+            chapter.ScanlationGroup = chapterNode.SelectValue("relationships[?(@.type=='scanlation_group')].id")
+            chapter.Volume = volumeNumber
+
+            if(acceptAny or userLanguages.Contains(GetLanguageId(chapter.Language))) then
+
+                groupUuids.Add(chapter.ScanlationGroup)
+
+                chapters.Add(chapter)
+
+            end
 
         end
 
-        chapterInfo.Url = FormatString('/chapter/{0}', chapterJson['id'])
-        chapterInfo.Volume = volumeNumber
-        chapterInfo.Language = chapterJson['language']
-
-        local groupId = chapterJson.SelectValues('groups[*]').First()
-
-        if(not isempty(groupId)) then
-            chapterInfo.ScanlationGroup = json.SelectValue("data.groups[?(@.id == "..groupId..")].name")
+        if(total <= 0) then
+            total = tonumber(json.SelectValue('total'))
         end
 
-        local uploadTimestamp = tonumber(chapterJson['timestamp'])
-        
-        if(uploadTimestamp <= os.time() and (acceptAny or userLanguages.Contains(GetLanguageId(chapterInfo.Language)))) then
-            chapters.Add(chapterInfo)
+        offset = offset + limit
+
+    until(offset >= total)
+
+    -- Get group names.
+
+    if(groupUuids.Count() > 0) then
+
+        local groupsDict = BuildGroupsDict(groupUuids)
+
+        for chapter in chapters do
+            chapter.ScanlationGroup = groupsDict[chapter.ScanlationGroup]
         end
-       
+
     end
-
-    chapters.Reverse()
 
 end
 
 function GetPages()
 
-    local apiEndpoint = GetMangaOrChapterApiEndpoint(url)
-    local json = Json.New(http.Get(apiEndpoint))
+    local json = GetGalleryJson()
 
-    local server = json.SelectValue('data.server')
-    local serverFallback = json.SelectValue('data.serverFallback')
-    local hash = json.SelectValue('data.hash')
+    local hash = tostring(json.SelectValues('data.attributes.hash'))
+    local baseUrl = Json.New(http.Get(GetApiEndpoint() .. 'at-home/server/' .. GetGalleryUuid())).SelectValue('baseUrl')
+    local data = json.SelectValues('data.attributes.data[*]')
+    local dataSaver = json.SelectValues('data.attributes.dataSaver[*]')
 
-    for filename in json.SelectValues('data.pages[*]') do
+    baseUrl = baseUrl .. '/data/' .. hash .. '/'
 
-        if(not isempty(filename)) then
+    for i = 0, data.Count() - 1 do
 
-            local pageInfo = PageInfo.New()
+        local pageInfo = PageInfo.New(baseUrl .. data[i])
 
-            pageInfo.Url = FormatString('{0}{1}/{2}', server, hash, filename)
-            pageInfo.BackupUrls.Add(FormatString('{0}{1}/{2}', serverFallback, hash, filename))
-            
-            pages.Add(pageInfo)
-
+        if(i < dataSaver.Count()) then
+            pageInfo.BackupUrls.Add(baseUrl .. dataSaver[i])
         end
+
+        pages.Add(pageInfo)
 
     end
 
 end
 
-function Login()
+function GetApiEndpoint()
+
+    return '//api.'..module.Domain..'/'
+
+end
+
+function GetGalleryUuid()
+
+    return url:regex('\\/(?:title|chapter)\\/([^\\/]+)', 1)
+
+end
+
+function GetGalleryJson()
+
+    local uuid = GetGalleryUuid()
+    local type = url:regex('\\/(title|chapter)', 1):replace('title', 'manga')
+    local apiEndpoint = GetApiEndpoint() .. type .. '/' .. uuid
     
-    if(not http.Cookies.Contains('mangadex_session')) then
+    return Json.New(http.Get(apiEndpoint))
 
-        http.Referer = 'https://'..module.Domain..'/login'
+end
 
-        -- Make an initial request to get session cookie(s).
+function GetChapterTitle(json)
 
-        http.Get(http.Referer)
+    local result = ''
 
-        -- Build multipart form data.
+    local chapterTitle = json.SelectValue('data.attributes.title')
+    local volumeNumber = tostring(json.SelectValue('data.attributes.volume'))
+    local chapterNumber = tostring(json.SelectValue('data.attributes.chapter'))
 
-        local formData = MultipartFormData.New()
+    if(volumeNumber == 'null') then
+        volumeNumber = ''
+    end
 
-        formData.Add('login_username', username)
-        formData.Add('login_password', password)
-        formData.Add('two_factor', '')
-        formData.Add('remember_me', '1')
+    if(not isempty(volumeNumber)) then
+        result = result .. ' Vol. ' .. volumeNumber
+    end
 
-        -- Make the login request.
+    if(not isempty(chapterNumber)) then
+        result = result .. ' Ch. ' .. chapterNumber
+    end
 
-        http.Headers['accept'] = '*/*'
-        http.Headers['content-type'] = formData.ContentType
-        http.Headers['x-requested-with'] = 'XMLHttpRequest'
+    if(not isempty(chapterTitle)) then
+        result = result .. ' - ' .. chapterTitle 
+    end
 
-        local response = http.PostResponse('https://'..module.Domain..'/ajax/actions.ajax.php?function=login', formData)
-        
-        if(not response.Cookies.Contains('mangadex_session')) then
-            Fail(Error.LoginFailed)
-        end
+    return result
 
-        global.SetCookies(response.Cookies)
+end
+
+function GetRelationshipNames(type, uuids)
+
+    local names = List.New()
+
+    for uuid in uuids do
+
+        local apiEndpoint = GetApiEndpoint() .. type .. '/' .. uuid
+        local json = Json.New(http.Get(apiEndpoint))
+
+        names.Add(json.SelectValue('data.attributes.name'))
 
     end
 
-end
-
-function GetApiEndpoint(url)
-
-    return '//api.'..module.Domain..'/v2/'
+    return names
 
 end
 
-function GetMangaOrChapterApiEndpoint(url)
+function BuildGroupsDict(uuids)
 
-    local path = url
-        :regex('\\/((?:title|manga|chapter)\\/\\d+)', 1)
-        :replace('title/', 'manga/')
+    local groupsApiEndpoint = GetApiEndpoint() .. 'group?'
 
-    return GetApiEndpoint(url)..path..'/'
+    for uuid in uuids do
+        groupsApiEndpoint = groupsApiEndpoint .. 'ids[]=' .. uuid .. '&'
+    end
 
-end
+    local groupsJson = Json.New(http.Get(groupsApiEndpoint:trim('&')))
+    local groupsDict = Dict.New()
 
-function CleanChapterTitle(title)
+    for groupData in groupsJson.SelectTokens('results[*].data') do
+        groupsDict[groupData.SelectValue('id')] = groupData.SelectValue('attributes.name')
 
-    -- Works for chapter titles from the chapter list as well as titles from chapters added individually.
+    end
 
-    title = tostring(title)
-        :before(' - Read Online')
-        :before(' - MangaDex')
-
-    return title
+    return groupsDict
 
 end
