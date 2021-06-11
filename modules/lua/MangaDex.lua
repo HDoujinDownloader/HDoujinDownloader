@@ -12,6 +12,8 @@ end
 
 function GetInfo()
 
+    RedirectFromOldUrl()
+
     local json = GetGalleryJson()
 
     info.Title = json.SelectValue('data.attributes.title.*')
@@ -38,6 +40,8 @@ end
 
 function GetChapters()
 
+    RedirectFromOldUrl()
+
     local uuid = GetGalleryUuid()
     local offset = 0
     local limit = 100
@@ -60,6 +64,7 @@ function GetChapters()
 
         for chapterNode in chapterNodes do
 
+            local chapterNumber = tostring(chapterNode.SelectValue('data.attributes.chapter'))
             local volumeNumber = tostring(chapterNode.SelectValue('data.attributes.volume'))
 
             if(volumeNumber == 'null') then
@@ -68,7 +73,10 @@ function GetChapters()
 
             local chapter = ChapterInfo.New()
 
-            chapter.Title = GetChapterTitle(chapterNode)
+            -- The chapters are not necessarily returned in order according to their chapter number.
+            -- The chapter number is temporarily prepended to the chapter title for sorting purposes.
+
+            chapter.Title = chapterNumber .. ' - ' .. GetChapterTitle(chapterNode)
             chapter.Url = '/chapter/' .. chapterNode.SelectValue('data.id')
             chapter.Language = chapterNode.SelectValue('data.attributes.translatedLanguage')
             chapter.ScanlationGroup = chapterNode.SelectValue("relationships[?(@.type=='scanlation_group')].id")
@@ -104,9 +112,19 @@ function GetChapters()
 
     end
 
+    -- Sort and remove prepended chapter numbers.
+
+    chapters.Sort()
+
+    for chapter in chapters do
+        chapter.Title = chapter.Title:after(' - ')
+    end
+
 end
 
 function GetPages()
+
+    RedirectFromOldUrl()
 
     local json = GetGalleryJson()
 
@@ -157,7 +175,7 @@ function GetChapterTitle(json)
 
     local result = ''
 
-    local chapterTitle = json.SelectValue('data.attributes.title')
+    local chapterTitle = tostring(json.SelectValue('data.attributes.title'))
     local volumeNumber = tostring(json.SelectValue('data.attributes.volume'))
     local chapterNumber = tostring(json.SelectValue('data.attributes.chapter'))
 
@@ -215,5 +233,18 @@ function BuildGroupsDict(uuids)
     end
 
     return groupsDict
+
+end
+
+function RedirectFromOldUrl()
+
+    if(not GetGalleryUuid():contains("-")) then
+
+        -- We have an old URL and need to follow the redirect to the new one.
+        -- Ex: https://mangadex.org/title/45502/veil
+
+        url = http.GetResponse(url).Url
+
+    end
 
 end
