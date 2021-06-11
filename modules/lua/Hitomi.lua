@@ -46,6 +46,10 @@ function GetInfo()
 		if(info.OriginalTitle == 'null') then
 			info.OriginalTitle = ''
 		end
+
+		if(isempty(info.OriginalTitle)) then
+			info.OriginalTitle = info.Title:before("|")
+		end
 	
 		-- Some information (group, series, artist, characters) is only available directly on the gallery page.
 	
