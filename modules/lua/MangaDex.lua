@@ -220,19 +220,26 @@ function BuildGroupsDict(uuids)
 
     local groupsApiEndpoint = GetApiEndpoint() .. 'group?'
 
+    local uuidDict = Dict.New()
+
+    -- Add all of the group UUIDs to the dict as keys, effectively filtering out the duplicates.
+
     for uuid in uuids do
+        uuidDict[uuid] = ''
+    end
+
+    for uuid in uuidDict.Keys do
         groupsApiEndpoint = groupsApiEndpoint .. 'ids[]=' .. uuid .. '&'
     end
 
     local groupsJson = Json.New(http.Get(groupsApiEndpoint:trim('&')))
-    local groupsDict = Dict.New()
 
     for groupData in groupsJson.SelectTokens('results[*].data') do
-        groupsDict[groupData.SelectValue('id')] = groupData.SelectValue('attributes.name')
+        uuidDict[groupData.SelectValue('id')] = groupData.SelectValue('attributes.name')
 
     end
 
-    return groupsDict
+    return uuidDict
 
 end
 
