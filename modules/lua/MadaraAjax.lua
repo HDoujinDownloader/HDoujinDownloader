@@ -18,11 +18,14 @@ function Register()
     module.Domains.Add('mangaradar.com', 'mangaradar.com')
     module.Domains.Add('mangarockteam.com', 'Manga Rock Team')
     module.Domains.Add('mangasushi.net', 'Mangasushi')
+    module.Domains.Add('manhuaga.com', 'Manhuaga Scans')
     module.Domains.Add('manhuaplus.com', 'ManhuaPLus')
     module.Domains.Add('manhuaus.com', 'Manhuaus.com')
     module.Domains.Add('nightcomic.com', 'Night Comic')
     module.Domains.Add('porncomixinfo.net', 'Porn Comics')
     module.Domains.Add('pornwha.com', 'Pornwha')
+    module.Domains.Add('pornwha.com', 'Pornwha')
+    module.Domains.Add('zinmanga.com', 'Zinmanga')
 
 end
 
