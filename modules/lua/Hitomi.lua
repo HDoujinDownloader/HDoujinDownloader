@@ -47,10 +47,14 @@ function GetInfo()
 			info.OriginalTitle = ''
 		end
 
+		-- Gallery titles often have the format "romaji title | translated".
+
 		if(isempty(info.OriginalTitle)) then
 			info.OriginalTitle = info.Title:before("|")
 		end
 	
+		info.AlternativeTitle = info.Title:after("|")
+
 		-- Some information (group, series, artist, characters) is only available directly on the gallery page.
 	
 		info.Circle = tostring(dom.SelectValues('//td[contains(text(),"Group")]/following-sibling::*//a')):title()
