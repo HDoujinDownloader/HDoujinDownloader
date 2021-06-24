@@ -195,7 +195,7 @@ function GetPages()
         end
 
         if(isempty(pages)) then
-            pages.AddRange(dom.SelectValues('//div[contains(@class,"read-content")]/img/@src')) -- manga18fx.com
+            pages.AddRange(dom.SelectValues('//div[contains(@class,"read-content")]//img/@src')) -- manga18fx.com
         end
 
         -- Sometimes the image URLs are in the "href" attribute under "entry-content" (Western comics on www.porncomixonline.net).
