@@ -1,10 +1,23 @@
 function Register()
 
     module.Name = 'MangaReader'
+
+    module = Module.New()
+
     module.Language = 'English'
 
     module.Domains.Add('flamescans.org', 'Flame Scans')
     module.Domains.Add('readkomik.com', 'ReadKomik')
+
+    RegisterModule(module)
+
+    module = Module.New()
+
+    module.Language = 'Turkish'
+
+    module.Domains.Add('turktoon.com', 'TurkToon')
+
+    RegisterModule(module)
 
 end
 
