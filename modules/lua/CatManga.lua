@@ -9,37 +9,58 @@ end
 
 function GetInfo()
 
-    info.Title = dom.SelectValue('//h1')
-    info.Tags = dom.SelectValues('//div[contains(@class,"tags")]/p')
-    info.Summary = dom.SelectValue('//div[contains(@class,"seriesDesc")]')
-    info.Status = dom.SelectValue('//p[contains(@class,"Status")]/text()[last()]')
+    local json = GetNextDataJson()
+
+    info.Title = json.SelectValue('$..series.title')
+    info.AlternativeTitle = json.SelectValues('$..alt_titles[*]')
+    info.Author = json.SelectValues('$..authors[*]')
+    info.Tags = json.SelectValues('$..genres[*]')
+    info.Summary = json.SelectValue('$..series.description')
+    info.Status = json.SelectValue('$..series.status')
 
 end
 
 function GetChapters()
 
-    for chapterNode in dom.SelectElements('//a[contains(@class,"chaptertile")]') do
+    local json = GetNextDataJson()
 
-        local chapterUrl = chapterNode.SelectValue('@href')
-        local chapterTitle = chapterNode.SelectValue('p[contains(@class, "Title")]')
-        local chapterSubtitle = chapterNode.SelectValue('p[contains(@class, "Text")]')
+    local seriesId = json.SelectValue('$..series.series_id')
+
+    for chapterNode in json.SelectTokens('$..chapters[*]') do
+       
+        local chapterNumber = tostring(chapterNode['number'])
+        local chapterSubtitle = tostring(chapterNode['title'])
+
+        local chapter = ChapterInfo.New()
+
+        chapter.Url = '/series/' .. seriesId .. '/' .. chapterNumber
+        chapter.Title = 'Chapter ' .. chapterNumber
+        chapter.Volume = tostring(chapterNode['volume'])
 
         if(not isempty(chapterSubtitle)) then
-            chapterTitle = chapterTitle..' - '..chapterSubtitle
+            chapter.Title = chapter.Title .. ' - ' .. chapterSubtitle
         end
 
-        chapters.Add(chapterUrl, chapterTitle)
- 
+        chapters.Add(chapter)
+        
     end
 
-    chapters.Reverse()
+    -- If we have an individual chapter, the chapters list might be reversed.
 
+    chapters.Sort()
+    
 end
 
 function GetPages()
 
-    local json = Json.New(dom.SelectValue('//script[@id="__NEXT_DATA__"]'))
+    local json = GetNextDataJson()
 
     pages.AddRange(json.SelectValues('props.pageProps.pages[*]'))
+
+end
+
+function GetNextDataJson()
+
+    return Json.New(dom.SelectValue('//script[@id="__NEXT_DATA__"]'))
 
 end
