@@ -1,4 +1,4 @@
-<img src="https://user-images.githubusercontent.com/46956787/123740892-65232d00-d866-11eb-96d1-ba6778cf67ff.png">
+<img src="https://user-images.githubusercontent.com/46956787/123745285-4d02dc00-d86d-11eb-97f2-c72efcc6e250.png">
 
 [HDoujin Downloader](https://doujindownloader.com/) is a manga and dōjinshi download manager supporting 800+ websites across many different languages.
 
