@@ -13,6 +13,14 @@ function Register()
 
     module = Module.New()
 
+    module.Language = 'Indonesian'
+
+    module.Domains.Add('kiryuu.id', 'Kiryuu')
+
+    RegisterModule(module)
+
+    module = Module.New()
+
     module.Language = 'Turkish'
 
     module.Domains.Add('turktoon.com', 'TurkToon')
@@ -23,13 +31,40 @@ end
 
 function GetInfo()
 
-    info.Title = dom.SelectValue('//h1')
+    info.Title = CleanTitle(dom.SelectValue('//h1'))
     info.Summary = dom.SelectValue('//div[@itemprop="description"]')
     info.Status = dom.SelectValue('//div[@class="imptdt" and contains(text(),"Status")]/*[last()]')
     info.Type = dom.SelectValue('//div[@class="imptdt" and contains(text(),"Type")]/*[last()]')
     info.Publisher = dom.SelectValue('//div[@class="imptdt" and contains(text(),"Serialization")]/*[last()]')
     info.Author = dom.SelectValue('//div[@class="imptdt" and contains(text(),"Author")]/*[last()]')
     info.Artist = dom.SelectValue('//div[@class="imptdt" and contains(text(),"Artist")]/*[last()]')
+    info.Tags = dom.SelectValues('//div[contains(@class,"seriestugenre")]/a')
+
+    -- Some sites have their metadata in a grid instead (e.g. kiryuu.id).
+
+    if(isempty(info.Status)) then
+        info.Status = dom.SelectValue('//td[contains(text(),"Status")]/following-sibling::td')
+    end
+
+    if(isempty(info.Type)) then
+        info.Type = dom.SelectValue('//td[contains(text(),"Type")]/following-sibling::td')
+    end
+
+    if(isempty(info.Author)) then
+        info.Author = dom.SelectValue('//td[contains(text(),"Author")]/following-sibling::td')
+    end
+
+    if(isempty(info.Artist)) then
+        info.Artist = dom.SelectValue('//td[contains(text(),"Author")]/following-sibling::td')
+    end
+
+    if(isempty(info.DateReleased)) then
+        info.DateReleased = dom.SelectValue('//td[contains(text(),"Released")]/following-sibling::td')
+    end
+
+    if(isempty(info.Magazine)) then
+        info.Magazine = dom.SelectValue('//td[contains(text(),"Serialization")]/following-sibling::td')
+    end
 
 end
 
@@ -56,5 +91,11 @@ function GetPages()
     pages.AddRange(pagesJson.SelectValues('[*]'))
 
     pages.Referer = ''
+
+end
+
+function CleanTitle(title)
+
+    return RegexReplace(title, '(?i)Bahasa Indonesia$', '')
 
 end
