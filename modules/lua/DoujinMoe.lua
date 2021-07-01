@@ -14,12 +14,14 @@ function GetInfo()
     info.Summary = dom.SelectValue('//div[contains(@class,"folder-message")]')
     info.Artist = dom.SelectValues('//div[contains(@class,"gallery-artist")]/a')
     info.Tags = dom.SelectValues('//li[contains(@class,"tag-area")]/a')
+    info.Translator = dom.SelectValue('//div[starts-with(text(),"Translated by:")]'):after(':')
+    info.Type = dom.SelectValue('//div[contains(@class,"folder-title")]/a[1]'):before('-')
 
 end
 
 function GetPages()
 
-    pages.AddRange(dom.SelectValues('//img[@id="doujinScroll"]/@data-file'))
+    pages.AddRange(dom.SelectValues('//img[contains(@id,"swiper-")]/@data-src'))
 
 end
 
