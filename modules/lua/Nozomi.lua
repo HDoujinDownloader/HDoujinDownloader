@@ -58,6 +58,8 @@ function GetTag()
 
     -- If we have multiple tags, we may need to do further processing, but this will work for now.
 
+    url = url:before('#')
+
     local tag = EncodeUriComponent(RegexReplace(GetParameter(url, 'q'), '[\\/]', ''))
 
     return tag
