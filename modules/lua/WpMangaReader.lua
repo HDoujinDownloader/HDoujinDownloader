@@ -23,7 +23,16 @@ function Register()
 
     module.Language = 'Turkish'
 
+    module.Domains.Add('108read.com', '108Read')
     module.Domains.Add('turktoon.com', 'TurkToon')
+
+    RegisterModule(module)
+
+    module = Module.New()
+
+    module.Language = 'Thai'
+
+    module.Domains.Add('108read.com', '108Read')
 
     RegisterModule(module)
 
@@ -34,7 +43,7 @@ function GetInfo()
     info.Title = CleanTitle(dom.SelectValue('//h1'))
     info.Summary = dom.SelectValue('//div[@itemprop="description"]')
     info.Status = dom.SelectValue('//div[@class="imptdt" and contains(text(),"Status")]/*[last()]')
-    info.Type = dom.SelectValue('//div[@class="imptdt" and contains(text(),"Type")]/*[last()]')
+    info.Type = dom.SelectValue('//div[@class="imptdt" and (contains(text(),"Type") or contains(text(),"ประเภทการ์ตูน"))]/*[last()]')
     info.Publisher = dom.SelectValue('//div[@class="imptdt" and contains(text(),"Serialization")]/*[last()]')
     info.Author = dom.SelectValue('//div[@class="imptdt" and contains(text(),"Author")]/*[last()]')
     info.Artist = dom.SelectValue('//div[@class="imptdt" and contains(text(),"Artist")]/*[last()]')
@@ -54,6 +63,10 @@ function GetInfo()
         info.Author = dom.SelectValue('//td[contains(text(),"Author")]/following-sibling::td')
     end
 
+    if(isempty(info.Author)) then -- 108read.com
+        info.Author = dom.SelectValue('//b[contains(text(),"ผู้แต่ง")]/following-sibling::span')
+    end
+
     if(isempty(info.Artist)) then
         info.Artist = dom.SelectValue('//td[contains(text(),"Author")]/following-sibling::td')
     end
@@ -64,6 +77,10 @@ function GetInfo()
 
     if(isempty(info.Magazine)) then
         info.Magazine = dom.SelectValue('//td[contains(text(),"Serialization")]/following-sibling::td')
+    end
+
+    if(isempty(info.Tags)) then -- 108read.com
+        info.Tags = dom.SelectValues('//span[contains(@class,"mgen")]//a')
     end
 
 end
