@@ -32,6 +32,8 @@ function GetChapters()
 
     chapters.AddRange(dom.SelectElements('//table[contains(@class,"listing")]//td/a'))
 
+    chapters.Reverse()
+
 end
 
 function GetPages()
