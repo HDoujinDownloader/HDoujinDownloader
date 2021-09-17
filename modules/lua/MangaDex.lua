@@ -63,7 +63,6 @@ function GetChapters()
         end
 
         for chapterNode in chapterNodes do
-            Log(chapterNode)
             local chapterNumber = tostring(chapterNode.SelectValue('attributes.chapter'))
             local volumeNumber = tostring(chapterNode.SelectValue('attributes.volume'))
 
@@ -81,8 +80,6 @@ function GetChapters()
             chapter.Language = chapterNode.SelectValue('attributes.translatedLanguage')
             chapter.ScanlationGroup = chapterNode.SelectValue("relationships[?(@.type=='scanlation_group')].id")
             chapter.Volume = volumeNumber
-
-            Log(chapter)
 
             if(acceptAny or userLanguages.Contains(GetLanguageId(chapter.Language))) then
 
@@ -120,8 +117,6 @@ function GetChapters()
 
     for chapter in chapters do
         chapter.Title = chapter.Title:after(' - ')
-        Log('final chapter')
-        Log(chapter)
     end
 
 
