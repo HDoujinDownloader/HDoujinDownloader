@@ -232,7 +232,7 @@ function BuildGroupsDict(uuids)
         groupsApiEndpoint = groupsApiEndpoint .. 'ids[]=' .. uuid .. '&'
     end
 
-    local groupsJson = Json.New(http.Get(groupsApiEndpoint:trim('&')))
+    local groupsJson = Json.New(http.Get(groupsApiEndpoint:trim('&ids[]=&')))
 
     for groupData in groupsJson.SelectTokens('results[*].data') do
         uuidDict[groupData.SelectValue('id')] = groupData.SelectValue('attributes.name')
