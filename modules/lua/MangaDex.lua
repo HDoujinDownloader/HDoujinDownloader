@@ -53,8 +53,8 @@ function GetChapters()
     local groupUuids = List.New()
 
     repeat
-
-        local apiEndpoint = GetApiEndpoint() .. 'chapter?manga=' .. uuid .. '&limit=' .. limit .. '&offset=' .. offset
+        -- Add contentRating to chapter call to bypass rating checks
+        local apiEndpoint = GetApiEndpoint() .. 'chapter?contentRating[]=safe&contentRating[]=suggestive&contentRating[]=erotica&contentRating[]=pornographic&manga=' .. uuid .. '&limit=' .. limit .. '&offset=' .. offset
         local json = Json.New(http.Get(apiEndpoint))
         local chapterNodes = json.SelectTokens('data[*]')
 
@@ -231,7 +231,8 @@ function BuildGroupsDict(uuids)
     for uuid in uuidDict.Keys do
         groupsApiEndpoint = groupsApiEndpoint .. 'ids[]=' .. uuid .. '&'
     end
-
+    
+    -- This was adding a blank id on the end of the query for some reason.  If it's present it causes a 400 and prevents the download, so lets just remove it
     local groupsJson = Json.New(http.Get(groupsApiEndpoint:trim('&ids[]=&')))
 
     for groupData in groupsJson.SelectTokens('results[*].data') do
