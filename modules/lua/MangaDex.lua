@@ -63,7 +63,7 @@ function GetChapters()
         end
 
         for chapterNode in chapterNodes do
-
+            Log(chapterNode)
             local chapterNumber = tostring(chapterNode.SelectValue('attributes.chapter'))
             local volumeNumber = tostring(chapterNode.SelectValue('attributes.volume'))
 
@@ -81,6 +81,8 @@ function GetChapters()
             chapter.Language = chapterNode.SelectValue('attributes.translatedLanguage')
             chapter.ScanlationGroup = chapterNode.SelectValue("relationships[?(@.type=='scanlation_group')].id")
             chapter.Volume = volumeNumber
+
+            Log(chapter)
 
             if(acceptAny or userLanguages.Contains(GetLanguageId(chapter.Language))) then
 
@@ -118,7 +120,11 @@ function GetChapters()
 
     for chapter in chapters do
         chapter.Title = chapter.Title:after(' - ')
+        Log('final chapter')
+        Log(chapter)
     end
+
+
 
 end
 
@@ -175,9 +181,9 @@ function GetChapterTitle(json)
 
     local result = ''
 
-    local chapterTitle = tostring(json.SelectValue('data.attributes.title'))
-    local volumeNumber = tostring(json.SelectValue('data.attributes.volume'))
-    local chapterNumber = tostring(json.SelectValue('data.attributes.chapter'))
+    local chapterTitle = tostring(json.SelectValue('attributes.title'))
+    local volumeNumber = tostring(json.SelectValue('attributes.volume'))
+    local chapterNumber = tostring(json.SelectValue('attributes.chapter'))
 
     if(volumeNumber == 'null') then
         volumeNumber = ''
@@ -231,11 +237,11 @@ function BuildGroupsDict(uuids)
     for uuid in uuidDict.Keys do
         groupsApiEndpoint = groupsApiEndpoint .. 'ids[]=' .. uuid .. '&'
     end
-    
+
     -- This was adding a blank id on the end of the query for some reason.  If it's present it causes a 400 and prevents the download, so lets just remove it
     local groupsJson = Json.New(http.Get(groupsApiEndpoint:trim('&ids[]=&')))
 
-    for groupData in groupsJson.SelectTokens('results[*].data') do
+    for groupData in groupsJson.SelectTokens('data[*]') do
         uuidDict[groupData.SelectValue('id')] = groupData.SelectValue('attributes.name')
 
     end
