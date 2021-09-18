@@ -53,19 +53,18 @@ function GetChapters()
     local groupUuids = List.New()
 
     repeat
-
-        local apiEndpoint = GetApiEndpoint() .. 'chapter?manga=' .. uuid .. '&limit=' .. limit .. '&offset=' .. offset
+        -- Add contentRating to chapter call to bypass rating checks
+        local apiEndpoint = GetApiEndpoint() .. 'chapter?contentRating[]=safe&contentRating[]=suggestive&contentRating[]=erotica&contentRating[]=pornographic&manga=' .. uuid .. '&limit=' .. limit .. '&offset=' .. offset
         local json = Json.New(http.Get(apiEndpoint))
-        local chapterNodes = json.SelectTokens('results[*]')
+        local chapterNodes = json.SelectTokens('data[*]')
 
         if(chapterNodes.Count() <= 0) then
             break
         end
 
         for chapterNode in chapterNodes do
-
-            local chapterNumber = tostring(chapterNode.SelectValue('data.attributes.chapter'))
-            local volumeNumber = tostring(chapterNode.SelectValue('data.attributes.volume'))
+            local chapterNumber = tostring(chapterNode.SelectValue('attributes.chapter'))
+            local volumeNumber = tostring(chapterNode.SelectValue('attributes.volume'))
 
             if(volumeNumber == 'null') then
                 volumeNumber = ''
@@ -77,8 +76,8 @@ function GetChapters()
             -- The chapter number is temporarily prepended to the chapter title for sorting purposes.
 
             chapter.Title = chapterNumber .. ' - ' .. GetChapterTitle(chapterNode)
-            chapter.Url = '/chapter/' .. chapterNode.SelectValue('data.id')
-            chapter.Language = chapterNode.SelectValue('data.attributes.translatedLanguage')
+            chapter.Url = '/chapter/' .. chapterNode.SelectValue('id')
+            chapter.Language = chapterNode.SelectValue('attributes.translatedLanguage')
             chapter.ScanlationGroup = chapterNode.SelectValue("relationships[?(@.type=='scanlation_group')].id")
             chapter.Volume = volumeNumber
 
@@ -119,6 +118,8 @@ function GetChapters()
     for chapter in chapters do
         chapter.Title = chapter.Title:after(' - ')
     end
+
+
 
 end
 
@@ -166,7 +167,7 @@ function GetGalleryJson()
     local uuid = GetGalleryUuid()
     local type = url:regex('\\/(title|chapter)', 1):replace('title', 'manga')
     local apiEndpoint = GetApiEndpoint() .. type .. '/' .. uuid
-    
+
     return Json.New(http.Get(apiEndpoint))
 
 end
@@ -175,9 +176,9 @@ function GetChapterTitle(json)
 
     local result = ''
 
-    local chapterTitle = tostring(json.SelectValue('data.attributes.title'))
-    local volumeNumber = tostring(json.SelectValue('data.attributes.volume'))
-    local chapterNumber = tostring(json.SelectValue('data.attributes.chapter'))
+    local chapterTitle = tostring(json.SelectValue('attributes.title'))
+    local volumeNumber = tostring(json.SelectValue('attributes.volume'))
+    local chapterNumber = tostring(json.SelectValue('attributes.chapter'))
 
     if(volumeNumber == 'null') then
         volumeNumber = ''
@@ -192,7 +193,7 @@ function GetChapterTitle(json)
     end
 
     if(not isempty(chapterTitle)) then
-        result = result .. ' - ' .. chapterTitle 
+        result = result .. ' - ' .. chapterTitle
     end
 
     return result
@@ -232,9 +233,10 @@ function BuildGroupsDict(uuids)
         groupsApiEndpoint = groupsApiEndpoint .. 'ids[]=' .. uuid .. '&'
     end
 
-    local groupsJson = Json.New(http.Get(groupsApiEndpoint:trim('&')))
+    -- This was adding a blank id on the end of the query for some reason.  If it's present it causes a 400 and prevents the download, so lets just remove it
+    local groupsJson = Json.New(http.Get(groupsApiEndpoint:trim('&ids[]=&')))
 
-    for groupData in groupsJson.SelectTokens('results[*].data') do
+    for groupData in groupsJson.SelectTokens('data[*]') do
         uuidDict[groupData.SelectValue('id')] = groupData.SelectValue('attributes.name')
 
     end
