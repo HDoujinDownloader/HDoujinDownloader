@@ -22,6 +22,10 @@ function GetInfo()
     info.Tags = dom.SelectValues('//b[contains(text(),"Category") or contains(text(),"Content")]/following-sibling::a')
     info.Description = dom.SelectValues('//b[contains(text(),"Storyline")]/following-sibling::p')
 
+    if(isempty(info.Title)) then
+        info.Title = dom.SelectValue('//span[contains(@class,"reader-left-text")]')
+    end
+
 end
 
 function GetChapters()
