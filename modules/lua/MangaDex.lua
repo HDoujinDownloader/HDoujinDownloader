@@ -24,8 +24,8 @@ function GetInfo()
     info.Type = json.SelectValue('data.attributes.originalLanguage')
     info.Status = json.SelectValue('data.attributes.status')
     info.Adult = json.SelectValue('data.attributes.contentRating') ~= 'safe'
-    info.Author = GetRelationshipNames('author', json.SelectValues("relationships[?(@.type=='author')].id"))
-    info.Artist = GetRelationshipNames('author', json.SelectValues("relationships[?(@.type=='artist')].id"))
+    info.Author = GetRelationshipNames('author', json.SelectValues("data.relationships[?(@.type=='author')].id"))
+    info.Artist = GetRelationshipNames('author', json.SelectValues("data.relationships[?(@.type=='artist')].id"))
 
     -- Get chapter metadata.
 
@@ -53,6 +53,7 @@ function GetChapters()
     local groupUuids = List.New()
 
     repeat
+
         -- Add contentRating to chapter call to bypass rating checks
         local apiEndpoint = GetApiEndpoint() .. 'chapter?contentRating[]=safe&contentRating[]=suggestive&contentRating[]=erotica&contentRating[]=pornographic&manga=' .. uuid .. '&limit=' .. limit .. '&offset=' .. offset
         local json = Json.New(http.Get(apiEndpoint))
@@ -63,6 +64,7 @@ function GetChapters()
         end
 
         for chapterNode in chapterNodes do
+
             local chapterNumber = tostring(chapterNode.SelectValue('attributes.chapter'))
             local volumeNumber = tostring(chapterNode.SelectValue('attributes.volume'))
 
@@ -118,8 +120,6 @@ function GetChapters()
     for chapter in chapters do
         chapter.Title = chapter.Title:after(' - ')
     end
-
-
 
 end
 
@@ -233,11 +233,14 @@ function BuildGroupsDict(uuids)
         groupsApiEndpoint = groupsApiEndpoint .. 'ids[]=' .. uuid .. '&'
     end
 
-    -- This was adding a blank id on the end of the query for some reason.  If it's present it causes a 400 and prevents the download, so lets just remove it
-    local groupsJson = Json.New(http.Get(groupsApiEndpoint:trim('&ids[]=&')))
-
-    for groupData in groupsJson.SelectTokens('data[*]') do
-        uuidDict[groupData.SelectValue('id')] = groupData.SelectValue('attributes.name')
+    if uuidDict.Keys.Count() > 0 then
+        
+        -- This was adding a blank id on the end of the query for some reason.  If it's present it causes a 400 and prevents the download, so lets just remove it
+        local groupsJson = Json.New(http.Get(groupsApiEndpoint:trim('&ids[]=&')))
+        
+        for groupData in groupsJson.SelectTokens('data[*]') do
+            uuidDict[groupData.SelectValue('id')] = groupData.SelectValue('attributes.name')
+        end
 
     end
 
