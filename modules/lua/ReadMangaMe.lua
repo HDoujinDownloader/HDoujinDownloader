@@ -4,9 +4,10 @@ function Register()
 
     module.Language = 'Russian'
 
-    module.Domains.Add('mintmanga.live', 'MintManga.com')
-    module.Domains.Add('readmanga.live', 'ReadManga.me')
-    module.Domains.Add('readmanga.me', 'ReadManga.me')
+    module.Domains.Add('mintmanga.live', 'MintManga')
+    module.Domains.Add('readmanga.io', 'ReadManga')
+    module.Domains.Add('readmanga.live', 'ReadManga')
+    module.Domains.Add('readmanga.me', 'ReadManga')
 
 end
 
@@ -52,12 +53,20 @@ function GetPages()
 
     src = http.Get(url)
 
-    -- Pages are located in array passed to "rm_h.init".
+    -- Pages are located in array passed to "rm_h.init" or "rm_h.initReader".
+    -- Each item is a tuple consisting of the host and the path for each image.
 
-    local arrayJson = Json.New(src:regex('rm_h\\.init\\(\\s*(\\[.+?\\]\\])', 1))
+    local imagesArray = src:regex('rm_h\\.(?:init|initReader)\\(.+?(\\[\\[.+?\\]\\])', 1)
 
-    for jsonToken in arrayJson do
-        pages.Add(tostring(jsonToken[0]) .. tostring(jsonToken[2]))
+    for jsonToken in Json.New(imagesArray) do
+
+        local root = tostring(jsonToken[0])
+        local path = tostring(jsonToken[2])
+
+        if(root:startswith('http')) then
+            pages.Add(root .. path)
+        end
+
     end
 
 end
