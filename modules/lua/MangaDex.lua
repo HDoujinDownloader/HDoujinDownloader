@@ -24,14 +24,14 @@ function GetInfo()
     info.Type = json.SelectValue('data.attributes.originalLanguage')
     info.Status = json.SelectValue('data.attributes.status')
     info.Adult = json.SelectValue('data.attributes.contentRating') ~= 'safe'
-    info.Author = GetRelationshipNames('author', json.SelectValues("data.relationships[?(@.type=='author')].id"))
-    info.Artist = GetRelationshipNames('author', json.SelectValues("data.relationships[?(@.type=='artist')].id"))
+    info.Author = json.SelectValues("data.relationships[?(@.type=='author')].attributes.name")
+    info.Artist = json.SelectValues("data.relationships[?(@.type=='artist')].attributes.name")
 
     -- Get chapter metadata.
 
     if(isempty(info.Title) and url:contains('/chapter/')) then
 
-        info.Title = GetChapterTitle(json)
+        info.Title = GetChapterTitle(json.SelectNode('data'))
         info.PageCount = json.SelectValues('data.attributes.data[*]').Count()
 
     end
@@ -55,7 +55,8 @@ function GetChapters()
     repeat
 
         -- Add contentRating to chapter call to bypass rating checks
-        local apiEndpoint = GetApiEndpoint() .. 'chapter?contentRating[]=safe&contentRating[]=suggestive&contentRating[]=erotica&contentRating[]=pornographic&manga=' .. uuid .. '&limit=' .. limit .. '&offset=' .. offset
+
+        local apiEndpoint = GetApiEndpoint() .. 'chapter?contentRating[]=safe&contentRating[]=suggestive&contentRating[]=erotica&contentRating[]=pornographic&manga=' .. uuid .. '&limit=' .. limit .. '&offset=' .. offset .. '&includes[]=scanlation_group'
         local json = Json.New(http.Get(apiEndpoint))
         local chapterNodes = json.SelectTokens('data[*]')
 
@@ -80,7 +81,7 @@ function GetChapters()
             chapter.Title = chapterNumber .. ' - ' .. GetChapterTitle(chapterNode)
             chapter.Url = '/chapter/' .. chapterNode.SelectValue('id')
             chapter.Language = chapterNode.SelectValue('attributes.translatedLanguage')
-            chapter.ScanlationGroup = chapterNode.SelectValue("relationships[?(@.type=='scanlation_group')].id")
+            chapter.ScanlationGroup = chapterNode.SelectValues("relationships[?(@.type=='scanlation_group')].attributes.name")
             chapter.Volume = volumeNumber
 
             if(acceptAny or userLanguages.Contains(GetLanguageId(chapter.Language))) then
@@ -100,18 +101,6 @@ function GetChapters()
         offset = offset + limit
 
     until(offset >= total)
-
-    -- Get group names.
-
-    if(groupUuids.Count() > 0) then
-
-        local groupsDict = BuildGroupsDict(groupUuids)
-
-        for chapter in chapters do
-            chapter.ScanlationGroup = groupsDict[chapter.ScanlationGroup]
-        end
-
-    end
 
     -- Sort and remove prepended chapter numbers.
 
@@ -166,7 +155,7 @@ function GetGalleryJson()
 
     local uuid = GetGalleryUuid()
     local type = url:regex('\\/(title|chapter)', 1):replace('title', 'manga')
-    local apiEndpoint = GetApiEndpoint() .. type .. '/' .. uuid
+    local apiEndpoint = GetApiEndpoint() .. type .. '/' .. uuid .. '?includes[]=artist&includes[]=author&includes[]=scanlation_group'
 
     return Json.New(http.Get(apiEndpoint))
 
@@ -182,6 +171,10 @@ function GetChapterTitle(json)
 
     if(volumeNumber == 'null') then
         volumeNumber = ''
+    end
+
+    if(chapterNumber == 'null') then
+        chapterNumber = ''
     end
 
     if(not isempty(volumeNumber)) then
