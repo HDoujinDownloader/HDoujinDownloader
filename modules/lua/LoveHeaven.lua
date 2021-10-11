@@ -9,6 +9,7 @@ function Register()
     module.Domains.Add('hanascan.com', 'HanaScan.com')
     module.Domains.Add('kissaway.net', 'KissAway')
     module.Domains.Add('kisslove.net', 'KissLove')
+    module.Domains.Add('klmanga.com', 'KLManga')
     module.Domains.Add('ksgroupscans.com', 'KSGroupScans')
     module.Domains.Add('lhscan.net', 'LoveHeaven')
     module.Domains.Add('lhscans.com', 'LoveHeaven')
@@ -16,6 +17,7 @@ function Register()
     module.Domains.Add('lovehug.net', 'LoveHug')
     module.Domains.Add('mangahato.com', 'MangaHato')
     module.Domains.Add('rawlh.com', 'LoveHeaven')
+    module.Domains.Add('welovemanga.net', 'WeLoveManga')
     
     module.Language = 'Japanese'
 
@@ -145,6 +147,19 @@ function GetPages()
 
         if(not imageUrl:contains('.')) then
             imageUrl = DecodeBase64(imageUrl) -- loveheaven.net
+        end
+
+        -- welovemanga.net obfuscates the image attribute to a random string, and deobfuscates it with JavaScript.
+
+        if(imageUrl:endswith('/lazy_loading.gif')) then
+
+            local attributeName = dom.SelectValue('//script[contains(text(),\'chapter-img").each\')]')
+                :regex("\\$\\(this\\)\\.attr\\('(.+?)'\\)", 1)
+
+            if(not node.GetAttribute(attributeName):empty()) then
+                imageUrl = node.GetAttribute(attributeName)
+            end
+
         end
 
         local page = PageInfo.New(imageUrl)
