@@ -3,6 +3,7 @@ function Register()
     module.Name = 'AnyACG'
 
     module.Domains.Add('bato.to', 'BATO.TO')
+    module.Domains.Add('batotoo.com', 'BATO.TO')
     module.Domains.Add('mangaseinen.com', 'mangaseinen.com')
     module.Domains.Add('mangatensei.com', 'MangaTensei.com')
     module.Domains.Add('rawmanga.info', 'raw manga')
@@ -20,6 +21,10 @@ function GetInfo()
     info.Summary = dom.SelectValue('//pre/text()')
     info.DateReleased = dom.SelectValue('//b[contains(text(), "Year of Release")]/following-sibling::span/text()')
     info.ReadingDirection = dom.SelectValue('//b[contains(text(), "Reading direction")]/following-sibling::span/text()')
+
+    if(isempty(info.Summary)) then
+        info.Summary = dom.SelectValue('//div[contains(@class,"limit-html")]') -- batotoo.com
+    end
 
 end
 
