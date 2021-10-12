@@ -17,6 +17,7 @@ function Register()
     module.Domains.Add('lovehug.net', 'LoveHug')
     module.Domains.Add('mangahato.com', 'MangaHato')
     module.Domains.Add('rawlh.com', 'LoveHeaven')
+    module.Domains.Add('weloma.net', 'WeLoveManga')
     module.Domains.Add('welovemanga.net', 'WeLoveManga')
     
     module.Language = 'Japanese'
@@ -151,7 +152,7 @@ function GetPages()
 
         -- welovemanga.net obfuscates the image attribute to a random string, and deobfuscates it with JavaScript.
 
-        if(imageUrl:endswith('/lazy_loading.gif')) then
+        if(imageUrl:endswith('/lazy_loading.gif') or imageUrl:endswith('/loading.jpg')) then
 
             local attributeName = dom.SelectValue('//script[contains(text(),\'chapter-img").each\')]')
                 :regex("\\$\\(this\\)\\.attr\\('(.+?)'\\)", 1)
