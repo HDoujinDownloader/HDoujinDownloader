@@ -1,28 +1,29 @@
 As of version 2021.5.1.0, the changelog will only contain updates made to the HDoujin Downloader application.
 For module updates, see: https://github.com/HDoujinDownloader/HDoujin-Downloader/tree/master/modules/lua
 
-[2021.5.25.0-rc3]
+[v2021.10.12.0]
 
+- [NEW] Added cURL integration (fixes TLS problems on Windows XP)
+- [NEW] Added option to download only wide images at original size
+- [NEW] Added option to split wide images
+- [NEW] Added %ALT_TITLE% folder formatting token
+- [NEW] Added side-by-side preview to metadata options form
+- [NEW] Added support for additional image formats
+- [NEW] Improved image conversion options form
 - [NEW] Metadata is now written to PDFs
-- [FIX] Fixed description getting modified when editing metadata
-- [FIX] Improved Cloudflare IUAM handling
-- [FIX] Improved handling of broken text encodings
-- [MISC] Various improvements and bug fixes
-
-[2021.5.14.0-rc2]
-
-- [FIX] Fixed some requests failing due to unsupported cryptographic protocols
-- [FIX] FlareSolverr is now downloaded on-demand if it's not already present
-- [FIX] Improved Cloudflare IUAM handling
-- [FIX] Web drivers are now downloaded on-demand if they're not already present
-
-[2021.5.1.0-rc1]
-
-- [FIX] Fixed FlareSolverr plugin failing on some websites
 - [FIX] Fixed broken modules not being reloaded after initial sync
 - [FIX] Fixed crash when WebDriver.dll is missing
+- [FIX] Fixed description changing when editing metadata
+- [FIX] Fixed description getting modified when editing metadata
+- [FIX] Fixed FlareSolverr plugin failing on some websites
 - [FIX] Fixed images sometimes being duplicated in multiple formats
+- [FIX] Fixed some requests failing due to unsupported cryptographic protocols
 - [FIX] Fixed stale modules sometimes being downloaded when syncing
+- [FIX] FlareSolverr is now downloaded on-demand if it's not already present
+- [FIX] Improved Cloudflare IUAM handling
+- [FIX] Improved Cloudflare IUAM handling
+- [FIX] Improved handling of broken text encodings
+- [FIX] Web drivers are now downloaded on-demand if they're not already present
 - [MISC] Improved metadata parsing
 - [MISC] Improved mirror finding process for ExHentai
 - [MISC] Various improvements and bug fixes
