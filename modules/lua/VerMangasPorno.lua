@@ -5,8 +5,9 @@ function Register()
     module.Adult = true
 
     module.Domains.Add('chochox.com', 'ChoChoX')
-    module.Domains.Add('vermangasporno.com', 'Ver Mangas Porno')
+    module.Domains.Add('vcp.xxx', 'VCP XXX')
     module.Domains.Add('vercomicsporno.com', 'Ver Comics Porno')
+    module.Domains.Add('vermangasporno.com', 'Ver Mangas Porno')
 
 end
 
