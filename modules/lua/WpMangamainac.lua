@@ -8,7 +8,6 @@ function Register()
     module.Type = 'Manga'
     module.Adult = false
 
-    module.Domains.Add('onepiecechapters.com', 'TCB Scans')
     module.Domains.Add('readshingekinokyojin.com', 'Read Shingeki no kyojin Manga Online')
 
 end
