@@ -4,6 +4,7 @@ function Register()
     module.Language = 'English'
 
     module.Domains.Add('mangatown.com', 'MangaTown')
+    module.Domains.Add('www.mangatown.com', 'MangaTown')
 
 end
 
