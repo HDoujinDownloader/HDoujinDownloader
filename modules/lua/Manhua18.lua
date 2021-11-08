@@ -16,6 +16,7 @@ function GetInfo()
     info.Author = dom.SelectValues('//span[contains(text(),"Author")]/following-sibling::span/a')
     info.Status = dom.SelectValues('//span[contains(text(),"Status")]/following-sibling::span/a')
     info.Summary = dom.SelectValue('//div[contains(@class,"summary-content")]')
+    info.Language = GetLanguageFromTitle(info.Title)
 
 end
 
@@ -37,5 +38,19 @@ end
 function GetPages()
 
     pages.AddRange(dom.SelectValues('//div[@id="chapter-content"]//img/@data-src'))
+
+end
+
+function GetLanguageFromTitle(title)
+
+    title = tostring(title):lower():trim()
+
+    if(title:endswith('raw')) then
+        return 'Korean'
+    elseif(title:endswith('engsub')) then
+        return 'English'
+    end
+
+    return ''
 
 end
