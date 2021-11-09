@@ -1,6 +1,10 @@
 As of version 2021.5.1.0, the changelog will only contain updates made to the HDoujin Downloader application.
 For module updates, see: https://github.com/HDoujinDownloader/HDoujin-Downloader/tree/master/modules/lua
 
+[v2021.11.8.0]
+
+- [NEW] Added support for FlareSolverr v2.0.0+
+
 [v2021.10.12.0]
 
 - [NEW] Added cURL integration (fixes TLS problems on Windows XP)
@@ -20,7 +24,6 @@ For module updates, see: https://github.com/HDoujinDownloader/HDoujin-Downloader
 - [FIX] Fixed some requests failing due to unsupported cryptographic protocols
 - [FIX] Fixed stale modules sometimes being downloaded when syncing
 - [FIX] FlareSolverr is now downloaded on-demand if it's not already present
-- [FIX] Improved Cloudflare IUAM handling
 - [FIX] Improved Cloudflare IUAM handling
 - [FIX] Improved handling of broken text encodings
 - [FIX] Web drivers are now downloaded on-demand if they're not already present
