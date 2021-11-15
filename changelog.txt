@@ -1,6 +1,11 @@
 As of version 2021.5.1.0, the changelog will only contain updates made to the HDoujin Downloader application.
 For module updates, see: https://github.com/HDoujinDownloader/HDoujin-Downloader/tree/master/modules/lua
 
+[v2021.11.15.0]
+
+- [FIX] Fixed exception when using web driver IUAM challenge solver
+- [FIX] Updates for webtoons.com (fixed downloads getting stuck at chapters)
+
 [v2021.11.8.0]
 
 - [NEW] Added support for FlareSolverr v2.0.0+
