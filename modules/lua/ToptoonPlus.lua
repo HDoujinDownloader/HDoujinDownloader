@@ -50,18 +50,58 @@ function GetPages()
 
 end
 
+function Login()
+
+    local token = module.Data['token']
+
+    if(isempty(token)) then
+        
+        local loginEndpoint = '//api.toptoonplus.com/auth/generateToken'
+
+        SetupApiHeaders()
+
+        http.PostData['auth'] = '0'
+        http.PostData['deviceId'] = 'a9d4f080-4aa0-11ec-81d3-0242ac130003'
+        http.PostData['is17'] = 'false'
+        http.PostData['password'] = password
+        http.PostData['userId'] = username
+
+        local json = Json.New(http.Post(loginEndpoint))
+
+        token = json.SelectValue('data.token')
+
+        module.Data['token'] = token
+
+        if(isempty(token)) then
+            Fail(Error.LoginFailed)
+        end
+
+    end
+
+end
+
 function GetApiUrl()
 
     return 'https://api.' ..  module.Domain .. '/api/v1/'
 
 end
 
-function GetApiJson(path)
+function SetupApiHeaders()
 
     http.Headers['accept'] = 'application/json, text/plain, */*'
     http.Headers['isalreadymature'] = '1'
-    http.Headers['version'] = '1.14.607a'
+    http.Headers['version'] = '1.14.619a'
     http.Headers['x-api-key'] = 'SUPERCOOLAPIKEY2021#@#('
+
+    if(not isempty(module.Data['token'])) then
+        http.Headers['token'] = module.Data['token']
+    end
+
+end
+
+function GetApiJson(path)
+
+    SetupApiHeaders()
 
     local json = http.Get(GetApiUrl() .. path)
 
