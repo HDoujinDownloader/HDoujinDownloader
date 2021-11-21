@@ -3,8 +3,9 @@ function Register()
     module.Name = "ReadMangaToday"
     module.Language = 'English'
 
-    module.Domains.Add('readmng.com')
     module.Domains.Add('readmanga.today')
+    module.Domains.Add('readmng.com')
+    module.Domains.Add('www.readmng.com')
 
 end
 
