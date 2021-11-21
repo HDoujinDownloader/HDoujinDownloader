@@ -1,3 +1,5 @@
+-- A Madara variant similar to Madara (Ajax), except the API endpoint is different ("/ajax/chapters/").
+
 require "Madara"
 
 function Register()
@@ -6,6 +8,7 @@ function Register()
     module.Language = 'English'
 
     module.Domains.Add('isekaiscan.com')
+    module.Domains.Add('manhwahentai.me', 'ManhwaHentai.me')
 
 end
 
