@@ -1,6 +1,11 @@
 As of version 2021.5.1.0, the changelog will only contain updates made to the HDoujin Downloader application.
 For module updates, see: https://github.com/HDoujinDownloader/HDoujin-Downloader/tree/master/modules/lua
 
+[v2021.11.22.0]
+
+- [FIX] Improved handling of malformed URLs from exhentai.org
+- [MISC] Various improvements and bug fixes
+
 [v2021.11.15.0]
 
 - [FIX] Fixed exception when using web driver IUAM challenge solver
