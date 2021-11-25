@@ -4,6 +4,7 @@ function Register()
     module.Type = 'Webtoon'
 
     module.Domains.Add('webtoons.com')
+    module.Domains.Add('www.webtoons.com')
 
     -- This cookie is required to access adult content.
 
