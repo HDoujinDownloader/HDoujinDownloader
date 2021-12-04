@@ -11,19 +11,27 @@ end
 
 function GetInfo()
 
-    info.Title = dom.SelectValue('//h3[contains(@class,"block-title")]/a/text()[1]')
-    info.OriginalTitle = dom.SelectValue('//li[contains(@class,"text-muted")]')
-    info.Parody = dom.SelectValues('//b[contains(text(),"Parody")]/following-sibling::a')
-    info.Status = dom.SelectValues('//b[contains(text(),"Status")]/following-sibling::a')
-    info.Author = dom.SelectValues('//b[contains(text(),"Author")]/following-sibling::a')
-    info.Artist = dom.SelectValues('//b[contains(text(),"Artist")]/following-sibling::a')
-    info.Characters = dom.SelectValues('//b[contains(text(),"Characters")]/following-sibling::a')
-    info.Language = dom.SelectValues('//b[contains(text(),"Language")]/following-sibling::a')
-    info.Tags = dom.SelectValues('//b[contains(text(),"Category") or contains(text(),"Content")]/following-sibling::a')
-    info.Description = dom.SelectValues('//b[contains(text(),"Storyline")]/following-sibling::p')
+    if(url:contains('/hentai-list/')) then
 
-    if(isempty(info.Title)) then
-        info.Title = dom.SelectValue('//span[contains(@class,"reader-left-text")]')
+        EnqueueAllGalleries()
+
+    else
+
+        info.Title = dom.SelectValue('//h3[contains(@class,"block-title")]/a/text()[1]')
+        info.OriginalTitle = dom.SelectValue('//li[contains(@class,"text-muted")]')
+        info.Parody = dom.SelectValues('//b[contains(text(),"Parody")]/following-sibling::a')
+        info.Status = dom.SelectValues('//b[contains(text(),"Status")]/following-sibling::a')
+        info.Author = dom.SelectValues('//b[contains(text(),"Author")]/following-sibling::a')
+        info.Artist = dom.SelectValues('//b[contains(text(),"Artist")]/following-sibling::a')
+        info.Characters = dom.SelectValues('//b[contains(text(),"Characters")]/following-sibling::a')
+        info.Language = dom.SelectValues('//b[contains(text(),"Language")]/following-sibling::a')
+        info.Tags = dom.SelectValues('//b[contains(text(),"Category") or contains(text(),"Content")]/following-sibling::a')
+        info.Description = dom.SelectValues('//b[contains(text(),"Storyline")]/following-sibling::p')
+    
+        if(isempty(info.Title)) then
+            info.Title = dom.SelectValue('//span[contains(@class,"reader-left-text")]')
+        end
+
     end
 
 end
@@ -51,5 +59,15 @@ function GetPages()
     for imageUrl in Json.New(imagesArray) do
         pages.Add(cdnUrl..tostring(imageUrl))
     end
+
+end
+
+function EnqueueAllGalleries()
+
+    for url in dom.SelectValues('//div[contains(@class,"book-grid-item")]/a/@href') do
+        Enqueue(url)
+    end
+
+    info.Ignore = true
 
 end
