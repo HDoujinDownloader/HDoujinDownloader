@@ -7,7 +7,9 @@ function Register()
     
     -- These domains are used for the reader.
 
+    module.Domains.Add('*.mangaowls.com')
     module.Domains.Add('mangaowl.com')
+    module.Domains.Add('mangaowls.com')
     module.Domains.Add('mostraveller.com')
     module.Domains.Add('thefashion101.com')
 
@@ -28,7 +30,7 @@ end
 
 function GetChapters()
 
-    for node in dom.SelectElements('//a[contains(@class,"chapter-url")]') do
+    for node in dom.SelectElements('//a[@class="chapter-url"]') do
 
         local title = node.SelectValue('label[1]')
         local url = node.SelectValue('@href')
