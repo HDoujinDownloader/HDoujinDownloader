@@ -4,6 +4,7 @@ function Register()
 
     module.Domains.Add('luscious.net')
     module.Domains.Add('www.luscious.net')
+    module.Domains.Add('members.luscious.net')
 
 end
 
@@ -57,12 +58,12 @@ function GetPages()
 end
 
 function Login()
-    
+
     if(not http.Cookies.Contains('has_login_session')) then
 
         -- We don't appear to be logged in already, so make a login attempt.
 
-        local domain = module.Domain
+        local domain = GetDomain(module.Domain)
 
         http.Referer = 'https://members.'..domain..'/login/'
         
@@ -75,11 +76,19 @@ function Login()
         
         local response = http.PostResponse('https://members.'..domain..'/accounts/login/')
 
-        if(not response.Cookies.Contains('has_login_session')) then
-            Fail(Error.LoginFailed)
+        for cookie in response.Cookies do
+
+            if cookie.Name:startswith('sessionid_') then
+                
+                global.SetCookies(response.Cookies)
+                
+                return
+
+            end
+
         end
 
-        global.SetCookies(response.Cookies)
+        Fail(Error.LoginFailed)
 
     end
 
@@ -95,7 +104,7 @@ function GetApiUrl()
 
     -- https://api.luscious.net/graphql/nobatch/
 
-    return 'https://api.'..module.Domain:after('www.')..'/graphql/nobatch/'
+    return 'https://api.'.. GetDomain(module.Domain) ..'/graphql/nobatch/'
 
 end
 
