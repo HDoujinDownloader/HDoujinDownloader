@@ -11,7 +11,7 @@ function GetInfo()
     info.Title = CleanTitle(dom.Title)
     info.Summary = dom.SelectValue('//div[contains(@class,"intro_desc")]')
 
-    if(url:contains('/album-')) then
+    if(url:contains('/album-') or url:contains('/photos-')) then
         info.PageCount = GetImageCount()
     end
 
@@ -93,13 +93,11 @@ function GetPages()
 
     pages.Sort()
 
-    Log(pages)
-
 end
 
 function BeforeDownloadPage()
 
-    local dataId = page.Url:regex('\\/[a-z]+(-.+(?:$|#|\\?))', 1)
+    local dataId = page.Url:regex('\\/[a-z]+(-.+?)(?:$|#|\\?)', 1)
 
     PrepareHttpHeaders()
 
