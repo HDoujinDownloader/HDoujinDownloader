@@ -1,7 +1,7 @@
 As of version 2021.5.1.0, the changelog will only contain updates made to the HDoujin Downloader application.
 For module updates, see: https://github.com/HDoujinDownloader/HDoujinDownloader/commits/master/modules/lua
 
-[v2021.12.13.0]
+[v2021.12.13.1]
 
 - [NEW] Cloudflare cookies are now cached to minimize reliance on FlareSolverr
 - [NEW] Modules can provide a BeforeDownloadPage implementation for other modules
