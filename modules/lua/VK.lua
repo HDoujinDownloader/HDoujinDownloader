@@ -67,29 +67,45 @@ function GetPages()
 
     local imagesPerPage = 40
     local totalImages = GetImageCount()
+    local offset = 0
 
-    for i = 0, totalImages, imagesPerPage do
+    local imagesUrlsDict = Dict.New()
 
-        PrepareHttpHeaders()
+    repeat
+
+        local previousImageCount = imagesUrlsDict.Values.Count()
 
         http.PostData['al'] = 1
         http.PostData['al_ad'] = 0
-        http.PostData['offset'] = i
+        http.PostData['offset'] = offset
         http.PostData['part'] = 1
 
-        local json = Json.New(http.Post(url))
+        -- Occasionally the JSON is prepended with "<!--". (Why?)
+
+        local postResponse = http.Post(url):after('<!--')
+        local json = Json.New(postResponse)
         local payload = json.SelectValue('payload[1][1]')
 
         dom = dom.New(payload)
 
         local imageUrls = dom.SelectValues('//a/@href')
 
-        pages.AddRange(imageUrls)
+        for imageUrl in imageUrls do
+            imagesUrlsDict[imageUrl] = imageUrl
+        end
+
+        local newImageCount = imagesUrlsDict.Values.Count() - previousImageCount
 
         if(imageUrls.Count() <= 0) then break end
         if(pages.Count() >= totalImages) then break end
+        if(newImageCount <= 0) then break end
 
-    end
+        offset = offset + imagesPerPage
+        totalImages = totalImages - newImageCount
+
+    until(totalImages <= 0)
+
+    pages.AddRange(imagesUrlsDict.Values)
 
     pages.Sort()
 
