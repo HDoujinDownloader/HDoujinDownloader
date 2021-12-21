@@ -5,7 +5,6 @@ function Register()
     module.Name = 'Madara (Ajax)'
     module.Language = 'English'
 
-    module.Domains.Add('allporncomic.com', 'AllPornComic.com')
     module.Domains.Add('aloalivn.com', 'Aloalivn.com')
     module.Domains.Add('astrallibrary.net', 'Astral Library')
     module.Domains.Add('earlymanga.net', 'EarlyManga')
