@@ -44,14 +44,14 @@ function GetPages()
 
     local cdnUrl = dom.SelectValue('//script[contains(.,"contentsCdnUrl")]'):regex("contentsCdnUrl:\\s*'([^']+)'", 1)
     local scrollPaths = json.SelectValues('data.extra.episode.scrollsInfo[*].path')
-    local quality = 30
+    local quality = 40
     local signedData = GetSignedDataJson(json, quality)
     local policy = signedData.SelectValue('data.Policy')
     local signature = signedData.SelectValue('data.Signature')
     local keyPairId = signedData.SelectValue('data.Key-Pair-Id')
 
     for scrollPath in scrollPaths do
-        pages.Add(cdnUrl .. '/v2' .. scrollPath .. '.webp?purchased=false&q=' .. quality .. '&Policy=' .. policy .. '&Signature=' .. signature .. '&Key-Pair-Id=' .. keyPairId)
+        pages.Add(cdnUrl .. '/v2' .. scrollPath .. '.jpg?purchased=true&q=' .. quality .. '&Policy=' .. policy .. '&Signature=' .. signature .. '&Key-Pair-Id=' .. keyPairId)
     end
 
 end
