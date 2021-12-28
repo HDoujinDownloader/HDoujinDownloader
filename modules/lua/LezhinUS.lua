@@ -131,7 +131,7 @@ function GetSignedDataJson(episodeJson, quality)
     local contentId = episodeJson.SelectValue('data.extra.comic.id')
     local episodeId = episodeJson.SelectValue('data.extra.episode.id')
 
-    local apiEndpoint = 'https://www.' .. module.Domain .. '/lz-api/v2/cloudfront/signed-url/generate?contentId=' .. contentId .. '&episodeId=' .. episodeId .. '&purchased=false&q=' .. quality .. '&firstCheckType=P'
+    local apiEndpoint = 'https://www.' .. module.Domain .. '/lz-api/v2/cloudfront/signed-url/generate?contentId=' .. contentId .. '&episodeId=' .. episodeId .. '&purchased=true&q=' .. quality .. '&firstCheckType=P'
 
     return Json.New(http.Get(apiEndpoint))
 
