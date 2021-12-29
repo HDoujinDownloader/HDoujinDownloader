@@ -108,9 +108,11 @@ function GetPages()
 	local galleryId = GetGalleryId(url)
 	local galleryJs = GetGalleryJs(galleryId)
 	local commonJs = http.Get('//ltn.hitomi.la/common.js'):regex("'\\.nozomi';(.+)\\$\\(document\\)", 1)
+	local ggJs = http.Get(dom.SelectValue('//script[contains(@src, "/gg.js")]/@src'))
 
 	js.Execute(galleryJs)	
 	js.Execute(commonJs)
+	js.Execute(ggJs)
 
 	local imageData = js.Execute(
 		'(function () {'..
