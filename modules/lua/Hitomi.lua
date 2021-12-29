@@ -13,17 +13,7 @@ end
 
 function GetInfo()
 
-	-- If we're being redirected, follow the redirect to the final page (URLs without gallery title redirect to URLs with gallery titles).
-	-- It's important to follow the redirect in order to get all metadata fields.
-
-	local redirectUrl = dom.SelectValue('//meta[@http-equiv="refresh"]/@content'):after('url=')
-
-	if(not isempty(redirectUrl)) then
-		
-		url = redirectUrl
-		dom = Dom.New(http.Get(url))
-
-	end
+	FollowRedirect()
 
 	local galleryId = GetGalleryId(url)
 
@@ -102,6 +92,8 @@ function GetInfo()
 end
 
 function GetPages()
+
+	FollowRedirect()
 
 	local js = JavaScript.New()
 
@@ -201,5 +193,21 @@ function GetTags(json)
 	end
 
 	return tags
+
+end
+
+function FollowRedirect()
+
+	-- If we're being redirected, follow the redirect to the final page (URLs without gallery title redirect to URLs with gallery titles).
+	-- It's important to follow the redirect in order to get all metadata fields.
+
+	local redirectUrl = dom.SelectValue('//meta[@http-equiv="refresh"]/@content'):after('url=')
+
+	if(not isempty(redirectUrl)) then
+		
+		url = redirectUrl
+		dom = Dom.New(http.Get(url))
+
+	end
 
 end
