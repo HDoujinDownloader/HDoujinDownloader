@@ -47,10 +47,10 @@ function GetPages()
     pages.AddRange(dom.SelectValues('//div[@id="readerarea"]//img/@data-src'))
 
     -- asurascans.com
-    -- Make sure to ignore any ad GIFs.
+    -- Make sure to ignore any ad GIFs, and skip the broken image at the beginning of each chapter.
 
     if(isempty(pages)) then
-        pages.AddRange(dom.SelectValues('//div[@id="readerarea"]//img[@class]/@src'))
+        pages.AddRange(dom.SelectValues('//div[@id="readerarea"]//img[@class and not(ancestor::div[contains(@class,"asurascans.rights")])]/@src'))
     end
 
 end
