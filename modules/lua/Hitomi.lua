@@ -104,6 +104,7 @@ function GetPages()
 
 	js.Execute(galleryJs)	
 	js.Execute(commonJs)
+	js.Execute('localStorage = {}')
 	js.Execute(ggJs)
 
 	local imageData = js.Execute(
