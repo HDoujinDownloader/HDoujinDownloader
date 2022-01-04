@@ -1,6 +1,13 @@
 As of version 2021.5.1.0, the changelog will only contain updates made to the HDoujin Downloader application.
 For module updates, see: https://github.com/HDoujinDownloader/HDoujinDownloader/commits/master/modules/lua
 
+[v2022.1.3.0]
+
+- [NEW] Added user agent randomization
+- [FIX] Fixed temporary hang when FlareSolverr fails to initialize
+- [FIX] Fixed unescaped strings in XML files
+- [FIX] Improved degraded download speed introduced in previous update
+
 [v2021.12.13.1]
 
 - [NEW] Cloudflare cookies are now cached to minimize reliance on FlareSolverr
