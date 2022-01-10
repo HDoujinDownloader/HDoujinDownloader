@@ -30,10 +30,7 @@ function GetInfo()
     -- Get chapter metadata.
 
     if(isempty(info.Title) and url:contains('/chapter/')) then
-
         info.Title = GetChapterTitle(json.SelectNode('data'))
-        info.PageCount = json.SelectValues('data.attributes.data[*]').Count()
-
     end
 
 end
@@ -116,12 +113,12 @@ function GetPages()
 
     RedirectFromOldUrl()
 
-    local json = GetGalleryJson()
+    local json = Json.New(http.Get(GetApiEndpoint() .. 'at-home/server/' .. GetGalleryUuid()))
 
-    local hash = tostring(json.SelectValues('data.attributes.hash'))
-    local baseUrl = Json.New(http.Get(GetApiEndpoint() .. 'at-home/server/' .. GetGalleryUuid())).SelectValue('baseUrl')
-    local data = json.SelectValues('data.attributes.data[*]')
-    local dataSaver = json.SelectValues('data.attributes.dataSaver[*]')
+    local hash = json.SelectValue('chapter.hash')
+    local baseUrl = json.SelectValue('baseUrl')
+    local data = json.SelectValues('chapter.data[*]')
+    local dataSaver = json.SelectValues('chapter.dataSaver[*]')
 
     baseUrl = baseUrl .. '/data/' .. hash .. '/'
 
