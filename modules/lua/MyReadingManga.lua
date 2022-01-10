@@ -10,7 +10,7 @@ end
 
 function GetInfo()
 
-    if(IsTagePage()) then
+    if(IsTagsPage()) then
 
         EnqueueAllEntriesForTag()
 
@@ -82,9 +82,13 @@ function GetPages()
 
     pages.AddRange(dom.SelectValues('//div[contains(@class,"entry-content")]//img/@data-src'))
 
+    if(isempty(pages)) then
+        pages.AddRange(dom.SelectValues('//div[contains(@class,"entry-content")]//img/@data-lazy-src'))
+    end
+
 end
 
-function IsTagePage()
+function IsTagsPage()
 
     return isempty(dom.SelectElement('//h1[contains(@class,"entry-title")]'))
 
