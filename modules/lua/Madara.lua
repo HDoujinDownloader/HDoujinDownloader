@@ -29,15 +29,20 @@ function Register()
     RegisterModule(module)
 
     module = module.New()
-
     module.Language = 'Korean'
 
     module.Domains.Add('manhwaraw.com', 'ManhwaRaw')
 
+    module = module.New()
+    module.Language = 'Portuguese'
+
+    module.Domains.Add('neoxscans.net', 'NEOX Scanlator')
+    
+    RegisterModule(module)
+
     RegisterModule(module)
 
     module = module.New()
-
     module.Language = 'Thai'
 
     module.Domains.Add('dokimori.com', 'DokiMori')
@@ -45,7 +50,6 @@ function Register()
     RegisterModule(module)
 
     module = module.New()
-
     module.Language = 'Turkish'
 
     module.Domains.Add('araznovel.com', 'ArazNovel')
