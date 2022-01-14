@@ -1,9 +1,12 @@
+-- Sites using this module might have "Powered by MadTheme" in the lower right corner.
+
 function Register()
 
     module.Name = 'MangaBuddy'
     module.Language = 'en'
 
-    module.Domains.Add('mangabuddy.com')
+    module.Domains.Add('mangabuddy.com', 'MangaBuddy')
+    module.Domains.Add('toonily.me', 'Toonily')
 
 end
 
