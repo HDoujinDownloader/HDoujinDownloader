@@ -45,9 +45,9 @@ function GetPages()
     local cdnUrl = dom.SelectValue('//script[contains(.,"contentsCdnUrl")]'):regex("contentsCdnUrl:\\s*'([^']+)'", 1)
     local scrollPaths = json.SelectValues('data.extra.episode.scrollsInfo[*].path')
     local extension = 'jpg'
-    local purchased = 'false'
+    local purchased = IsLoggedIn() and 'true' or 'false'
     local quality = 40
-    local signedData = GetSignedDataJson(json, quality)
+    local signedData = GetSignedDataJson(json, purchased, quality)
     local policy = signedData.SelectValue('data.Policy')
     local signature = signedData.SelectValue('data.Signature')
     local keyPairId = signedData.SelectValue('data.Key-Pair-Id')
@@ -60,7 +60,7 @@ end
 
 function Login()
 
-    if(not http.Cookies.Contains('REMEMBER')) then
+    if(not IsLoggedIn()) then
 
         local endpoint = 'https://www.'.. module.Domain .. '/en/login?redirect=%2Fen'
         local dom = Dom.New(http.Get(endpoint))
@@ -74,7 +74,7 @@ function Login()
 
         local response = http.PostResponse(endpoint)
 
-        if(not http.Cookies.Contains('REMEMBER')) then
+        if(not IsLoggedIn()) then
             Fail(Error.LoginFailed)
         end
 
@@ -119,21 +119,21 @@ function GetEpisodeJson()
     SetHttpHeaders()
 
     local contentSlug = url:regex('\\/comic\\/([^\\/]+)', 1)
-    local episodeSlug = url:regex('\\/comic\\/[^\\/]+\\/(\\d+)', 1)
+    local episodeSlug = url:regex('\\/comic\\/[^\\/]+\\/([^\\/#?]+)', 1)
     local apiEndpoint = GetApiUrl() .. 'inventory_groups/comic_viewer_k?platform=web&store=web&alias=' .. contentSlug .. '&name=' .. episodeSlug .. '&preload=false&type=comic_episode'
 
     return Json.New(http.Get(apiEndpoint))
 
 end
 
-function GetSignedDataJson(episodeJson, quality)
+function GetSignedDataJson(episodeJson, purchased, quality)
 
     SetHttpHeaders()
 
     local contentId = episodeJson.SelectValue('data.extra.comic.id')
     local episodeId = episodeJson.SelectValue('data.extra.episode.id')
 
-    local apiEndpoint = 'https://www.' .. module.Domain .. '/lz-api/v2/cloudfront/signed-url/generate?contentId=' .. contentId .. '&episodeId=' .. episodeId .. '&purchased=false&q=' .. quality .. '&firstCheckType=P'
+    local apiEndpoint = 'https://www.' .. module.Domain .. '/lz-api/v2/cloudfront/signed-url/generate?contentId=' .. contentId .. '&episodeId=' .. episodeId .. '&purchased=' .. purchased .. '&q=' .. quality .. '&firstCheckType=P'
 
     return Json.New(http.Get(apiEndpoint))
 
@@ -153,5 +153,11 @@ function SetHttpHeaders()
     if(not isempty(bearerToken)) then
         http.Headers['authorization'] = 'Bearer ' .. bearerToken
     end
+
+end
+
+function IsLoggedIn()
+
+    return http.Cookies.Contains('REMEMBER')
 
 end
