@@ -1,7 +1,9 @@
 function Register()
 
     module.Name = '9hentai'
+
     module.Domains.Add('9hentai.ru')
+    module.Domains.Add('9hentai.to')
 
     module.Adult = true
 
