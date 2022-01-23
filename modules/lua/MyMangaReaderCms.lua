@@ -28,16 +28,6 @@ function Register()
     
     RegisterModule(module)
 
-    -- Spanish
-
-    module = Module.New()
-
-    module.Language = 'Spanish'
-
-    module.Domains.Add('mangas.in', 'Mangas.in')
-
-    RegisterModule(module)
-
     -- Turkish
 
     module = Module.New()
@@ -85,7 +75,7 @@ function GetChapters()
 
     for chapterNode in dom.SelectElements('//ul[contains(@class,"chapters")]//h5') do
 
-        local chapterTitle = tostring(chapterNode)
+        local chapterTitle = CleanTitle(tostring(chapterNode))
         local chapterUrl = chapterNode.SelectValue('i/a/@href') -- manhwas.men
 
         if(isempty(chapterUrl)) then
@@ -134,5 +124,11 @@ function GetPages()
         pages.Add(GetRooted(imageUrl, GetRooted(baseUrl, url)))
 
     end
+
+end
+
+function CleanTitle(title)
+
+    return RegexReplace(title, '(?:^(?:\\s*↛\\s*)|(?:\\:\\s*)$)', '')
 
 end
