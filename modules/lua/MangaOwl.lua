@@ -30,10 +30,24 @@ end
 
 function GetChapters()
 
+    local js = JavaScript.New()
+    
+    js.Execute('window = {}')
+    js.Execute(dom.SelectValue('//script[contains(.,"window[\'tr\']")]'))
+
+    local tr = tostring(js.GetObject('window.tr'))
+    local s = tostring(js.Execute('encodeURIComponent(btoa("' .. GetRoot(url):trim('/') .. '"))'))
+
     for node in dom.SelectElements('//a[@class="chapter-url"]') do
 
         local title = node.SelectValue('label[1]')
         local url = node.SelectValue('@href')
+
+        if(isempty(url)) then
+            url = node.SelectValue('@data-href')
+        end
+
+        url = url .. '?tr=' .. tr .. '&s=' .. s
 
         chapters.Add(url, title)
 
