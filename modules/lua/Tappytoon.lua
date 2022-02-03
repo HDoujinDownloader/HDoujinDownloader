@@ -4,6 +4,7 @@ function Register()
     module.Type = 'Webtoon'
     
     module.Domains.Add('tappytoon.com')
+    module.Domains.Add('www.tappytoon.com')
 
 end
 
@@ -38,7 +39,7 @@ function GetChapters()
     local comicId = json.SelectValue('..pageProps.comic.id')
     local baseUrl = url:before('/comics/')..'/'
 
-    for chapterId in json.SelectValues('..get-chapters-by-comic-id-'..comicId..'.response.data.result[*]') do
+    for chapterId in json.SelectValues('..get-chapters-by-comic-id-'..comicId..'-asc.response.data.result[*]') do
 
         local chapterJson = chaptersJson.SelectToken(chapterId)
         local chapterUnlocked = toboolean(chapterJson['isUserUnlocked']) or toboolean(chapterJson['isFree']) or toboolean(chapterJson['isUserRented'])
