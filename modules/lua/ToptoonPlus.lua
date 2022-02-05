@@ -46,7 +46,7 @@ function GetPages()
     local json = GetEpisodeJson()
     local episodeId = GetEpisodeId()
 
-    pages.AddRange(json.SelectValues("data.episode[?(@.episodeId==" .. episodeId .. ")].contentImage.jpeg[*].path"))
+    pages.AddRange(json.SelectValues("data.episode.contentImage.jpeg[*].path"))
 
 end
 
@@ -90,7 +90,9 @@ function SetupApiHeaders()
 
     http.Headers['accept'] = 'application/json, text/plain, */*'
     http.Headers['isalreadymature'] = '1'
-    http.Headers['version'] = '1.14.619a'
+    http.Headers['partnercode'] = ''
+    http.Headers['ua'] = 'web'
+    http.Headers['version'] = '1.14.792b'
     http.Headers['x-api-key'] = 'SUPERCOOLAPIKEY2021#@#('
 
     if(not isempty(module.Data['token'])) then
@@ -103,7 +105,11 @@ function GetApiJson(path)
 
     SetupApiHeaders()
 
-    local json = http.Get(GetApiUrl() .. path)
+    if(not path:startsWith('//') and not path:startsWith('https://')) then
+        path = GetApiUrl() .. path
+    end
+
+    local json = http.Get(path)
 
     return Json.New(json)
 
@@ -129,6 +135,8 @@ end
 
 function GetEpisodeJson()
 
-    return GetApiJson('page/viewer?comicId=' .. GetComicId() .. '&episodeId=' .. GetEpisodeId())
+    http.Headers['language'] = 'en'
+
+    return GetApiJson('//api.toptoonplus.com/check/isUsableEpisode?comicId=' .. GetComicId() .. '&episodeId=' .. GetEpisodeId() .. '&location=viewer&action=view_contents')
 
 end
