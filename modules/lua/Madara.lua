@@ -10,11 +10,11 @@ function Register()
     module.Language = 'English'
 
     module.Domains.Add('allporncomic.com', 'AllPornComic.com')
-    module.Domains.Add('disasterscans.com', 'Disaster Scans')
     module.Domains.Add('hentairead.com', 'HentaiRead')
     module.Domains.Add('manga18fx.com', 'Manga18fx')
     module.Domains.Add('mangaclash.com', 'Manga Clash')
     module.Domains.Add('mangadna.com', 'MangaDNA')
+    module.Domains.Add('mangalord.com', 'Manga Lord')
     module.Domains.Add('mangapl.com', 'MangaPL')
     module.Domains.Add('mangastream.cc', 'MangaStream')
     module.Domains.Add('mangatx.com', 'Mangatx')
