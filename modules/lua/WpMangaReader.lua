@@ -9,6 +9,7 @@ function Register()
     module.Domains.Add('flamescans.org', 'Flame Scans')
     module.Domains.Add('manhuascan.us', 'Manhuascan.us')
     module.Domains.Add('readkomik.com', 'ReadKomik')
+    module.Domains.Add('xcalibrscans.com', 'xCaliBR Scans')
 
     RegisterModule(module)
 
@@ -66,6 +67,10 @@ function GetInfo()
 
     if(isempty(info.Author)) then -- 108read.com
         info.Author = dom.SelectValue('//b[contains(text(),"ผู้แต่ง")]/following-sibling::span')
+    end
+
+    if(isempty(info.Author)) then -- xcalibrscans.com
+        info.Author = dom.SelectValue('//b[contains(text(),"Author")]/following-sibling::span')
     end
 
     if(isempty(info.Artist)) then
