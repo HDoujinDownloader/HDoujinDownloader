@@ -2,6 +2,8 @@
 
 require "Madara"
 
+local MadaraGetPages = GetPages
+
 function Register()
 
     module.Name = 'IsekaiScan'
@@ -9,6 +11,26 @@ function Register()
 
     module.Domains.Add('isekaiscan.com')
     module.Domains.Add('manhwahentai.me', 'ManhwaHentai.me')
+    module.Domains.Add('disasterscans.com', 'Disaster Scans')
+
+end
+
+function GetPages()
+
+    MadaraGetPages()
+
+    for page in pages do
+
+        if(page.Url:contains('.wp.com/')) then
+
+            -- Remove the redirect from Imgur images, and blank the referer so Imgur lets us access the image directly.
+
+            page.Url = RegexReplace(page.Url, '\\/\\/[^.]+\\.wp\\.com\\/(.+?)\\?ssl=1', '//$1')
+            page.Referer = ''
+
+        end
+
+    end
 
 end
 
