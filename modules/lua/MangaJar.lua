@@ -18,10 +18,6 @@ function GetInfo()
     info.Summary = dom.SelectValue('//div[contains(@class, "manga-description")]')
     info.ChapterCount = dom.SelectValue('//b[contains(text(), "Chapters")]//following-sibling::text()')
 
-    if(isempty(info.ChapterCount)) then
-        info.PageCount = ParsePages().Count()
-    end
-
     if(isempty(info.Title)) then
         info.Title = dom.SelectValue('//h1')
     end
@@ -45,13 +41,19 @@ end
 
 function GetPages()
    
-    pages.AddRange(ParsePages())
+    for imageNode in dom.SelectElements('//div[contains(@class, "chapter-container")]//img') do
 
-end
+        -- Sometimes the first image will only have the image in the "src" attribute while the rest use "data-src".
 
-function ParsePages()
+        local pageUrl = imageNode.SelectValue('@data-src')
 
-    return dom.SelectValues('//div[contains(@class, "chapter-container")]//img/@src')
+        if(isempty(pageUrl)) then
+            pageUrl = imageNode.SelectValue('@src')
+        end
+
+        pages.Add(pageUrl)
+
+    end
 
 end
 
