@@ -1,6 +1,12 @@
 As of version 2021.5.1.0, the changelog will only contain updates made to the HDoujin Downloader application.
 For module updates, see: https://github.com/HDoujinDownloader/HDoujinDownloader/commits/master/modules/lua
 
+[v2022.2.11.0-rc.1]
+
+- [NEW] Improved support for data URLs
+- [FIX] Fixed image subdirectories being ignored for Lua modules
+- [MISC] Various improvements and bug fixes
+
 [v2022.1.3.0]
 
 - [NEW] Added user agent randomization
