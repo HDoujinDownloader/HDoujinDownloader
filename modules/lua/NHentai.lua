@@ -63,7 +63,11 @@ function GetPages()
 
     for thumbnailUrl in dom.SelectValues('//div[@id="thumbnail-container"]//img/@data-src') do
 
-        local fullImageUrl = thumbnailUrl:replace('//t.', '//i.')
+        local fullImageUrl = thumbnailUrl
+        
+        if(module.Domain ~= 'nhentai.to') then
+            fullImageUrl:replace('//t.', '//i.')
+        end
 
         fullImageUrl = RegexReplace(fullImageUrl, '(\\d+)t(.+?)$', '$1$2')
 
