@@ -22,6 +22,13 @@ end
 
 function GetChapters()
 
+    -- If this directory has any images, we won't return any chapters.
+    -- This is so we can still get the images in the current directory (the remaining albums can be downloaded recursively).
+
+    if(GetAllPages(url).Count() > 0) then
+        return
+    end
+
     -- Note that albums are listed newest to oldest.
 
     for album in GetAllAlbums(url) do
@@ -109,7 +116,7 @@ function GetAllPages(url, albumPath)
     local dom = Dom.New(http.Get(url))
 
     local pageList = PageList.New()
-    local pageUrls = dom.SelectValues('//a[contains(@class,"c-tile")]//img/@data-src')
+    local pageUrls = dom.SelectValues('//a[contains(@class,"c-tile") and not(.//span[contains(@class,"title-text")])]//img/@data-src')
 
     for pageUrl in pageUrls do
 
@@ -145,24 +152,14 @@ function GetAllPagesRecursively(url, albumPath, recursionDepth)
         return
     end
 
-    local albums = GetAllAlbums(url)
-    
-    if(albums.Count() <= 0) then
+    for page in GetAllPages(url, albumPath) do
+        pages.Add(page)
+    end
 
-        -- There are no albums, so just add the images.
+    -- Recursively add images from each nested album.
 
-        for page in GetAllPages(url, albumPath) do
-            pages.Add(page)
-        end
-
-    else
-
-        -- There are albums, so add the images from each one recursively.
-
-        for album in albums do
-            GetAllPagesRecursively(album.Url, albumPath .. '/' .. album.Title, recursionDepth + 1)    
-        end
-
+    for album in GetAllAlbums(url) do
+        GetAllPagesRecursively(album.Url, albumPath .. '\\' .. album.Title, recursionDepth + 1)    
     end
 
 end
