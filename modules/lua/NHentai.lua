@@ -66,7 +66,7 @@ function GetPages()
         local fullImageUrl = thumbnailUrl
         
         if(module.Domain ~= 'nhentai.to') then
-            fullImageUrl:replace('//t.', '//i.')
+            fullImageUrl = fullImageUrl:replace('//t.', '//i.')
         end
 
         fullImageUrl = RegexReplace(fullImageUrl, '(\\d+)t(.+?)$', '$1$2')
