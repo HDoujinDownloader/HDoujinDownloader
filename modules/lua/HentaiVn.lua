@@ -4,6 +4,7 @@ function Register()
     module.Language = 'Vietnamese'
     module.Adult = true
 
+    module.Domains.Add('hentaivn.moe')
     module.Domains.Add('hentaivn.net')
     module.Domains.Add('hentaivn.tv')
 
