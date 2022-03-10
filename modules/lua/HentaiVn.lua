@@ -29,7 +29,25 @@ end
 
 function GetChapters()
 
-    chapters.AddRange(dom.SelectElements('//table[contains(@class,"listing")]//a'))
+    local chaptersXPath = '//table[contains(@class,"listing")]//a'
+
+    chapters.AddRange(dom.SelectElements(chaptersXPath))
+
+    if(isempty(chapters)) then
+
+        -- We need to make another request to get the chapters list, because they're not embedded directly on the page anymore.
+
+        local chapterId = url:regex('\\/(\\d+)-', 1)
+        local chapterSlug = url:regex('doc-truyen-([^.]+?)\\.html', 1)
+        local endpoint = '/list-showchapter.php?idchapshow=' .. chapterId .. '&idlinkanime=' .. chapterSlug
+
+        http.Headers['accept'] = '*/*'
+
+        dom = Dom.New(http.Get(endpoint))
+
+        chapters.AddRange(dom.SelectElements(chaptersXPath))
+
+    end
 
     chapters.Reverse()
 
