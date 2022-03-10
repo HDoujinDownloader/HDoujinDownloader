@@ -1,9 +1,10 @@
 As of version 2021.5.1.0, the changelog will only contain updates made to the HDoujin Downloader application.
 For module updates, see: https://github.com/HDoujinDownloader/HDoujinDownloader/commits/master/modules/lua
 
-[v2022.2.11.0-rc.1]
+[v2022.3.9.0-rc.2]
 
 - [NEW] Improved support for data URLs
+- [FIX] Fixed Cloudflare bypass failing when site returns invalid cookies
 - [FIX] Fixed image subdirectories being ignored for Lua modules
 - [MISC] Various improvements and bug fixes
 
