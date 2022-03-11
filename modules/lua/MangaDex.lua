@@ -277,6 +277,10 @@ function GetScanlationStatus(json)
     local lastChapterNumber = json.SelectValue('data.attributes.lastChapter')
     local lastVolumeNumber = json.SelectValue('data.attributes.lastVolume')
 
+    if(lastVolumeNumber == 'null') then
+        lastVolumeNumber = ''
+    end
+
     chapters = ChapterList.New()
 
     GetChapters()
@@ -285,10 +289,16 @@ function GetScanlationStatus(json)
         return 'ongoing'
     end
 
-    local lastChapter = chapters.Last()
+    -- We can't just check the most recent chapter, because sometimes there is content uploaded after the last chapter.
+    -- See https://github.com/HDoujinDownloader/HDoujinDownloader/issues/76#issuecomment-1065185376
+    -- Sometimes the "lastVolume" property will be null, in which case we should just check the chapter number.
 
-    if(lastChapter.Chapter == lastChapterNumber and lastChapter.Volume == lastVolumeNumber) then
-        return 'completed'
+    for chapter in chapters do
+
+        if(chapter.Chapter == lastChapterNumber and (isempty(lastVolumeNumber) or chapter.Volume == lastVolumeNumber)) then
+            return 'completed'
+        end
+
     end
 
     return 'ongoing'
