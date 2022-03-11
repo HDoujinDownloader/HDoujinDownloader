@@ -117,9 +117,24 @@ end
 function GetPages()
 
     local pagesArray = tostring(dom):regex('"images":(\\[[^\\]]+\\])', 1)
-    local pagesJson = Json.New(pagesArray)
 
-    pages.AddRange(pagesJson.SelectValues('[*]'))
+    if(not isempty(pagesArray)) then
+        
+        local pagesJson = Json.New(pagesArray)
+        
+        pages.AddRange(pagesJson.SelectValues('[*]'))
+
+    else
+
+        if(isempty(pages)) then
+
+            -- manhuascan.us just has the image URLs directly in the HTML.
+    
+            pages.AddRange(dom.SelectValues('//div[@id="readerarea"]//img/@src'))
+    
+        end
+
+    end
 
     pages.Referer = ''
 
