@@ -8,6 +8,15 @@ function Register()
 
     global.SetCookie(module.Domains.First(), 'mangadex_h_toggle', '1')
 
+    if(API_VERSION >= 3) then
+
+        BuildLanguageSelection(module)
+
+        module.Settings.AddCheck('Prefer scanlation status over publishing status', false)
+            .WithToolTip('If enabled, the scanlation status will be used instead of the publishing status in the metadata.')
+
+    end
+
 end
 
 function GetInfo()
@@ -25,7 +34,19 @@ function GetInfo()
     info.Status = json.SelectValue('data.attributes.status')
     info.Adult = json.SelectValue('data.attributes.contentRating') ~= 'safe'
     info.Author = json.SelectValues("data.relationships[?(@.type=='author')].attributes.name")
-    info.Artist = json.SelectValues("data.relationships[?(@.type=='artist')].attributes.name")
+
+    if(toboolean(module.Settings['Prefer scanlation status over publishing status'])) then
+
+        -- For more information, see:
+        -- https://github.com/HDoujinDownloader/HDoujinDownloader/issues/76
+
+        local scanlationStatus = GetScanlationStatus(json)
+
+        if(not isempty(scanlationStatus)) then
+            info.Status = scanlationStatus
+        end
+
+    end
 
     -- Get chapter metadata.
 
@@ -44,9 +65,8 @@ function GetChapters()
     local limit = 100
     local total = 0
 
-    local sssMangadexPreferredLanguages = global.GetSetting('sssMangadexPreferredLanguages')
-    local userLanguages = sssMangadexPreferredLanguages:split(',')
-    local acceptAny = isempty(sssMangadexPreferredLanguages) or userLanguages.Count() <= 0 or userLanguages.Contains(GetLanguageId("all"))
+    local userLanguages = GetPreferredLanguages()
+    local acceptAny = userLanguages.Count() <= 0 or userLanguages.Contains(GetLanguageId("all"))
     local groupUuids = List.New()
 
     repeat
@@ -79,6 +99,7 @@ function GetChapters()
             chapter.Url = '/chapter/' .. chapterNode.SelectValue('id')
             chapter.Language = chapterNode.SelectValue('attributes.translatedLanguage')
             chapter.ScanlationGroup = chapterNode.SelectValues("relationships[?(@.type=='scanlation_group')].attributes.name")
+            chapter.Chapter = chapterNumber
             chapter.Volume = volumeNumber
 
             if(acceptAny or userLanguages.Contains(GetLanguageId(chapter.Language))) then
@@ -144,7 +165,7 @@ end
 
 function GetGalleryUuid()
 
-    return url:regex('\\/(?:title|chapter)\\/([^\\/]+)', 1)
+    return url:regex('\\/(?:title|chapter)\\/([^\\/?#]+)', 1)
 
 end
 
@@ -248,5 +269,92 @@ function RedirectFromOldUrl()
         url = http.GetResponse(url).Url
 
     end
+
+end
+
+function GetScanlationStatus(json)
+
+    local lastChapterNumber = json.SelectValue('data.attributes.lastChapter')
+    local lastVolumeNumber = json.SelectValue('data.attributes.lastVolume')
+
+    chapters = ChapterList.New()
+
+    GetChapters()
+
+    if(isempty(chapters)) then
+        return 'ongoing'
+    end
+
+    local lastChapter = chapters.Last()
+
+    if(lastChapter.Chapter == lastChapterNumber and lastChapter.Volume == lastVolumeNumber) then
+        return 'completed'
+    end
+
+    return 'ongoing'
+
+end
+
+function BuildLanguageSelection(module)
+
+    local options = { 
+        "All", 
+        "sa", "bd", "bg", "mm", "ct", "cn", "hk", "cz", "dk", "nl", 
+        "gb", "ph", "fi", "fr", "de", "gr", "hu", "id", "it", "jp", 
+        "kr", "my", "mn", "ir", "pl", "br", "pt", "ro", "ru", "rs", 
+        "es", "mx", "se", "th", "tr", "ua", "vn", "hi", "fa"
+    }
+
+    for i = 2, #options do
+        options[i] = GetLanguageName(options[i])
+    end
+
+    local oldSettingName = 'sssMangadexPreferredLanguages'
+    local oldSettingValue = global.GetSetting(oldSettingName)
+    local defaultSettingValue = nil
+
+    if(not isempty(oldSettingValue)) then
+
+        local languageIds = oldSettingValue:split(',')
+
+        for i = 0, languageIds.Count() - 1 do
+            languageIds[i] = GetLanguageName(languageIds[i])
+        end
+
+        defaultSettingValue = tostring(languageIds)
+
+    end
+
+    local setting = module.Settings.AddChoice('Preferred language(s)', defaultSettingValue, options)
+        .WithMultiSelect()
+
+    setting.Options.Sort()
+
+end
+
+function GetPreferredLanguages()
+
+    local preferredLanguagesStr = module.Settings['Preferred language(s)']
+    local modulePreferredLanguageSettingIsSet = not isempty(preferredLanguagesStr)
+
+    if(not modulePreferredLanguageSettingIsSet) then
+        preferredLanguagesStr = global.GetSetting('sssMangadexPreferredLanguages')
+    end
+
+    if(isempty(preferredLanguagesStr)) then
+        return List.New()
+    end
+
+    local preferredLanguages = preferredLanguagesStr:split(',')
+
+    if(modulePreferredLanguageSettingIsSet) then
+
+        for i = 0, preferredLanguages.Count() - 1 do
+            preferredLanguages[i] = tostring(GetLanguageId(preferredLanguages[i]))
+        end
+
+    end
+
+    return preferredLanguages
 
 end
