@@ -7,8 +7,9 @@ function Register()
     module.Language = 'en'
     module.Adult = true
 
-    module.Domains.Add('comics.8muses.com')
     module.Domains.Add('8muses.com')
+    module.Domains.Add('8muses.io')
+    module.Domains.Add('comics.8muses.com')
 
     module.Settings.AddCheck('Download albums recursively', false)
 
@@ -16,7 +17,7 @@ end
 
 function GetInfo()
 
-    info.Title = CleanTitle(dom.Title)
+    info.Title = CleanTitle(dom.SelectValue('(//div[contains(@class,"top-menu-breadcrumb")]//li)[last()]'))
 
 end
 
@@ -65,7 +66,22 @@ end
 
 local function CleanPaginationUrl(url)
 
-    return tostring(url):regex('(.+?)(?:\\/\\d+|\\?|#|$)', 1):trim('/') .. '/'
+    -- 8muses.com pagination appends "/1"
+    -- 8muses.io pagination appends "/page=1"
+
+    return RegexReplace(tostring(url), '\\/(?:\\?page=)?\\d+([#?].+?)?$', ''):trim('/') .. '/'
+
+end
+
+function SetPaginationIndex(url, index)
+
+    if(module.Domain == '8muses.io') then
+        url = CleanPaginationUrl(url) .. '?page=' .. index
+    else
+        url = CleanPaginationUrl(url) .. index
+    end
+
+    return url
 
 end
 
@@ -77,6 +93,11 @@ function GetAllAlbums(url)
     local url = CleanPaginationUrl(url)
     local dom = Dom.New(http.Get(url))
     local rootUrl = GetRoot(url)
+
+    -- When paginating, some albums can show up twice (i.e. at the end of a page and the beginning of the next one).
+    -- Keep track of what albums we've seen to avoid adding the same one more than once.
+
+    local albumUrlDict = Dict.New()
 
     repeat
 
@@ -92,14 +113,18 @@ function GetAllAlbums(url)
             local albumUrl = GetRooted(albumNode.SelectValues('./@href'), rootUrl)
             local albumTitle = albumNode.SelectValue('.//span[contains(@class,"title-text")]')
 
-            albumList.Add(albumUrl, albumTitle)
+            if(not albumUrlDict.ContainsKey(albumUrl)) then
+                albumList.Add(albumUrl, albumTitle)
+            end
+
+            albumUrlDict[albumUrl] = albumUrl
 
         end
 
         paginationCount = paginationCount + 1
 
         if(paginationCount < MaxPagination) then
-            dom = Dom.New(http.Get(url .. tostring(paginationCount)))
+            dom = Dom.New(http.Get(SetPaginationIndex(url, paginationCount)))
         end
 
     until(paginationCount >=  MaxPagination)
