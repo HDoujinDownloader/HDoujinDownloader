@@ -15,8 +15,8 @@ function GetChapters()
     for chapterNode in dom.SelectElements('//ul[contains(@class,"chapters")]//h5') do
 
         local chapterTitle = chapterNode.SelectValue('a/following-sibling::text()')
-        local chapterSubtitle = chapterNode.SelectValue('eee')
-        local chapterUrl = chapterNode.SelectValue('eee/a/@href')
+        local chapterSubtitle = chapterNode.SelectValue('daka')
+        local chapterUrl = chapterNode.SelectValue('daka/a/@href')
 
         chapters.Add(chapterUrl, CleanTitle(chapterTitle .. chapterSubtitle))
 
