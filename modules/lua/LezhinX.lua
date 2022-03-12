@@ -3,7 +3,9 @@ function Register()
     module.Name = 'Lezhin X'
     module.Adult = true
 
+    module.Domains.Add('lezhin.es')
     module.Domains.Add('lezhinx.com')
+    module.Domains.Add('www.lezhin.es')
 
     module.Settings.AddText('Bearer token', '')
 
@@ -50,17 +52,26 @@ function GetApiUrl()
 
     -- https://www.lezhinx.com/balcony-api/contents/
 
-    return 'https://www.' .. module.Domain .. '/balcony-api/contents/'
+    return 'https://www.' .. module.Domain:trim('www.') .. '/balcony-api/contents/'
     
+end
+
+function GetBalconyId()
+
+    return module.Domain
+        :trim('www.')
+        :replace('.', '_')
+        :upper()
+
 end
 
 function GetApiJson(apiEndpoint)
 
     http.Headers['accept'] = 'application/json'
     http.Headers['referer'] = url
-    http.Headers['x-balcony-id'] = 'LEZHINX_COM'
+    http.Headers['x-balcony-id'] = GetBalconyId()
     http.Headers['x-platform'] = 'WEB'
-
+    
     local bearerToken = module.Settings['Bearer token']
 
     if(not isempty(bearerToken)) then
