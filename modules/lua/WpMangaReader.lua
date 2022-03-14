@@ -7,6 +7,7 @@ function Register()
     module.Language = 'English'
 
     module.Domains.Add('acescans.xyz', 'ACE SCANS')
+    module.Domains.Add('alpha-scans.org', 'Alpha Scans')
     module.Domains.Add('flamescans.org', 'Flame Scans')
     module.Domains.Add('manhuascan.us', 'Manhuascan.us')
     module.Domains.Add('readkomik.com', 'ReadKomik')
