@@ -5,6 +5,8 @@ function Register()
 
     module.Domains.Add('toptoonplus.com')
 
+    module.Settings.AddText('Token', '')
+
     global.SetCookie(module.Domains.First(), 'already_mature', '1')
 
 end
@@ -46,7 +48,7 @@ function GetPages()
     local json = GetEpisodeJson()
     local episodeId = GetEpisodeId()
 
-    pages.AddRange(json.SelectValues("data.episode.contentImage.jpeg[*].path"))
+    pages.AddRange(json.SelectValues("data.episode[*].contentImage.jpeg[*].path"))
 
 end
 
@@ -58,10 +60,10 @@ function Login()
         
         local loginEndpoint = '//api.toptoonplus.com/auth/generateToken'
 
-        SetupApiHeaders()
+        SetUpApiHeaders()
 
         http.PostData['auth'] = '0'
-        http.PostData['deviceId'] = 'a9d4f080-4aa0-11ec-81d3-0242ac130003'
+        http.PostData['deviceId'] = GetDeviceId()
         http.PostData['is17'] = 'false'
         http.PostData['password'] = password
         http.PostData['userId'] = username
@@ -80,38 +82,51 @@ function Login()
 
 end
 
+function GetDeviceId()
+
+    return 'a9d4f080-4aa0-11ec-81d3-0242ac130003'
+
+end
+
 function GetApiUrl()
+
+    -- Return the base API path
 
     return 'https://api.' ..  module.Domain .. '/api/v1/'
 
 end
 
-function SetupApiHeaders()
+function SetUpApiUrl(path)
 
-    http.Headers['accept'] = 'application/json, text/plain, */*'
-    http.Headers['isalreadymature'] = '1'
-    http.Headers['partnercode'] = ''
-    http.Headers['ua'] = 'web'
-    http.Headers['version'] = '1.14.792b'
-    http.Headers['x-api-key'] = 'SUPERCOOLAPIKEY2021#@#('
-
-    if(not isempty(module.Data['token'])) then
-        http.Headers['token'] = module.Data['token']
-    end
-
-end
-
-function GetApiJson(path)
-
-    SetupApiHeaders()
+    -- Take a relative API path and convert it to a full path
 
     if(not path:startsWith('//') and not path:startsWith('https://')) then
         path = GetApiUrl() .. path
     end
 
-    local json = http.Get(path)
+    return path
 
-    return Json.New(json)
+end
+
+function SetUpApiHeaders()
+
+    http.Headers['accept'] = '*/*'
+    http.Headers['deviceId'] = GetDeviceId()
+    http.Headers['is17'] = 'false'
+    http.Headers['isalreadymature'] = '1'
+    http.Headers['language'] = 'en'
+    http.Headers['partnercode'] = ''
+    http.Headers['ua'] = 'web'
+    http.Headers['version'] = '1.15.1647223446b'
+    http.Headers['x-api-key'] = 'SUPERCOOLAPIKEY2021#@#('
+    http.Headers['origin'] = 'https://toptoonplus.com'
+    http.Headers['referer'] = 'https://toptoonplus.com/'
+
+    if(not isempty(module.Data['token'])) then
+        http.Headers['token'] = module.Data['token']
+    elseif(not isempty(module.Settings['Token'])) then
+        http.Headers['token'] = module.Settings['Token']
+    end
 
 end
 
@@ -129,14 +144,40 @@ end
 
 function GetComicJson()
 
-    return GetApiJson('page/episode?comicId=' .. GetComicId())
+    SetUpApiHeaders()
+
+    local endpoint = SetUpApiUrl('page/episode?comicId=' .. GetComicId())
+    local json = Json.New(http.Get(endpoint))
+
+    return Json.New(json)
 
 end
 
 function GetEpisodeJson()
 
-    http.Headers['language'] = 'en'
+    SetUpApiHeaders()
 
-    return GetApiJson('//api.toptoonplus.com/check/isUsableEpisode?comicId=' .. GetComicId() .. '&episodeId=' .. GetEpisodeId() .. '&location=viewer&action=view_contents')
+    local cToken = ''
+    local comicId = GetComicId()
+    local episodeId = GetEpisodeId()
+    local viewerToken = ''
+
+    -- Start by getting the episode metadata, which includes the viewer token.
+    -- The viewer token is needed for episodes that require an account, and is only valid when logged in (valid "token" header sent with the request).
+
+    local endpoint = SetUpApiUrl('//api.toptoonplus.com/check/isUsableEpisode?comicId=' .. comicId .. '&episodeId=' .. episodeId .. '&location=viewer&action=view_contents')
+    local json = Json.New(http.Get(endpoint))
+
+    viewerToken = json.SelectValue('data.viewerToken')
+
+    -- Get the episode images.
+
+    http.Headers['content-type'] = 'application/json'
+    
+    endpoint = SetUpApiUrl('page/viewer')
+    local payload = '{"comicId":' .. comicId .. ',"episodeId":' .. episodeId .. ',"viewerToken":"' .. viewerToken .. '","cToken":"' .. cToken .. '"}'
+    local json = Json.New(http.Post(endpoint, payload))
+
+    return Json.New(json)
 
 end
