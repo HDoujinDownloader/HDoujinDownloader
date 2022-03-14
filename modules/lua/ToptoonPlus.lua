@@ -54,7 +54,7 @@ end
 
 function Login()
 
-    local token = module.Data['token']
+    local token = GetToken()
 
     if(isempty(token)) then
         
@@ -85,6 +85,18 @@ end
 function GetDeviceId()
 
     return 'a9d4f080-4aa0-11ec-81d3-0242ac130003'
+
+end
+
+function GetToken()
+
+    if(not isempty(module.Data['token'])) then
+        return module.Data['token']
+    elseif(not isempty(module.Settings['Token'])) then
+        return module.Settings['Token']
+    end
+
+    return ''
 
 end
 
@@ -122,10 +134,10 @@ function SetUpApiHeaders()
     http.Headers['origin'] = 'https://toptoonplus.com'
     http.Headers['referer'] = 'https://toptoonplus.com/'
 
-    if(not isempty(module.Data['token'])) then
-        http.Headers['token'] = module.Data['token']
-    elseif(not isempty(module.Settings['Token'])) then
-        http.Headers['token'] = module.Settings['Token']
+    local token = GetToken()
+
+    if(not isempty(token)) then
+        http.Headers['token'] = token
     end
 
 end
