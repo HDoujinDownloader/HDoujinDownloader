@@ -12,16 +12,15 @@ function GetInfo()
 
     local json = GetGalleryJson()
 
-    info.Status = json.SelectValue('projectInfo.np_status')
-    info.Title = json.SelectValue('projectInfo.np_name')
-    info.Adult = json.SelectValue('projectInfo.np_flag_mature') ~= 'N'
-    info.Summary = json.SelectValue('projectInfo.np_info')
-    info.DateReleased = json.SelectValue('projectInfo.np_created_date')
-    info.Author = json.SelectValue('projectInfo.author_name')
-    info.Artist = json.SelectValue('projectInfo.artist_name')
-    info.Tags = json.SelectValue('projectCategoryUsed[*].npc_name')
+    info.Title = json.SelectValue('projectInfo.projectName')
+    info.Adult = json.SelectValue('projectInfo.flgMature') ~= 'N'
+    info.Summary = json.SelectValue('projectInfo.info')
+    info.DateReleased = json.SelectValue('projectInfo.releaseDate')
+    info.Author = json.SelectValue('projectInfo.authorName')
+    info.Artist = json.SelectValue('projectInfo.artistName')
+    info.Tags = json.SelectValue('listCate[*].cateName')
 
-    if(info.Status == '1') then
+    if(json.SelectValue('projectInfo.status') == '1') then
         info.Status = 'ongoing'
     else
         info.Status = 'completed'
@@ -31,16 +30,15 @@ end
 
 function GetChapters()
 
-    local galleryId = GetGalleryId()
     local json = GetGalleryJson()
 
-    for chapterNode in json.SelectTokens('projectChapterList[*]') do
+    for chapterNode in json.SelectTokens('listChapter[*]') do
 
-        local chapterNumber = tostring(chapterNode['nc_chapter_no'])
-        local chapterName = tostring(chapterNode['nc_chapter_name'])
+        local chapterNumber = tostring(chapterNode['chapterNo'])
+        local chapterName = tostring(chapterNode['chapterName'])
 
-        local chapterTitle = 'Ch.'..chapterNumber..' - '..chapterName
-        local chapterUrl = url:trim('/')..'/'..chapterNumber
+        local chapterTitle = 'Ch.' .. chapterNumber .. ' - ' .. chapterName
+        local chapterUrl = url:trim('/') .. '/' .. chapterNumber
         
         chapters.Add(chapterUrl, chapterTitle)
 
@@ -56,10 +54,10 @@ function GetPages()
 
     local galleryId = json.SelectValue('projectId')
     local chapterId = json.SelectValue('chapterId')
-   
+
     for filename in json.SelectValues('pageItem[*].fileName') do
 
-        local imageUrl = GetChapterApiEndpoint()..'collectManga/'..galleryId..'/'..chapterId..'/'..filename
+        local imageUrl = GetChapterApiUrl() .. FormatString('collectManga/{0}/{1}/{2}', galleryId, chapterId, filename)
 
         pages.Add(imageUrl)
 
@@ -67,34 +65,34 @@ function GetPages()
 
 end
 
-function GetGalleryId()
+local function GetGalleryApiUrl()
+
+    return '//api.osemocphoto.com/frontAPI/'
+
+end
+
+function GetChapterApiUrl()
+
+    return '//www.osemocphoto.com/'
+
+end
+
+local function GetGalleryId()
 
     return tostring(url):regex('\\/(?:comic|manga)\\/(\\d+)', 1)
 
 end
 
-function GetChapterId()
+local function GetChapterId()
 
     return tostring(url):regex('\\/(?:comic|manga)\\/\\d+\\/([\\d\\.]+)', 1)
 
 end
 
-function GetGalleryApiEndpoint()
-
-    return '//tuner.'..GetDomain(module.Domain)..'/ApiTest/'
-
-end
-
-function GetChapterApiEndpoint()
-
-    return '//fs.'..GetDomain(module.Domain)..'/'
-
-end
-
 function GetGalleryJson()
 
-    local apiEndpoint = GetGalleryApiEndpoint()..'getProjectDetailFull/'..GetGalleryId()
-    local json = Json.New(http.Get(apiEndpoint)) 
+    local endpoint = GetGalleryApiUrl() .. 'getProjectInfo/' .. GetGalleryId()
+    local json = Json.New(http.Get(endpoint)) 
 
     return json
 
@@ -103,25 +101,17 @@ end
 function GetChapterJson()
 
     local galleryId = GetGalleryId()
-    local chapterId = GetChapterId()
+    local chapterNumber = GetChapterId()
     local galleryJson = GetGalleryJson()
 
-    -- Find the chapter id of the current chapter.
+    -- Get the ID of the current chapter from the gallery JSON.
 
-    for chapterNode in galleryJson.SelectTokens('projectChapterList[*]') do
+    local chapterId = galleryJson.SelectValue("listChapter[?(@.chapterNo == '" ..chapterNumber .. "')].chapterId")
 
-        if(tostring(chapterNode['nc_chapter_no']) == chapterId) then
+    local endpoint = GetChapterApiUrl() .. FormatString('/collectManga/{0}/{1}/{0}_{1}.json', galleryId, chapterId)
+    local json = Json.New(http.Get(endpoint)) 
 
-            chapterId = tostring(chapterNode['nc_chapter_id'])
-
-            local apiEndpoint = GetChapterApiEndpoint()..'collectManga/'..galleryId..'/'..chapterId..'/'..galleryId..'_'..chapterId..'.json'
-            local json = Json.New(http.Get(apiEndpoint)) 
-
-            return json
-
-        end
-
-    end
+    return json
 
 end
 
