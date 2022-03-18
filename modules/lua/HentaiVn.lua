@@ -25,6 +25,14 @@ function GetInfo()
         info.Title = CleanTitle(dom.Title)
     end
 
+    -- Set the page count right away if pages are available, because otherwise GetChapters will succeed.
+
+    local pageCount = GetPageCount()
+
+    if(pageCount > 0) then
+        info.PageCount = pageCount
+    end
+
 end
 
 function GetChapters()
@@ -63,5 +71,15 @@ function CleanTitle(title)
 
     return RegexReplace(tostring(title), '(?:^Đọc Online:|Full$)', '')
         :trim()
+
+end
+
+function GetPageCount()
+
+    pages = PageList.New()
+
+    GetPages()
+
+    return pages.Count()
 
 end
