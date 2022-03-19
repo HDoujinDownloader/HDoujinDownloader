@@ -40,6 +40,11 @@ function Register()
     
     RegisterModule(module)
 
+    module = module.New()
+    module.Language = 'Spanish'
+
+    module.Domains.Add('nartag.com', 'Traducciones amistosas')
+    
     RegisterModule(module)
 
     module = module.New()
@@ -114,6 +119,14 @@ function GetInfo()
         -- Some sites don't have a nested "p" element in the description (e.g. mangatx.com).
 
         info.Summary = dom.SelectValue('//div[contains(@class, "description-summary")]/div')
+
+    end
+
+    if(isempty(info.Summary)) then
+
+        -- Some sites don't have a dedicated class for the description content (e.g. nartag.com).
+
+        info.Summary = dom.SelectValue('//h5[contains(text(),"Summary")]/following-sibling::div')
 
     end
 
