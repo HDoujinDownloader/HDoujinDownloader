@@ -43,8 +43,10 @@ function GetPages()
         imageServer = 'm3'
     elseif(galleryId > 527143 and galleryId <= 632481) then
         imageServer = 'm4'
-    elseif(galleryId > 632481) then
+    elseif(galleryId > 632481 and galleryId <= 816010) then
         imageServer = 'm5'
+    elseif(galleryId > 816010) then
+        imageServer = 'm6'
     end
 
     for key in imagesJson.Keys do
