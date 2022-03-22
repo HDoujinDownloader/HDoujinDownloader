@@ -69,7 +69,9 @@ end
 
 function CleanTitle(title)
 
-    return tostring(title):before('&#233;')
+    return tostring(title)
+        :before('&#233;')
+        :before('  - Read ')
 
 end
 
@@ -99,13 +101,22 @@ function GetPagesFromChapterFun(imagesScript)
         js.Execute(pagesJs)
 
         local imagesJson = js.GetObject('d').ToJson()
-
-        if(imagesJson.Count() <= 0) then
-            break
-        end
+        local pagesAdded = 0;
 
         for imageUrl in imagesJson do
-            pages.Add(imageUrl)
+
+            if(not pages.Contains(imageUrl)) then
+
+                pages.Add(imageUrl)
+
+                pagesAdded = pagesAdded + 1
+
+            end
+
+        end
+
+        if(pagesAdded <= 0) then
+            break
         end
 
         pageNumber = pageNumber + 1
