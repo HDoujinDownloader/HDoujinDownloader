@@ -6,6 +6,7 @@ function Register()
     module.Adult = true
 
     module.Domains.Add('hgamecg.com', 'HGAMECG.COM')
+    module.Domains.Add('www.hgamecg.com', 'HGAMECG.COM')
 
 
 end
@@ -14,8 +15,13 @@ function GetInfo()
 
     info.Title = dom.SelectValue('//h1')
     info.Circle = info.Title:regex('^\\[(.+?)\\]', 1)
-    info.PageCount = doc:regex('-(\\d+)\\.html', 1) -- (image URLs have the total number of images at the end)
-   
+
+    local pageCount = GetPageCount()
+
+    if(pageCount > 0) then
+        info.PageCount = pageCount
+    end
+
     -- Make sure we're on the first page of the gallery.
 
     info.Url = RegexReplace(info.Url, '\\/page-\\d+\\-', '/page-1-')
@@ -24,7 +30,7 @@ end
 
 function GetPages()
 
-    -- Galleries are paginated into groups of 25 images.
+    -- Galleries are paginated into groups of 20 images.
 
     local lastPaginationUrl = ''
     local paginationUrls = List.New()
@@ -54,5 +60,20 @@ function GetPages()
         end
 
     until(isempty(lastPaginationUrl) or paginationUrls.Contains(lastPaginationUrl) or pages.Count() <= 0)
+
+end
+
+function GetPageCount()
+
+    -- image URLs have the total number of images at the end
+
+    local lastPaginationUrl = dom.SelectValue('//div[contains(@class,"imgpagebar")]/a[last()]/@href')
+    local imageCount = lastPaginationUrl:regex('-(\\d+)\\.html', 1) 
+
+    if(isempty(imageCount)) then
+        return 0
+    else
+        return tonumber(imageCount)
+    end
 
 end
