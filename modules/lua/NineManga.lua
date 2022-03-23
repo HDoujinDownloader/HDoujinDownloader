@@ -33,9 +33,12 @@ end
 
 function GetPages()
 
-    local imagesJson = Json.New(dom.SelectValue('//script[contains(.,"all_imgs_url")]'):regex('all_imgs_url:\\s*(\\[[^\\]]+\\])', 1))
+    local imagesJsonStr = dom.SelectValue('//script[contains(.,"all_imgs_url")]')
+        :regex('all_imgs_url:\\s*(\\[[^\\]]+\\])', 1)
 
-    pages.AddRange(imagesJson)
+    if(not isempty(imagesJsonStr)) then
+        pages.AddRange(Json.New(imagesJsonStr))
+    end
 
 end
 
