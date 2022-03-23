@@ -15,7 +15,7 @@ end
 
 function GetInfo()
 
-    info.Title = dom.SelectValue('//h1')
+    info.Title = CleanTitle(dom.SelectValue('//h1'))
     info.Status = dom.SelectValue('//span[contains(@class,"book-status")]'):between('(', ')')
     info.Author = dom.SelectValues('(//span[contains(text(),"Author(s)")])[1]/following-sibling::a')
     info.Artist = dom.SelectValues('(//span[contains(text(),"Artist")])[1]/following-sibling::a')
@@ -33,7 +33,7 @@ function GetChapters()
         return
     end
 
-    local chaptersListUrl = dom.SelectValue('//a[@title="Chapters"]/@href')
+    local chaptersListUrl = dom.SelectValue('//a[contains(@href,"/chapters.html")]/@href')
 
     if(not isempty(chaptersListUrl)) then
         
@@ -64,5 +64,34 @@ function GetPages()
     dom = Dom.New(http.Get(url))
 
     BaseGetPages()
+
+    -- Some of the subdomains use a different reader where the images are directly in the HTML.
+    -- We can only get 10 images at a time.
+
+    if(isempty(pages)) then
+
+        -- It will paginate into the next chapter, so make sure we only get the pages for this chapter.
+
+        local chapterSlug = url:regex('\\/chapter(\\/[^\\/]+\\/)', 1)
+
+        for page in Paginator.New(http, dom, '//div[contains(@class,"btn-next")]/a[contains(@href, "' .. chapterSlug .. '")]/@href') do
+    
+            local imageUrls = page.SelectValues('//img[contains(@class,"manga_pic")]/@src')
+
+            if(isempty(imageUrls)) then
+                break
+            end
+
+            pages.AddRange(imageUrls)
+        
+        end
+
+    end
+
+end
+
+function CleanTitle(title)
+
+    return RegexReplace(tostring(title):trim(), '\\/$', '')
 
 end
