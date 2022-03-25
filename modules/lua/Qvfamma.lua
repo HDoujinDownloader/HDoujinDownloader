@@ -24,7 +24,10 @@ function GetChapters()
     local title = dom.SelectValue('//h1[contains(@class,"entry-title")]')
     local slug = dom.SelectValue('//a[contains(@href,"/label/")]/@href'):regex('\\/label\\/([^?&]+)', 1)
 
-    if(title:contains('[Información]') and not isempty(slug)) then
+    -- Summary posts (with the chapters listed below) always have "Información" in the title.
+    -- it may appear as "[Información]" or "(Información)" at the end of the title.
+
+    if(title:contains('Información') and not isempty(slug)) then
 
         local json = Json.New(http.Get('/feeds/posts/default/-/' .. slug .. '?alt=json&max-results=15'))
 
@@ -33,7 +36,7 @@ function GetChapters()
             local postTitle = postNode.SelectValue('title')
             local postUrl = postNode.SelectValue('href')
             
-            if(not postTitle:contains('[Información]')) then
+            if(not postTitle:contains('Información')) then
                 chapters.Add(postUrl, postTitle)
             end
 
