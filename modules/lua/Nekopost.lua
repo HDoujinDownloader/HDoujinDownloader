@@ -55,7 +55,16 @@ function GetPages()
     local galleryId = json.SelectValue('projectId')
     local chapterId = json.SelectValue('chapterId')
 
-    for filename in json.SelectValues('pageItem[*].fileName') do
+    local filenames = json.SelectValues('pageItem[*].fileName')
+
+    -- Some chapters don't have a "fileName" property, and have a "pageName" property instead!
+    -- BOTH of them are in use, so don't remove the former.
+
+    if(isempty(filenames)) then
+        filenames = json.SelectValues('pageItem[*].pageName')
+    end
+
+    for filename in filenames do
 
         local imageUrl = GetChapterApiUrl() .. FormatString('collectManga/{0}/{1}/{2}', galleryId, chapterId, filename)
 
@@ -108,8 +117,10 @@ function GetChapterJson()
 
     local chapterId = galleryJson.SelectValue("listChapter[?(@.chapterNo == '" ..chapterNumber .. "')].chapterId")
 
-    local endpoint = GetChapterApiUrl() .. FormatString('/collectManga/{0}/{1}/{0}_{1}.json', galleryId, chapterId)
+    local endpoint = GetChapterApiUrl() .. FormatString('collectManga/{0}/{1}/{0}_{1}.json', galleryId, chapterId)
     local json = Json.New(http.Get(endpoint)) 
+
+    Log(json)
 
     return json
 
