@@ -16,8 +16,10 @@ end
 
 function GetInfo()
 
-    info.Title = dom.SelectValue('//div[contains(@class,"info-body")]//a[contains(@class,"title")]')
-    info.Summary = dom.SelectValue('//div[contains(@class,"info-body")]//div[contains(@class,"description")]')
+    info.Title = dom.SelectValue('//div[contains(@class,"title-wrapper")]')
+    info.Author = dom.SelectValues('//ul[contains(@class,"detail-row__body--creator")]//a[contains(@class,"name")]')
+    info.Summary = dom.SelectValue('//span[contains(@class,"description__body")]')
+    info.Tags = dom.SelectValues('//div[contains(@class,"info-detail")]//a[contains(@class,"genre-btn")]')
     
     if(info.Title:endsWith('(Mature)')) then
         info.Adult = true
@@ -29,7 +31,7 @@ end
 
 function GetChapters()
 
-    local seriesId = tostring(dom):regex('data-series-id="(.+?)"', 1)
+    local seriesId = GetComicId()
     local chaptersPerRequest = 20
     local paginationIndex = 1
     local totalChapters = -1
@@ -50,8 +52,9 @@ function GetChapters()
 
         for chapterNode in chapterNodes do
 
+            local episodeNum = chapterNode.SelectValue('.//a[contains(@class,"label")]')
             local chapterUrl = chapterNode.SelectValue('@data-href')
-            local chapterTitle = chapterNode.SelectValue('.//a[contains(@class,"title")]')
+            local chapterTitle = episodeNum .. ' - ' .. chapterNode.SelectValue('.//a[contains(@class,"title")]')
 
             chapters.Add(chapterUrl, chapterTitle)
 
@@ -95,8 +98,16 @@ function Login()
 
 end
 
+function GetComicId()
+
+    return GetParameter(dom.SelectValue('//a[contains(@class,"subscribe-cnt")]/@href'), "series_id")
+
+end
+
 function CleanTitle(title)
 
-    return RegexReplace(tostring(title), '(?i)\\(mature\\)$', '')
+    -- Read The Beginning After the End | Tapas Web Comics
+
+    return RegexReplace(tostring(title), '(?i)^(?:Read\\s*)|(?:\\(mature\\)|\\s*\\|\\s*Tapas Web Comics)$', '')
 
 end
