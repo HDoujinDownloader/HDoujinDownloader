@@ -119,9 +119,7 @@ function GetChapterJson()
 
     local endpoint = GetChapterApiUrl() .. FormatString('collectManga/{0}/{1}/{0}_{1}.json', galleryId, chapterId)
     local json = Json.New(http.Get(endpoint)) 
-
-    Log(json)
-
+    
     return json
 
 end
