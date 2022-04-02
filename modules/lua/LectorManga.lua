@@ -22,7 +22,7 @@ end
 
 function GetChapters()
 
-    local chapterNodes = dom.SelectElements('//div[@id="chapters"]/div')
+    local chapterNodes = dom.SelectElements('//div[@id="chapters" or @id="chapters-collapsed"]/div')
     
     chapterNodes.Reverse()
     
@@ -31,13 +31,13 @@ function GetChapters()
         local chapterTitle = chapterNode.SelectValue('.//h4')
         local uploadNodes = chapterNode.SelectElements('./following-sibling::ul[1]/li')
 
-        for i=0,uploadNodes.Count() - 1 do
+        for i = 0, uploadNodes.Count() - 1 do
 
             local chapterInfo = ChapterInfo.New()
 
             chapterInfo.Title = chapterTitle
             chapterInfo.ScanlationGroup = uploadNodes[i].SelectValue('.//span')
-            chapterInfo.Url = uploadNodes[i].SelectValue('.//a/@href')
+            chapterInfo.Url = uploadNodes[i].SelectValue('.//a[contains(@class,"btn-default")]/@href')
 
             chapters.Add(chapterInfo)
 
@@ -49,17 +49,12 @@ end
 
 function GetPages()
 
-    -- Due to the fact the referer isn't carried across HTTPS redirects, the request after the redirect won't have a referer.
-    -- A referer is necessary in order to access the images, so a temporary solution is to downgrade to HTTP for the first request. 
-    -- The proper solution below will be used after the next update.
+    local url = http.GetResponse(url).Url
+    local dom = Dom.New(http.Get(url))
+    local readerScript = dom.SelectValue('//script[contains(text(),"dirPath")]')
 
-    --local redirectUrl = http.GetResponse(url).Url
-    local redirectUrl = url:replace('https:', 'http:')
-
-    doc = http.Get(redirectUrl)
-
-    local dirPath = doc:regex("dirPath\\s*=\\s*'(.+?)\'", 1)
-    local images = doc:regex("images\\s*=\\s*JSON.parse\\('(.+?)\'", 1)
+    local dirPath = readerScript:regex("dirPath\\s*=\\s*'(.+?)\'", 1)
+    local images = readerScript:regex("images\\s*=\\s*JSON.parse\\('(.+?)\'", 1)
 
     for image in Json.New(images).SelectValues('[*]') do
         pages.Add(dirPath..image)
