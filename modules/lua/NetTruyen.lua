@@ -5,8 +5,10 @@ function Register()
 
     module.Domains.Add('nettruyen.com')
     module.Domains.Add('nettruyenmoi.com')
+    module.Domains.Add('nettruyenone.com')
     module.Domains.Add('www.nettruyen.com')
     module.Domains.Add('www.nettruyenmoi.com')
+    module.Domains.Add('www.nettruyenone.com')
 
 end
 
