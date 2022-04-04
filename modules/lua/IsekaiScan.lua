@@ -9,10 +9,12 @@ function Register()
     module.Name = 'IsekaiScan'
     module.Language = 'English'
 
+    module.Domains.Add('betafox.net', 'Beta Fox')
     module.Domains.Add('disasterscans.com', 'Disaster Scans')
     module.Domains.Add('isekaiscan.com')
     module.Domains.Add('manhwahentai.me', 'ManhwaHentai.me')
     module.Domains.Add('toongod.com', 'ToonGod')
+    module.Domains.Add('www.betafox.net', 'Beta Fox')
     
 
 end
