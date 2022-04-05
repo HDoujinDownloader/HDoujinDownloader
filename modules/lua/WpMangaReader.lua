@@ -33,6 +33,14 @@ function Register()
 
     module = Module.New()
 
+    module.Language = 'Spanish'
+
+    module.Domains.Add('miauscan.com', 'miauscan.com')
+
+    RegisterModule(module)
+
+    module = Module.New()
+
     module.Language = 'Turkish'
 
     module.Domains.Add('108read.com', '108Read')
