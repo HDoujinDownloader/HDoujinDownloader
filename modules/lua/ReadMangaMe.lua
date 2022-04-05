@@ -44,12 +44,10 @@ end
 
 function GetPages()
 
-    -- Set the "mature" parameter, which is required for accessing certain chapters.
-    -- e.g. https://mintmanga.live/rainbow/vol15/153
+    -- Set the "mtr" parameter, which is required for accessing certain chapters.
+    -- e.g. /rainbow/vol15/153
 
-    if(isempty(GetParameter(url, 'mature'))) then
-        url = SetParameter(url, 'mature', '1')
-    end
+    url = SetParameter(url, 'mtr', 'true')
 
     src = http.Get(url)
 
