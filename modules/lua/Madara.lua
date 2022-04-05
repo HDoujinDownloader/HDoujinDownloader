@@ -44,6 +44,7 @@ function Register()
     module.Language = 'Spanish'
 
     module.Domains.Add('nartag.com', 'Traducciones amistosas')
+    module.Domains.Add('olympusscanlation.com', 'Olympus Scanlation')
     
     RegisterModule(module)
 
