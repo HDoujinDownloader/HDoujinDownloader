@@ -7,7 +7,7 @@ function Register()
     module.Domains.Add('nhentai.to')
 
     module.Settings.AddCheck('Use pretty titles', false)
-        .WithToolTip('If enabled, full titles containing the artist, series, etc., will be used. Otherwise, the basic title will be used.')
+        .WithToolTip('Use shorter titles with the artist, series, and language information removed.')
 
 end
 
