@@ -11,6 +11,7 @@ function Register()
     module.Language = 'Thai'
 
     module.Domains.Add('niceoppai.net', 'Niceoppai')
+    module.Domains.Add('www.niceoppai.net', 'Niceoppai')
 
     RegisterModule(module)
 
