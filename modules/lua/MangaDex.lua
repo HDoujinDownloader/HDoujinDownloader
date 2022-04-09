@@ -195,6 +195,10 @@ function GetChapterTitle(json)
         chapterNumber = ''
     end
 
+    if(chapterTitle == 'null') then
+        chapterTitle = ''
+    end
+
     if(not isempty(volumeNumber)) then
         result = result .. ' Vol. ' .. volumeNumber
     end
