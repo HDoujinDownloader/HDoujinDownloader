@@ -4,6 +4,7 @@ function Register()
     module.Language = 'Chinese'
     
     module.Domains.Add('dm5.com')
+    module.Domains.Add('www.dm5.com')
 
     global.SetCookie('www.dm5.com', "isAdult", "1")
 
