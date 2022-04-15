@@ -15,8 +15,16 @@ function Register()
     module.Domains.Add('manhwahentai.me', 'ManhwaHentai.me')
     module.Domains.Add('toongod.com', 'ToonGod')
     module.Domains.Add('www.betafox.net', 'Beta Fox')
-    
 
+    RegisterModule(module)
+
+    module = Module.New()
+    module.Language = 'Spanish'
+
+    module.Domains.Add('selevertranslation.com', 'Selever Translation')
+
+    RegisterModule(module)
+    
 end
 
 function GetPages()
