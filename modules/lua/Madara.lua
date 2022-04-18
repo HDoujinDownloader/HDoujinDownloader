@@ -194,7 +194,17 @@ function GetPages()
 
     else
 
-        pages.AddRange(dom.SelectValues('//div[input[@id="wp-manga-current-chap"]]//img/@src'))
+        -- Start by attempting to get the images from the src attribute.
+        -- Note that we may get image URLs this way, but they're not guaranteed to be what we want (manhwatop.com).
+
+        local possibleImageUrls = dom.SelectValues('//div[input[@id="wp-manga-current-chap"]]//img/@src')
+        local imageUrlsAreValid = not (isempty(pages) or possibleImageUrls[0]:contains('/loader.svg'))
+
+        if(imageUrlsAreValid) then
+            pages.AddRange(possibleImageUrls)
+        end
+
+        -- Attempt to extract the images from the data-src attribute instead.
 
         if(isempty(pages)) then
             pages.AddRange(dom.SelectValues('//div[input[@id="wp-manga-current-chap"]]//img/@data-src')) -- webtoon.xyz
