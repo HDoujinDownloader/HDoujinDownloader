@@ -9,6 +9,7 @@ function Register()
 
     module.Language = 'English'
 
+    module.Domains.Add('1stkissmanga.io', '1ST KISS MANGA')
     module.Domains.Add('allporncomic.com', 'AllPornComic.com')
     module.Domains.Add('hentairead.com', 'HentaiRead')
     module.Domains.Add('manga18fx.com', 'Manga18fx')
@@ -20,9 +21,11 @@ function Register()
     module.Domains.Add('mangatx.com', 'Mangatx')
     module.Domains.Add('manytoon.club', 'ManyToon')
     module.Domains.Add('manytoon.com', 'ManyToon')
+    module.Domains.Add('muctau.com', 'MUCTAU')
     module.Domains.Add('porncomixonline.net', 'Porncomix')
     module.Domains.Add('readfreecomics.com', 'ReadFreeComics')
     module.Domains.Add('skymanga.co', 'skymanga')
+    module.Domains.Add('teenmanhua.com', 'teenmanhua.com')
     module.Domains.Add('toonily.com', 'Toonily')
     module.Domains.Add('webtoon.xyz', 'Webtoon XYZ')
 
