@@ -12,6 +12,7 @@ function Register()
     module.Domains.Add('flamescans.org', 'Flame Scans')
     module.Domains.Add('manhuascan.us', 'Manhuascan.us')
     module.Domains.Add('readkomik.com', 'ReadKomik')
+    module.Domains.Add('realmscans.com', 'Realm Scans')
     module.Domains.Add('xcalibrscans.com', 'xCaliBR Scans')
 
     RegisterModule(module)
