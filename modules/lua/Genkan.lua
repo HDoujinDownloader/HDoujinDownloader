@@ -14,7 +14,6 @@ function Register()
     module.Domains.Add('skscans.com', 'SK Scans')
     module.Domains.Add('the-nonames.com', 'The Nonames Scans')
     module.Domains.Add('wowescans.co', 'Wowe Scans')
-    module.Domains.Add('zeroscans.com', 'Zero Scans')
 
 end
 
