@@ -94,9 +94,19 @@ function GetChapters()
 
             -- The chapters are not necessarily returned in order according to their chapter number.
             -- The chapter number is temporarily prepended to the chapter title for sorting purposes.
+        
+            -- Some chapters are located on external sites like bilibilicomics.com.
+            -- e.g. /title/8798e5d3-b383-459e-9606-9550c6340f4d/the-dictator
+            
+            local externalUrl = chapterNode.SelectValue('attributes.externalUrl')
 
-            chapter.Title = chapterNumber .. ' - ' .. GetChapterTitle(chapterNode)
-            chapter.Url = '/chapter/' .. chapterNode.SelectValue('id')
+            if(not isempty(externalUrl) and externalUrl ~= 'null') then
+                chapter.Url = externalUrl
+            else
+                chapter.Url = '/chapter/' .. chapterNode.SelectValue('id')
+            end
+
+            chapter.Title = chapterNumber .. ' - ' .. GetChapterTitle(chapterNode)         
             chapter.Language = chapterNode.SelectValue('attributes.translatedLanguage')
             chapter.ScanlationGroup = chapterNode.SelectValues("relationships[?(@.type=='scanlation_group')].attributes.name")
             chapter.Chapter = chapterNumber
