@@ -6,6 +6,8 @@ function Register()
 
     module.Domains.Add('lezhinus.com')
 
+    module.Settings.AddCheck('Download WebP images', true)
+
 end
 
 function GetInfo()
@@ -44,7 +46,7 @@ function GetPages()
 
     local cdnUrl = dom.SelectValue('//script[contains(.,"contentsCdnUrl")]'):regex("contentsCdnUrl:\\s*'([^']+)'", 1)
     local scrollPaths = json.SelectValues('data.extra.episode.scrollsInfo[*].path')
-    local extension = 'jpg'
+    local extension = toboolean(module.Settings['Download WebP images']) and 'webp' or 'jpg'
     local purchased = IsLoggedIn() and 'true' or 'false'
     local quality = 40
     local signedData = GetSignedDataJson(json, purchased, quality)
