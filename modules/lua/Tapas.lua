@@ -44,7 +44,9 @@ function GetChapters()
 
         totalChapters = tonumber(chaptersJson.SelectValue('data.pagination.total'))
 
-        local chapterNodes = chaptersDom.SelectElements('//li[contains(@id,"ep")]')
+        -- Make sure that we ignore the unreleased ("coming soon") chapters.
+
+        local chapterNodes = chaptersDom.SelectElements('//li[contains(@id,"ep") and not(contains(@class,"js-coming-soon"))]')
 
         if(chapterNodes.Count() <= 0) then
             break
