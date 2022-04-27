@@ -4,7 +4,10 @@ function Register()
     module.Language = 'English'
 
     module.Domains.Add('manga-raw.club')
+    module.Domains.Add('mcreader.net')
     module.Domains.Add('www.manga-raw.club')
+    module.Domains.Add('www.manga-raw.club')
+    module.Domains.Add('www.mcreader.net')
 
 end
 
