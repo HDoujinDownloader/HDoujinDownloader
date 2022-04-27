@@ -1,9 +1,12 @@
+-- This module is a (simpler) duplicate of MyMangaReaderCMS.
+
 function Register()
 
     module.Name = 'Jpmangas'
     module.Language = 'french'
 
-    module.Domains.Add('jpmangas.cc')
+    module.Domains.Add('jpmangas.cc', 'Jpmangas')
+    module.Domains.Add('lelscanvf.com', 'LelscanVF')
 
 end
 
@@ -25,7 +28,7 @@ function GetChapters()
     for chapterNode in dom.SelectElements('//h5[contains(@class,"chapter-title")]') do
 
         local chapterUrl = chapterNode.SelectValue('./a/@href')
-        local chapterTitle = tostring(chapterNode)
+        local chapterTitle = CleanTitle(tostring(chapterNode))
 
         chapters.Add(chapterUrl, chapterTitle)
 
@@ -38,5 +41,11 @@ end
 function GetPages()
 
     pages.AddRange(dom.SelectValues('//div[@id="all"]/img/@data-src'))
+
+end
+
+function CleanTitle(title)
+
+    return tostring(title):trim():trim(':')
 
 end
