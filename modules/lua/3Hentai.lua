@@ -29,7 +29,7 @@ function GetInfo()
         -- Fall back to the gallery ID if we can't get a title.
 
         if(isempty(info.Title)) then
-            info.Title = url:regex('\\/g\\/(\\d+)', 1)
+            info.Title = url:regex('\\/d\\/(\\d+)', 1)
         end
 
         info.OriginalTitle = dom.SelectValue('//div[@id="info"]/h2')
