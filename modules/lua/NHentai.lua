@@ -24,7 +24,7 @@ function GetInfo()
         if(toboolean(module.Settings['Use pretty titles'])) then
             info.Title = GetPrettyTitle()
         end
-        Log(dom)
+
         if(isempty(info.Title)) then
             info.Title = dom.SelectValue('//h1')
         end
