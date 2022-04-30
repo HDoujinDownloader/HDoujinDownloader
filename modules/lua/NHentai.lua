@@ -4,6 +4,8 @@ function Register()
     module.Adult = true
 
     module.Domains.Add('nhentai.net')
+
+    module.Domains.Add('3hentai.net', '3hentai')
     module.Domains.Add('nhentai.to')
 
     module.Settings.AddCheck('Use pretty titles', false)
@@ -13,16 +15,16 @@ end
 
 function GetInfo()
 
-    if(url:contains('/g/')) then
+    if(IsGalleryUrl()) then
 
         EnsureOnGalleryPage()
 
         -- Get the gallery's title.
 
         if(toboolean(module.Settings['Use pretty titles'])) then
-            info.Title = dom.SelectValue('//span[contains(@class,"pretty")]')
+            info.Title = GetPrettyTitle()
         end
-
+        Log(dom)
         if(isempty(info.Title)) then
             info.Title = dom.SelectValue('//h1')
         end
@@ -30,7 +32,7 @@ function GetInfo()
         -- Fall back to the gallery ID if we can't get a title.
 
         if(isempty(info.Title)) then
-            info.Title = url:regex('\\/g\\/(\\d+)', 1)
+            info.Title = GetGalleryId()
         end
 
         info.OriginalTitle = dom.SelectValue('//div[@id="info"]/h2')
@@ -61,7 +63,19 @@ function GetPages()
 
     EnsureOnGalleryPage()
 
-    for thumbnailUrl in dom.SelectValues('//div[@id="thumbnail-container"]//img/@data-src') do
+    -- Get the thumbnail URLs.
+
+    local thumbnailUrls = dom.SelectValues('//div[@id="thumbnail-container"]//img/@data-src')
+
+    -- 3hentai.net
+
+    if(isempty(thumbnailUrls)) then
+        thumbnailUrls = dom.SelectValues('//div[@id="thumbnail-gallery"]//img/@data-src')
+    end
+
+    -- Convert the thumbnail URLs to full image URLs.
+
+    for thumbnailUrl in thumbnailUrls do
 
         local fullImageUrl = thumbnailUrl
         
@@ -105,16 +119,32 @@ function Login()
 
 end
 
-function EnsureOnGalleryPage()
+function IsGalleryUrl()
 
-    local backToGalleryUrl = dom.SelectValue('//*[contains(@class,"back-to-gallery") or contains(@class,"go-back")]//@href')
+    return url:contains('/g/') or
+        url:contains('/d') -- 3hentai.net
 
-    if(not isempty(backToGalleryUrl)) then
+end
 
-        src = http.Get(backToGalleryUrl)
-        dom = Dom.New(src)
+function GetGalleryId()
 
+    -- 3hentai.net uses "/d/" instead of "/g/"
+
+    return url:regex('\\/[gd]\\/(\\d+)', 1)
+
+end
+
+function GetPrettyTitle()
+
+    local prettyTitle = dom.SelectValue('//span[contains(@class,"pretty")]')
+
+    -- 3hentai.net
+
+    if(isempty(prettyTitle)) then
+        prettyTitle = dom.SelectValue('//span[contains(@class,"middle-title")]')
     end
+
+    return prettyTitle
 
 end
 
@@ -129,6 +159,19 @@ function GetTagsFromTagGroup(groupName)
     end
 
     return tags
+
+end
+
+function EnsureOnGalleryPage()
+
+    local backToGalleryUrl = dom.SelectValue('//*[contains(@class,"back-to-gallery") or contains(@class,"go-back")]//@href')
+
+    if(not isempty(backToGalleryUrl)) then
+
+        src = http.Get(backToGalleryUrl)
+        dom = Dom.New(src)
+
+    end
 
 end
 
