@@ -1,4 +1,9 @@
 -- Sites using this module might have "Powered by MadTheme" in the lower right corner.
+-- mangaxyz.com uses the same theme, so this module might be a duplicate.
+
+require "MangaXyz"
+
+local BaseGetPages = GetPages
 
 function Register()
 
@@ -38,6 +43,12 @@ end
 
 function GetPages()
 
-    pages.AddRange(dom.SelectValues('//div[@id="chapter-images"]//img/@data-src'))
+    local chapImagesScript = dom.SelectValue('//script[contains(.,"chapImages")]')
+
+    if(isempty(chapImagesScript)) then
+        pages.AddRange(dom.SelectValues('//div[@id="chapter-images"]//img/@data-src'))
+    else
+        BaseGetPages()
+    end
 
 end
