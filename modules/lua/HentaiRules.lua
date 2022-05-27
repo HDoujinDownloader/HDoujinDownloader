@@ -12,6 +12,7 @@ function Register()
     module.Adult = true
     
     module.Domains.Add('hentairules.net')
+    module.Domains.Add('www.hentairules.net')
 
 end
 
