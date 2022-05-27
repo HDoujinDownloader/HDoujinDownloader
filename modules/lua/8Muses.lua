@@ -146,6 +146,7 @@ function GetAllPages(url, albumPath)
     for pageUrl in pageUrls do
 
         pageUrl = pageUrl:replace('/th/', '/fl/')
+        pageUrl = pageUrl:replace('/th_', '/full_')
 
         local page = PageInfo.New(pageUrl)
 
