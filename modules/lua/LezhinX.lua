@@ -52,7 +52,7 @@ function GetApiUrl()
 
     -- https://www.lezhinx.com/balcony-api/contents/
 
-    return 'https://www.' .. module.Domain:trim('www.') .. '/balcony-api/contents/'
+    return 'https://www.' .. module.Domain:trim('www.') .. '/api/balcony-api/contents/'
     
 end
 
