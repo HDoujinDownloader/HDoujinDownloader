@@ -1,6 +1,11 @@
 As of version 2021.5.1.0, the changelog will only contain updates made to the HDoujin Downloader application.
 For module updates, see: https://github.com/HDoujinDownloader/HDoujinDownloader/commits/master/modules/lua
 
+[v2022.6.6.0-rc.4]
+
+- [FIX] FlareSolverr now works on Windows 7
+- [FIX] FlareSolverr can now start automatically on Linux systems
+
 [v2022.3.10.0-rc.3]
 
 - [NEW] Improved support for data URLs
