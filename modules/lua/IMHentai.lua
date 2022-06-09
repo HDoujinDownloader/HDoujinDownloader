@@ -30,6 +30,36 @@ function GetPages()
     -- The JSON object has the filenames as the key; the value is a 3-tuple starting with a letter that indicates the file type.
 
     local imagesJson = Json.New(tostring(dom):regex("g_th\\s*=\\s*\\$\\.parseJSON\\('(.+?)'\\)", 1))
+    local imageServer = GetImageServerFromGalleryId(galleryId)
+
+    for key in imagesJson.Keys do
+
+        local filename = key..GetFileExtensionFromKey(tostring(imagesJson[key]):split(',').first())
+        local imageUrl = FormatString('https://{0}.{1}/{2}/{3}/{4}', imageServer, module.Domain, loadDir, loadId, filename)
+
+        pages.Add(imageUrl)
+
+    end
+
+end
+
+function GetFileExtensionFromKey(key)
+
+    if(key == 'j') then 
+        return '.jpg'
+    elseif(key == 'p') then 
+        return '.png'
+    elseif(key == 'b') then 
+        return '.bmp'
+    elseif(key == 'g') then 
+        return '.gif'
+    else
+        return '.jpg' -- default to .jpg
+    end
+
+end
+
+function GetImageServerFromGalleryId(galleryId)
 
     -- The logic that selects an image server is in main.js.
     
@@ -49,29 +79,6 @@ function GetPages()
         imageServer = 'm6'
     end
 
-    for key in imagesJson.Keys do
-
-        local filename = key..GetFileExtension(tostring(imagesJson[key]):split(',').first())
-        local imageUrl = FormatString('https://{0}.{1}/{2}/{3}/{4}', imageServer, module.Domain, loadDir, loadId, filename)
-
-        pages.Add(imageUrl)
-
-    end
-
-end
-
-function GetFileExtension(key)
-
-    if(key == 'j') then 
-        return '.jpg'
-    elseif(key == 'p') then 
-        return '.png'
-    elseif(key == 'b') then 
-        return '.bmp'
-    elseif(key == 'g') then 
-        return '.gif'
-    else
-        return '.jpg' -- default to .jpg
-    end
+    return imageServer
 
 end
