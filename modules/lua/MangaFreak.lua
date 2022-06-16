@@ -3,8 +3,10 @@ function Register()
     module.Name = 'MangaFreak'
     module.Language = 'English'
 
+    module.Domains.Add('*.mangafreak.net')
     module.Domains.Add('mangafreak.net')
     module.Domains.Add('w12.mangafreak.net')
+    module.Domains.Add('w13.mangafreak.net')
 
 end
 
