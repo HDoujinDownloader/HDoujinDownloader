@@ -27,6 +27,7 @@ function Register()
     module.Domains.Add('skymanga.co', 'skymanga')
     module.Domains.Add('teenmanhua.com', 'teenmanhua.com')
     module.Domains.Add('toonily.com', 'Toonily')
+    module.Domains.Add('vinload.com', 'VinLoad')
     module.Domains.Add('webtoon.xyz', 'Webtoon XYZ')
 
     RegisterModule(module)
