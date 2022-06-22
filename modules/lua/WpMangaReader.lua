@@ -37,6 +37,7 @@ function Register()
 
     module.Language = 'Spanish'
 
+    module.Domains.Add('lectorhentai.com', 'Lector Hentai')
     module.Domains.Add('miauscan.com', 'miauscan.com')
 
     RegisterModule(module)
@@ -109,6 +110,14 @@ function GetInfo()
         info.Tags = dom.SelectValues('//span[contains(@class,"mgen")]//a')
     end
 
+    -- Get the page count if we're on a site that doesn't use chapters (lectorhentai.com).
+
+    local pageCount = GetPageCount()
+
+    if(pageCount > 0) then
+        info.PageCount = pageCount
+    end
+
 end
 
 function GetChapters()
@@ -128,7 +137,18 @@ end
 
 function GetPages()
 
-    local pagesArray = tostring(dom):regex('"images":(\\[[^\\]]+\\])', 1)
+    -- Open the reader URL if we're currently on the summary page (lectorhentai.com).
+
+    local readerUrl = GetReaderUrl()
+
+    if(not isempty(readerUrl)) then
+
+        url = readerUrl
+        dom = Dom.New(http.Get(url))
+
+    end
+
+    local pagesArray = tostring(dom):regex('"images"\\s*:\\s*(\\[[^\\]]+\\])', 1)
 
     if(not isempty(pagesArray)) then
         
@@ -155,5 +175,17 @@ end
 function CleanTitle(title)
 
     return RegexReplace(title, '(?i)Bahasa Indonesia$', '')
+
+end
+
+function GetPageCount()
+
+    return dom.SelectElements('//div[@id="chapterlist"]//div[contains(@class,"bsx")]').Count()
+
+end
+
+function GetReaderUrl()
+
+    return dom.SelectValue('//div[contains(@class,"releases")]//a/@href')
 
 end
