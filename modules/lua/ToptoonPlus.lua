@@ -127,12 +127,13 @@ function SetUpApiHeaders()
     http.Headers['is17'] = 'false'
     http.Headers['isalreadymature'] = '1'
     http.Headers['language'] = 'en'
-    http.Headers['partnercode'] = ''
-    http.Headers['ua'] = 'web'
-    http.Headers['version'] = '1.15.1647223446b'
-    http.Headers['x-api-key'] = 'SUPERCOOLAPIKEY2021#@#('
     http.Headers['origin'] = 'https://toptoonplus.com'
-    http.Headers['referer'] = 'https://toptoonplus.com/'
+    http.Headers['partnercode'] = 'subred'
+    http.Headers['referer'] = 'https://toptoonplus.com'
+    http.Headers['ua'] = 'web'
+    http.Headers['version'] = 'undefined'
+    http.Headers['x-api-key'] = 'SUPERCOOLAPIKEY2021#@#('
+    http.Headers['x-origin'] = 'toptoonplus.com'
 
     local token = GetToken()
 
@@ -144,13 +145,19 @@ end
 
 function GetComicId()
 
-    return url:regex('\\/comic\\/(\\d+)', 1)
+    -- toptoonplus.com/comic/<comic_id>/
+    -- toptoonplus.com/content/<title>/<comic_id>
+    
+    return url:regex('(?:content\\/[^\\/]+|\\/comic)\\/(\\d+)', 1)
 
 end
 
 function GetEpisodeId()
 
-    return url:regex('\\/comic\\/\\d+\\/(\\d+)', 1)
+    -- toptoonplus.com/comic/<comic_id>/<episode_id>
+    -- toptoonplus.com/content/<title>/<comic_id>/<episode_id>
+
+    return url:regex('(?:content\\/[^\\/]+|\\/comic)\\/\\d+\\/(\\d+)', 1)
 
 end
 
