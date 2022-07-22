@@ -8,6 +8,7 @@ function Register()
     module.Domains.Add('mangabat.com', 'Mangabat.com')
     module.Domains.Add('mangakakalot.city', 'Mangakakalot')
     module.Domains.Add('mangakakalot.com', 'Mangakakalot')
+    module.Domains.Add('mangakakalot.to', 'Mangakakalot')
     module.Domains.Add('mangakakalot.tv', 'Mangakakalot')
     module.Domains.Add('manganato.com', 'Manganato')
     module.Domains.Add('manganelo.com', 'Manganelo')
@@ -24,7 +25,12 @@ function GetInfo()
 
     FollowRedirect()
 
-    info.Title = tostring(dom.GetElementsByTagName('h1')[0]):title()
+    info.Title = dom.SelectValue('//div[contains(@class,"db-info")]//h3[contains(@class,"manga-name")]') -- mangakakalot.to
+
+    if(isempty(info.Title)) then
+        info.Title = CleanTitle(dom.SelectValue('//h1'):title())
+    end
+
     info.AlternativeTitle = dom.SelectValue('//td[contains(., "Alternative")]/following-sibling::td/text()')
     info.Author = dom.SelectValues('//td[contains(., "Author")]/following-sibling::td/a/text()')
     info.Status = dom.SelectValue('//td[contains(., "Status")]/following-sibling::td/text()')
@@ -35,6 +41,10 @@ function GetInfo()
 
     if(isempty(info.AlternativeTitle)) then -- mangakakalot.com
         info.AlternativeTitle = dom.SelectValue('//h2[contains(@class, "alternative")]')
+    end
+
+    if(isempty(info.AlternativeTitle)) then -- mangakakalot.to
+        info.AlternativeTitle = dom.SelectValue('//div[contains(@class,"alias")]')
     end
 
     if(isempty(info.Author)) then -- mangakakalot.com
@@ -49,8 +59,20 @@ function GetInfo()
         info.Status = dom.SelectValue('//li[contains(text(), "Status")]'):after(':')
     end
 
+    if(isempty(info.Status)) then -- mangakakalot.to
+        info.Status = dom.SelectValue('//span[contains(text(),"Status")]/following-sibling::span')
+    end
+
     if(isempty(info.Tags)) then -- mangakakalot.com
         info.Tags = dom.SelectValues('//li[contains(text(), "Genre") or contains(text(), "Genres")]//a')
+    end
+
+    if(isempty(info.Tags)) then -- mangakakalot.to
+        info.Tags = dom.SelectValues('//span[contains(text(),"Genres")]/following-sibling::*//a')
+    end
+
+    if(isempty(info.Summary)) then -- mangakakalot.to
+        info.Summary = dom.SelectValue('//div[contains(@class,"dbs-content")]')
     end
 
 end
@@ -61,6 +83,28 @@ function GetChapters()
 
     chapters.AddRange(dom.SelectElements('//div[contains(@class, "chapter-list")]//a'))
 
+    -- TODO: Mangakakalot now has chapters in different languages (generally Japanese and English).
+    -- Should we add an option to choose the language downloaded?
+    -- For now, just download whichever language is displayed first.
+
+    if(isempty(chapters)) then -- mangakakalot.to
+
+        local apiUrl = 'list-chapter-volume?id=' .. GetMangaId()
+        local apiResponse = GetApiResponse(apiUrl)
+
+        dom = Dom.New(apiResponse)
+
+        local language = GetLanguageName(dom.SelectValue('(//div[contains(@class,"reading-list")])[1]/@id')
+            :afterlast('-'))
+
+        chapters.AddRange(dom.SelectElements('(//div[contains(@class,"reading-list")])[1]//a[contains(@class,"chapter-name")]'))
+
+        for chapter in chapters do
+            chapter.Language = language
+        end
+
+    end
+
     chapters.Reverse()
 
 end
@@ -70,6 +114,17 @@ function GetPages()
     -- Get all image URLs for the current image server.
 
     pages.AddRange(GetImageUrls())
+
+    if(isempty(pages)) then -- mangakakalot.to
+
+        local apiUrl = 'images?id=' .. GetChapterId() .. '&type=chap'
+        local apiResponse = GetApiResponse(apiUrl)
+
+        dom = Dom.New(apiResponse)
+
+        pages.AddRange(GetImageUrls())
+
+    end
 
     -- Add the image URLs from the other servers as backup URLs.
     -- Which server the images are loaded from is dependent upon the value of the "content_server" cookie.
@@ -137,10 +192,55 @@ function GetImageUrls()
 
         local pageArray = dom.SelectValue('//p[@id="arraydata"]')
 
-        imageList.AddRange(pageArray:split(','))
+        if(not isempty(pageArray)) then
+            imageList.AddRange(pageArray:split(','))
+        end
+
+    end
+
+    if(isempty(imageList)) then -- mangakakalot.to
+
+        -- Try to get the image URLs from the API response.
+
+        imageList.AddRange(dom.SelectValues('//div[not(contains(@class,"shuffled"))]/@data-url'))
 
     end
 
     return imageList
+
+end
+
+function CleanTitle(title)
+
+    return RegexReplace(title, '(?i)^Read\\s| manga on Mangakakalot$', '')
+
+end
+
+function GetMangaId()
+
+    return dom.SelectValue('//div[@id="main"]/@data-id')
+
+end
+
+function GetChapterId()
+
+    return dom.SelectValue('//div[@id="reading"]/@data-reading-id')
+
+end
+
+function GetApiEndpoint()
+
+    return GetRoot(url) .. 'ajax/manga/'
+
+end
+
+function GetApiResponse(path)
+
+    local endpoint = GetApiEndpoint() .. path
+
+    http.Headers['accept'] = '*/*'
+    http.Headers['x-requested-with'] = 'XMLHttpRequest'
+
+    return http.Get(endpoint)
 
 end
