@@ -10,6 +10,7 @@ function Register()
     module.Domains.Add('hentai-chan.pro', 'Хентай-тян!')
     module.Domains.Add('hentaichan.live', 'Хентай-тян!')
     module.Domains.Add('manga-chan.me', 'Манга-тян')
+    module.Domains.Add('y.hentaichan.live', 'Хентай-тян!')
     module.Domains.Add('yaoi-chan.me', 'Яой-тян')
 
 end
