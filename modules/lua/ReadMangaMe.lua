@@ -4,6 +4,7 @@ function Register()
 
     module.Language = 'Russian'
 
+    module.Domains.Add('allhen.online', 'AllHentai')
     module.Domains.Add('mintmanga.live', 'MintManga')
     module.Domains.Add('readmanga.io', 'ReadManga')
     module.Domains.Add('readmanga.live', 'ReadManga')
@@ -60,6 +61,10 @@ function GetPages()
 
         local root = tostring(jsonToken[0])
         local path = tostring(jsonToken[2])
+
+        if(root:startsWith('//')) then
+            root = GetRooted(root, url)
+        end
 
         if(root:startswith('http')) then
             pages.Add(root .. path)
