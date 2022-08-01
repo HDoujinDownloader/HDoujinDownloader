@@ -27,7 +27,7 @@ function GetInfo()
     info.Characters = dom.SelectValues('//h3[contains(text(),"Characters")]/following-sibling::div//span[contains(@class,"tag")]/text()[1]')
     info.Language = dom.SelectValues('//h3[contains(text(),"Language")]/following-sibling::div//span[contains(@class,"tag")]/text()[1]')
     info.Type = dom.SelectValues('//h3[contains(text(),"Categories")]/following-sibling::div//span[contains(@class,"tag")]/text()[1]')
-    info.PageCount = dom.SelectValue('//h3[contains(text(),"Pages:")]'):after(':')
+    info.PageCount = GetPageCount()
 
     -- Cloudflare's email protection obfuscates anything with an @ symbol (lol).
     -- e.g. https://asmhentai.com/g/231921/
@@ -46,24 +46,33 @@ function GetPages()
 
     -- Get thumbnail URLs through the API.
 
-    local apiEndpoint = 'https://'..module.Domain..'/load_thumbs'
+    local apiEndpoint = '//' .. module.Domain .. '/inc/thumbs_loader.php'
     local galleryId = GetGalleryId(url)
-    local dir = dom.SelectValue('//input[@id="dir"]/@value')
-    local totalPages = tonumber(dom.SelectValue('//h3[contains(text(),"Pages:")]'):after(':'))
+    local dir = dom.SelectValue('//input[@id="load_dir"]/@value')
+    local totalPages = GetPageCount()
+    local token = dom.SelectValue('//meta[@name="csrf-token"]/@content')
 
-    http.Headers['Accept'] = '*/*'
-    http.Headers['X-Requested-With'] = 'XMLHttpRequest'
+    -- Galleries with < 10 pages will not have a "load_dir" value, so we can just get the thumbnails directly.
 
-    http.PostData['_token'] = dom.SelectValue('//meta[@name="csrf-token"]/@content')
-    http.PostData['id'] = GetGalleryId(url)
-    http.PostData['dir'] = dom.SelectValue('//input[@id="dir"]/@value')
-    http.PostData['v_pages'] = '0'
-    http.PostData['t_pages'] = tostring(totalPages)
-    http.PostData['type'] = '2'
+    if(not isempty(dir)) then
 
-    local apiResponse = http.Post(apiEndpoint)
+        http.Headers['Accept'] = '*/*'
+        http.Headers['X-Requested-With'] = 'XMLHttpRequest'
+    
+        http.PostData['_token'] = token
+        http.PostData['id'] = galleryId
+        http.PostData['dir'] = dir
+        http.PostData['visible_pages'] = '0'
+        http.PostData['t_pages'] = tostring(totalPages)
+        http.PostData['type'] = '2'
 
-    for thumbnailUrl in dom.New(apiResponse).SelectValues('//img/@data-src') do
+        local apiResponse = http.Post(apiEndpoint)
+
+        dom = dom.New(apiResponse)
+
+    end
+
+    for thumbnailUrl in dom.SelectValues('//div[contains(@class,"preview_thumb")]//img/@data-src') do
 
         local imageUrl = thumbnailUrl:replace('t.', '.')
 
@@ -76,5 +85,11 @@ end
 function GetGalleryId(url)
 
     return url:regex('\\/g(?:allery)?\\/(\\d+)', 1)
+
+end
+
+function GetPageCount()
+
+    return dom.SelectValue('//h3[contains(text(),"Pages:")]'):after(':')
 
 end
