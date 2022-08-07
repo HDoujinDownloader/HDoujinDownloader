@@ -29,8 +29,14 @@ end
 function GetChapters()
 
     for node in dom.SelectElements('//ul[contains(@class, "chp_lst")]/li/a') do
-
         chapters.Add(node.GetAttribute('href'), node.ChildNodes[1])
+    end
+
+    if(isempty(chapterNodes)) then -- readmng.com
+
+        for node in dom.SelectElements('//a[contains(@class,"chnumber")]') do
+            chapters.Add(node.GetAttribute('href'), node.SelectValue('.//text()[1]'))
+        end
 
     end
 
@@ -41,9 +47,19 @@ end
 function GetPages()
     
     local doc = http.Get(url)
-    local pagesJson = Json.New(doc:regex('var\\s*images\\s*=\\s*(\\[.+?\\])', 1))
+    local imagesArray = doc:regex('var\\s*images\\s*=\\s*(\\[.+?\\])', 1)
+
+    if(isempty(imagesArray)) then -- readmng.com
+        imagesArray = doc:regex('"images":\\s*(\\[.+?\\])', 1)
+    end
+
+    local pagesJson = Json.New(imagesArray)
 
     pages.AddRange(pagesJson.SelectTokens('[*].url'))
+
+    if(isempty(pages)) then -- readmng.com
+        pages.AddRange(pagesJson.SelectTokens('[*]')) 
+    end
 
     for page in pages do 
         
