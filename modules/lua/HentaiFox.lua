@@ -45,6 +45,8 @@ function GetPages()
 
         if(pageExtension == 'p') then
             pageExtension = '.png'
+        elseif(pageExtension == 'g') then
+            pageExtension = '.gif'
         else
             pageExtension = '.jpg'
         end
