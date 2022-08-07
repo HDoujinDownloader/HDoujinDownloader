@@ -26,20 +26,17 @@ end
 
 function GetPages()
 
-    local thumbnailUrls = dom.SelectValues('//div[contains(@class,"preview")]//img/@src')
+    local permalinkUrls = dom.SelectValues('//div[contains(@class,"preview")]//a/@href')
 
-    for thumbnailUrl in thumbnailUrls do
+    pages.AddRange(permalinkUrls)
 
-        local baseImageUrl = thumbnailUrl:beforelast('/')
+end
 
-        local page = PageInfo.New()
+function BeforeDownloadPage()
 
-        -- Do we have to worry about other file extensions?
+    if(page.Url:contains('/archive/')) then
 
-        page.Url = baseImageUrl .. '.jpg'
-        page.BackupUrls.Add(baseImageUrl .. '.png')
-
-        pages.Add(page)
+        page.Url = dom.SelectValue('//img/@src')
 
     end
 
