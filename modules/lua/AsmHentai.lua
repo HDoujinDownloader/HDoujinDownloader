@@ -4,17 +4,18 @@ function Register()
     module.Adult = true
     
     module.Domains.Add('asmhentai.com')
+    module.Domains.Add('hentaiera.com')
 
 end
 
 function GetInfo()
 
-    if(url:contains('/gallery/')) then
+    if(not url:contains('/g/')) then
 
         -- The user added a reader URL.
         -- Navigate to the gallery page instead.
 
-        url = GetRoot(url)..'/g/'..GetGalleryId(url)..'/'
+        url = GetRoot(url) .. '/g/' .. GetGalleryId(url) .. '/'
         dom = Dom.New(http.Get(url))
 
     end
