@@ -4,19 +4,20 @@ function Register()
     module.Adult = true
     
     module.Domains.Add('asmhentai.com')
-    module.Domains.Add('hentaiera.com')
 
 end
 
 function GetInfo()
 
-    if(not url:contains('/g/')) then
+    local backToGalleryUrl = dom.SelectValue('//a[contains(@class,"return_btn") or contains(@class,"back_btn")]/@href')
+
+    if(not isempty(backToGalleryUrl)) then
 
         -- The user added a reader URL.
         -- Navigate to the gallery page instead.
 
-        url = GetRoot(url) .. '/g/' .. GetGalleryId(url) .. '/'
-        dom = Dom.New(http.Get(url))
+        info.Url = backToGalleryUrl
+        dom = Dom.New(http.Get(info.Url))
 
     end
 
@@ -40,6 +41,36 @@ function GetInfo()
 end
 
 function GetPages()
+
+    for thumbnailUrl in GetThumbnailUrls() do
+
+        local imageUrl = RegexReplace(thumbnailUrl, 't(\\..+?)$', '$1')
+
+        pages.Add(imageUrl)
+
+    end
+
+end
+
+function GetGalleryId(url)
+
+    return url:regex('\\/g(?:allery)?\\/(\\d+)', 1)
+
+end
+
+function GetPageCount()
+
+    local pageCount = dom.SelectValue('//h3[contains(text(),"Pages:")]'):after(':')
+
+    if(isempty(pageCount)) then
+        pageCount = dom.SelectValue('//*[@id="pages_btn"]//text()'):before('Pages')
+    end
+
+    return pageCount
+
+end
+
+function GetThumbnailUrls()
 
     -- Make request to get session cookies.
 
@@ -73,24 +104,6 @@ function GetPages()
 
     end
 
-    for thumbnailUrl in dom.SelectValues('//div[contains(@class,"preview_thumb")]//img/@data-src') do
-
-        local imageUrl = thumbnailUrl:replace('t.', '.')
-
-        pages.Add(imageUrl)
-
-    end
-
-end
-
-function GetGalleryId(url)
-
-    return url:regex('\\/g(?:allery)?\\/(\\d+)', 1)
-
-end
-
-function GetPageCount()
-
-    return dom.SelectValue('//h3[contains(text(),"Pages:")]'):after(':')
+    return dom.SelectValues('//div[contains(@class,"preview_thumb")]//img/@data-src')
 
 end
