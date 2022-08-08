@@ -1,7 +1,7 @@
--- This module is very similar to the one used for IMHentai (IMHentai.lua).
--- It is not identical, however, because the server selection depends on different gallery ID ranges.
+-- This module is very similar to the one used for AsmHentai (AsmHentai.lua).
+-- It is not identical, however, because the API requires different parameters.
 
-require "IMHentai"
+require "AsmHentai"
 
 function Register()
 
@@ -12,39 +12,42 @@ function Register()
 
 end
 
-function GetInfo()
+function GetThumbnailUrls()
 
-    info.Title = dom.SelectValue('//h1')
-    info.OriginalTitle = dom.SelectValue('//p[contains(@class,"subtitle")]')
-    info.Parody = dom.SelectValues('//span[contains(text(),"Parodies")]/following-sibling::div//a')
-    info.Characters = dom.SelectValues('//span[contains(text(),"Characters")]/following-sibling::div//a')
-    info.Tags = dom.SelectValues('//span[contains(text(),"Tags")]/following-sibling::div//a')
-    info.Artist = dom.SelectValues('//span[contains(text(),"Artists")]/following-sibling::div//a')
-    info.Language = dom.SelectValues('//span[contains(text(),"Languages")]/following-sibling::div//a')
-    info.Type = dom.SelectValues('//span[contains(text(),"Category")]/following-sibling::div//a')
+    -- Make request to get session cookies.
 
-end
+    dom = dom.New(http.Get(url))
 
-function GetImageServerFromGalleryId(galleryId)
+    -- Get thumbnail URLs through the API.
 
-    -- The logic that selects an image server is in main_XXXXXX.js.
+    local apiEndpoint = '//' .. module.Domain .. '/inc/thumbs_loader.php'
+    local galleryId = GetGalleryId(url)
+    local server = dom.SelectValue('//input[@id="load_server"]/@value')
+    local loadId = dom.SelectValue('//input[@id="load_id"]/@value')
+    local loadDir = dom.SelectValue('//input[@id="load_dir"]/@value')
+    local totalPages = GetPageCount()
+
+    -- Galleries with < 10 pages will not have a "load_dir" value, so we can just get the thumbnails directly.
+
+    if(not isempty(loadDir)) then
+
+        http.Headers['Accept'] = '*/*'
+        http.Headers['X-Requested-With'] = 'XMLHttpRequest'
     
-    local imageServer = 'm5'
+        http.PostData['server'] = server
+        http.PostData['u_id'] = galleryId
+        http.PostData['g_id'] = loadId
+        http.PostData['img_dir'] = loadDir
+        http.PostData['visible_pages'] = '0'
+        http.PostData['total_pages'] = tostring(totalPages)
+        http.PostData['type'] = '2'
 
-    if(galleryId > 0 and galleryId <= 274825) then
-        imageServer = 'm1'
-    elseif(galleryId > 274825 and galleryId <= 403818) then
-        imageServer = 'm2'
-    elseif(galleryId > 403818 and galleryId <= 527143) then
-        imageServer = 'm3'
-    elseif(galleryId > 527143 and galleryId <= 632481) then
-        imageServer = 'm4'
-    elseif(galleryId > 632481 and galleryId <= 815858) then
-        imageServer = 'm5'
-    elseif(galleryId > 815858) then
-        imageServer = 'm6'
+        local apiResponse = http.Post(apiEndpoint)
+
+        dom = dom.New(apiResponse)
+
     end
 
-    return imageServer
+    return dom.SelectValues('//div[contains(@class,"gthumb")]//img/@data-src')
 
 end
