@@ -29,7 +29,7 @@ end
 
 function GetChapters()
 
-    for i = 0, 100 do
+    for i = 1, 100 do
 
         local chaptersJson = GetChaptersJson(i)
         local totalChapters = tonumber(chaptersJson.SelectValue('chapters.totalChapters'))
