@@ -50,6 +50,14 @@ function GetPages()
 
     pages.AddRange(json.SelectValues("data.episode[*].contentImage.jpeg[*].path"))
 
+    if(isempty(pages)) then
+       
+        -- The episode is only available as WebP.
+
+        pages.AddRange(json.SelectValues("data.episode[*].contentImage.webp[*].path"))
+        
+    end
+
 end
 
 function Login()
@@ -100,40 +108,71 @@ function GetToken()
 
 end
 
-function GetApiUrl()
+function GetApiUrl(path)
 
-    -- Return the base API path
+    local baseUrl = 'https://api.' ..  module.Domain .. '/api/'
+    local result = baseUrl
 
-    return 'https://api.' ..  module.Domain .. '/api/v1/'
+    if(not isempty(path)) then
 
-end
+        -- Take a relative API path and convert it to a full path
 
-function SetUpApiUrl(path)
+        if(not path:startsWith('//') and not path:startsWith('https://')) then
+            result = baseUrl .. path
+        else
+            result = path
+        end
 
-    -- Take a relative API path and convert it to a full path
-
-    if(not path:startsWith('//') and not path:startsWith('https://')) then
-        path = GetApiUrl() .. path
     end
 
-    return path
+    return result
 
 end
 
-function SetUpApiHeaders()
+function SetUpApiHeaders(version)
+
+    version = isempty(version) and 'v1' or version
+
+    if(version == 'v1') then
+
+        http.Headers['is17'] = 'false'
+        http.Headers['isalreadymature'] = '1'
+        http.Headers['partnercode'] = 'subred'
+        http.Headers['referer'] = 'https://' .. module.Domain
+        http.Headers['x-api-key'] = 'SUPERCOOLAPIKEY2021#@#('
+
+    elseif(version == 'v2') then
+
+        -- Add API v2 headers "timestamp" and "x-api-key".
+
+        -- The API key is generated in the 'convertApiKey' function from the device ID and timestamp.
+
+        local js = JavaScript.New()
+
+        local timestamp = tostring(js.Execute('Date.now()'))
+
+        js.Execute(http.Get('https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js'))
+
+        -- Set up the variables used to generate the API key.
+
+        js.Execute('e = ' .. timestamp);
+        js.Execute('t = "' .. GetDeviceId() .. '"');
+        js.Execute('n = 257'); -- REACT_APP_API_KEY_ITERATION
+
+        local apiKey = tostring(js.Execute('i=CryptoJS.SHA256(t.toString().replace(/-/g,"".concat(e))).toString(CryptoJS.enc.Hex);CryptoJS.PBKDF2("".concat(t,"|").concat(e),i,{hasher:CryptoJS.algo.SHA512,keySize:i.length / 4,iterations:n}).toString(CryptoJS.enc.Base64)'))
+
+        http.Headers['timestamp'] = timestamp
+        http.Headers['x-api-key'] = apiKey
+
+    end
 
     http.Headers['accept'] = '*/*'
     http.Headers['deviceId'] = GetDeviceId()
-    http.Headers['is17'] = 'false'
-    http.Headers['isalreadymature'] = '1'
     http.Headers['language'] = 'en'
-    http.Headers['origin'] = 'https://toptoonplus.com'
-    http.Headers['partnercode'] = 'subred'
-    http.Headers['referer'] = 'https://toptoonplus.com'
+    http.Headers['origin'] = 'https://' .. module.Domain
     http.Headers['ua'] = 'web'
     http.Headers['version'] = 'undefined'
-    http.Headers['x-api-key'] = 'SUPERCOOLAPIKEY2021#@#('
-    http.Headers['x-origin'] = 'toptoonplus.com'
+    http.Headers['x-origin'] = module.Domain
 
     local token = GetToken()
 
@@ -165,7 +204,7 @@ function GetComicJson()
 
     SetUpApiHeaders()
 
-    local endpoint = SetUpApiUrl('page/episode?comicId=' .. GetComicId())
+    local endpoint = GetApiUrl('v1/page/episode?comicId=' .. GetComicId())
     local json = Json.New(http.Get(endpoint))
 
     return Json.New(json)
@@ -184,17 +223,20 @@ function GetEpisodeJson()
     -- Start by getting the episode metadata, which includes the viewer token.
     -- The viewer token is needed for episodes that require an account, and is only valid when logged in (valid "token" header sent with the request).
 
-    local endpoint = SetUpApiUrl('//api.toptoonplus.com/check/isUsableEpisode?comicId=' .. comicId .. '&episodeId=' .. episodeId .. '&location=viewer&action=view_contents')
+    local endpoint = GetApiUrl('//api.toptoonplus.com/check/isUsableEpisode?comicId=' .. comicId .. '&episodeId=' .. episodeId .. '&location=viewer&action=view_contents')
     local json = Json.New(http.Get(endpoint))
 
     viewerToken = json.SelectValue('data.viewerToken')
 
     -- Get the episode images.
 
+    SetUpApiHeaders('v2')
+
     http.Headers['content-type'] = 'application/json'
     
-    endpoint = SetUpApiUrl('page/viewer')
-    local payload = '{"comicId":' .. comicId .. ',"episodeId":' .. episodeId .. ',"viewerToken":"' .. viewerToken .. '","cToken":"' .. cToken .. '"}'
+    endpoint = GetApiUrl('v2/viewer/' .. comicId .. '/' .. episodeId, 'v2')
+
+    local payload = '{"location":"viewer","action":"view_contents","isCached":false,"viewerToken":"' .. viewerToken .. '","cToken":""}'
     local json = Json.New(http.Post(endpoint, payload))
 
     return Json.New(json)
