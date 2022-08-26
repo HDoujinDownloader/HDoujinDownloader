@@ -5,6 +5,8 @@ function Register()
 
     module.Domains.Add('4chan.org')
     module.Domains.Add('4channel.org')
+    module.Domains.Add('boards.4chan.org')
+    module.Domains.Add('boards.4channel.org')
     module.Domains.Add('yuki.la')
     
 end
