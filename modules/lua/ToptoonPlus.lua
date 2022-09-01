@@ -92,7 +92,12 @@ end
 
 function GetDeviceId()
 
-    return 'a9d4f080-4aa0-11ec-81d3-0242ac130003'
+    -- Generate a device UUID, but be a little random about it.
+    -- Some users were having problems resulting from a static UUID (too many concurrent users?).
+
+    math.randomseed(os.time())
+
+    return math.random(1, 9) .. 'b6b034-8a1a-4c39-b814-6bbb27aead1d'
 
 end
 
@@ -133,6 +138,8 @@ function SetUpApiHeaders(version)
 
     version = isempty(version) and 'v1' or version
 
+    local deviceId = GetDeviceId()
+
     if(version == 'v1') then
 
         http.Headers['is17'] = 'false'
@@ -156,7 +163,7 @@ function SetUpApiHeaders(version)
         -- Set up the variables used to generate the API key.
 
         js.Execute('e = ' .. timestamp);
-        js.Execute('t = "' .. GetDeviceId() .. '"');
+        js.Execute('t = "' .. deviceId .. '"');
         js.Execute('n = 257'); -- REACT_APP_API_KEY_ITERATION
 
         local apiKey = tostring(js.Execute('i=CryptoJS.SHA256(t.toString().replace(/-/g,"".concat(e))).toString(CryptoJS.enc.Hex);CryptoJS.PBKDF2("".concat(t,"|").concat(e),i,{hasher:CryptoJS.algo.SHA512,keySize:i.length / 4,iterations:n}).toString(CryptoJS.enc.Base64)'))
@@ -167,7 +174,7 @@ function SetUpApiHeaders(version)
     end
 
     http.Headers['accept'] = '*/*'
-    http.Headers['deviceId'] = GetDeviceId()
+    http.Headers['deviceId'] = deviceId
     http.Headers['language'] = 'en'
     http.Headers['origin'] = 'https://' .. module.Domain
     http.Headers['ua'] = 'web'
