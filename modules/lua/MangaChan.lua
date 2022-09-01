@@ -6,6 +6,7 @@ function Register()
 
     module.Domains.Add('exhentai-dono.me', 'Хентай-тян!')
     module.Domains.Add('h-chan.me', 'Хентай-тян!')
+    module.Domains.Add('hchan.live', 'Хентай-тян!')
     module.Domains.Add('henchan.pro', 'Хентай-тян!')
     module.Domains.Add('hentai-chan.pro', 'Хентай-тян!')
     module.Domains.Add('hentaichan.live', 'Хентай-тян!')
@@ -21,7 +22,11 @@ function GetInfo()
 
     info.Url = SetDevelopmentAccessParameter(info.Url)
 
-    info.Title = dom.SelectValue('//h1')
+    -- Make sure we didn't get redirected to the login page.
+
+    MakeSureGalleryIsLoaded()
+
+    info.Title = ReadTitleFromMetadata()
     info.AlternativeTitle = dom.SelectValue('//td[contains(text(), "Другие названия")]/following-sibling::td'):split(';')
     info.Type = dom.SelectValue('//td[contains(text(), "Тип")]/following-sibling::td')
     info.Author = dom.SelectValues('//td[contains(text(), "Автор")]/following-sibling::td//a')
@@ -59,20 +64,12 @@ function GetInfo()
         info.Summary = dom.SelectValue('//div[@id="description"]')
     end
 
-     -- We might not have a title yet if added from the reader.
-
-    if(isempty(info.Title)) then
-        info.Title = CleanTitle(dom.Title)
-    end
-
     -- There might not be any chapters listed, and just a "read online" link (h-chan.me).
     -- In that case, just go to the reader.
 
     if(ParseChapters().Count() <= 0) then
 
-        info.Url = dom.SelectValue('//a[contains(text(), "Читать онлайн")]/@href')
-        info.Url = SetDevelopmentAccessParameter(info.Url)
-
+        info.Url = SetDevelopmentAccessParameter(dom.SelectValue('//a[contains(text(), "Читать онлайн")]/@href'))        
         info.PageCount = ParsePages(info.Url).Count()
 
     end
@@ -171,10 +168,45 @@ function SetDevelopmentAccessParameter(url)
 
 end
 
+function ReadTitleFromMetadata()
+
+    local title = dom.SelectValue('//h1')
+
+    if(isempty(title)) then
+        title = dom.SelectValue('//a[contains(@class,"title_top_a")]')
+    end
+
+    -- We might not have a title yet if added from the reader.
+
+    if(isempty(title)) then
+        title = CleanTitle(dom.Title)
+    end
+
+    return title
+
+end
+
 function FailIfLoginRequired()
 
     if(tostring(dom):contains('Гости не могут просматривать этот раздел.')) then
         Fail(Error.LoginRequired)
     end
+
+end
+
+function MakeSureGalleryIsLoaded()
+
+        -- We may need to get the current URL repeatedly to make sure we have the proper cookies.
+        -- Otherwise, we get redirected to the login page on the first request.
+
+        for i = 0, 2 do
+
+            if(not isempty(ReadTitleFromMetadata())) then
+                break
+            end
+
+            dom = Dom.New(http.Get(url))
+
+        end
 
 end
