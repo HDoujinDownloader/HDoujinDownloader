@@ -19,6 +19,7 @@ function Register()
     module.Domains.Add('manhwahentai.me', 'ManhwaHentai.me')
     module.Domains.Add('toongod.com', 'ToonGod')
     module.Domains.Add('www.betafox.net', 'Beta Fox')
+    module.Domains.Add('mm-scans.org', 'Mmscans')
 
     RegisterModule(module)
 
@@ -62,12 +63,16 @@ function GetChapters()
 
         dom = Dom.New(http.Post(endpoint, ' '))
 
-        local chapterNodes = dom.SelectElements('//li[contains(@class,"wp-manga-chapter")]/a')
+        local chapterNodes = dom.SelectElements('//li[contains(@class,"wp-manga-chapter") or contains(@class,"chapter-li")]/a')
 
         for chapterNode in chapterNodes do
 
             local chapterUrl = chapterNode.SelectValue('./@href')
             local chapterTitle = chapterNode.SelectValue('./text()[1]')
+
+            if(isempty(chapterTitle)) then
+                chapterTitle = chapterNode.SelectValue('.//p')
+            end
 
             chapters.Add(chapterUrl, chapterTitle)
 
