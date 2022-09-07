@@ -11,7 +11,10 @@ function Register()
 
     module.Domains.Add('betafox.net', 'Beta Fox')
     module.Domains.Add('disasterscans.com', 'Disaster Scans')
+    module.Domains.Add('en.leviatanscans.com', 'LeviatanScans')
+    module.Domains.Add('es.leviatanscans.com', 'LeviatanScans')
     module.Domains.Add('isekaiscan.com')
+    module.Domains.Add('leviatanscans.com', 'LeviatanScans')
     module.Domains.Add('manhuamanhwa.com', 'MANHUA & MANHWA')
     module.Domains.Add('manhwahentai.me', 'ManhwaHentai.me')
     module.Domains.Add('toongod.com', 'ToonGod')
@@ -59,8 +62,17 @@ function GetChapters()
 
         dom = Dom.New(http.Post(endpoint, ' '))
 
-        chapters.AddRange(dom.SelectElements('//li[contains(@class,"wp-manga-chapter")]/a'))
-    
+        local chapterNodes = dom.SelectElements('//li[contains(@class,"wp-manga-chapter")]/a')
+
+        for chapterNode in chapterNodes do
+
+            local chapterUrl = chapterNode.SelectValue('./@href')
+            local chapterTitle = chapterNode.SelectValue('./text()[1]')
+
+            chapters.Add(chapterUrl, chapterTitle)
+
+        end
+
         chapters.Reverse()
 
     end
