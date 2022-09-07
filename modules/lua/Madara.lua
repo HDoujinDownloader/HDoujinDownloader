@@ -84,7 +84,7 @@ function GetInfo()
     info.Type = dom.SelectValue('//div[contains(h5/text(), "Type") or contains(h5/text(), "Tip") or contains(h5/text(), "Tipo")]/following-sibling::div')
     info.DateReleased = dom.SelectValue('//div[contains(h5/text(), "Release") or contains(h5/text(), "Yayınlanma")]/following-sibling::div')
     info.Status = dom.SelectValue('//div[contains(h5/text(), "Status") or contains(h5/text(), "Durum")]/following-sibling::div')
-    info.Summary = dom.SelectValues('//div[contains(@class, "description-summary") or contains(@class, "dsct")]//p'):join('\n\n') -- note that some content has multiple paragraphs (e.g. on astrallibrary.net)
+    info.Summary = dom.SelectValues('//div[contains(@class, "description-summary") or contains(@class, "dsct") or contains(@class,"summary-text")]//p'):join('\n\n') -- note that some content has multiple paragraphs (e.g. on astrallibrary.net)
     info.Adult = not isempty(dom.SelectValue('//h1/span[contains(@class, "adult")]'))
     info.Language = dom.SelectValues('//div[contains(h5/text(), "Language")]/following-sibling::div//a')
 
@@ -142,6 +142,10 @@ function GetInfo()
 
         info.Language = info.Title:trim():regex('\\[(.+?)\\]$', 1)
 
+    end
+
+    if(isempty(info.Tags)) then -- mm-scans.org
+        info.Tags = dom.SelectValue('//div[h5[contains(text(),"Genre")]]/following-sibling::div')
     end
 
     info.Title = CleanTitle(info.Title)
