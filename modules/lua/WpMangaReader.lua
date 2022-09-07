@@ -65,11 +65,11 @@ function GetInfo()
 
     info.Title = CleanTitle(dom.SelectValue('//h1'))
     info.Summary = dom.SelectValue('//div[@itemprop="description"]')
-    info.Status = dom.SelectValue('//div[@class="imptdt" and contains(text(),"Status")]/*[last()]')
-    info.Type = dom.SelectValue('//div[@class="imptdt" and (contains(text(),"Type") or contains(text(),"ประเภทการ์ตูน"))]/*[last()]')
-    info.Publisher = dom.SelectValue('//div[@class="imptdt" and contains(text(),"Serialization")]/*[last()]')
-    info.Author = dom.SelectValue('//div[@class="imptdt" and contains(text(),"Author")]/*[last()]')
-    info.Artist = dom.SelectValue('//div[@class="imptdt" and contains(text(),"Artist")]/*[last()]')
+    info.Status = dom.SelectValue('//div[@class="imptdt" and contains(.,"Status")]/*[last()]')
+    info.Type = dom.SelectValue('//div[@class="imptdt" and (contains(.,"Type") or contains(.,"ประเภทการ์ตูน"))]/*[last()]')
+    info.Publisher = dom.SelectValue('//div[@class="imptdt" and contains(.,"Serialization")]/*[last()]')
+    info.Author = dom.SelectValue('//div[@class="imptdt" and contains(.,"Author")]/*[last()]')
+    info.Artist = dom.SelectValue('//div[@class="imptdt" and contains(.,"Artist")]/*[last()]')
     info.Tags = dom.SelectValues('//div[contains(@class,"seriestugenre")]/a')
 
     -- Some sites have their metadata in a grid instead (e.g. kiryuu.id).
@@ -122,10 +122,16 @@ end
 
 function GetChapters()
 
-    for chapterNode in dom.SelectElements('//div[@id="chapterlist"]//div[contains(@class,"eph-num")]/a') do
+    local chapterNodes = dom.SelectElements('//div[@id="chapterlist"]//div[contains(@class,"eph-num")]/a')
+
+    if(isempty(chapterNodes)) then -- flamescans.org
+        chapterNodes = dom.SelectElements('//div[@id="chapterlist"]//li[@data-num]/a')
+    end
+
+    for chapterNode in chapterNodes do
 
         local chapterUrl = chapterNode.SelectValue('@href')
-        local chapterTitle = chapterNode.SelectValue('span[contains(@class, "chapternum")]')
+        local chapterTitle = chapterNode.SelectValue('.//span[contains(@class, "chapternum")]')
 
         chapters.Add(chapterUrl, chapterTitle)
 
