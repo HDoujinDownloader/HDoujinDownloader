@@ -30,7 +30,9 @@ function GetPages()
 
     -- Pages are stored in the "ytaw" array.
 
-    local pagesArray = tostring(dom):regex('var\\s*ytaw=\\s*(\\[.+?\\])', 1)
+    local scriptContent = dom.SelectValue('//script[contains(.,"data-src")]')
+
+    local pagesArray = RegexMatches(scriptContent, 'var\\s*(?:ytaw|thzq)=\\s*(\\[.+?\\])').Last()[1]
     local pagesJson = Json.New(pagesArray)
 
     for pageJson in pagesJson do
