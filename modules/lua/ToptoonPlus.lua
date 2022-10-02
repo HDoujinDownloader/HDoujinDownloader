@@ -6,6 +6,7 @@ function Register()
     module.Domains.Add('toptoonplus.com')
 
     module.Settings.AddText('Token', '')
+    module.Settings.AddText('Device ID', '')
 
     global.SetCookie(module.Domains.First(), 'already_mature', '1')
 
@@ -94,6 +95,10 @@ function GetDeviceId()
 
     -- Generate a device UUID, but be a little random about it.
     -- Some users were having problems resulting from a static UUID (too many concurrent users?).
+
+    if(not isempty(module.Settings['Device ID'])) then
+        return module.Settings['Device ID']
+    end
 
     math.randomseed(os.time())
 
