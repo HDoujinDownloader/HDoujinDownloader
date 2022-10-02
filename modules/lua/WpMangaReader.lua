@@ -8,6 +8,7 @@ function Register()
 
     module.Domains.Add('acescans.xyz', 'ACE SCANS')
     module.Domains.Add('alpha-scans.org', 'Alpha Scans')
+    module.Domains.Add('constellarscans.com', 'Constellar Scans')
     module.Domains.Add('edoujin.net', 'edoujin')
     module.Domains.Add('flamescans.org', 'Flame Scans')
     module.Domains.Add('luminousscans.com', 'Luminous Scans')
