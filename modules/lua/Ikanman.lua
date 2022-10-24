@@ -7,6 +7,7 @@ function Register()
 
     module.Domains.Add('ikanman.com')
     module.Domains.Add('manhuagui.com')
+    module.Domains.Add('www.manhuagui.com')
 
 end
 
