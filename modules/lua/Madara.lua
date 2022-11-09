@@ -243,6 +243,11 @@ function GetPages()
         if(isempty(pages)) then
             pages.AddRange(dom.SelectValues('//div[contains(@class, "entry-content")]//figure/a/@href'))
         end
+        
+        -- Sometimes the image URLs are in the "<p></p>" tag (manhuaplus.com) due to manga type especially for "Video Chapter" or for another reason.
+        if(isempty(pages)) then
+            pages.AddRange(dom.SelectValues('//div[contains(@id, "chapter-video-frame") or contains(@class, "reading-content") or contains(@class, "blocks-gallery-grid")]//img/@src'))
+        end
 
     end
 
