@@ -19,7 +19,7 @@ end
 
 function GetChapters()
 
-    local comicId = GetAppJs():regex(',(\\d+),(?:true|false),"Zero Scans"\\)\\);', 1)
+    local comicId = GetAppJs():regex('{id:(\\d+),.+\\);', 1)
 
     if(isempty(comicId)) then
         return
