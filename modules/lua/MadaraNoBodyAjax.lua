@@ -1,3 +1,6 @@
+-- Note: This module may be a duplicate of IsekaiScan.lua.
+-- Consider moving the sites contained here into that module instead.
+
 require "Madara"
 
 function Register()
@@ -22,29 +25,14 @@ end
 
 function GetChapters()
 
-    -- We need to make a POST request to get the chapters list.
+    -- We need to make a POST request to get the chapter list.
+    -- We don't actually need to send any POST data, so an empty body is sent.
 
+    http.Headers['accept'] = '*/*'
     http.Headers['x-requested-with'] = 'XMLHttpRequest'
 
-    local endpoint
-
-    if(string.sub(url, -1) == '/') then
-
-        endpoint = url..'ajax/chapters/'
-
-    elseif(string.sub(url, -1) ~= '/') then
-
-        endpoint = url..'/ajax/chapters/'
-
-    else 
-
-        error('Invalid POST XMLHttpRequest URL : '..url..' to get Madara chapters list')
-
-    end
-
-    local HTMLContentRequestBody = http.Post(endpoint)
-
-    local dom = Dom.New(HTMLContentRequestBody)
+    local endpoint = 'ajax/chapters/'
+    local dom = dom.New(http.Post(endpoint, ' '))
 
     chapters.AddRange(dom.SelectElements('//li[contains(@class,"wp-manga-chapter")]/a'))
         
