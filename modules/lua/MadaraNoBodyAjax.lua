@@ -3,6 +3,8 @@
 
 require "Madara"
 
+local BaseGetPages = GetPages
+
 function Register()
 
     module.Name = 'Madara (No Body Ajax)'
@@ -20,6 +22,22 @@ function Register()
     module.Domains.Add('manhuaus.com', 'Manhuaus.com')
     module.Domains.Add('immortalupdates.com', 'Immortal Updates')
     module.Domains.Add('zinmanga.com', 'Zinmanga')
+
+end
+
+function GetPages()
+
+    BaseGetPages()
+
+    for page in pages do
+
+        -- Websites using WordPress.com for image hosting (e.g. manhuaplus.com) need to have a referer set in order to access the image directly.
+
+        if(page.Url:contains('.wordpress.com/')) then
+            page.Referer = url
+        end
+
+    end
 
 end
 
