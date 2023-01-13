@@ -75,8 +75,10 @@ function GetImageServerFromGalleryId(galleryId)
         imageServer = 'm4'
     elseif(galleryId > 632481 and galleryId <= 816010) then
         imageServer = 'm5'
-    elseif(galleryId > 816010) then
+     elseif(galleryId > 816010 and galleryId <= 970099) then
         imageServer = 'm6'
+    elseif(galleryId > 970099) then
+        imageServer = 'm7'
     end
 
     return imageServer

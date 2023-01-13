@@ -1,4 +1,9 @@
+-- Note: This module may be a duplicate of IsekaiScan.lua.
+-- Consider moving the sites contained here into that module instead.
+
 require "Madara"
+
+local BaseGetPages = GetPages
 
 function Register()
 
@@ -20,31 +25,32 @@ function Register()
 
 end
 
-function GetChapters()
+function GetPages()
 
-    -- We need to make a POST request to get the chapters list.
+    BaseGetPages()
 
-    http.Headers['x-requested-with'] = 'XMLHttpRequest'
+    for page in pages do
 
-    local endpoint
+        -- Websites using WordPress.com for image hosting (e.g. manhuaplus.com) need to have a referer set in order to access the image directly.
 
-    if(string.sub(url, -1) == '/') then
-
-        endpoint = url..'ajax/chapters/'
-
-    elseif(string.sub(url, -1) ~= '/') then
-
-        endpoint = url..'/ajax/chapters/'
-
-    else 
-
-        error('Invalid POST XMLHttpRequest URL : '..url..' to get Madara chapters list')
+        if(page.Url:contains('.wordpress.com/')) then
+            page.Referer = url
+        end
 
     end
 
-    local HTMLContentRequestBody = http.Post(endpoint)
+end
 
-    local dom = Dom.New(HTMLContentRequestBody)
+function GetChapters()
+
+    -- We need to make a POST request to get the chapter list.
+    -- We don't actually need to send any POST data, so an empty body is sent.
+
+    http.Headers['accept'] = '*/*'
+    http.Headers['x-requested-with'] = 'XMLHttpRequest'
+
+    local endpoint = 'ajax/chapters/'
+    local dom = dom.New(http.Post(endpoint, ' '))
 
     chapters.AddRange(dom.SelectElements('//li[contains(@class,"wp-manga-chapter")]/a'))
         
