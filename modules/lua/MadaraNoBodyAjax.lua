@@ -13,6 +13,7 @@ function Register()
     module.Domains.Add('hentai20.com', 'Hentai20')
     module.Domains.Add('hentaidexy.com', 'hentaidexy')
     module.Domains.Add('hiperdex.com', 'Hiperdex')
+    module.Domains.Add('hscans.com', 'Hscans')
     module.Domains.Add('isekaiscanmanga.com', 'Isekaiscan Manga')
     module.Domains.Add('mangarockteam.com', 'Manga Rock Team')
     module.Domains.Add('mangasushi.net', 'Mangasushi')
@@ -49,8 +50,23 @@ function GetChapters()
     http.Headers['accept'] = '*/*'
     http.Headers['x-requested-with'] = 'XMLHttpRequest'
 
-    local endpoint = 'ajax/chapters/'
-    local dom = dom.New(http.Post(endpoint, ' '))
+    local endpoint
+
+    if(string.sub(url, -1) == '/') then
+
+        endpoint = url..'ajax/chapters/'
+
+    elseif(string.sub(url, -1) ~= '/') then
+
+        endpoint = url..'/ajax/chapters/'
+
+    else 
+
+        error('Invalid POST XMLHttpRequest URL : '..url..' to get chapters content list')
+
+    end
+
+    local dom = Dom.New(http.Post(endpoint, ''))
 
     chapters.AddRange(dom.SelectElements('//li[contains(@class,"wp-manga-chapter")]/a'))
         
