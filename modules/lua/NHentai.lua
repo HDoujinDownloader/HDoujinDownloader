@@ -7,6 +7,7 @@ function Register()
 
     module.Domains.Add('3hentai.net', '3hentai')
     module.Domains.Add('nhentai.to')
+    module.Domains.Add('nhentai.uk')
 
     module.Settings.AddCheck('Use pretty titles', false)
         .WithToolTip('Use shorter titles with the artist, series, and language information removed.')
@@ -23,6 +24,10 @@ function GetInfo()
 
         if(toboolean(module.Settings['Use pretty titles'])) then
             info.Title = GetPrettyTitle()
+        end
+
+        if(isempty(info.Title)) then -- nhentai.uk
+            info.Title = dom.SelectValue('//div[@id="info"]/h1')
         end
 
         if(isempty(info.Title)) then
