@@ -35,11 +35,13 @@ function Register()
     RegisterModule(module)
 
     module = module.New()
+    
     module.Language = 'Korean'
 
     module.Domains.Add('manhwaraw.com', 'ManhwaRaw')
 
     module = module.New()
+
     module.Language = 'Portuguese'
 
     module.Domains.Add('neoxscans.net', 'NEOX Scanlator')
@@ -47,6 +49,7 @@ function Register()
     RegisterModule(module)
 
     module = module.New()
+
     module.Language = 'Spanish'
 
     module.Domains.Add('nartag.com', 'Traducciones amistosas')
@@ -55,6 +58,7 @@ function Register()
     RegisterModule(module)
 
     module = module.New()
+
     module.Language = 'Thai'
 
     module.Domains.Add('dokimori.com', 'DokiMori')
@@ -62,11 +66,20 @@ function Register()
     RegisterModule(module)
 
     module = module.New()
+
     module.Language = 'Turkish'
 
     module.Domains.Add('araznovel.com', 'ArazNovel')
     module.Domains.Add('mangawow.com', 'MangaWOW')
     module.Domains.Add('mangawow.net', 'MangaWOW')
+    
+    RegisterModule(module)
+
+    module = module.New()
+    
+    module.Language = 'Vietnamese'
+
+    module.Domains.Add('roadsteam.net', 'Roads Team')
     
     RegisterModule(module)
 
@@ -253,8 +266,12 @@ function GetPages()
             pages.AddRange(dom.SelectValues('//div[contains(@class, "reading-content")]//img[@id]/@src'))
         end
 
-        if(isempty(pages)) then
-            pages.AddRange(dom.SelectValues('//div[contains(@class,"read-content")]//img/@src')) -- manga18fx.com
+        if(isempty(pages)) then -- manga18fx.com
+            pages.AddRange(dom.SelectValues('//div[contains(@class,"read-content")]//img/@src'))
+        end
+
+        if(isempty(pages)) then -- roadsteam.net
+            pages.AddRange(dom.SelectValues('//div[contains(@class, "reading-content")]//img[@decoding]/@src'))
         end
 
         -- Sometimes the image URLs are in the "href" attribute under "entry-content" (Western comics on www.porncomixonline.net).
