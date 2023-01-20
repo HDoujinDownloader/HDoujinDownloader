@@ -25,6 +25,7 @@ function Register()
     module.Domains.Add('muctau.com', 'MUCTAU')
     module.Domains.Add('porncomixonline.net', 'Porncomix')
     module.Domains.Add('readfreecomics.com', 'ReadFreeComics')
+    module.Domains.Add('reset-scans.com', 'Reset Scans')
     module.Domains.Add('skymanga.co', 'skymanga')
     module.Domains.Add('teenmanhua.com', 'teenmanhua.com')
     module.Domains.Add('toonily.com', 'Toonily')
@@ -120,6 +121,16 @@ function GetInfo()
 
     end
 
+    local mangaTitleBadges = dom.SelectElements('//h1/span[contains(@class, "manga-title-badges")]')
+
+    if(mangaTitleBadges.Count() > 0) then
+
+        -- Some site have a span type element containing a tag can be inside the h1 tag (e.g. toonily.com). We will select only the content.
+
+        info.Title = dom.SelectValue('//h1/text()')
+
+    end
+
     if(isempty(info.Summary)) then
 
         -- Some sites don't have a nested "p" element in the description (e.g. mangatx.com).
@@ -181,7 +192,17 @@ function GetChapters()
 
     else
 
-        chapters.AddRange(dom.SelectElements('//div[contains(@class, "listing-chapters") or @id="chapterlist"]//li/a'))
+        if(isempty(dom.SelectValue('//div[contains(@class, "listing-chapters") or @id="chapterlist"]//li/a/text()'))) then
+
+            -- reset-scans.com
+
+            chapters.AddRange(dom.SelectElements('//div[contains(@class, "li__text")]/a'))
+
+        else
+
+            chapters.AddRange(dom.SelectElements('//div[contains(@class, "listing-chapters") or @id="chapterlist"]//li/a'))
+
+        end
 
         chapters.Reverse()
 
