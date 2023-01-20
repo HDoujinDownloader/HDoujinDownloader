@@ -52,6 +52,7 @@ function Register()
 
     module.Language = 'Spanish'
 
+    module.Domains.Add('manhwa-latino.com', 'Manhwa-latino')
     module.Domains.Add('nartag.com', 'Traducciones amistosas')
     module.Domains.Add('olympusscanlation.com', 'Olympus Scanlation')
     
@@ -274,6 +275,10 @@ function GetPages()
             pages.AddRange(dom.SelectValues('//div[contains(@class, "reading-content")]//img[@decoding]/@src'))
         end
 
+        if(isempty(pages)) then -- manhwa-latino.com
+            pages.AddRange(dom.SelectValues('//div[contains(@class,"read-container")]//img/@data-src'))
+        end
+
         -- Sometimes the image URLs are in the "href" attribute under "entry-content" (Western comics on www.porncomixonline.net).
         -- This isn't part of the Madara theme, but it appears this site hasn't updated all of their galleries to use the Madara reader.
         -- e.g. https://www.porncomixonline.net/comicsbase/westerncomics/ (all galleries under this category)
@@ -293,11 +298,15 @@ end
 
 function CleanTitle(title)
 
-    return tostring(title)
+    title = tostring(title)
         :beforelast(' - Webtoon ') -- Remove " - Webtoon Manhwa Hentai" suffix (manhwahentai.me)
         :beforelast(' &#8211; Webtoon ') -- Remove " — Webtoon Manhwa Hentai" suffix (manhwahentai.me)
         :trim()
         :trim(' Manhwa Hentai') -- Remove " Manhwa Hentai" suffix (manhwahentai.me)
         :trim()
+
+    title = RegexReplace(title, '(?i)(?:español\\s*»\\s*manhwa-latino)$', '')
+
+    return title
 
 end
