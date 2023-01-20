@@ -104,7 +104,7 @@ function GetApiUrl()
 
     -- https://api.luscious.net/graphql/nobatch/
 
-    return 'https://api.'.. GetDomain(module.Domain) ..'/graphql/nobatch/'
+    return 'https://apicdn.'.. GetDomain(module.Domain) ..'/graphql/nobatch/'
 
 end
 
