@@ -11,6 +11,7 @@ function Register()
 
     module.Domains.Add('1stkissmanga.io', '1ST KISS MANGA')
     module.Domains.Add('allporncomic.com', 'AllPornComic.com')
+    module.Domains.Add('ero18x.com', 'Ero18x')
     module.Domains.Add('hentairead.com', 'HentaiRead')
     module.Domains.Add('manga18fx.com', 'Manga18fx')
     module.Domains.Add('mangaclash.com', 'Manga Clash')
@@ -132,16 +133,6 @@ function GetInfo()
         -- Reader galleries don't always have a title, so we'll use the title of the selected chapter if we need to.
 
         info.Title = dom.SelectValue('//li[@class="active"]')
-
-    end
-
-    local mangaTitleBadges = dom.SelectElements('//h1/span[contains(@class, "manga-title-badges")]')
-
-    if(mangaTitleBadges.Count() > 0) then
-
-        -- Some site have a span type element containing a tag can be inside the h1 tag (e.g. toonily.com). We will select only the content.
-
-        info.Title = dom.SelectValue('//h1/text()')
 
     end
 
