@@ -15,11 +15,13 @@ function Register()
     module.Domains.Add('es.leviatanscans.com', 'LeviatanScans')
     module.Domains.Add('isekaiscan.com')
     module.Domains.Add('leviatanscans.com', 'LeviatanScans')
+    module.Domains.Add('mangasushi.net', 'Mangasushi')
+    module.Domains.Add('mangasushi.org', 'Mangasushi')
     module.Domains.Add('manhuamanhwa.com', 'MANHUA & MANHWA')
     module.Domains.Add('manhwahentai.me', 'ManhwaHentai.me')
+    module.Domains.Add('mm-scans.org', 'Mmscans')
     module.Domains.Add('toongod.com', 'ToonGod')
     module.Domains.Add('www.betafox.net', 'Beta Fox')
-    module.Domains.Add('mm-scans.org', 'Mmscans')
 
     RegisterModule(module)
 
@@ -70,7 +72,7 @@ function GetChapters()
             local chapterUrl = chapterNode.SelectValue('./@href')
             local chapterTitle = chapterNode.SelectValue('./text()[1]')
 
-            if(isempty(chapterTitle)) then
+            if(isempty(chapterTitle)) then -- mm-scans.org
                 chapterTitle = chapterNode.SelectValue('.//p')
             end
 
