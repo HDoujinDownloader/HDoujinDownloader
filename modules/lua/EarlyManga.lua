@@ -1,11 +1,11 @@
--- EarlyManga is very similar to MangaDex, minus the API.
+-- EarlyManga V1 is very similar to MangaDex, minus the API.
 
 function Register()
 
     module.Name = 'EarlyManga'
     module.Language  = 'English'
 
-    module.Domains.Add('earlymanga.org', 'EarlyManga')
+    module.Domains.Add('v1.earlym.org', 'EarlyManga')
 
 end
 
