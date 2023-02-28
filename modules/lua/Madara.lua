@@ -11,7 +11,6 @@ function Register()
 
     module.Domains.Add('1stkissmanga.io', '1ST KISS MANGA')
     module.Domains.Add('allporncomic.com', 'AllPornComic.com')
-    module.Domains.Add('ero18x.com', 'Ero18x')
     module.Domains.Add('hentairead.com', 'HentaiRead')
     module.Domains.Add('manga18fx.com', 'Manga18fx')
     module.Domains.Add('mangaclash.com', 'Manga Clash')
