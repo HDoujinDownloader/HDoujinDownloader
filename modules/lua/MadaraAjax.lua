@@ -22,6 +22,16 @@ function Register()
     module.Domains.Add('pornwha.com', 'Pornwha')
     module.Domains.Add('x2manga.com', 'X2MANGA')
 
+    RegisterModule(module)
+    
+    module = Module.New()
+
+    module.Language = 'Spanish'
+
+    module.Domains.Add('desuhentai.net', 'DesuHentai')
+
+    RegisterModule(module)
+
 end
 
 function GetChapters()
