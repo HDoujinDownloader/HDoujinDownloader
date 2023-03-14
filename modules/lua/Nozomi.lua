@@ -50,7 +50,21 @@ function BeforeDownloadPage()
 
     local json = Json.New(http.Get(jsonPath))
 
-    page.Url = json.SelectValue('imageurl')
+    -- Posts can have multiple image URLs (?), but I haven't seen any like this.
+
+    local isVideo = toboolean(json.SelectValue('is_video'))
+    local imageType = json.SelectValue('imageurls[0].type')
+    local imageHash = json.SelectValue('imageurls[0].dataid')
+
+    if(isVideo) then
+
+        page.Url = '//v.nozomi.la/' .. FullPathFromHash(imageHash) .. '.' .. imageType
+
+    else
+
+        page.Url = '//' .. (imageType == 'gif' and 'g' or 'w') .. '.nozomi.la/' .. FullPathFromHash(imageHash) .. '.' .. (imageType == 'gif' and 'gif' or 'webp')
+
+    end
 
 end
 
@@ -68,10 +82,23 @@ end
 
 function GetNozomiUrl()
 
-    -- See the implementation here: https://j.nozomi.la/nozomi.js
+    -- Defined in nozomi.js
 
     local tag = GetTag()
 
     return '//j.nozomi.la/nozomi/' .. tag .. '.nozomi'
 
 end
+
+function FullPathFromHash(hash)
+
+    -- Defined in main.js
+
+    if(hash:len() < 3) then
+        return hash
+    end
+
+    return RegexReplace(hash, '^.*(..)(.)$', '$2/$1/' .. hash)
+
+end
+
