@@ -10,45 +10,59 @@ end
 
 function GetInfo()
 
-    info.Title = GetTag()
-    info.Tags = info.Title:split('%20')
+    if(url:contains('/post/')) then
+       
+        -- A single post was added.
+
+        local json = GetPostJson(url)
+
+        info.Title = json.SelectValue('postid')
+        info.Tags = json.SelectValues('$..tag')
+        info.PageCount = 1
+
+    else
+
+        info.Title = GetTag()
+        info.Tags = info.Title:split('%20')
+
+    end
 
 end
 
 function GetPages()
 
-    -- Get the nozomi data, which is uint32s corresponding to each post ID.
+    if(url:contains('/post/')) then
 
-    local nozomi = http.GetResponse(GetNozomiUrl(url)).Data
-    local total = nozomi.Count() / 4
+        pages.Add(url)
 
-    local galleryIds = List.New()
+    else
 
-    for i = 0, total - 1 do
+        -- Get the nozomi data, which is uint32s corresponding to each post ID.
 
-        galleryIds.Add(nozomi.GetUInt32(i * 4))
-
-	end
-
-    for galleryId in galleryIds do
-
-        pages.Add('//nozomi.la/post/' .. galleryId .. '.html')
+        local nozomi = http.GetResponse(GetNozomiUrl(url)).Data
+        local total = nozomi.Count() / 4
+        
+        local galleryIds = List.New()
+        
+        for i = 0, total - 1 do
+            galleryIds.Add(nozomi.GetUInt32(i * 4))
+        end
+        
+        for galleryId in galleryIds do
+            pages.Add('//nozomi.la/post/' .. galleryId .. '.html')
+        end
+        
+        -- List older images first.
+        
+        pages.Reverse()
 
     end
-
-    -- List older images first.
-
-    pages.Reverse()
 
 end
 
 function BeforeDownloadPage()
 
-    local postId = page.Url:regex('\\/post\\/(\\d+)', 1)
-    local fullPath = RegexReplace(postId, '^.*(..)(.)$', '$2/$1/' .. postId)
-    local jsonPath = '//j.nozomi.la/post/'.. fullPath .. '.json'
-
-    local json = Json.New(http.Get(jsonPath))
+    local json = GetPostJson(page.Url)
 
     -- Posts can have multiple image URLs (?), but I haven't seen any like this.
 
@@ -59,6 +73,7 @@ function BeforeDownloadPage()
     if(isVideo) then
 
         page.Url = '//v.nozomi.la/' .. FullPathFromHash(imageHash) .. '.' .. imageType
+        page.FileExtensionHint = imageType
 
     else
 
@@ -102,3 +117,18 @@ function FullPathFromHash(hash)
 
 end
 
+function GetPostId(url)
+
+    return url:regex('\\/post\\/(\\d+)', 1)
+
+end
+
+function GetPostJson(url)
+
+    local postId = GetPostId(url)
+    local fullPath = RegexReplace(postId, '^.*(..)(.)$', '$2/$1/' .. postId)
+    local jsonPath = '//j.nozomi.la/post/'.. fullPath .. '.json'
+
+    return Json.New(http.Get(jsonPath))
+
+end
