@@ -31,9 +31,13 @@ function GetChapters()
     for chapterNode in dom.SelectElements('//ul[@id="chapter-list"]//a') do
 
         local chapterUrl = chapterNode.SelectValue('@href')
-        local chapterTitle = chapterNode.SelectValue('.//*[contains(@class,"chapter-title")]')
+        local chapterTitle = chapterNode.SelectValue('.//*[contains(@class,"chapter-title")]'):trim()
 
-        chapters.Add(chapterUrl, chapterTitle)
+        -- The admin posts "notices" as chapters sometimes, but we should ignore them.
+
+        if(not chapterTitle:startsWith('Notice. :')) then
+            chapters.Add(chapterUrl, chapterTitle)
+        end
 
     end
 
