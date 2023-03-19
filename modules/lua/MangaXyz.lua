@@ -43,10 +43,15 @@ function GetPages()
     local js = JavaScript.New()
 
     js.Execute(chapImagesScript)
-    js.Execute(serversScript)
+
+    -- Some sites won't use a server script, and will have full image URLs in "chapImages".
+
+    if(not isempty(serversScript)) then
+        js.Execute(serversScript)
+    end
 
     local chapImages = tostring(js.GetObject('chapImages'))
-    local server = tostring(js.GetObject('mainServer'))
+    local server = isempty(serversScript) and '' or tostring(js.GetObject('mainServer'))
 
     for image in chapImages:split(',') do
 
