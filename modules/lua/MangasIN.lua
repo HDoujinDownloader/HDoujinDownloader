@@ -12,13 +12,25 @@ end
 
 function GetChapters()
 
-    for chapterNode in dom.SelectElements('//ul[contains(@class,"chapters")]//h5') do
+    local chaptersScript1 = dom.SelectValue('//script[contains(text(),"newChapterList")]')
+    local chaptersArrayName = chaptersScript1:regex('let\\s*fchapter\\s*=\\s*([a-zA-Z0-9]+)', 1)
+    local chaptersScript2 = dom.SelectValue('//script[contains(text(),"' .. chaptersArrayName .. '")][1]')
+    local chaptersJson = Json.New(chaptersScript2:regex(chaptersArrayName .. '\\s*=\\s*(\\[.+?\\])', 1))
+    local mangaSlug = url:regex('\\/manga\\/([^\\/?#]+)', 1)
 
-        local chapterTitle = chapterNode.SelectValue('a/following-sibling::text()')
-        local chapterSubtitle = chapterNode.SelectValue('daka')
-        local chapterUrl = chapterNode.SelectValue('daka/a/@href')
+    for chapterNode in chaptersJson do
 
-        chapters.Add(chapterUrl, CleanTitle(chapterTitle .. chapterSubtitle))
+        local chapterNumber = chapterNode.SelectValue('number')
+        local volumeNumber = chapterNode.SelectValue('volume')
+        local chapterSubtitle = chapterNode.SelectValue('name')
+        local chapterTitle = '#' .. chapterNumber
+        local chapterUrl = '/manga/' .. mangaSlug .. '/' .. chapterNode.SelectValue('slug')
+
+        if(not isempty(chapterSubtitle)) then
+            chapterTitle = chapterTitle .. ' - ' .. chapterSubtitle
+        end
+
+        chapters.Add(chapterUrl, CleanTitle(chapterTitle))
 
     end
 
