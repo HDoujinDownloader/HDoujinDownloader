@@ -179,7 +179,14 @@ function GetPages()
 
     end
 
-    pages.Referer = ''
+    -- Some sites use external image hosts from which downloads will fail if we set a referer.
+    -- However, some other sites require a referer in order to download.
+
+    if(module.Domain == 'realmscans.com') then
+        pages.Referer = 'https://realmscans.com/'
+    else
+        pages.Referer = '' 
+    end
 
 end
 
