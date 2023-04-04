@@ -15,6 +15,8 @@ function GetInfo()
     info.Author = json.SelectValue("data.data.creators[?(@.role == 'Writer')].name")
     info.Artist = json.SelectValue("data.data.creators[?(@.role == 'Illustration')].name")
     info.Translator = json.SelectValue("data.data.creators[?(@.role == 'Localization')].name")
+    info.Summary = json.SelectValue("data.data.description.long")
+    info.Publisher = module.Name
 
     if(toboolean(json.SelectValue('data.data.isCompleted'))) then
         info.Status = 'completed'
@@ -74,13 +76,32 @@ end
 
 local function GetComicId()
 
-    return url:regex('series\\/(\\d+)', 1)
+    -- Series URLs can be of the following forms:
+    -- //manta.net/en/series/<title>?seriesId=<seriesId>
+    -- //manta.net/series/<seriesId>
 
+    local seriesId = GetParameter(url, 'seriesId')
+    
+    if(isempty(seriesId)) then
+        seriesId = url:regex('series\\/(\\d+)', 1)
+    end
+
+    return seriesId
 end
 
 local function GetEpisodeId()
 
-    return url:regex('episodes\\/(\\d+)', 1)
+    -- Episode URLs can be of the following forms:
+    -- //manta.net/en/series/<title>/episodes/<episodeTitle>?episodeId=<episodeId>
+    -- //manta.net/episodes/<episodeId>
+
+    local episodeId = GetParameter(url, 'episodeId')
+    
+    if(isempty(episodeId)) then
+        episodeId = url:regex('episodes\\/(\\d+)', 1)
+    end
+
+    return episodeId
 
 end
 
