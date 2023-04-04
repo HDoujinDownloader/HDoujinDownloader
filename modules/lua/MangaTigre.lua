@@ -4,7 +4,9 @@ function Register()
     module.Language = 'es'
 
     module.Domains.Add('mangatigre.com')
+    module.Domains.Add('mangatigre.com')
     module.Domains.Add('www.mangatigre.com')
+    module.Domains.Add('www.mangatigre.net')
 
 end
 
@@ -51,5 +53,26 @@ end
 function GetPages()
 
     pages.AddRange(dom.SelectValues('//img[contains(@id,"chapter-image")]/@data-src'))
+
+    if(isempty(pages)) then
+
+        -- Update (04/04/2023): The image URLs are now generated with JavaScript.
+
+        local imagesScript = dom.SelectValue('//script[contains(text(),"window.chapter")]')
+        local cdnScript = dom.SelectValue('//script[contains(text(),"window.cdn")]')
+        local cdn = cdnScript:regex('window\\.cdn\\s*=\\s"([^"]+)', 1)
+        local imagesJson = Json.New(imagesScript:regex("window.chapter\\s*=\\s*'([^']+)", 1))
+        local slug = imagesJson.SelectValue('manga.slug')
+        local number = imagesJson.SelectValue('number')
+
+        for fileName in imagesJson.SelectValues('$..name') do
+            
+            local imageUrl = '//' .. cdn .. '/chapters/' .. slug.. '/' .. number .. '/' .. fileName .. '.webp'
+
+            pages.Add(imageUrl)
+
+        end
+
+    end
 
 end
