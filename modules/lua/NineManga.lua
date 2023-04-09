@@ -9,6 +9,7 @@ function Register()
     module.Domains.Add('es.ninemanga.com')
     module.Domains.Add('fr.ninemanga.com')
     module.Domains.Add('it.ninemanga.com')
+    module.Domains.Add('my.ninemanga.com')
     module.Domains.Add('ninemanga.com')
     module.Domains.Add('ru.ninemanga.com')
 
@@ -74,7 +75,7 @@ end
 
 function GetPagesFromArray()
 
-    -- This doesn't seem to work anymore, but I've left it here just in case.
+    -- This doesn't seem to work anymore, but I've left it here just in case (relied on by other modules with the same reader).
 
     local imagesJsonStr = dom.SelectValue('//script[contains(.,"all_imgs_url")]')
         :regex('all_imgs_url:\\s*(\\[[^\\]]+\\])', 1)
