@@ -1,5 +1,7 @@
 require "NineManga" -- Uses the same reader
 
+local BaseGetPages = GetPages
+
 function Register()
 
     module.Name = 'Novel Cool'
@@ -17,6 +19,16 @@ function GetInfo()
     info.Summary = dom.SelectValue('//div[contains(@class,"bk-summary-txt")]')
     info.Status = dom.SelectValue('//div[contains(@class,"bk-going")]')
     info.Tags = dom.SelectValues('//div[contains(@class,"bk-cate-item")]//a/span')
+
+end
+
+function GetPages()
+
+    -- The referer must be blank, or we get an invalid response.
+
+    http.Referer = ''
+
+    BaseGetPages()
 
 end
 
