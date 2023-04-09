@@ -1,1 +1,128 @@
-DoEncryptedString("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")
+require "MangaParkV3"
+
+local BaseGetInfo = GetInfo
+local BaseGetChapters = GetChapters
+local BaseGetPages = GetPages
+
+function Register()
+
+    module.Name = 'MangaPark'
+    module.Language = 'English'
+
+    module.Domains.Add('mangapark.net')
+    module.Domains.Add('mangapark.org')
+
+    -- Set the "set" cookie so that 18+ content is visible.
+
+    global.SetCookie('.' .. module.Domains.First(), "set", "h=1")
+
+end
+
+function GetInfo()
+
+    BaseGetInfo()
+
+    if(not IsMangaParkV3()) then
+
+        local json = Json.New(dom.SelectValue('//script[contains(@id,"__NEXT_DATA__")]'))
+            .SelectToken('..state.data.data')
+
+        info.Title = json.SelectValue('name')
+        info.AlternativeTitle = json.SelectValues('altNames[*]')
+        info.Author = json.SelectValues('authors[*]')
+        info.Artist = json.SelectValues('artists[*]')
+        info.Tags = json.SelectValues('genres[*]')
+        info.Status = json.SelectValue('originalStatus')
+        info.Summary = json.SelectValue('summary.code')
+        info.Type = json.SelectValue('originalLanguage')
+
+    end
+
+end
+
+function GetChapters()
+
+    if(IsMangaParkV3()) then
+
+        BaseGetChapters()
+
+    else
+
+        -- We have to query the API to get the chapter list.
+
+        local comicId = GetComicId()
+        local payload = '{"query":"\\n  query get_content_comicChapterRangeList($select: Content_ComicChapterRangeList_Select) {\\n    get_content_comicChapterRangeList(\\n      select: $select\\n    ) {\\n      reqRange{x y}\\n      missing\\n      pager {x y}\\n      items{\\n        serial \\n        chapterNodes {\\n          \\n  id\\n  data {\\n    \\n\\n  id\\n  sourceId\\n\\n  dbStatus\\n  isNormal\\n  isHidden\\n  isDeleted\\n  isFinal\\n  \\n  dateCreate\\n  datePublic\\n  dateModify\\n  lang\\n  volume\\n  serial\\n  dname\\n  title\\n  urlPath\\n\\n  srcTitle srcColor\\n\\n  count_images\\n\\n  stat_count_post_child\\n  stat_count_post_reply\\n  stat_count_views_login\\n  stat_count_views_guest\\n  \\n  userId\\n  userNode {\\n    \\n  id \\n  data {\\n    \\nid\\nname\\nuniq\\navatarUrl \\nurlPath\\n\\nverified\\ndeleted\\nbanned\\n\\ndateCreate\\ndateOnline\\n\\nstat_count_chapters_normal\\nstat_count_chapters_others\\n\\nis_adm is_mod is_vip is_upr\\n\\n  }\\n\\n  }\\n\\n  disqusId\\n\\n\\n  }\\n\\n          sser_read\\n        }\\n      }\\n\\n    }\\n  }\\n  ","variables":{"select":{"comicId":' .. comicId .. ',"range":null,"isAsc":false}},"operationName":"get_content_comicChapterRangeList"}'
+        local chaptersJson = GetApiJson(payload)
+
+        for chapterNode in chaptersJson.SelectTokens('..chapterNodes[*].data') do
+
+            local chapterInfo = ChapterInfo.New()
+
+            chapterInfo.Volume = chapterNode.SelectValue('volume')
+            chapterInfo.Title = chapterNode.SelectValue('dname')
+            chapterInfo.Url = chapterNode.SelectValue('urlPath')
+            chapterInfo.Version = chapterNode.SelectValue('srcTitle')
+            chapterInfo.Language = chapterNode.SelectValue('lang')
+
+            chapters.Add(chapterInfo)
+
+        end
+
+        chapters.Reverse()
+
+    end  
+
+end
+
+function GetPages()
+
+    if(IsMangaParkV3()) then
+
+        BaseGetPages()
+
+    else
+
+        local json = Json.New(dom.SelectValue('//script[contains(@id,"__NEXT_DATA__")]'))
+            .SelectToken('..imageSet')
+
+        local fileNames = json.SelectValues('httpLis[*]')
+        local accessTokens = json.SelectValues('wordLis[*]')
+
+        for i = 0, fileNames.Count() - 1 do
+
+            local imageUrl = fileNames[i] .. '?' .. accessTokens[i]
+
+            pages.Add(imageUrl)
+
+        end
+
+    end
+
+end
+
+function IsMangaParkV3()
+
+    return url:contains('/comic/')
+
+end
+
+function GetComicId()
+
+    return url:regex('\\/(?:title|comic)\\/(\\d+)', 1)
+
+end
+
+function GetApiUrl()
+
+    return '/apo/'
+
+end
+
+function GetApiJson(postDataStr)
+
+    http.Headers['accept'] = '*/*'
+    http.Headers['content-type'] = 'application/json'
+
+    return Json.New(http.Post(GetApiUrl(), postDataStr))
+
+end
