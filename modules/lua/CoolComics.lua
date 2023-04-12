@@ -5,6 +5,9 @@ function Register()
     module.Adult = true
 
     module.Domains.Add('cool-comics.com')
+    module.Domains.Add('cool-manga.com')
+    module.Domains.Add('porn-comic.com')
+    module.Domains.Add('www.cool-manga.com')
 
 end
 
