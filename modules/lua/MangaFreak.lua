@@ -7,20 +7,20 @@ function Register()
     module.Domains.Add('mangafreak.net')
     module.Domains.Add('w12.mangafreak.net')
     module.Domains.Add('w13.mangafreak.net')
+    module.Domains.Add('w14.mangafreak.net')
+    module.Domains.Add('w15.mangafreak.net')
 
 end
 
 function GetInfo()
 
-    local infoNode = dom.SelectElement('//div[contains(@class,"manga_series_data")]')
-
-    info.Title = dom.SelectValue('//h5')
-    info.AlternativeTitle = infoNode.SelectValue('text[1]')
-    info.DateReleased = infoNode.SelectValue('div[1]')
-    info.Status = infoNode.SelectValue('div[2]')
-    info.Author = infoNode.SelectValue('div[3]')
-    info.Artist = infoNode.SelectValue('div[4]')
-    info.ReadingDirection = infoNode.SelectValue('div[5]')
+    info.Title = dom.SelectValue('//h1')
+    info.AlternativeTitle = dom.SelectValue('//h1/following-sibling::div')  
+    info.DateReleased = dom.SelectValue('//div[contains(text(),"Release:")]'):after(":")
+    info.Status = dom.SelectValue('//div[contains(text(),"Status:")]'):after(":")
+    info.Author = dom.SelectValue('//div[contains(text(),"Author:")]'):after(":")
+    info.Artist = dom.SelectValue('//div[contains(text(),"Artist:")]'):after(":")
+    info.ReadingDirection = dom.SelectValue('//div[contains(text(),"Type:")]'):after(":")
     info.Tags = dom.SelectValues('//div[contains(@class,"series_sub_genre_list")]/a')
     info.Summary = dom.SelectValue('//p')
 
