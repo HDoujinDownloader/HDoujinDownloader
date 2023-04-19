@@ -33,6 +33,16 @@ end
 
 function GetPages()
 
-    pages.AddRange(dom.SelectValues('//article/img/@src'))
+    -- Most chapters have images directly in the HTML, but some of them we need to get like this.
+
+    local imagesScript = dom.SelectValue('//script[contains(text(),"listImageCaption ")]')
+
+    if(not isempty(imagesScript)) then
+        pages.AddRange(imagesScript:regexmany('"url":"([^"]+)', 1))
+    end
+
+    if(isempty(pages)) then        
+        pages.AddRange(dom.SelectValues('//article/img[not(@width)]/@src'))
+    end
 
 end
