@@ -34,18 +34,48 @@ end
 
 function GetPages()
 
-    -- Switch to "10 pages" mode, which allows us to access all of the pages.
-    -- We will be redirected multiple times.
+    -- Use GetResponse so we can get the URL of the page we get redirected to.
+    -- This allows us to generate the full URL for the JavaScript redirect.
 
-    url = url:trim('/') .. '-10-1.html'
-    dom = Dom.New(http.Get(url))
+    local httpResponse = http.GetResponse(url)
+
+    url = httpResponse.Url
+    dom = Dom.New(httpResponse.Body)
+
+    -- Follow the JavaScript redirect if we need to.
+
+    local redirectScript = dom.SelectValue('//script[contains(text(), "window.location.href")]')
+    local redirectUrl = redirectScript:regex('window\\.location\\.href\\s*=\\s*"([^"]+)', 1)
+
+    if(not isempty(redirectUrl)) then
+
+        http.Referer = url
+
+        url = GetRooted(redirectUrl, url)
+        dom = Dom.New(http.Get(url))
+
+    end
 
     GetPagesFromArray()
 
-    -- Some of the subdomains use a different reader where the images are directly in the HTML.
-    -- We can only get 10 images at a time.
+    if(isempty(pages)) then
+
+        -- Switch to "10 pages" mode, which allows us to access all of the pages.
+        -- We will be redirected multiple times.
+        
+        -- This is no longer relevant for NineManga itself, but it is for some dependent modules (e.g. NiAdd).
+
+        url = RegexReplace(url, '(?:\\/|\\.html)$', '-10-1.html')
+        dom = Dom.New(http.Get(url))
+
+        GetPagesFromArray()
+
+    end
 
     if(isempty(pages)) then
+
+        -- Some of the subdomains use a different reader where the images are directly in the HTML.
+        -- We can only get 10 images at a time.
 
         -- It will paginate into the next chapter, so make sure we only get the pages for this chapter.
 
@@ -74,8 +104,6 @@ function CleanTitle(title)
 end
 
 function GetPagesFromArray()
-
-    -- This doesn't seem to work anymore, but I've left it here just in case (relied on by other modules with the same reader).
 
     local imagesJsonStr = dom.SelectValue('//script[contains(.,"all_imgs_url")]')
         :regex('all_imgs_url:\\s*(\\[[^\\]]+\\])', 1)
