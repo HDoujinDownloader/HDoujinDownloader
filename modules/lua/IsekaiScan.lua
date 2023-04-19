@@ -21,6 +21,7 @@ function Register()
     module.Domains.Add('manhuamanhwa.com', 'MANHUA & MANHWA')
     module.Domains.Add('manhwahentai.me', 'ManhwaHentai.me')
     module.Domains.Add('mm-scans.org', 'Mmscans')
+    module.Domains.Add('paragonscans.com', 'Paragonscans')
     module.Domains.Add('toongod.com', 'ToonGod')
     module.Domains.Add('www.betafox.net', 'Beta Fox')
 
