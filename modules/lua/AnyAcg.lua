@@ -1,1 +1,65 @@
-DoEncryptedString("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")
+require "AnyAcgV2"
+
+local BaseGetInfo = GetInfo
+local BaseGetChapters = GetChapters
+local BaseGetPages = GetPages
+
+function Register()
+
+    module.Name = 'AnyACG'
+
+    module.Domains.Add('bato.to', 'BATO.TO')
+    module.Domains.Add('batotoo.com', 'BATO.TO')
+    module.Domains.Add('mangaseinen.com', 'mangaseinen.com')
+    module.Domains.Add('mangatensei.com', 'MangaTensei.com')
+    module.Domains.Add('mangatoto.com', 'BATO.TO')
+    module.Domains.Add('rawmanga.info', 'raw manga')
+
+end
+
+function GetInfo()
+
+    if(IsAnyAcgV2()) then
+
+        BaseGetInfo()
+
+    else
+
+        local json = Json.New(dom.SelectValue('//astro-island[contains(@props,"originalStatus")]/@props'):replace('&quot;', '\"'))
+            .SelectToken('data[1]')
+
+        info.Title = json.SelectValue('name[1]')
+        info.AlternativeTitle = Json.New(json.SelectValue('altNames[1]')).SelectValues('[*][1]')
+        info.Author = Json.New(json.SelectValue('authors[1]')).SelectValues('[*][1]')
+        info.Artist = Json.New(json.SelectValue('artists[1]')).SelectValues('[*][1]')
+        info.Tags = Json.New(json.SelectValue('genres[1]')).SelectValues('[*][1]')
+        info.Language = json.SelectValue('tranLang[1]')
+        info.Status = json.SelectValue('originalStatus[1]')
+        info.DateReleased = json.SelectValue('originalPubFrom[1]')
+        info.ReadingDirection = json.SelectValue('readDirection[1]')
+        info.Summary = json.SelectValue('summary[1].code')
+
+    end
+
+end
+
+function GetChapters()
+
+    chapters.AddRange(dom.SelectElements('//div[contains(@name,"chapter-list")]//a[contains(@href,"/title/")]'))    
+
+end
+
+function GetPages()
+
+    local json = Json.New(dom.SelectValue('//astro-island[contains(@props,"imageFiles")]/@props'):replace('&quot;', '\"'))
+    local imagesJson = Json.New(json.SelectValue('imageFiles[1]'))
+   
+    pages.AddRange(imagesJson.SelectValues('[*][1]'))
+
+end
+
+function IsAnyAcgV2()
+
+    return url:contains('/series/')
+
+end
