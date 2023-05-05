@@ -24,10 +24,30 @@ function GetChapters()
 end
 
 function GetPages()
+    
+    -- The images are delivered as a PDF (with the ".jpg" file extension?)
 
-    for page in Paginator.New(http, dom, '//a[contains(text(),"หน้าถัดไป")]/@href') do
+    local pdfDownloadUrl = dom.SelectValue('//script[contains(text(), "initPDFViewer")]')
+        :regex('initPDFViewer\\("([^"]+)"', 1)
 
-        pages.Add(page.SelectValue('//img/@src'))
+    if(not isempty(pdfDownloadUrl)) then
+
+        pdfDownloadUrl = '/manga/' .. pdfDownloadUrl .. '.jpg'
+
+        local pageInfo = PageInfo.New(pdfDownloadUrl)
+
+        pageInfo.ExtractContents = true
+        pageInfo.FileExtensionHint = '.pdf'
+
+        pages.Add(pageInfo)
+
+    else
+        
+        for page in Paginator.New(http, dom, '//a[contains(text(),"หน้าถัดไป")]/@href') do
+
+            pages.Add(page.SelectValue('//img/@src'))
+    
+        end
 
     end
 
