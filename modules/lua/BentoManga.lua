@@ -41,7 +41,7 @@ function GetChapters()
         chapterInfo.Language = 'fr'
         chapterInfo.Translator = translator ~= 'null' and translator or ''
         chapterInfo.Volume = isnumber(volumeNumber) and volumeNumber or ''
-        chapterInfo.Url = baseUrl .. chapterNumber
+        chapterInfo.Url = baseUrl .. chapterNumber:replace('.', '-')
 
         if(not isempty(chapterTitle)) then
             chapterInfo.Title = chapterInfo.Title .. ' - ' .. chapterTitle
@@ -50,6 +50,8 @@ function GetChapters()
         chapters.Add(chapterInfo)
 
     end
+
+    chapters.Sort()
 
 end
 
