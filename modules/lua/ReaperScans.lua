@@ -52,10 +52,12 @@ function GetChapters()
 
             chapter.Url = chapterNode.SelectValue('./@href')
             chapter.Title = chapterNode.SelectValue('.//p')
-
+            
             chapters.Add(chapter)
 
         end
+
+        sleep(3)
 
     end
 
@@ -65,6 +67,11 @@ end
 
 function GetPages()
 
-    pages.AddRange(dom.SelectValues('//main//img/@src'))
+    pages.AddRange(dom.SelectValues('//main//img[contains(@src,"media.reaperscans.com") or contains(@class,"max-w-full mx-auto display-block")]/@src'))
 
+end
+
+function sleep(s)
+    local ntime = os.clock() + s/10
+    repeat until os.clock() > ntime
 end
