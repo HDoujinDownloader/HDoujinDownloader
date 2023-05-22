@@ -1,56 +1,57 @@
 function Register()
 
     module.Name = 'Pixiv'
-    module.Domain = 'pixiv.net'
     module.Type = 'Artist CG'
-    module.Strict = false -- Because artworks can be made up of multiple images, we'll often have more images than expected
+    
+    -- Because artworks can be made up of multiple images, we'll often have more images than expected.
+
+    module.Strict = false 
+
+    module.Domains.Add('pixiv.net')
+    module.Domains.Add('www.pixiv.net')
 
 end
 
 function GetInfo()
 
+    local json = GetPreloadJson()
+
     if(url:contains('/users/')) then
 
         -- Added user gallery.
 
-        local json = GetUserJson(url)
+        info.Artist = json.SelectValue('user..name')
+        info.Summary = json.SelectValue('user..comment')
 
-        VerifyApiResponse(json)
-
-        info.Artist = json.SelectValue('user.name')
-        info.Summary = json.SelectValue('user.comment')
+        json = GetUserArtworksJson()
 
         if(url:contains('/manga')) then
 
             -- Added "manga" tab.
             -- Treat each manga as its own chapter.
 
-            info.Title = info.Artist..'\'s manga'
-            info.ChapterCount = json.SelectValue('profile.total_manga')
+            info.Title = info.Artist .. '\'s manga'
+            info.ChapterCount = json.SelectToken('body.manga').Count()
 
         else
 
             -- Added "illustrations" tab.
 
-            info.Title = info.Artist..'\'s illustrations'
-            info.PageCount = json.SelectValue('profile.total_illusts')
+            info.Title = info.Artist .. '\'s illustrations'
+            info.PageCount = json.SelectToken('body.illusts').Count()
 
         end
 
     elseif(url:contains('/artworks/')) then
 
-        -- Added single artwork.
+        -- Added a single illustration/manga.
 
-        local json = GetIllustrationJson(url)
-
-        VerifyApiResponse(json)
-
-        info.Title = json.SelectValue('illust.title')
-        info.Artist = json.SelectValue('illust.user.name')
-        info.Summary = json.SelectValue('illust.caption')
-        info.Tags = json.SelectValues('illust.tags[*].name')
-        info.DateReleased = json.SelectValue('illust.create_date')
-        info.PageCount = json.SelectValue('illust.page_count')
+        info.Title = json.SelectValue('illust..illustTitle')
+        info.Artist = json.SelectValue('illust..userName')
+        info.Summary = json.SelectValue('illust..description')
+        info.Tags = json.SelectValues('illust..tags.tags[*].tag')
+        info.DateReleased = json.SelectValue('illust..createDate')
+        info.PageCount = json.SelectValue('illust..pageCount')
         info.Adult = List.New(info.Tags).Contains('R-18')
 
     end
@@ -63,43 +64,14 @@ function GetPages()
 
         -- Added user gallery.
 
-        local type = 'illust'
-        local offset = 0
-        local json = GetIllustrationsJson(url, type, offset)
+        local json = GetUserArtworksJson()
 
-        VerifyApiResponse(json)
+        for node in json.SelectToken('body.illusts') do
 
-        -- We can't get all images in one go; we can only get 30 images at a time.
-        -- Keep going until we don't get anymore images (up to an offset of 5000, which is the limit enforced by the API).
+            local artworkId = node.Key
+            local artworkJson = GetArtworkImagesJson(artworkId)
 
-        while json['illusts'].Count() > 0 and offset < 5000 do
-
-            for artwork in json['illusts'] do
-      
-                local singlePage = artwork.SelectValue('meta_single_page.original_image_url')
-                local metaPages = artwork.SelectValues('meta_pages[*].image_urls.original')
-
-                if(not isempty(singlePage)) then
-                    pages.Add(singlePage)
-                end
-        
-                if(not isempty(metaPages)) then
-
-                    metaPages.Reverse() -- We reverse the page list later; this will make sure the pages are in the correct order.
-
-                    pages.AddRange(metaPages)
-
-                end
-
-            end
-
-            offset = offset + json['illusts'].Count()
-            
-            if(offset < 5000) then
-
-                json = GetIllustrationsJson(url, type, offset)
-
-            end
+            pages.AddRange(artworkJson.SelectValues('body[*].urls.original'))
 
         end
 
@@ -109,23 +81,16 @@ function GetPages()
 
     elseif(url:contains('/artworks/')) then
 
-        -- Added single artwork.
+        -- Added a single illustration/manga.
 
-        local json = GetIllustrationJson(url)
+        local json = GetArtworkImagesJson()
 
-        VerifyApiResponse(json)
+        pages.AddRange(json.SelectValues('body[*].urls.original'))
 
-        -- Only one of these queries will produce results, so it's fine to add both.
+        -- If the artwork is NSFW, we won't be able to get any images without signing in.
 
-        local singlePage = json.SelectValue('illust.meta_single_page.original_image_url')
-        local metaPages = json.SelectValues('illust.meta_pages[*].image_urls.original')
-
-        if(not isempty(singlePage)) then
-            pages.Add(singlePage)
-        end
-
-        if(not isempty(metaPages)) then
-            pages.AddRange(metaPages)
+        if(isempty(pages)) then
+            Fail(Error.LoginRequired)
         end
 
     end
@@ -134,31 +99,52 @@ end
 
 function GetChapters()
 
-    -- If we're here, the user added an artist's "manga" tab.
-    -- We'll treat each manga as a separate chapter.
-    -- Keep going until we don't get anymore manga (up to an offset of 5000, which is the limit enforced by the API).
+    local json = GetPreloadJson()
+    local userId = json.SelectValue('user..userId')
+    local artworkIds = List.New()
 
-    local type = 'manga'
-    local offset = 0
-    local json = GetIllustrationsJson(url, type, offset)
+    json = GetUserArtworksJson()
 
-    while json['illusts'].Count() > 0 and offset < 5000 do
+    for node in json.SelectToken('body.manga') do
+        artworkIds.Add(node.Key)
+    end
 
-        for artwork in json['illusts'] do
+    -- We'll have a list of all artwork IDs, but no titles.
+    -- We need to request the artwork metadata in batches.
 
-            local id = tostring(artwork['id'])
-            local title = tostring(artwork['title'])
+    local batchSize = 48
 
-            chapters.Add('/artworks/'..id, title)
+    for i = 0, artworkIds.Count() - 1, batchSize do
 
+        local apiEndpoint = '/ajax/user/' .. userId .. '/profile/illusts?'
+
+        for j = i, math.min(i + batchSize, artworkIds.Count()) - 1 do
+
+            if(j > i) then
+                apiEndpoint = apiEndpoint .. '&'
+            end
+
+            apiEndpoint = apiEndpoint .. 'ids%5B%5D=' .. artworkIds[j]
 
         end
 
-        offset = offset + json['illusts'].Count()
-        
-        if(offset < 5000) then
+        apiEndpoint = apiEndpoint .. '&work_category=manga&is_first_page=1'
 
-            json = GetIllustrationsJson(url, type, offset)
+        -- Get the metadata for this batch.
+
+        json = Json.New(http.Get(apiEndpoint))
+
+        local artworkNodes = json.SelectToken('body..works')
+
+        for j = 0, artworkNodes.Count() - 1 do
+
+            local node = artworkNodes[j]
+
+            local artworkId = node.SelectValue('..id')
+            local artworkTitle = node.SelectValue('..title')
+            local artworkUrl = '/en/artworks/' .. artworkId
+
+            chapters.Add(artworkUrl, artworkTitle)
 
         end
 
@@ -170,217 +156,34 @@ function GetChapters()
 
 end
 
-function Login()
+function GetPreloadJson()
 
-    -- We don't bother trying to log in by username/password if we've already got an access token.
-
-    if(isempty(module.Data['access_token'])) then
-
-        GetAccessToken(username, password)
-
-        if(isempty(module.Data['access_token'])) then
-            Fail(Error.LoginFailed)
-        end
-        
-    end
+    return Json.New(dom.SelectValue('//meta[@id="meta-preload-data"]/@content'))
 
 end
 
-function GetAuthorizationUrl()
+function GetUserArtworksJson()
 
-    -- https://oauth.secure.pixiv.net/auth/token
+    local json = GetPreloadJson()
+    local userId = json.SelectValue('user..userId')
+    local apiEndpoint = '/ajax/user/' .. userId .. '/profile/all'
 
-    return 'https://oauth.secure.'..module.Domain..'/auth/token'
-
-end
-
-function GetApiUrl()
-
-    -- https://app-api.pixiv.net
-
-    return 'https://app-api.'..module.Domain
+    return Json.New(http.Get(apiEndpoint))
 
 end
 
-function AddAuthorizationHeader(http)
+function GetArtworkImagesJson(artworkId)
 
-    RefreshAccessToken()
+    if(artworkId == nil) then
 
-    -- Add the authorization header to the http object passed in, IF we have received an access token.
+        local json = GetPreloadJson()
 
-    if(not isempty(module.Data['access_token'])) then
-
-        http.Headers.Add('Authorization', 'Bearer '..module.Data['access_token'])
+        artworkId = json.SelectValue('illust..illustId')
 
     end
 
-end
+    local apiEndpoint = '/ajax/illust/' .. artworkId .. '/pages'
 
-function GetAppVersion()
-
-    local appStoreUrl = 'https://play.google.com/store/apps/details?id=jp.pxv.android&hl=en_US&gl=US'
-    local appVersion = '5.0.234'
-
-    if(isempty(module.Data['App-Version'])) then
-
-        -- Set the default app version so we have something to use even if we fail to get the latest version.
-
-        module.Data['App-Version'] = appVersion
-
-        Log('Getting latest app version from '..appStoreUrl)
-
-        local dom = Dom.New(http.Get(appStoreUrl))
-
-        appVersion = dom.SelectValue('//div[contains(text(),"Current Version")]/following-sibling::*')
-
-        Log('Got app version: '..appVersion)
-
-        if(not isempty(appVersion)) then
-            module.Data['App-Version'] = appVersion
-        end
-
-    end
-
-    return module.Data['App-Version']
-
-end
-
-function PrepareHttpForAuthorization(http)
-
-    -- Add all of the necessary common headers to the http object passed in to perform authorization.
-
-    local clientId = 'KzEZED7aC0vird8jWyHM38mXjNTY'
-    local clientSecret = 'W9JZoJe00qPvJsiyCGT3CCtC6ZUtdpKpzMbNlUGP'
-    local loginSecret = '28c1fdd170a5204386cb1313c7077b34f83e4aaf4aa829ce78c231e05b0bae2c'
-
-    local xClientTimeHeader = os.date("!%Y-%m-%dT%T+00:00")
-    local xClientHashHeader = MD5(xClientTimeHeader..loginSecret):lower()
-
-    -- The user agent, and the app version in particular, are very important!
-    -- If we try to authorize with an outdated app version in the user agent, it will respond with a 403 error.
-    -- See https://github.com/upbit/pixivpy/issues/140
-
-    local appOSVersion = '4.4.2'
-    local appVersion = GetAppVersion()
-
-    http.Headers.Add('User-Agent', 'PixivAndroidApp/'..appVersion..' (Android '..appOSVersion..'; R831T)')
-    http.Headers.Add('Accept-Language', 'en_US')
-    http.Headers.Add('App-OS', 'android')
-    http.Headers.Add('App-OS-Version', appOSVersion)
-    http.Headers.Add('App-Version', appVersion)
-    http.Headers.Add('X-Client-Time', xClientTimeHeader)
-    http.Headers.Add('X-Client-Hash', xClientHashHeader)
-
-    http.PostData.Add('client_id', clientId)
-    http.PostData.Add('client_secret', clientSecret)
-    http.PostData.Add('device_token', 'pixiv')
-    http.PostData.Add('get_secure_url', 'true')
-    http.PostData.Add('include_policy', 'true')
-
-end
-
-function GetAccessToken(username, password)
-
-    -- Get an access token by username and password.
-
-    local http = Http.New()
-
-    PrepareHttpForAuthorization(http)
-
-    http.PostData.Add('grant_type', 'password')
-    http.PostData.Add('username', username)
-    http.PostData.Add('password', password)
-
-    ReadAccessToken(Json.New(http.Post(GetAuthorizationUrl())))
-
-end
-
-function RefreshAccessToken()
-
-    if(not isempty(module.Data['refresh_token']) and 
-        not isempty(module.Data['expires_on']) 
-        and os.time() >= tonumber(module.Data['expires_on'])) then
-
-        -- Get an access token using the refresh token.
-
-        local http = Http.New()
-
-        PrepareHttpForAuthorization(http)
-
-        http.PostData.Add('grant_type', 'refresh_token')
-        http.PostData.Add('refresh_token', module.Data['refresh_token'])
-
-        ReadAccessToken(Json.New(http.Post(GetAuthorizationUrl())))
-
-        return not isempty(module.Data['refresh_token'])
-
-    end
-
-    -- Returning false indicates that we did not refresh the access token.
-
-    return false
-
-end
-
-function ReadAccessToken(json)
-
-    -- Read information about the access token from the JSON response we got from the API.
-
-    module.Data['expires_on'] = (os.time() + tonumber(json.SelectValue('response.expires_in')))
-    module.Data['access_token'] = json.SelectValue('response.access_token')
-    module.Data['refresh_token'] = json.SelectValue('response.refresh_token')
-
-end
-
-function GetIllustrationJson(url)
-
-    AddAuthorizationHeader(http)
-
-    local id = StripParameters(url):regex('(\\d+)\\/*$', 1)
-    local requestUrl = GetApiUrl()..'/v1/illust/detail?illust_id='..id
-
-    return Json.New(http.Get(requestUrl))
-
-end
-
-function GetUserJson(url)
-
-    AddAuthorizationHeader(http)
-
-    local userId = StripParameters(url):regex('\\/users\\/(\\d+)', 1)
-    local requestUrl = GetApiUrl()..'/v1/user/detail'
-
-    requestUrl = SetParameter(requestUrl, 'user_id', userId)
-    requestUrl = SetParameter(requestUrl, 'filter', 'for_ios')
-
-    return Json.New(http.Get(requestUrl))
-
-end
-
-function GetIllustrationsJson(url, type, offset)
-
-    AddAuthorizationHeader(http)
-
-    local userId = StripParameters(url):regex('\\/users\\/(\\d+)', 1)
-    local requestUrl = GetApiUrl()..'/v1/user/illusts'
-
-    requestUrl = SetParameter(requestUrl, 'user_id', userId)
-    requestUrl = SetParameter(requestUrl, 'type', type)
-    requestUrl = SetParameter(requestUrl, 'offset', offset)
-    requestUrl = SetParameter(requestUrl, 'filter', 'for_ios')
-
-    return Json.New(http.Get(requestUrl))
-
-end
-
-function VerifyApiResponse(json)
-
-    if(not isempty(json['error'])) then
-
-        Log(json['error']['message'])
-
-        Fail(Error.LoginRequired)
-
-    end
+    return Json.New(http.Get(apiEndpoint))
 
 end
