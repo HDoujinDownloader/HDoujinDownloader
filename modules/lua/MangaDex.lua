@@ -73,6 +73,8 @@ function GetChapters()
 
         -- Add contentRating to chapter call to bypass rating checks
 
+        PrepareHttpHeaders()
+
         local apiEndpoint = GetApiEndpoint() .. 'chapter?contentRating[]=safe&contentRating[]=suggestive&contentRating[]=erotica&contentRating[]=pornographic&manga=' .. uuid .. '&limit=' .. limit .. '&offset=' .. offset .. '&includes[]=scanlation_group'
         local json = Json.New(http.Get(apiEndpoint))
         local chapterNodes = json.SelectTokens('data[*]')
@@ -144,7 +146,9 @@ function GetPages()
 
     RedirectFromOldUrl()
 
-    local json = Json.New(http.Get(GetApiEndpoint() .. 'at-home/server/' .. GetGalleryUuid()))
+    PrepareHttpHeaders()
+
+    local json = Json.New(http.Get(GetApiEndpoint() .. 'at-home/server/' .. GetGalleryUuid() .. '?forcePort443=false'))
 
     local hash = json.SelectValue('chapter.hash')
     local baseUrl = json.SelectValue('baseUrl')
@@ -179,7 +183,15 @@ function GetGalleryUuid()
 
 end
 
+function PrepareHttpHeaders()
+
+    http.Headers['accept'] = '*/*'
+
+end
+
 function GetGalleryJson()
+
+    PrepareHttpHeaders()
 
     local uuid = GetGalleryUuid()
     local type = url:regex('\\/(title|chapter)', 1):replace('title', 'manga')
@@ -231,6 +243,8 @@ function GetRelationshipNames(type, uuids)
 
     for uuid in uuids do
 
+        PrepareHttpHeaders()
+
         local apiEndpoint = GetApiEndpoint() .. type .. '/' .. uuid
         local json = Json.New(http.Get(apiEndpoint))
 
@@ -243,6 +257,8 @@ function GetRelationshipNames(type, uuids)
 end
 
 function BuildGroupsDict(uuids)
+
+    PrepareHttpHeaders()
 
     local groupsApiEndpoint = GetApiEndpoint() .. 'group?'
 
