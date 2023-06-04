@@ -61,6 +61,7 @@ function Register()
     module.Language = 'Thai'
 
     module.Domains.Add('108read.com', '108Read')
+    module.Domains.Add('webtoonmanga.com', 'webtoonmanga')
 
     RegisterModule(module)
 
