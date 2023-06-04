@@ -10,6 +10,7 @@ function Register()
 
     module.Domains.Add('bato.to', 'BATO.TO')
     module.Domains.Add('batotoo.com', 'BATO.TO')
+    module.Domains.Add('dto.to', 'BATO.TO')
     module.Domains.Add('mangaseinen.com', 'mangaseinen.com')
     module.Domains.Add('mangatensei.com', 'MangaTensei.com')
     module.Domains.Add('mangatoto.com', 'BATO.TO')
