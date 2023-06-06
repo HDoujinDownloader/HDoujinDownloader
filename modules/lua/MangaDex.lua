@@ -169,11 +169,13 @@ function GetPages()
 
     end
 
+    pages.Referer = 'https://' .. module.Domain .. '/'
+
 end
 
 function GetApiEndpoint()
 
-    return '//api.'..module.Domain..'/'
+    return '//api.' .. module.Domain .. '/'
 
 end
 
