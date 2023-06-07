@@ -87,82 +87,97 @@ end
 
 function GetInfo()
 
-    info.Title = dom.SelectValue('//h1/text()[last()]')
-    info.AlternativeTitle = dom.SelectValue('//div[contains(h5/text(), "Alternative") or contains(h5/text(), "Diğer Adları") or contains(h5/text(), "Alternativo")]/following-sibling::div')
-    info.Author = dom.SelectValues('//div[contains(h5/text(), "Author(s)") or contains(h5/text(), "Auth.") or contains(h5/text(), "Yazar") or contains(h5/text(), "Autor(es)")]/following-sibling::div//a')
-    info.Artist = dom.SelectValues('//div[contains(h5/text(), "Artist") or contains(h5/text(), "Çizer") or contains(h5/text(), "Artista(s)")]/following-sibling::div//a')
-    info.Characters = dom.SelectValues('//div[contains(h5/text(), "Character")]/following-sibling::div//a')
-    info.Parody = dom.SelectValues('//div[contains(h5/text(), "Parodi(es)")]/following-sibling::div//a')
-    info.Circle = dom.SelectValues('//div[contains(h5/text(), "Circle")]/following-sibling::div//a')
-    info.Tags = dom.SelectValues('(//div[contains(h5/text(), "Genre") or contains(h5/text(), "Tag(s)") or contains(h5/text(), "Kategori") or contains(h5/text(), "Tür") or contains(h5/text(), "Género(s)")])[1]/following-sibling::div//a')
-    info.Type = dom.SelectValue('//div[contains(h5/text(), "Type") or contains(h5/text(), "Tip") or contains(h5/text(), "Tipo")]/following-sibling::div')
-    info.DateReleased = dom.SelectValue('//div[contains(h5/text(), "Release") or contains(h5/text(), "Yayınlanma")]/following-sibling::div')
-    info.Status = dom.SelectValue('//div[contains(h5/text(), "Status") or contains(h5/text(), "Durum")]/following-sibling::div')
-    info.Summary = dom.SelectValues('//div[contains(@class, "description-summary") or contains(@class, "dsct") or contains(@class,"summary-text")]//p'):join('\n\n') -- note that some content has multiple paragraphs (e.g. on astrallibrary.net)
-    info.Adult = not isempty(dom.SelectValue('//h1/span[contains(@class, "adult")]'))
-    info.Language = dom.SelectValues('//div[contains(h5/text(), "Language")]/following-sibling::div//a')
+    if(IsTagPage()) then
 
-    if(module.GetName(url):endswith('Scans')) then
-        info.Scanlator = module.GetName(url)
+        -- Add all galleries on the current page to the download queue.
+
+        for galleryUrl in dom.SelectValues('//div[contains(@id,"manga-item")]/a/@href') do
+            Enqueue(galleryUrl)
+        end
+
+        info.Ignore = true
+
+    else
+
+        info.Title = dom.SelectValue('//h1/text()[last()]')
+        info.AlternativeTitle = dom.SelectValue('//div[contains(h5/text(), "Alternative") or contains(h5/text(), "Diğer Adları") or contains(h5/text(), "Alternativo")]/following-sibling::div')
+        info.Author = dom.SelectValues('//div[contains(h5/text(), "Author(s)") or contains(h5/text(), "Auth.") or contains(h5/text(), "Yazar") or contains(h5/text(), "Autor(es)")]/following-sibling::div//a')
+        info.Artist = dom.SelectValues('//div[contains(h5/text(), "Artist") or contains(h5/text(), "Çizer") or contains(h5/text(), "Artista(s)")]/following-sibling::div//a')
+        info.Characters = dom.SelectValues('//div[contains(h5/text(), "Character")]/following-sibling::div//a')
+        info.Parody = dom.SelectValues('//div[contains(h5/text(), "Parodi(es)")]/following-sibling::div//a')
+        info.Circle = dom.SelectValues('//div[contains(h5/text(), "Circle")]/following-sibling::div//a')
+        info.Tags = dom.SelectValues('(//div[contains(h5/text(), "Genre") or contains(h5/text(), "Tag(s)") or contains(h5/text(), "Kategori") or contains(h5/text(), "Tür") or contains(h5/text(), "Género(s)")])[1]/following-sibling::div//a')
+        info.Type = dom.SelectValue('//div[contains(h5/text(), "Type") or contains(h5/text(), "Tip") or contains(h5/text(), "Tipo")]/following-sibling::div')
+        info.DateReleased = dom.SelectValue('//div[contains(h5/text(), "Release") or contains(h5/text(), "Yayınlanma")]/following-sibling::div')
+        info.Status = dom.SelectValue('//div[contains(h5/text(), "Status") or contains(h5/text(), "Durum")]/following-sibling::div')
+        info.Summary = dom.SelectValues('//div[contains(@class, "description-summary") or contains(@class, "dsct") or contains(@class,"summary-text")]//p'):join('\n\n') -- note that some content has multiple paragraphs (e.g. on astrallibrary.net)
+        info.Adult = not isempty(dom.SelectValue('//h1/span[contains(@class, "adult")]'))
+        info.Language = dom.SelectValues('//div[contains(h5/text(), "Language")]/following-sibling::div//a')
+    
+        if(module.GetName(url):endswith('Scans')) then
+            info.Scanlator = module.GetName(url)
+        end
+    
+        if(isempty(info.Title)) then
+    
+            -- Sometimes we need to get the title in a different way (www.porncomixonline.net).
+            -- We purposefully look under the "post-title" div because, for western comics on the same website, "//h3" returns an incorrect title.
+            -- This selector won't work for western comics (which are picked up in the following case), but does work for manga.
+    
+            info.Title = dom.SelectValue('//div[contains(@class, "post-title")]/h3')
+    
+        end
+    
+        if(isempty(info.Title)) then
+    
+            -- If the user added a reader URL, we may need to get the title in a different way (Western comics on www.porncomixonline.net).
+            -- This case is not part of the Madara theme, but a special case for porncomixonline.net, where western comics use a notably different layout.
+    
+            info.Title = dom.SelectValue('//h2')
+            info.Tags = dom.SelectValues('//div[@class="item-tags"]//li')
+    
+        end
+    
+        if(isempty(info.Title)) then
+    
+            -- Reader galleries don't always have a title, so we'll use the title of the selected chapter if we need to.
+    
+            info.Title = dom.SelectValue('//li[@class="active"]')
+    
+        end
+    
+        if(isempty(info.Summary)) then
+    
+            -- Some sites don't have a nested "p" element in the description (e.g. mangatx.com).
+    
+            info.Summary = dom.SelectValue('//div[contains(@class, "description-summary")]/div')
+    
+        end
+    
+        if(isempty(info.Summary)) then
+    
+            -- Some sites don't have a dedicated class for the description content (e.g. nartag.com).
+    
+            info.Summary = dom.SelectValue('//h5[contains(text(),"Summary")]/following-sibling::div')
+    
+        end
+    
+        if(isempty(info.Language)) then
+    
+            -- Some sites have the language as part of the title (e.g. hmanhwa.com, "Title [Language]").
+    
+            info.Language = info.Title:trim():regex('\\[(.+?)\\]$', 1)
+    
+        end
+    
+        if(isempty(info.Tags)) then -- mm-scans.org
+            info.Tags = dom.SelectValue('//div[h5[contains(text(),"Genre")]]/following-sibling::div')
+        end
+    
+        info.Title = CleanTitle(info.Title)
+    
+
     end
-
-    if(isempty(info.Title)) then
-
-        -- Sometimes we need to get the title in a different way (www.porncomixonline.net).
-        -- We purposefully look under the "post-title" div because, for western comics on the same website, "//h3" returns an incorrect title.
-        -- This selector won't work for western comics (which are picked up in the following case), but does work for manga.
-
-        info.Title = dom.SelectValue('//div[contains(@class, "post-title")]/h3')
-
-    end
-
-    if(isempty(info.Title)) then
-
-        -- If the user added a reader URL, we may need to get the title in a different way (Western comics on www.porncomixonline.net).
-        -- This case is not part of the Madara theme, but a special case for porncomixonline.net, where western comics use a notably different layout.
-
-        info.Title = dom.SelectValue('//h2')
-        info.Tags = dom.SelectValues('//div[@class="item-tags"]//li')
-
-    end
-
-    if(isempty(info.Title)) then
-
-        -- Reader galleries don't always have a title, so we'll use the title of the selected chapter if we need to.
-
-        info.Title = dom.SelectValue('//li[@class="active"]')
-
-    end
-
-    if(isempty(info.Summary)) then
-
-        -- Some sites don't have a nested "p" element in the description (e.g. mangatx.com).
-
-        info.Summary = dom.SelectValue('//div[contains(@class, "description-summary")]/div')
-
-    end
-
-    if(isempty(info.Summary)) then
-
-        -- Some sites don't have a dedicated class for the description content (e.g. nartag.com).
-
-        info.Summary = dom.SelectValue('//h5[contains(text(),"Summary")]/following-sibling::div')
-
-    end
-
-    if(isempty(info.Language)) then
-
-        -- Some sites have the language as part of the title (e.g. hmanhwa.com, "Title [Language]").
-
-        info.Language = info.Title:trim():regex('\\[(.+?)\\]$', 1)
-
-    end
-
-    if(isempty(info.Tags)) then -- mm-scans.org
-        info.Tags = dom.SelectValue('//div[h5[contains(text(),"Genre")]]/following-sibling::div')
-    end
-
-    info.Title = CleanTitle(info.Title)
 
 end
 
@@ -297,5 +312,14 @@ function CleanTitle(title)
     title = RegexReplace(title, '(?i)(?:español\\s*»\\s*manhwa-latino)$', '')
 
     return title
+
+end
+
+function IsTagPage()
+
+    -- There can be many different URLs for this depending on the type of tag page we're on.
+    -- It's easier just to check the content of the page for the search navigation instead.
+
+    return dom.SelectElements('//div[contains(@class,"tab-wrap")]').Count() > 0
 
 end
