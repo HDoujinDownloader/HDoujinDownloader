@@ -28,9 +28,13 @@ function Register()
     module.Domains.Add('reset-scans.com', 'Reset Scans')
     module.Domains.Add('skymanga.co', 'skymanga')
     module.Domains.Add('teenmanhua.com', 'teenmanhua.com')
+    module.Domains.Add('toongod.com', 'ToonGod')
+    module.Domains.Add('toongod.org', 'ToonGod')
     module.Domains.Add('toonily.com', 'Toonily')
     module.Domains.Add('vinload.com', 'VinLoad')
     module.Domains.Add('webtoon.xyz', 'Webtoon XYZ')
+    module.Domains.Add('www.toongod.com', 'ToonGod')
+    module.Domains.Add('www.toongod.org', 'ToonGod')
 
     RegisterModule(module)
 
