@@ -1,10 +1,23 @@
 function Register()
 
     module.Name = 'Maid'
+
+    module = Module.New()
+
     module.Language = 'Indonesian'
 
     module.Domains.Add('maid.my.id')
     module.Domains.Add('www.maid.my.id')
+
+    RegisterModule(module)
+
+    module = Module.New()
+
+    module.Language = 'Thai'
+
+    module.Domains.Add('romance-manga.com', 'Romance-manga')
+
+    RegisterModule(module)
 
 end
 
