@@ -17,6 +17,21 @@ function Register()
 
     end
 
+--[[     -- The following rate limits are from:
+    -- https://api.mangadex.org/docs/rate-limits/
+
+    if(API_VERSION >= 20230612) then
+
+        module.RateLimits.Add('api.' .. module.Domains.First(), 5, 1000)
+        module.RateLimits.Add('/at-home/server/', 40, 60000)
+
+        -- There are no specified rate limits for this endpoint, but let's play it safe for now.
+        -- Users have been reporting issues with MangaDex returning incorrect images (#216).
+
+        module.RateLimits.Add('uploads.' .. module.Domains.First(), 5, 1000)
+
+    end ]]
+
 end
 
 function GetInfo()
@@ -144,6 +159,9 @@ end
 
 function GetPages()
 
+    -- The APIs used in this method are thoroughly described here:
+    -- https://api.mangadex.org/docs/retrieving-chapter/
+
     RedirectFromOldUrl()
 
     PrepareHttpHeaders()
@@ -155,21 +173,27 @@ function GetPages()
     local data = json.SelectValues('chapter.data[*]')
     local dataSaver = json.SelectValues('chapter.dataSaver[*]')
 
-    baseUrl = baseUrl .. '/data/' .. hash .. '/'
-
     for i = 0, data.Count() - 1 do
 
-        local pageInfo = PageInfo.New(baseUrl .. data[i])
+        local pageInfo = PageInfo.New(baseUrl .. '/data/' .. hash .. '/' .. data[i])
 
         if(i < dataSaver.Count()) then
-            pageInfo.BackupUrls.Add(baseUrl .. dataSaver[i])
+            pageInfo.BackupUrls.Add(baseUrl .. '/data-saver/' .. hash .. '/' .. dataSaver[i])
         end
 
         pages.Add(pageInfo)
 
     end
 
+    -- Attempt to replicate the image request headers as closely as possible.
+
     pages.Referer = 'https://' .. module.Domain .. '/'
+
+    if(API_VERSION >= 20230612) then
+
+        pages.Headers['accept'] = '*/*'
+
+    end
 
 end
 
