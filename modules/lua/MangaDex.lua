@@ -6,8 +6,6 @@ function Register()
     module.Domains.Add('mangadex.cc')
     module.Domains.Add('mangadex.com')
 
-    global.SetCookie(module.Domains.First(), 'mangadex_h_toggle', '1')
-
     if(API_VERSION >= 3) then
 
         BuildLanguageSelection(module)
