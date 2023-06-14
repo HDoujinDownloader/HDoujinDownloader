@@ -149,6 +149,12 @@ function GetPrettyTitle()
         prettyTitle = dom.SelectValue('//span[contains(@class,"middle-title")]')
     end
 
+    -- nhentai.uk
+
+    if(isempty(prettyTitle)) then
+        prettyTitle = RegexReplace(dom.SelectValue('//div[@id="bigcontainer"]//h1'):trim(), '(?i)(?:^Nhentai|hentai$)', '')
+    end
+
     return prettyTitle
 
 end
