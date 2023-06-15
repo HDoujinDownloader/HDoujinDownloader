@@ -37,19 +37,20 @@ function GetChapters()
 
         if(chapterInfo.SelectValue('price') == '0') then
 
-            local chapterUrl = url .. '/' .. chapterInfo.SelectValue('chapter_slug')
-            local chapterTitle = chapterInfo.SelectValue('chapter_title') == 'null' 
-            and chapterInfo.SelectValue('chapter_name') 
-            or chapterInfo.SelectValue('chapter_name') .. ' - ' .. chapterInfo.SelectValue('chapter_title')
+            local chapterUrl = url:trim('/') .. '/' .. chapterInfo.SelectValue('chapter_slug')
+            local chapterTitle = chapterInfo.SelectValue('chapter_name')
+            local chapterSubtitle = chapterInfo.SelectValue('chapter_title')
+            
+            if(chapterSubtitle ~= 'null' and not isempty(chapterSubtitle)) then
+                chapterTitle = chapterTitle .. ' - ' .. chapterSubtitle
+            end
 
             chapters.Add(chapterUrl, chapterTitle)
             
         end
 
     end
-
-    chapters.Reverse()
-
+    
 end
 
 function GetPages()
