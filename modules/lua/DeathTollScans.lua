@@ -10,6 +10,8 @@ end
 
 function GetInfo()
 
+    BypassMatureContentWarning()
+
     info.Title = dom.SelectValue('//h1[contains(@class,"title")]')
     info.Summary = CleanMetadataFieldValue(dom.SelectValue('//b[contains(text(),"Synopsis")]/following-sibling::text()[1]'))
     info.Author = CleanMetadataFieldValue(dom.SelectValue('//b[contains(text(),"Author")]/following-sibling::text()[1]'))
@@ -19,6 +21,8 @@ function GetInfo()
 end
 
 function GetChapters()
+
+    BypassMatureContentWarning()
 
     -- Sometimes chapters are grouped into volumes.
 
@@ -62,6 +66,8 @@ function GetChapters()
 end
 
 function GetPages()
+
+    BypassMatureContentWarning()
 
     local currentPage = dom.SelectValue('//div[contains(@class,"current_page")]')
 
@@ -126,5 +132,19 @@ function CleanMetadataFieldValue(value)
     end
 
     return value
+
+end
+
+function BypassMatureContentWarning()
+
+    local isMatureContent = dom.SelectElements('//div[contains(@class, "comic") and contains(@class, "alert")]').Count() > 0
+
+    if(isMatureContent) then
+
+        http.PostData['adult'] = 'true'
+
+        dom = dom.New(http.Post(url))
+
+    end
 
 end
