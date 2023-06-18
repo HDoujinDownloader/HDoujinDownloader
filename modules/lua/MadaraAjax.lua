@@ -32,6 +32,15 @@ function Register()
     module.Domains.Add('desuhentai.net', 'DesuHentai')
 
     RegisterModule(module)
+    
+    module = Module.New()
+
+    module.Language = 'Thai'
+
+    module.Domains.Add('cartoon-th.com', 'Cartoon-TH')
+    module.Domains.Add('wwww.cartoon-th.com', 'Cartoon-TH')
+
+    RegisterModule(module)
 
 end
 
