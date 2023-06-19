@@ -10,11 +10,14 @@ function Register()
     module.Domains.Add('alpha-scans.org', 'Alpha Scans')
     module.Domains.Add('anigliscans.com', 'Animated Glitched Scans')
     module.Domains.Add('constellarscans.com', 'Constellar Scans')
+    module.Domains.Add('cosmicscans.com', 'Cosmic Scans')
     module.Domains.Add('edoujin.net', 'edoujin')
     module.Domains.Add('flamescans.org', 'Flame Scans')
     module.Domains.Add('luminousscans.com', 'Luminous Scans')
     module.Domains.Add('luminousscans.gg', 'Luminous Scans')
     module.Domains.Add('manhuascan.us', 'Manhuascan.us')
+    module.Domains.Add('nightscans.org', 'Night Scans')
+    module.Domains.Add('nocturnalscans.com', 'Nocturnal Scanlations')
     module.Domains.Add('readkomik.com', 'ReadKomik')
     module.Domains.Add('realmscans.com', 'Realm Scans')
     module.Domains.Add('void-scans.com', 'Void Scans')
@@ -111,14 +114,34 @@ function GetInfo()
         info.Artist = dom.SelectValue('//td[contains(text(),"Author")]/following-sibling::td')
     end
 
+    if(isempty(info.Artist)) then -- nocturnalscans.com
+        info.Artist = dom.SelectValue('//b[contains(text(),"Artist")]/following-sibling::span')
+    end
+
     if(isempty(info.DateReleased)) then
         info.DateReleased = dom.SelectValue('//td[contains(text(),"Released")]/following-sibling::td')
+    end
+
+    if(isempty(info.DateReleased)) then -- nightscans.org
+        info.DateReleased = dom.SelectValue('//div[contains(text(),"Released")]//following-sibling::i')
+    end
+
+    if(isempty(info.DateReleased)) then -- nocturnalscans.com
+        info.DateReleased = dom.SelectValue('//b[contains(text(),"Released")]/following-sibling::span')
     end
 
     if(isempty(info.Magazine)) then
         info.Magazine = dom.SelectValue('//td[contains(text(),"Serialization")]/following-sibling::td')
     end
 
+    if(isempty(info.Publisher)) then -- nocturnalscans.com
+        info.Publisher = dom.SelectValue('//b[contains(text(),"Serialization")]/following-sibling::span')
+    end
+
+    if(module.GetName(url):endsWith('Scans') or module.GetName(url):endsWith('Scanlations')) then
+        info.Scanlator = module.GetName(url)
+    end
+    
     if(isempty(info.Tags)) then -- 108read.com
         info.Tags = dom.SelectValues('//span[contains(@class,"mgen")]//a')
     end
