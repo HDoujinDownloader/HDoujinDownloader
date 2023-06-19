@@ -29,6 +29,7 @@ function GetPages()
     for imageUrl in dom.SelectValues('//div[contains(@class,"image-wrapper")]//img/@data-src') do
 
         imageUrl = imageUrl:before('&w=')
+            :before('&amp;w=')
 
         pages.Add(imageUrl)
 
