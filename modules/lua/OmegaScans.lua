@@ -16,31 +16,41 @@ function GetInfo()
     info.DateReleased = dom.SelectValue('//p[contains(text(),"Release year")]/strong')
     info.Author = dom.SelectValue('//p[contains(text(),"Author: ")]/strong')
     info.Artist = dom.SelectValue('//p[contains(text(),"Author: ")]/strong')
-    info.Type = 'Manhwa'
-    info.Scanlator = 'Omega Scans'
+    info.Scanlator = module.Name
     info.Publisher = dom.SelectValue('//p[contains(text(),"This series is produced by")]/strong')
 
     local checkEndStatus = dom.SelectValue('//*[@id="simple-tabpanel-0"]/div/span/div/ul/a[1]/li//span[contains(text(),"[END]")]')
 
     if(not isempty(checkEndStatus)) then
+
         info.Status = 'Completed'
+
     end
 
 end
 
 function GetChapters()
 
-    for chapterNode in dom.SelectElements('//*[@id="simple-tabpanel-0"]/div/span/div/ul/a') do
+    for chapterJson in GetChaptersJson() do
 
-        local chapterUrl = chapterNode.SelectValue('@href')
-        local chapterTitle = chapterNode.SelectValue('.//span[contains(text(), "Chapter")]')
+        local chapterInfo = Json.New(chapterJson)
 
-        chapters.Add(chapterUrl, chapterTitle)
+        if(chapterInfo.SelectValue('price') == '0') then
+
+            local chapterUrl = url:trim('/') .. '/' .. chapterInfo.SelectValue('chapter_slug')
+            local chapterTitle = chapterInfo.SelectValue('chapter_name')
+            local chapterSubtitle = chapterInfo.SelectValue('chapter_title')
+            
+            if(chapterSubtitle ~= 'null' and not isempty(chapterSubtitle)) then
+                chapterTitle = chapterTitle .. ' - ' .. chapterSubtitle
+            end
+
+            chapters.Add(chapterUrl, chapterTitle)
+            
+        end
 
     end
-
-    chapters.Reverse()
-
+    
 end
 
 function GetPages()
@@ -87,6 +97,15 @@ end
 function GetChapterId()
 
     return GetAppJs():regex('{"id":(\\d+),', 1)
+
+end
+
+function GetChaptersJson()
+
+    local json = Json.New(GetAppJs())
+    local chaptersJson = json.SelectValues('props.pageProps.series.chapters[*]')
+
+    return chaptersJson
 
 end
 
