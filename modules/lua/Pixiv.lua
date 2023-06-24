@@ -158,7 +158,15 @@ end
 
 function GetPreloadJson()
 
-    return Json.New(dom.SelectValue('//meta[@id="meta-preload-data"]/@content'))
+    local jsonStr = dom.SelectValue('//meta[@id="meta-preload-data"]/@content')
+
+    if(isempty(jsonStr)) then
+
+        Fail(Error.LoginRequired)
+
+    end
+
+    return Json.New(jsonStr)
 
 end
 
