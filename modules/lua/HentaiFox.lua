@@ -9,14 +9,30 @@ end
 
 function GetInfo()
 
-    info.Title = dom.SelectValue('//h1')
-    info.Parody = dom.SelectValues('//ul[@class="parodies"]//a/text()[1]')
-    info.Tags = dom.SelectValues('//ul[@class="tags"]//a/text()[1]')
-    info.Artist = dom.SelectValues('//ul[@class="artists"]//a/text()[1]')
-    info.Circle = dom.SelectValues('//ul[@class="groups"]//a/text()[1]')
-    info.Language = dom.SelectValues('//ul[@class="languages"]//a/text()[1]')
-    info.Type = dom.SelectValues('//ul[@class="categories"]//a/text()[1]')
-    info.PageCount = GetPageCount()
+    if(url:contains('/gallery/')) then
+
+        info.Title = dom.SelectValue('//h1')
+        info.Parody = dom.SelectValues('//ul[@class="parodies"]//a/text()[1]')
+        info.Tags = dom.SelectValues('//ul[@class="tags"]//a/text()[1]')
+        info.Artist = dom.SelectValues('//ul[@class="artists"]//a/text()[1]')
+        info.Circle = dom.SelectValues('//ul[@class="groups"]//a/text()[1]')
+        info.Language = dom.SelectValues('//ul[@class="languages"]//a/text()[1]')
+        info.Type = dom.SelectValues('//ul[@class="categories"]//a/text()[1]')
+        info.PageCount = GetPageCount()
+
+    else
+
+        info.Title = dom.SelectValue('//h1'):beforelast('-')
+
+        for galleryUrl in dom.SelectValues('//h2[contains(@class,"g_title")]/a/@href') do
+
+            Enqueue(galleryUrl)
+
+        end
+
+        info.Ignore = true
+
+    end
 
 end
 
