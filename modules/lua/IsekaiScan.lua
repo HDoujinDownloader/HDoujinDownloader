@@ -63,22 +63,54 @@ function GetChapters()
 
         dom = Dom.New(http.Post(endpoint, ' '))
 
-        local chapterNodes = dom.SelectElements('//li[contains(@class,"wp-manga-chapter") or contains(@class,"chapter-li")]/a')
+        -- Chapters may be split up into separate volumes.
 
-        for chapterNode in chapterNodes do
+        local volumeNodes = dom.SelectElements('//li[a[contains(text(),"Volume")]]')        
 
-            local chapterUrl = chapterNode.SelectValue('./@href')
-            local chapterTitle = chapterNode.SelectValue('./text()[1]')
+        for volumeNode in volumeNodes do
+           
+            local volumeNumber = volumeNode.SelectValue('./a'):regex('\\d+')
 
-            if(isempty(chapterTitle)) then -- mm-scans.org
-                chapterTitle = chapterNode.SelectValue('.//p')
-            end
+            GetChaptersFromNode(volumeNode, volumeNumber)
 
-            chapters.Add(chapterUrl, chapterTitle)
+        end
+
+        if(volumeNodes.Count() <= 0) then
+
+            GetChaptersFromNode(dom)
 
         end
 
         chapters.Reverse()
+
+    end
+
+end
+
+function GetChaptersFromNode(node, volumeNumber)
+
+    local chapterNodes = node.SelectElements('.//li[contains(@class,"wp-manga-chapter") or contains(@class,"chapter-li")]/a')
+
+    for chapterNode in chapterNodes do
+
+        local chapterInfo = ChapterInfo.New()
+
+        chapterInfo.Url = chapterNode.SelectValue('./@href')
+        chapterInfo.Title = chapterNode.SelectValue('./text()[1]')
+
+        if(isempty(chapterInfo.Title)) then -- mm-scans.org
+            chapterInfo.Title = chapterNode.SelectValue('.//p')
+        end
+
+        if(volumeNumber ~= nil) then
+            
+            chapterInfo.Volume = volumeNumber
+
+            chapterInfo.Title = 'Volume ' .. volumeNumber .. ' ' .. chapterInfo.Title
+
+        end
+
+        chapters.Add(chapterInfo)
 
     end
 
