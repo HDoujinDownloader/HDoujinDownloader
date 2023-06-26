@@ -7,7 +7,6 @@ function Register()
     module.Language = 'English'
 
     module.Domains.Add('reader.deathtollscans.net', 'Death Toll Reader')
-    module.Domains.Add('rosesquadscans.aishiteru.org', 'Rose Squad Scans')
     module.Domains.Add('zandynofansub.aishiteru.org', 'Zandy no Fansub')
     
     RegisterModule(module)
