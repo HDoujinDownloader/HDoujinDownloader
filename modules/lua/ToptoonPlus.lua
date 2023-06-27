@@ -3,6 +3,7 @@ function Register()
     module.Name = 'TOPTOON PLUS'
     module.Type = 'Webtoon'
 
+    module.Domains.Add('daycomics.com')
     module.Domains.Add('toptoonplus.com')
 
     module.Settings.AddText('Token', '')
@@ -30,7 +31,7 @@ function GetChapters()
 
         local episodeId = node.SelectValue('episodeId')
         local comicId = node.SelectValue('comicId')
-        local chapterUrl = '/comic/' .. comicId .. '/' .. episodeId
+        local chapterUrl = '/content/' .. comicId .. '/' .. episodeId
         local chapterTitle = node.SelectValue('information.title')
         local chapterSubtitle = node.SelectValue('information.subTitle')
 
@@ -67,7 +68,7 @@ function Login()
 
     if(isempty(token)) then
         
-        local loginEndpoint = '//api.toptoonplus.com/auth/generateToken'
+        local loginEndpoint = GetApiUrl('/auth/generateToken')
 
         SetUpApiHeaders()
 
@@ -127,10 +128,20 @@ function GetApiUrl(path)
 
         -- Take a relative API path and convert it to a full path
 
+        if(path:startswith('/')) then
+
+            path = path:sub(2)
+
+        end
+
         if(not path:startsWith('//') and not path:startsWith('https://')) then
+
             result = baseUrl .. path
+
         else
+            
             result = path
+
         end
 
     end
@@ -143,25 +154,33 @@ function SetUpApiHeaders(version)
 
     version = isempty(version) and 'v1' or version
 
+    local js = JavaScript.New()
+
     local deviceId = GetDeviceId()
+    local token = GetToken()
+    local timestamp = tostring(js.Execute('Date.now()'))
 
-    if(version == 'v1') then
+    http.Headers['accept'] = '*/*'
+    http.Headers['deviceId'] = deviceId
+    http.Headers['language'] = 'en'
+    http.Headers['local-datetime'] = tostring(js.Execute("(function() { var date = new Date(); return date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + String(date.getDate()).padStart(2, '0') + ' ' + String(date.getHours()).padStart(2, '0') + ':' + String(date.getMinutes()).padStart(2, '0') + ':' + String(date.getSeconds()).padStart(2, '0'); })()"))
+    http.Headers['origin'] = 'https://' .. module.Domain
+    http.Headers['package-name'] = 'web'
+    http.Headers['pathname'] = url:after(module.Domain)
+    http.Headers['referer'] = 'https://' .. module.Domain .. '/'
+    http.Headers['timestamp'] = timestamp
+    http.Headers['timezone'] = 'America/California'
+    http.Headers['ua'] = 'web'
+    http.Headers['user-id'] = '0'
+    http.Headers['version'] = '0.1.5a'
+    http.Headers['x-api-key'] = 'SUPERCOOLAPIKEY2021#@#('
+    http.Headers['x-origin'] = module.Domain
 
-        http.Headers['is17'] = 'false'
-        http.Headers['isalreadymature'] = '1'
-        http.Headers['partnercode'] = 'subred'
-        http.Headers['referer'] = 'https://' .. module.Domain
-        http.Headers['x-api-key'] = 'SUPERCOOLAPIKEY2021#@#('
-
-    elseif(version == 'v2') then
+    if(version == 'v2') then
 
         -- Add API v2 headers "timestamp" and "x-api-key".
 
         -- The API key is generated in the 'convertApiKey' function from the device ID and timestamp.
-
-        local js = JavaScript.New()
-
-        local timestamp = tostring(js.Execute('Date.now()'))
 
         js.Execute(http.Get('https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js'))
 
@@ -173,23 +192,13 @@ function SetUpApiHeaders(version)
 
         local apiKey = tostring(js.Execute('i=CryptoJS.SHA256(t.toString().replace(/-/g,"".concat(e))).toString(CryptoJS.enc.Hex);CryptoJS.PBKDF2("".concat(t,"|").concat(e),i,{hasher:CryptoJS.algo.SHA512,keySize:i.length / 4,iterations:n}).toString(CryptoJS.enc.Base64)'))
 
-        http.Headers['timestamp'] = timestamp
+        http.Headers['content-type'] = 'application/json'
         http.Headers['x-api-key'] = apiKey
 
-    end
+        if(not isempty(token)) then
+            http.Headers['token'] = token
+        end
 
-    http.Headers['accept'] = '*/*'
-    http.Headers['deviceId'] = deviceId
-    http.Headers['language'] = 'en'
-    http.Headers['origin'] = 'https://' .. module.Domain
-    http.Headers['ua'] = 'web'
-    http.Headers['version'] = 'undefined'
-    http.Headers['x-origin'] = module.Domain
-
-    local token = GetToken()
-
-    if(not isempty(token)) then
-        http.Headers['token'] = token
     end
 
 end
@@ -198,8 +207,9 @@ function GetComicId()
 
     -- toptoonplus.com/comic/<comic_id>/
     -- toptoonplus.com/content/<title>/<comic_id>
+    -- daycomics.com/content/<comic_id>
     
-    return url:regex('(?:content\\/[^\\/]+|\\/comic)\\/(\\d+)', 1)
+    return url:regex('\\/(?:comic|content\\/[^\\d]+|content)\\/(\\d+)', 1)
 
 end
 
@@ -207,8 +217,9 @@ function GetEpisodeId()
 
     -- toptoonplus.com/comic/<comic_id>/<episode_id>
     -- toptoonplus.com/content/<title>/<comic_id>/<episode_id>
+    -- daycomics.com/content/<comic_id>/<episode_id>
 
-    return url:regex('(?:content\\/[^\\/]+|\\/comic)\\/\\d+\\/(\\d+)', 1)
+    return url:regex('\\/(?:comic|content\\/[^\\d]+|content)\\/\\d+\\/(\\d+)', 1)
 
 end
 
@@ -232,23 +243,13 @@ function GetEpisodeJson()
     local episodeId = GetEpisodeId()
     local viewerToken = ''
 
-    -- Start by getting the episode metadata, which includes the viewer token.
-    -- The viewer token is needed for episodes that require an account, and is only valid when logged in (valid "token" header sent with the request).
-
-    local endpoint = GetApiUrl('//api.toptoonplus.com/check/isUsableEpisode?comicId=' .. comicId .. '&episodeId=' .. episodeId .. '&location=viewer&action=view_contents')
-    local json = Json.New(http.Get(endpoint))
-
-    viewerToken = json.SelectValue('data.viewerToken')
-
     -- Get the episode images.
 
     SetUpApiHeaders('v2')
 
-    http.Headers['content-type'] = 'application/json'
-    
-    endpoint = GetApiUrl('v2/viewer/' .. comicId .. '/' .. episodeId, 'v2')
+    endpoint = GetApiUrl('v2/viewer/' .. comicId .. '/' .. episodeId)
 
-    local payload = '{"location":"viewer","action":"view_contents","isCached":false,"viewerToken":"' .. viewerToken .. '","cToken":""}'
+    local payload = '{"location":"viewer","action":"view_contents","isCached":false,"cToken":""}'
     local json = Json.New(http.Post(endpoint, payload))
 
     return Json.New(json)
