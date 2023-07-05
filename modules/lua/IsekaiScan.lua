@@ -53,7 +53,7 @@ end
 
 function GetChapters()
 
-    local chapterListNodeCount = dom.SelectElements('//div[@id="manga-chapters-holder"]').Count()
+    local chapterListNodeCount = dom.SelectElements('//div[@id="manga-chapters-holder" or contains(@class, "chapter-content")]').Count()
 
     if(chapterListNodeCount > 0) then
 
