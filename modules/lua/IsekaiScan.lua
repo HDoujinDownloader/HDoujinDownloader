@@ -11,7 +11,10 @@ function Register()
 
     module.Domains.Add('betafox.net', 'Beta Fox')
     module.Domains.Add('disasterscans.com', 'Disaster Scans')
+    module.Domains.Add('en.leviatanscans.com', 'LeviatanScans')
+    module.Domains.Add('es.leviatanscans.com', 'LeviatanScans')
     module.Domains.Add('isekaiscan.com')
+    module.Domains.Add('leviatanscans.com', 'LeviatanScans')
     module.Domains.Add('lhtranslation.net', 'LHTranslation')
     module.Domains.Add('mangasushi.net', 'Mangasushi')
     module.Domains.Add('mangasushi.org', 'Mangasushi')
@@ -53,7 +56,7 @@ end
 
 function GetChapters()
 
-    local chapterListNodeCount = dom.SelectElements('//div[@id="manga-chapters-holder"]').Count()
+    local chapterListNodeCount = dom.SelectElements('//div[@id="manga-chapters-holder" or contains(@class, "chapter-content")]').Count()
 
     if(chapterListNodeCount > 0) then
 
