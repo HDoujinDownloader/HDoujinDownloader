@@ -20,6 +20,7 @@ function Register()
     module.Domains.Add('nocturnalscans.com', 'Nocturnal Scanlations')
     module.Domains.Add('readkomik.com', 'ReadKomik')
     module.Domains.Add('realmscans.com', 'Realm Scans')
+    module.Domains.Add('realmscans.xyz', 'Realm Scans')
     module.Domains.Add('void-scans.com', 'Void Scans')
     module.Domains.Add('xcalibrscans.com', 'xCaliBR Scans')
 
@@ -213,8 +214,8 @@ function GetPages()
     -- Some sites use external image hosts from which downloads will fail if we set a referer.
     -- However, some other sites require a referer in order to download.
 
-    if(module.Domain == 'realmscans.com') then
-        pages.Referer = 'https://realmscans.com/'
+    if(module.Domain == 'realmscans.xyz') then
+        pages.Referer = 'https://realmscans.xyz/'
     else
         pages.Referer = '' 
     end
