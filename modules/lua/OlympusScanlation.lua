@@ -5,26 +5,20 @@ function Register()
     module.Adult = false
 
     module.Domains.Add('olympusscans.com')
+    module.Domains.Add('olympusv2.gg')
 
 end
 
 function GetInfo()
 
-    local titleJson = GetTitleJson()
-
-    info.Title = titleJson.SelectValue('data..data.name')
-    info.Summary = titleJson.SelectValue('data..data.summary')
-    info.Tags = titleJson.SelectValues('data..data.genres[*].name')
-    info.Scanlator = module.Name
+    info.Title = dom.SelectValue("//h1")
 
 end
 
 function GetChapters()
 
-    local titleJson = GetTitleJson()
-
-    local slug = titleJson.SelectValue('data..data.slug')
-    local seriesSlug = url:regex('\\/series\\/([^\\/#?]+)$', 1)
+    local slug = url:regex('\\/series\\/(?:comic-)?([^\\/]+)', 1)
+    local seriesSlug = url:regex('\\/series\\/([^\\/]+)', 1)
     local currentPageIndex = 1
     local lastPageIndex = 1
 
@@ -61,18 +55,8 @@ end
 
 function GetPages()
 
-    pages.AddRange(dom.SelectValues('//img[@loading]/@src'))    
-
-end
-
-function GetTitleJson()
-
-    local metadataScript = dom.SelectValue('//script[contains(text(),"window.__NUXT__")]')
-
-    local js = JavaScript.New()
-
-    js.Execute('window = {}')
-
-    return js.Execute(metadataScript).ToJson()
-
+    if(url:contains('/capitulo/')) then
+        pages.AddRange(dom.SelectValues('//img[@loading]/@src'))
+    end
+        
 end
