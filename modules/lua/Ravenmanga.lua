@@ -1,3 +1,5 @@
+-- This site uses the same theme as OlympusScans, but doesn't use the same API.
+
 function Register()
 
     module.Name = 'Ravenmanga'
@@ -9,16 +11,25 @@ end
 
 function GetInfo()
 
-    info.Title = dom.SelectValue('//span[contains(@class,"info-span")]')
-    info.Summary = dom.SelectValue('//div[contains(text(),"Sinopsis")]/following-sibling::div')
-    info.Tags = dom.SelectValues('//div[contains(text(),"Generos")]/following-sibling::div//span')
-    info.Type = dom.SelectValue('//span[contains(text(),"Tipo:")]'):after(':')
+    info.Title = dom.SelectValue('//h1')
+    info.Summary = dom.SelectValue('//section[contains(@id,"section-sinopsis")]//p')
+    info.Tags = dom.SelectValues('//div[contains(text(), "Géneros:")]/following-sibling::div//a')
 
 end
 
 function GetChapters()
 
-    chapters.AddRange(dom.SelectElements('//a[contains(@class,"cap-link")]'))
+    for chapterNode in dom.SelectElements('//section[contains(@id,"section-list-cap")]//a') do
+
+        local chapterInfo = ChapterInfo.New()
+
+        chapterInfo.Url = chapterNode.SelectValue('./@href')
+        chapterInfo.Title = chapterNode.SelectValue('.//div[contains(@id,"name")]')
+        chapterInfo.Scanlator = chapterNode.SelectValue('.//div[contains(@id,"name")]/following-sibling::div')
+
+        chapters.Add(chapterInfo)
+
+    end
 
     chapters.Reverse()
 
@@ -26,6 +37,6 @@ end
 
 function GetPages()
 
-    pages.AddRange(dom.SelectValues('//img[contains(@class,"img-fluid")]/@src'))
+    pages.AddRange(dom.SelectValues('//main//img/@src'))
 
 end
