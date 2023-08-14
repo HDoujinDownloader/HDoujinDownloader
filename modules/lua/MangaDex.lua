@@ -15,7 +15,9 @@ function Register()
 
     end
 
---[[     -- The following rate limits are from:
+    --[[     
+    
+    -- The following rate limits are from:
     -- https://api.mangadex.org/docs/rate-limits/
 
     if(API_VERSION >= 20230612) then
@@ -28,7 +30,9 @@ function Register()
 
         module.RateLimits.Add('uploads.' .. module.Domains.First(), 5, 1000)
 
-    end ]]
+    end 
+    
+    ]]
 
 end
 
@@ -36,7 +40,7 @@ function GetInfo()
 
     RedirectFromOldUrl()
 
-    local json = GetGalleryJson()
+    local json = GetTitleJson()
 
     info.Title = json.SelectValue('data.attributes.title.*')
     info.AlternativeTitle = json.SelectValues('data.attributes.altTitles.*')
@@ -47,13 +51,15 @@ function GetInfo()
     info.Status = json.SelectValue('data.attributes.status')
     info.Adult = json.SelectValue('data.attributes.contentRating') ~= 'safe'
     info.Author = json.SelectValues("data.relationships[?(@.type=='author')].attributes.name")
+    info.Artist = json.SelectValues("data.relationships[?(@.type=='artist')].attributes.name")
+    info.Scanlator = json.SelectValues("data.relationships[?(@.type=='scanlation_group')].attributes.name")
 
     if(toboolean(module.Settings['Prefer scanlation status over publishing status'])) then
 
         -- For more information, see:
         -- https://github.com/HDoujinDownloader/HDoujinDownloader/issues/76
 
-        local scanlationStatus = GetScanlationStatus(json)
+        local scanlationStatus = GetScanlationStatusFromJson(json)
 
         if(not isempty(scanlationStatus)) then
             info.Status = scanlationStatus
@@ -64,7 +70,7 @@ function GetInfo()
     -- Get chapter metadata.
 
     if(isempty(info.Title) and url:contains('/chapter/')) then
-        info.Title = GetChapterTitle(json.SelectNode('data'))
+        info.Title = GetChapterTitleFromJson(json.SelectNode('data'))
     end
 
 end
@@ -75,7 +81,7 @@ function GetChapters()
 
     local uuid = GetGalleryUuid()
     local offset = 0
-    local limit = 100
+    local limit = 96
     local total = 0
 
     local userLanguages = GetPreferredLanguages()
@@ -84,11 +90,9 @@ function GetChapters()
 
     repeat
 
-        -- Add contentRating to chapter call to bypass rating checks
-
         PrepareHttpHeaders()
 
-        local apiEndpoint = GetApiEndpoint() .. 'chapter?contentRating[]=safe&contentRating[]=suggestive&contentRating[]=erotica&contentRating[]=pornographic&manga=' .. uuid .. '&limit=' .. limit .. '&offset=' .. offset .. '&includes[]=scanlation_group'
+        local apiEndpoint = GetApiEndpoint() .. 'manga/' .. uuid .. '/feed?limit=' .. limit .. '&includes[]=scanlation_group&includes[]=user&order[volume]=desc&order[chapter]=desc&offset=' .. offset .. '&contentRating[]=safe&contentRating[]=suggestive&contentRating[]=erotica&contentRating[]=pornographic'
         local json = Json.New(http.Get(apiEndpoint))
         local chapterNodes = json.SelectTokens('data[*]')
 
@@ -121,7 +125,7 @@ function GetChapters()
                 chapter.Url = '/chapter/' .. chapterNode.SelectValue('id')
             end
 
-            chapter.Title = chapterNumber .. ' - ' .. GetChapterTitle(chapterNode)         
+            chapter.Title = chapterNumber .. ' - ' .. GetChapterTitleFromJson(chapterNode)         
             chapter.Language = chapterNode.SelectValue('attributes.translatedLanguage')
             chapter.ScanlationGroup = chapterNode.SelectValues("relationships[?(@.type=='scanlation_group')].attributes.name")
             chapter.Chapter = chapterNumber
@@ -195,12 +199,6 @@ function GetPages()
 
 end
 
-function GetApiEndpoint()
-
-    return '//api.' .. module.Domain .. '/'
-
-end
-
 function GetGalleryUuid()
 
     return url:regex('\\/(?:title|chapter)\\/([^\\/?#]+)', 1)
@@ -213,19 +211,33 @@ function PrepareHttpHeaders()
 
 end
 
-function GetGalleryJson()
+function GetApiEndpoint()
+
+    -- //api.mangadex.org/
+
+    return '//api.' .. module.Domain .. '/'
+
+end
+
+function GetTitleJson()
 
     PrepareHttpHeaders()
 
     local uuid = GetGalleryUuid()
     local type = url:regex('\\/(title|chapter)', 1):replace('title', 'manga')
-    local apiEndpoint = GetApiEndpoint() .. type .. '/' .. uuid .. '?includes[]=artist&includes[]=author&includes[]=scanlation_group'
+    local apiEndpoint = GetApiEndpoint() .. type .. '/' .. uuid
+
+    if(type == 'manga') then      
+        apiEndpoint = apiEndpoint .. '?includes[]=artist&includes[]=author&includes[]=cover_art'
+    elseif(type == 'chapter') then
+        apiEndpoint = apiEndpoint .. '?includes[]=scanlation_group&includes[]=manga&includes[]=user'
+    end
 
     return Json.New(http.Get(apiEndpoint))
 
 end
 
-function GetChapterTitle(json)
+function GetChapterTitleFromJson(json)
 
     local result = ''
 
@@ -257,76 +269,20 @@ function GetChapterTitle(json)
         result = result .. ' - ' .. chapterTitle
     end
 
+    if(isempty(result)) then
+        
+        -- If the chapter has no chapter, volume, or title metadata, it's probably a oneshot.
+        -- See https://doujindownloader.com/forum/viewtopic.php?f=9&t=2419
+
+        result = 'Oneshot'
+
+    end
+
     return result
 
 end
 
-function GetRelationshipNames(type, uuids)
-
-    local names = List.New()
-
-    for uuid in uuids do
-
-        PrepareHttpHeaders()
-
-        local apiEndpoint = GetApiEndpoint() .. type .. '/' .. uuid
-        local json = Json.New(http.Get(apiEndpoint))
-
-        names.Add(json.SelectValue('data.attributes.name'))
-
-    end
-
-    return names
-
-end
-
-function BuildGroupsDict(uuids)
-
-    PrepareHttpHeaders()
-
-    local groupsApiEndpoint = GetApiEndpoint() .. 'group?'
-
-    local uuidDict = Dict.New()
-
-    -- Add all of the group UUIDs to the dict as keys, effectively filtering out the duplicates.
-
-    for uuid in uuids do
-        uuidDict[uuid] = ''
-    end
-
-    for uuid in uuidDict.Keys do
-        groupsApiEndpoint = groupsApiEndpoint .. 'ids[]=' .. uuid .. '&'
-    end
-
-    if uuidDict.Keys.Count() > 0 then
-        
-        -- This was adding a blank id on the end of the query for some reason.  If it's present it causes a 400 and prevents the download, so lets just remove it
-        local groupsJson = Json.New(http.Get(groupsApiEndpoint:trim('&ids[]=&')))
-        
-        for groupData in groupsJson.SelectTokens('data[*]') do
-            uuidDict[groupData.SelectValue('id')] = groupData.SelectValue('attributes.name')
-        end
-
-    end
-
-    return uuidDict
-
-end
-
-function RedirectFromOldUrl()
-
-    if(not GetGalleryUuid():contains("-")) then
-
-        -- We have an old URL and need to follow the redirect to the new one.
-        -- Ex: https://mangadex.org/title/45502/veil
-
-        url = http.GetResponse(url).Url
-
-    end
-
-end
-
-function GetScanlationStatus(json)
+function GetScanlationStatusFromJson(json)
 
     local lastChapterNumber = json.SelectValue('data.attributes.lastChapter')
     local lastVolumeNumber = json.SelectValue('data.attributes.lastVolume')
@@ -356,6 +312,19 @@ function GetScanlationStatus(json)
     end
 
     return 'ongoing'
+
+end
+
+function RedirectFromOldUrl()
+
+    if(not GetGalleryUuid():contains("-")) then
+
+        -- We have an old URL and need to follow the redirect to the new one.
+        -- Ex: https://mangadex.org/title/45502/veil
+
+        url = http.GetResponse(url).Url
+
+    end
 
 end
 
