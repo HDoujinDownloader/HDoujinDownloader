@@ -20,6 +20,7 @@ function Register()
     module.Domains.Add('mangaqueen.net', 'Manga Queen')
     module.Domains.Add('mangastream.cc', 'MangaStream')
     module.Domains.Add('mangatx.com', 'Mangatx')
+    module.Domains.Add('manhwa-raw.com', 'Manhwa-raw')
     module.Domains.Add('manytoon.club', 'ManyToon')
     module.Domains.Add('manytoon.com', 'ManyToon')
     module.Domains.Add('muctau.com', 'MUCTAU')
@@ -115,7 +116,7 @@ function GetInfo()
         info.Type = dom.SelectValue('//div[contains(h5/text(), "Type") or contains(h5/text(), "Tip") or contains(h5/text(), "Tipo")]/following-sibling::div')
         info.DateReleased = dom.SelectValue('//div[contains(h5/text(), "Release") or contains(h5/text(), "Yayınlanma")]/following-sibling::div')
         info.Status = dom.SelectValue('//div[contains(h5/text(), "Status") or contains(h5/text(), "Durum")]/following-sibling::div')
-        info.Summary = dom.SelectValues('//div[contains(@class, "description-summary") or contains(@class, "dsct") or contains(@class,"summary-text")]//p'):join('\n\n') -- note that some content has multiple paragraphs (e.g. on astrallibrary.net)
+        info.Summary = dom.SelectValues('//div[contains(@class, "description-summary") or contains(@class, "dsct") or contains(@class,"summary-text") or contains(@class,"summary-container")]//p'):join('\n\n') -- note that some content has multiple paragraphs (e.g. on astrallibrary.net)
         info.Adult = not isempty(dom.SelectValue('//h1/span[contains(@class, "adult")]'))
         info.Language = dom.SelectValues('//div[contains(h5/text(), "Language")]/following-sibling::div//a')
     
@@ -188,7 +189,7 @@ end
 
 function GetChapters()
 
-    -- Sometimes chapters are grouped into volumes (araznovel.com).
+    -- Sometimes chapters are grouped into volumes (e.g. araznovel.com).
 
     local volumeNodes = dom.SelectElements('//ul[contains(@class, "sub-chap")]')
 
@@ -215,15 +216,22 @@ function GetChapters()
 
     else
 
-        if(isempty(dom.SelectValue('//div[contains(@class, "listing-chapters") or @id="chapterlist"]//li/a/text()'))) then
+        -- This site doesn't have volumes, so just get the chapter list normally.
 
-            -- reset-scans.com
+        for chapterNode in dom.SelectElements('//div[contains(@class, "listing-chapters") or @id="chapterlist"]//li') do
+            
+            local chapterUrl = chapterNode.SelectValue('.//a/@href')
+            local chapterTitle = chapterNode.SelectValue('.//a')
 
-            chapters.AddRange(dom.SelectElements('//div[contains(@class, "li__text")]/a'))
+            if(isempty(chapterTitle)) then
+                
+                -- reset-scans.com
+                
+                chapterTitle = chapterNode.SelectValue('./div[contains(@class,"li__text")]/a')
 
-        else
+            end
 
-            chapters.AddRange(dom.SelectElements('//div[contains(@class, "listing-chapters") or @id="chapterlist"]//li/a'))
+            chapters.Add(chapterUrl, chapterTitle)
 
         end
 
