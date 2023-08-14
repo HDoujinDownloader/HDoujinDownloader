@@ -6,6 +6,7 @@ function Register()
     module.Domains.Add('lezhin.es')
     module.Domains.Add('lezhinx.com')
     module.Domains.Add('www.lezhin.es')
+    module.Domains.Add('www.lezhinx.com')
 
     module.Settings.AddText('Bearer token', '')
 
@@ -21,6 +22,10 @@ function GetInfo()
     info.Status = toboolean(json.SelectValue('data.isComplete')) and 'Completed' or 'Ongoing'
     info.Tags = json.SelectValue('data.tag'):lower()
     info.Summary = json.SelectValue('data.synopsis')
+
+    if(isempty(info.Author)) then
+        info.Author = json.SelectValues('data.creators[*].name')        
+    end
 
 end
 
@@ -50,9 +55,9 @@ end
 
 function GetApiUrl()
 
-    -- https://www.lezhinx.com/balcony-api/contents/
+    -- https://www.lezhinx.com/balcony-api-v2/contents/
 
-    return 'https://www.' .. module.Domain:trim('www.') .. '/api/balcony-api/contents/'
+    return 'https://www.' .. module.Domain:trim('www.') .. '/api/balcony-api-v2/contents/'
     
 end
 
