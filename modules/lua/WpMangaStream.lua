@@ -6,9 +6,10 @@ function Register()
     module.Name = 'MangaStream'
     module.Language = 'English'
 
-    module.Domains.Add('asura.gg', 'Asura Scans')
     module.Domains.Add('asurascans.com', 'Asura Scans')
     module.Domains.Add('www.asurascans.com', 'Asura Scans')
+    module.Domains.Add('asura.gg', 'Asura Scans')
+    module.Domains.Add('asura.nacm.xyz', 'Asura Scans')
 
 end
 
