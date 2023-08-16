@@ -6,6 +6,10 @@ function Register()
     module.Domains.Add('daycomics.com')
     module.Domains.Add('toptoonplus.com')
 
+    -- The device ID is not strictly required to authenticate with the user's token, and it doesn't matter if it doesn't match.
+    -- However, a valid "user-id" header must be included with all requests that use the token, or the server will invalidate the token.
+
+    module.Settings.AddText('User ID', '')
     module.Settings.AddText('Token', '')
     module.Settings.AddText('Device ID', '')
 
@@ -48,7 +52,6 @@ end
 function GetPages()
 
     local json = GetEpisodeJson()
-    local episodeId = GetEpisodeId()
 
     pages.AddRange(json.SelectValues("data.episode[*].contentImage.jpeg[*].path"))
 
@@ -68,17 +71,14 @@ function Login()
 
     if(isempty(token)) then
         
-        local loginEndpoint = GetApiUrl('/auth/generateToken')
+        local loginEndpoint = GetApiUrl('auth/generateToken')
 
-        SetUpApiHeaders()
+        SetUpApiHeaders('v2')
 
-        http.PostData['auth'] = '0'
-        http.PostData['deviceId'] = GetDeviceId()
-        http.PostData['is17'] = 'false'
-        http.PostData['password'] = password
-        http.PostData['userId'] = username
+        http.Headers['pathname'] = '/'
 
-        local json = Json.New(http.Post(loginEndpoint))
+        local payload = '{"userId":"' .. username .. '","password":"' .. password .. '","auth":0,"is17":false,"deviceId":"' .. GetDeviceId() .. '","cToken":""}'
+        local json = Json.New(http.Post(loginEndpoint, payload))
 
         token = json.SelectValue('data.token')
 
@@ -98,12 +98,23 @@ function GetDeviceId()
     -- Some users were having problems resulting from a static UUID (too many concurrent users?).
 
     if(not isempty(module.Settings['Device ID'])) then
+
+        -- If the user has manually specified a device ID, use it.
+
         return module.Settings['Device ID']
+
+    elseif(isempty(module.Data['Device ID'])) then
+
+        -- If the user has not specified a device ID, generate one.
+        -- We will continue using the same device ID for subsequent requests.
+
+        math.randomseed(os.time())
+
+        module.Data['Device ID'] = math.random(1, 9) .. 'b6b034-8a1a-4c39-b814-6bbb27aead1d'
+
     end
 
-    math.randomseed(os.time())
-
-    return math.random(1, 9) .. 'b6b034-8a1a-4c39-b814-6bbb27aead1d'
+    return module.Data['Device ID']
 
 end
 
@@ -155,23 +166,20 @@ function SetUpApiHeaders(version)
     version = isempty(version) and 'v1' or version
 
     local js = JavaScript.New()
-
-    local deviceId = GetDeviceId()
     local token = GetToken()
-    local timestamp = tostring(js.Execute('Date.now()'))
 
     http.Headers['accept'] = '*/*'
-    http.Headers['deviceId'] = deviceId
+    http.Headers['deviceId'] = GetDeviceId()
     http.Headers['language'] = 'en'
     http.Headers['local-datetime'] = tostring(js.Execute("(function() { var date = new Date(); return date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + String(date.getDate()).padStart(2, '0') + ' ' + String(date.getHours()).padStart(2, '0') + ':' + String(date.getMinutes()).padStart(2, '0') + ':' + String(date.getSeconds()).padStart(2, '0'); })()"))
     http.Headers['origin'] = 'https://' .. module.Domain
     http.Headers['package-name'] = 'web'
-    http.Headers['pathname'] = url:after(module.Domain)
+    http.Headers['pathname'] = url and url:after(module.Domain) or '/'
     http.Headers['referer'] = 'https://' .. module.Domain .. '/'
-    http.Headers['timestamp'] = timestamp
+    http.Headers['timestamp'] = tostring(js.Execute('Date.now()'))
     http.Headers['timezone'] = 'America/California'
     http.Headers['ua'] = 'web'
-    http.Headers['user-id'] = '0'
+    http.Headers['user-id'] = module.Settings['User ID'] or '0'
     http.Headers['version'] = '0.1.5a'
     http.Headers['x-api-key'] = 'SUPERCOOLAPIKEY2021#@#('
     http.Headers['x-origin'] = module.Domain
@@ -179,15 +187,14 @@ function SetUpApiHeaders(version)
     if(version == 'v2') then
 
         -- Add API v2 headers "timestamp" and "x-api-key".
-
         -- The API key is generated in the 'convertApiKey' function from the device ID and timestamp.
 
         js.Execute(http.Get('https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js'))
 
         -- Set up the variables used to generate the API key.
 
-        js.Execute('e = ' .. timestamp);
-        js.Execute('t = "' .. deviceId .. '"');
+        js.Execute('e = ' .. http.Headers['timestamp']);
+        js.Execute('t = "' .. http.Headers['deviceId'] .. '"');
         js.Execute('n = 257'); -- REACT_APP_API_KEY_ITERATION
 
         local apiKey = tostring(js.Execute('i=CryptoJS.SHA256(t.toString().replace(/-/g,"".concat(e))).toString(CryptoJS.enc.Hex);CryptoJS.PBKDF2("".concat(t,"|").concat(e),i,{hasher:CryptoJS.algo.SHA512,keySize:i.length / 4,iterations:n}).toString(CryptoJS.enc.Base64)'))
@@ -238,17 +245,14 @@ function GetEpisodeJson()
 
     SetUpApiHeaders()
 
-    local cToken = ''
     local comicId = GetComicId()
     local episodeId = GetEpisodeId()
-    local viewerToken = ''
 
     -- Get the episode images.
 
     SetUpApiHeaders('v2')
 
-    endpoint = GetApiUrl('v2/viewer/' .. comicId .. '/' .. episodeId)
-
+    local endpoint = GetApiUrl('v2/viewer/' .. comicId .. '/' .. episodeId)
     local payload = '{"location":"viewer","action":"view_contents","isCached":false,"cToken":""}'
     local json = Json.New(http.Post(endpoint, payload))
 
