@@ -4,6 +4,7 @@ function Register()
     module.Language = 'Vietnamese'
 
     module.Domains.Add('blogtruyen.vn')
+    module.Domains.Add('blogtruyenmoi.com')
 
 end
 
