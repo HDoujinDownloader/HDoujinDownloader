@@ -102,7 +102,7 @@ end
 
 local function SetUpApiHeaders()
 
-    http.Headers['accept'] = 'application/json, text/plain, */*'
+    http.Headers['accept'] = '*/*'
     http.Headers['content-type'] = 'application/json;charset=UTF-8'
 
     local bearerToken = GetBearerToken()
@@ -135,9 +135,31 @@ end
 function GetEpisodeJson()
 
     local endpoint = GetApiUrl() .. 'GetImageIndex?device=pc&platform=web&lang=en&sys_lang=en'
-    local payload = '{"ep_id":' .. GetEpisodeId() .. ',"credential":""}'
+    local comicId = GetComicId()
+    local episodeId = GetEpisodeId()
+    local payload = '{"ep_id":' .. episodeId .. ',"credential":""}'
+    local json = GetApiJson(endpoint, payload)
 
-    return GetApiJson(endpoint, payload)
+    if(json.SelectValue('code') == '1') then
+
+        -- We need to supply a credential in order to access all of the images for this episode.
+        -- Otherwise, we're only able to download the first two images.
+
+        local credentialEndpoint = '/twirp/global.v1.Comic/GetCredential?device=pc&platform=web&lang=en&sys_lang=en'
+        local credentialPayload = '{"type":1,"comic_id":' .. comicId .. ',"ep_id":' .. episodeId .. '}'
+        local credentialJson = GetApiJson(credentialEndpoint, credentialPayload)
+        local credential = credentialJson.SelectValue('data.credential')
+
+        if(not isempty(credential)) then
+
+            payload = '{"ep_id":' .. episodeId .. ',"credential":"' .. credential .. '"}'
+            json = GetApiJson(endpoint, payload)
+
+        end
+
+    end
+
+    return json
 
 end
 
