@@ -64,7 +64,16 @@ end
 
 function GetPages()
 
-    pages.AddRange(dom.SelectValues('//div[@id="image" or @id="content_chap"]/img/@src'))
+    -- Read the "data-src" attribute first, because the "src" attribute is just a loading spinner.
+    -- The latter is kept just in case there are chapters that haven't been updated to use the new attribute.
+
+    pages.AddRange(dom.SelectValues('//div[@id="image" or @id="content_chap"]/img/@data-src'))
+
+    if(isempty(pages)) then
+        pages.AddRange(dom.SelectValues('//div[@id="image" or @id="content_chap"]/img/@src'))
+    end
+
+    pages.Referer = url
 
 end
 
