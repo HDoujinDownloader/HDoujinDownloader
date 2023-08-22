@@ -1,21 +1,24 @@
 As of version 2021.5.1.0, the changelog will only contain updates made to the HDoujin Downloader application.
 For module updates, see: https://github.com/HDoujinDownloader/HDoujinDownloader/commits/master/modules/lua
 
-[v2022.6.9.0-rc.5]
+[v2023.8.21.0]
 
-- [FIX] Fixed file extension hint from modules being ignored
-
-[v2022.6.6.0-rc.4]
-
-- [FIX] FlareSolverr now works on Windows 7
-- [FIX] FlareSolverr can now start automatically on Linux systems
-
-[v2022.3.10.0-rc.3]
-
+- [NEW] Added rate limiting for MangaDex
+- [NEW] Added support for more image formats (animated WebP, AVIF, JXL, and more)
+- [NEW] Cookie editor can now import cookies from web browsers
+- [NEW] FlareSolverr plugin is now included with HDoujin Downloader
 - [NEW] Improved support for data URLs
 - [NEW] Multiselect settings are now possible through the Lua API
 - [FIX] Fixed Cloudflare bypass failing when site returns invalid cookies
+- [FIX] Fixed downloads occasionally failing when starting multiple concurrently
+- [FIX] Fixed file extension hint from modules being ignored
 - [FIX] Fixed image subdirectories being ignored for Lua modules
+- [FIX] FlareSolverr can now start automatically on Linux systems
+- [FIX] FlareSolverr now works on Windows 7
+- [FIX] Improved handling of partially-downloaded files
+- [FIX] Improved image cropping/resizing
+- [FIX] Improved webpage encoding detection
+- [MISC] Minor UI consistency updates
 - [MISC] Various improvements and bug fixes
 
 [v2022.1.3.0]
