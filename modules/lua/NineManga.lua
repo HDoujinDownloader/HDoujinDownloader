@@ -12,6 +12,7 @@ function Register()
     module.Domains.Add('my.ninemanga.com')
     module.Domains.Add('ninemanga.com')
     module.Domains.Add('ru.ninemanga.com')
+    module.Domains.Add('www.ninemanga.com')
 
 end
 
@@ -21,6 +22,7 @@ function GetInfo()
     info.Tags = dom.SelectValues('//li[contains(@itemprop,"genre")]/a')
     info.Status = dom.SelectValue('//li/a[contains(@class,"red")]')
     info.Summary = dom.SelectValue('//p/b/following-sibling::text()')
+    info.Language = module.Domain:regex('^(.{2})\\.', 1)
 
 end
 
