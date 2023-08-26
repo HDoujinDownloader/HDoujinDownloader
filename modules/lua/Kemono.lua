@@ -58,6 +58,19 @@ function GetPages()
 
     pages.AddRange(GetAttachmentsAndFiles())
 
+    for page in pages do
+
+        -- The file name is specified in the content-disposition header.
+        -- Newer versions of HDoujin Downloader will read this header, but older versions won't.
+
+        local fileName = GetParameter(page.Url, 'f')
+
+        if(not isempty(fileName)) then
+            page.FilenameHint = fileName
+        end
+
+    end
+
 end
 
 function GetAttachmentsAndFiles()
