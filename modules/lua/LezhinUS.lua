@@ -4,7 +4,10 @@ function Register()
     module.Language = 'en'
     module.Type = 'webtoon'
 
+    module.Domains.Add('lezhin.com')
     module.Domains.Add('lezhinus.com')
+    module.Domains.Add('www.lezhin.com')
+    module.Domains.Add('www.lezhinus.com')
 
     module.Settings.AddCheck('Download WebP images', true)
 
@@ -64,7 +67,7 @@ function Login()
 
     if(not IsLoggedIn()) then
 
-        local endpoint = 'https://www.'.. module.Domain .. '/en/login?redirect=%2Fen'
+        local endpoint = 'https://www.'.. module.Domain:trim('www.') .. '/en/login?redirect=%2Fen'
         local dom = Dom.New(http.Get(endpoint))
         
         http.PostData['utf8'] = '✓'
@@ -135,7 +138,7 @@ function GetSignedDataJson(episodeJson, purchased, quality)
     local contentId = episodeJson.SelectValue('data.extra.comic.id')
     local episodeId = episodeJson.SelectValue('data.extra.episode.id')
 
-    local apiEndpoint = 'https://www.' .. module.Domain .. '/lz-api/v2/cloudfront/signed-url/generate?contentId=' .. contentId .. '&episodeId=' .. episodeId .. '&purchased=' .. purchased .. '&q=' .. quality .. '&firstCheckType=P'
+    local apiEndpoint = 'https://www.' .. module.Domain:trim('www.') .. '/lz-api/v2/cloudfront/signed-url/generate?contentId=' .. contentId .. '&episodeId=' .. episodeId .. '&purchased=' .. purchased .. '&q=' .. quality .. '&firstCheckType=P'
 
     return Json.New(http.Get(apiEndpoint))
 
