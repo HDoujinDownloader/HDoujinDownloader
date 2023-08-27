@@ -1,10 +1,10 @@
 function Register()
 
     module.Name = 'Toomics'
-
     module.Type = 'Webtoon'
 
-    module.Domains.Add('toomics.com', 'Toomics')
+    module.Domains.Add('global.toomics.com')
+    module.Domains.Add('toomics.com')
 
 end
 
@@ -60,9 +60,13 @@ end
 
     if(not http.Cookies.Contains('GTOOMICSremember_id')) then
 
-        http.Referer = 'https://'..module.Domain..'/'
+        local originUrl = 'https://' .. module.Domain
+        local refererUrl = originUrl .. '/en'
+        local loginEndpoint = refererUrl .. '/auth/layer_login'
+        
+        http.Get(refererUrl)
 
-        http.Get(http.Referer)
+        http.Referer = refererUrl
 
         http.PostData.Add('user_id', username)
         http.PostData.Add('user_pw', password)
@@ -75,10 +79,14 @@ end
 
         http.Headers['accept'] = 'application/json, text/javascript, */*; q=0.01'
         http.Headers['content-type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
-        http.Headers['origin'] = 'https://'..module.Domain
+        http.Headers['origin'] = originUrl
         http.Headers['x-requested-with'] = 'XMLHttpRequest'
 
-        local response = http.PostResponse('https://'..module.Domain..'/en/auth/layer_login')
+        -- Add the "click position" cookie, which is set when the mouse is clicked.
+
+        http.Cookies.Add('.toomics.com', 'cp', '0%7C0')
+
+        local response = http.PostResponse(loginEndpoint)
 
         if(not response.Cookies.Contains('GTOOMICSremember_id')) then
             Fail(Error.LoginFailed)
