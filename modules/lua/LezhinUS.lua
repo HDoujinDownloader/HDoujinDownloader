@@ -27,7 +27,11 @@ end
 
 function GetChapters()
 
-    local baseUrl = StripParameters(url:trim('/')) .. '/'
+    -- We have two different URL formats to account for when determining the base URL.
+    -- /en/comic/<comic-slug>
+    -- /en/library/comic/en-US/<comic-slug>
+
+    local baseUrl = RegexReplace(StripParameters(url:trim('/')) .. '/', '\\/library\\/|\\/\\w{2}-\\w{2}\\/', '/')
     local json = GetComicJson()
 
     for episodeNode in json.SelectTokens('episodes[*]') do
