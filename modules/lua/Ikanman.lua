@@ -1,4 +1,4 @@
-LZStringDownloadUrl = 'https://raw.githubusercontent.com/pieroxy/lz-string/cf06e9a0e61daa8b120a474bbc80666f959ff7d4/libs/lz-string.js'
+LZStringDownloadUrl = 'https://raw.githubusercontent.com/pieroxy/lz-string/4a94308c1e684fb98866f7ba1288f3db6d9f8801/libs/lz-string.min.js'
 
 function Register()
 
