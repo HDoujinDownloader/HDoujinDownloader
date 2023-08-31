@@ -8,6 +8,7 @@ function Register()
 
     module.Domains.Add('asura.gg', 'Asura Scans')
     module.Domains.Add('asura.nacm.xyz', 'Asura Scans')
+    module.Domains.Add('asuracomics.com', 'Asura Scans')
     module.Domains.Add('asurascans.com', 'Asura Scans')
     module.Domains.Add('www.asurascans.com', 'Asura Scans')
 
