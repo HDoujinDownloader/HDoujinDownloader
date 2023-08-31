@@ -29,6 +29,7 @@ function Register()
     module.Domains.Add('bokugents.com', 'Bokugen Translations')
     module.Domains.Add('housemangas.com', 'HouseMangas')
     module.Domains.Add('mhscans.com', 'MHScans')
+    module.Domains.Add('ragnarokscanlation.com', 'Ragnarok Scanlation')
     module.Domains.Add('selevertranslation.com', 'Selever Translation')
     module.Domains.Add('taurusfansub.com', 'Taurus Fansub')
 
