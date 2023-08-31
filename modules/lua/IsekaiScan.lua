@@ -26,6 +26,7 @@ function Register()
     module = Module.New()
     module.Language = 'Spanish'
 
+    module.Domains.Add('housemangas.com', 'HouseMangas')
     module.Domains.Add('mhscans.com', 'MHScans')
     module.Domains.Add('selevertranslation.com', 'Selever Translation')
     module.Domains.Add('taurusfansub.com', 'Taurus Fansub')
