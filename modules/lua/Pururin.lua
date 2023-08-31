@@ -12,6 +12,8 @@ end
 
 function GetInfo()
 
+    RedirectToSummaryPage()
+
     info.Title = dom.SelectValue('//h1'):before('/')
     info.OriginalTitle = dom.SelectValue('//h1'):after('/')
     info.AlternativeTitle = dom.SelectValue('//div[contains(@class,"alt-title")]')
@@ -28,18 +30,42 @@ end
 
 function GetChapters()
 
+    RedirectToSummaryPage()
+
     chapters.AddRange(dom.SelectElements('//table[contains(@class,"table-collection")]//a'))
 
 end
 
 function GetPages()
 
-    local galleryId = url:regex('gallery\\/(\\d+)', 1)
-    local pageCount = tonumber(dom.SelectValue('//td[contains(text(),"Pages")]/following-sibling::td'):regex('^\\d+'))
+    RedirectToSummaryPage()
 
-    for i = 1, pageCount do
+    for thumbnailUrl in dom.SelectValues('//div[contains(@class,"gallery-preview")]//img/@src') do
+        
+        local imageUrl = RegexReplace(thumbnailUrl, '\\/(\\d+)t\\.', '/$1.')
 
-        pages.Add('//cdn.' .. module.Domain .. '/assets/images/data/' .. galleryId .. '/' .. i .. '.jpg')
+        pages.Add(imageUrl)
+
+    end
+
+end
+
+function GetGalleryId()
+
+    return url:regex('\\/(?:gallery|read)\\/(\\d+)', 1)
+
+end
+
+function RedirectToSummaryPage()
+
+    -- If a reader URL was added, go back to the summary page.
+
+    if(url:contains('/read/')) then
+        
+        local galleryId = GetGalleryId()
+
+        url = GetRooted('/gallery/' .. galleryId .. '/', url)
+        dom = Dom.New(http.Get(url))
 
     end
 
