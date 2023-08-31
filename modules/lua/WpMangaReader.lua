@@ -51,6 +51,7 @@ function Register()
     module.Domains.Add('lectorhentai.com', 'Lector Hentai')
     module.Domains.Add('legionscans.com', 'LEGION SCAN')
     module.Domains.Add('miauscan.com', 'miauscan.com')
+    module.Domains.Add('raikiscan.com', 'Raiki Scan')
 
     RegisterModule(module)
 
@@ -87,10 +88,10 @@ function GetInfo()
 
     info.Title = CleanTitle(dom.SelectValue('//h1'))
     info.Summary = dom.SelectValue('//div[@itemprop="description"]')
-    info.Status = dom.SelectValue('//div[@class="imptdt" and (contains(.,"Status") or contains(.,"สถานะ"))]/*[last()]')
-    info.Type = dom.SelectValue('//div[@class="imptdt" and (contains(.,"Type") or contains(.,"ประเภทการ์ตูน") or contains(.,"พิมพ์"))]/*[last()]')
+    info.Status = dom.SelectValue('//div[@class="imptdt" and (contains(.,"Status") or contains(.,"สถานะ") or contains(.,"Estado"))]/*[last()]')
+    info.Type = dom.SelectValue('//div[@class="imptdt" and (contains(.,"Type") or contains(.,"ประเภทการ์ตูน") or contains(.,"พิมพ์") or contains(.,"Tipo"))]/*[last()]')
     info.Publisher = dom.SelectValue('//div[@class="imptdt" and (contains(.,"Serialization") or contains(.,"การทำให้เป็นอนุกรม"))]/*[last()]')
-    info.Author = dom.SelectValue('//div[@class="imptdt" and (contains(.,"Author") or contains(.,"ผู้เขียน"))]/*[last()]')
+    info.Author = dom.SelectValue('//div[@class="imptdt" and (contains(.,"Author") or contains(.,"ผู้เขียน") or contains(.,"Autor"))]/*[last()]')
     info.Artist = dom.SelectValue('//div[@class="imptdt" and (contains(.,"Artist") or contains(.,"ศิลปิน"))]/*[last()]')
     info.Tags = dom.SelectValues('//div[contains(@class,"seriestugenre")]/a')
 
