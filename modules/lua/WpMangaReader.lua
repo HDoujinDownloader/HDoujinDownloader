@@ -49,6 +49,7 @@ function Register()
     module.Language = 'Spanish'
 
     module.Domains.Add('lectorhentai.com', 'Lector Hentai')
+    module.Domains.Add('legionscans.com', 'LEGION SCAN')
     module.Domains.Add('miauscan.com', 'miauscan.com')
 
     RegisterModule(module)
