@@ -2,41 +2,17 @@ function Register()
 
     module.Name = 'Toptoon'
     module.Type = 'webtoon'
-
-    module = Module.New()
-
     module.Language = 'ko'
 
     module.Domains.Add('toptoon.com')
-
-    RegisterModule(module)
-
-    module = Module.New()
-
-    module.Language = 'cn'
-
-    module.Domains.Add('toptoon.net')
-    module.Domains.Add('www.toptoon.net')
-
-    RegisterModule(module)
 
 end
 
 function GetInfo()
   
-    if(GetDomain() == 'toptoon.com') then
-        
-        info.Title = dom.SelectValue('//span[@title]')
-        info.Author = dom.SelectValue('//span[contains(@class,"comic_wt")]')
-        info.Summary = dom.SelectValue('//p[contains(@class,"story_synop")]')
-
-    else
-
-        info.Title = dom.SelectValue('//section[contains(@class,"infoContent")]//div[contains(@class,"title")]')
-        info.Author = dom.SelectValue('//div[contains(@class,"etc")]//text()[3]'):after(':')
-        info.Summary = dom.SelectValue('//div[contains(@class,"desc")]')
-
-    end
+    info.Title = dom.SelectValue('//span[@title]')
+    info.Author = dom.SelectValue('//span[contains(@class,"comic_wt")]')
+    info.Summary = dom.SelectValue('//p[contains(@class,"story_synop")]')
 
 end
 
@@ -44,40 +20,19 @@ function GetChapters()
 
     local baseUrl = StripParameters(url)
     :replace('/ep_list/', '/ep_view/')
-    :replace('/epList/', '/epView/')
     :trim('/') .. '/'
 
-    if(GetDomain() == 'toptoon.com') then
+    for episodeNode in dom.SelectElements('//a[@data-episode-id]') do
 
-        for episodeNode in dom.SelectElements('//a[@data-episode-id]') do
+        local episodeUrl = baseUrl .. episodeNode.SelectValue('@data-episode-id')
+        local episodeTitle = episodeNode.SelectValue('.//p[contains(@class,"episode_title")]')
+        local episodeSubtitle = episodeNode.SelectValue('.//p[contains(@class,"episode_stitle")]')
 
-            local episodeUrl = baseUrl .. episodeNode.SelectValue('@data-episode-id')
-            local episodeTitle = episodeNode.SelectValue('.//p[contains(@class,"episode_title")]')
-            local episodeSubtitle = episodeNode.SelectValue('.//p[contains(@class,"episode_stitle")]')
-    
-            if(not isempty(episodeSubtitle)) then
-                episodeTitle = episodeTitle .. episodeSubtitle
-            end
-    
-            chapters.Add(episodeUrl, episodeTitle)
-    
+        if(not isempty(episodeSubtitle)) then
+            episodeTitle = episodeTitle .. episodeSubtitle
         end
 
-    else
-
-        for episodeNode in dom.SelectElements('//li[contains(@class,"episodeBox")]') do
-            
-            local episodeUrl = baseUrl .. episodeNode.SelectValue('.//@data-episode_idx')
-            local episodeTitle = episodeNode.SelectValue('.//div[contains(@class,"title")]/text()[1]')
-            local episodeSubtitle = episodeNode.SelectValue('.//div[contains(@class,"subTitle")]/text()[1]')
-
-            if(not isempty(episodeSubtitle)) then
-                episodeTitle = episodeTitle .. episodeSubtitle
-            end
-    
-            chapters.Add(episodeUrl, episodeTitle)
-
-        end
+        chapters.Add(episodeUrl, episodeTitle)
 
     end
     
@@ -91,34 +46,38 @@ end
 
 function Login()
 
-    if(GetDomain() == 'toptoon.com') then
+    if(isempty(http.Cookies)) then
 
-            -- Login is currently only implemented for toptoon.net.
+        local sourcePage = 'https://' .. module.Domain .. '/'
 
-            Fail(Error.LoginFailed)
+        -- Get a session cookie.
 
-    else
+        http.Get(sourcePage)
+
+        -- Get the login form so we can get a login token.
+
+        local dom = Dom.New(http.Get('https://' .. module.Domain .. '/alert/auth/login?no-token=yes&redirect=https%253A%252F%252F' .. module.Domain .. '%252F'))
+        local token = dom.SelectValue('//script[contains(text(), "Login.init")]'):regex("token\\s*:\\s*'([^']+)", 1)
+
+        -- Make the login request.
 
         http.Headers['accept'] = 'application/json, text/javascript, */*; q=0.01'
         http.Headers['content-type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
-        http.Headers['referer'] = 'https://' .. module.Domain .. '/'
+        http.Headers['referer'] = sourcePage
         http.Headers['x-requested-with'] = 'XMLHttpRequest'
 
-        local loginEndpoint = '/member/login_proc'
+        local loginEndpoint = '/login/login_proc'
 
-        http.PostData.Add('redirect', http.Headers['referer'])
-        http.PostData.Add('userId', username)
-        http.PostData.Add('userPw', password)
-        http.PostData.Add('saveId', '1')
-        http.PostData.Add('autoLogin', '1')
+        http.PostData.Add('user_id', username)
+        http.PostData.Add('user_pw', password)
+        http.PostData.Add('id_save', '1')
+        http.PostData.Add('auto_login', '1')
+        http.PostData.Add('tokn', token)
+        http.PostData.Add('ci_token', 'null')
 
         local response = http.PostResponse(loginEndpoint)
 
-        if(not response.Cookies.Contains('isLoginUsed')) then
-            Fail(Error.LoginFailed)
-        end
-
-        global.SetCookies(response.Cookies)
+        global.SetCookies(response.Cookies) 
 
     end
 
