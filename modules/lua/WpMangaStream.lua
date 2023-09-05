@@ -10,6 +10,8 @@ function Register()
     module.Domains.Add('asura.nacm.xyz', 'Asura Scans')
     module.Domains.Add('asuracomics.com', 'Asura Scans')
     module.Domains.Add('asurascans.com', 'Asura Scans')
+    module.Domains.Add('luminousscans.com', 'Luminous Scans')
+    module.Domains.Add('luminousscans.gg', 'Luminous Scans')
     module.Domains.Add('www.asurascans.com', 'Asura Scans')
 
     if(API_VERSION >= 20230823) then      
@@ -89,25 +91,27 @@ function RedirectToNewMangaUrl()
     -- If we hit a 404 page for a manga URL, attempt to find the current numeric ID and update the URL.
     -- See https://github.com/HDoujinDownloader/HDoujinDownloader/issues/238
 
-    if(url:contains('/manga/')) then
+    local numericPrefixKey = module.Domain .. '-NumericPrefix'
+
+    if(url:contains('/manga/') or url:contains('/series/')) then
    
-        if(isempty(module.Data['NumericPrefix'])) then
+        if(isempty(module.Data[numericPrefixKey])) then
             
             -- If we haven't gotten the prefix yet, extract it from a URL on the home page and save it.
 
             local homePageDom = Dom.New(http.Get(GetRoot(url)))
-            local numericPrefix = homePageDom.SelectValue('//div[contains(@class,"listupd")]//a[contains(@href,"/manga/")]/@href')
-                :regex('\\/manga\\/(\\d+)', 1)
+            local numericPrefix = homePageDom.SelectValue('//div[contains(@class,"listupd")]//a[contains(@href,"/manga/") or contains(@href,"/series/")]/@href')
+                :regex('\\/(?:manga|series)\\/(\\d+)', 1)
     
-            module.Data['NumericPrefix'] = numericPrefix
+            module.Data[numericPrefixKey] = numericPrefix
 
         end
 
-        if(not isempty(module.Data['NumericPrefix'])) then
+        if(not isempty(module.Data[numericPrefixKey])) then
             
             -- Apply the prefix to the URL.
 
-            url = RegexReplace(url, '\\/manga\\/\\d*-?', '/manga/' .. module.Data['NumericPrefix'] .. '-')
+            url = RegexReplace(url, '\\/(manga|series)\\/\\d*-?', '/$1/' .. module.Data[numericPrefixKey] .. '-')
             dom = Dom.New(http.Get(url))
             
         end
