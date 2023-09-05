@@ -35,6 +35,17 @@ end
 
 function GetPages()
 
-    pages.AddRange(dom.SelectValues('//div[contains(@class,"container")]//p//img/@data-src'))
+    for imageNode in dom.SelectElements('//div[contains(@class,"container")]//p//img') do
+        
+        local srcUrl = imageNode.SelectValue('./@src')
+        local dataSrcUrl = imageNode.SelectValue('./@data-src')
+
+        if(not isempty(srcUrl)) then
+            pages.Add(srcUrl)
+        elseif(not isempty(dataSrcUrl)) then
+            pages.Add(dataSrcUrl)
+        end
+
+    end
 
 end
