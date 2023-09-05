@@ -2,7 +2,7 @@ function Register()
 
     module.Name = '네이버 만화'
     module.Type = 'webtoon'
-    module.Language = 'korean'
+    module.Language = 'kr'
 
     module.Domains.Add('comic.naver.com')
 
@@ -10,52 +10,49 @@ end
 
 function GetInfo()
 
-    info.Title = dom.SelectValue('//span[contains(@class,"title")]')
-    info.Artist = dom.SelectValue('//span[contains(@class,"wrt_nm")]'):split('/')
-    info.Summary = dom.SelectValue('//div[contains(@class,"detail")]/p')
-    info.Tags = dom.SelectValue('//span[@class="genre"]'):split(',')
+    local json = GetComicJson()
 
-    local episodeTitle = dom.SelectValue('//div[contains(@class,"tit_area")]//h3')
-    local chapterCount = GetChapterCount()
-
-    if(not isempty(episodeTitle)) then
-        info.Title = info.Title .. ' - ' .. episodeTitle
-    end
-
-    if(chapterCount > 0) then
-        info.ChapterCount = chapterCount
-    end
+    info.Title = json.SelectValue('titleName')
+    info.Author = json.SelectValues('author.writers[*].name')
+    info.Artist = json.SelectValues('author.painters[*].name')
+    info.Summary = json.SelectValue('synopsis')
+    info.Tags = json.SelectValues('curationTagList[*].tagName')
+    info.Status = json.SelectValue('finished') == 'false' and 'ongoing' or 'completed'
 
 end
 
 function GetChapters()
 
-    if(not url:contains('/list?')) then
-        return
-    end
+    local titleId = GetParameter(url, 'titleId')
+    local pageIndex = 1
+    local totalPages = 0
 
-    url = SetParameter(url, 'page', '1')
-    dom = Dom.New(http.Get(url))
+    repeat
+        
+        local endpoint = GetApiUrl() .. 'article/list?titleId=' .. titleId .. '&page=' .. pageIndex .. '&sort=DESC'
+        local json = GetApiJson(endpoint)
+        local episodeNodes = json.SelectTokens('articleList[*]')
 
-    while true do
-
-        local chapterNodes = dom.SelectElements('//td[contains(@class,"title")]/a')
-        local nextPageUrl = dom.SelectValue('//a[@class="next"]/@href'):replace('&amp;', '&')
-
-        chapters.AddRange(chapterNodes)
-
-        if(chapterNodes.Count() <= 0) then
+        if(episodeNodes.Count() <= 0) then
             break
         end
 
-        if(isempty(nextPageUrl)) then
-            break
+        totalPages = tonumber(json.SelectValue('pageInfo.totalPages'))
+
+        for episodeNode in episodeNodes do
+            
+            local episodeNo = episodeNode.SelectValue('no')
+            local episodeSubtitle = episodeNode.SelectValue('subtitle')
+            local episodeTitle = episodeNo .. ' - ' .. episodeSubtitle
+            local episodeUrl = '/webtoon/detail?titleId=' .. titleId .. '&no=' .. episodeNo
+
+            chapters.Add(episodeUrl, episodeTitle)
+            
         end
 
-        url = nextPageUrl
-        dom = Dom.New(http.Get(url))
+        pageIndex = pageIndex + 1
 
-    end
+    until (pageIndex > totalPages)
 
     chapters.Reverse()
 
@@ -67,18 +64,35 @@ function GetPages()
 
 end
 
-function GetChapterCount()
+function GetApiUrl()
 
-    url = SetParameter(url, 'page', '1')
-    dom = Dom.New(http.Get(url))
+    return '/api/'
 
-    local latestEpisodeUrl = dom.SelectValue('//td[contains(@class,"title")]/a/@href')
-    local latestEpisodeNo = GetParameter(latestEpisodeUrl, 'no')
+end
 
-    if(isnumber(latestEpisodeNo)) then
-        return tonumber(latestEpisodeNo)
-    else
-        return 0
+function SetUpApiHeaders()
+
+    http.Headers['accept'] = 'application/json, text/plain, */*'
+
+    if(http.Cookies.Contains('XSRF-TOKEN')) then
+        http.Headers['X-Xsrf-Token'] = http.Cookies['XSRF-TOKEN']
     end
+    
+end
+
+function GetApiJson(endpoint)
+
+    SetUpApiHeaders()
+
+    return Json.New(http.Get(endpoint))
+
+end
+
+function GetComicJson()
+
+    local titleId = GetParameter(url, 'titleId')
+    local endpoint = GetApiUrl() .. 'article/list/info?titleId=' .. titleId
+
+    return GetApiJson(endpoint)
 
 end
