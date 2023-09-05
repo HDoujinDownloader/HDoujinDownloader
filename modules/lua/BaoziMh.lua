@@ -25,7 +25,7 @@ end
 
 function GetChapters()
 
-    chapters.AddRange(dom.SelectElements('//div[contains(@id,"chapter-items")]//a'))
+    chapters.AddRange(dom.SelectElements('//div[contains(@id,"chapter-items") or contains(@id,"chapters_other_list")]//a'))
 
 end
 
