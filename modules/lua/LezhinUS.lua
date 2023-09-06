@@ -119,6 +119,10 @@ function GetComicJson()
     local script = dom.SelectValue('//script[contains(.,"__LZ_PRODUCT__ ")]')
     local productJson = script:regex('\\bproduct:\\s*({.+?}),\\s', 1)
 
+    if(isempty(productJson)) then      
+        Fail(Error.LoginRequired)
+    end
+
     return Json.New(productJson)
 
 end
