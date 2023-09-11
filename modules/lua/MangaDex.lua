@@ -53,6 +53,7 @@ function GetInfo()
     info.Author = json.SelectValues("data.relationships[?(@.type=='author')].attributes.name")
     info.Artist = json.SelectValues("data.relationships[?(@.type=='artist')].attributes.name")
     info.Scanlator = json.SelectValues("data.relationships[?(@.type=='scanlation_group')].attributes.name")
+    info.Url = url
 
     if(toboolean(module.Settings['Prefer scanlation status over publishing status'])) then
 
@@ -317,12 +318,21 @@ end
 
 function RedirectFromOldUrl()
 
-    if(not GetGalleryUuid():contains("-")) then
+    local galleryId = GetGalleryUuid()
 
-        -- We have an old URL and need to follow the redirect to the new one.
-        -- Ex: https://mangadex.org/title/45502/veil
+    if(not galleryId:contains("-")) then
 
-        url = http.GetResponse(url).Url
+        -- We have an old URL and need to follow the redirect to the new one to get the UUID.
+        -- e.g. https://mangadex.org/title/45502/veil
+
+        PrepareHttpHeaders()
+
+        local json = Json.New(http.Post(GetApiEndpoint() .. '/legacy/mapping', '{"type":"manga","ids":[' .. galleryId .. ']}'))
+        local newId = json.SelectValue('data[0].attributes.newId')
+
+        if(not isempty(newId)) then         
+            url = '/title/' .. newId
+        end
 
     end
 
