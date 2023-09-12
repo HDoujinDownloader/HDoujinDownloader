@@ -50,6 +50,7 @@ function Register()
     module.Domains.Add('legionscans.com', 'LEGION SCAN')
     module.Domains.Add('miauscan.com', 'miauscan.com')
     module.Domains.Add('raikiscan.com', 'Raiki Scan')
+    module.Domains.Add('shotasekai.club', 'Shota Sekai')
 
     RegisterModule(module)
 
