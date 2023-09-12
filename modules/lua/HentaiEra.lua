@@ -1,7 +1,5 @@
--- This module is very similar to the one used for AsmHentai (AsmHentai.lua).
--- It is not identical, however, because the API requires different parameters.
-
-require "AsmHentai"
+-- This module is very similar to AsmHentai and IMHentai.
+-- However, the metadata and images URLs must be acccessed differently.
 
 function Register()
 
@@ -12,42 +10,74 @@ function Register()
 
 end
 
-function GetThumbnailUrls()
+function GetInfo()
 
-    -- Make request to get session cookies.
+    RedirectBackToGallery()
 
-    dom = dom.New(http.Get(url))
+    info.Title = dom.SelectValue('//h1')
+    info.OriginalTitle = dom.SelectValue('//p[contains(@class,"subtitle")]')    
+    info.Tags = dom.SelectValues('//span[contains(text(),"Tags")]/following-sibling::div//a')
+    info.Circle = dom.SelectValues('//span[contains(text(),"Groups")]/following-sibling::div//a')
+    info.Language = dom.SelectValues('//span[contains(text(),"Languages")]/following-sibling::div//a')
+    info.Type = dom.SelectValues('//span[contains(text(),"Category")]/following-sibling::div//a')
+    info.Url = url
 
-    -- Get thumbnail URLs through the API.
+end
 
-    local apiEndpoint = '//' .. module.Domain .. '/inc/thumbs_loader.php'
-    local galleryId = GetGalleryId(url)
-    local server = dom.SelectValue('//input[@id="load_server"]/@value')
-    local loadId = dom.SelectValue('//input[@id="load_id"]/@value')
-    local loadDir = dom.SelectValue('//input[@id="load_dir"]/@value')
-    local totalPages = GetPageCount()
+function GetPages()
 
-    -- Galleries with < 10 pages will not have a "load_dir" value, so we can just get the thumbnails directly.
+    -- Instead of computing the image server using the reader parameters, we can just use a thumbnail URL as a template.
+    -- Thumbnails will be stored on the same server as the full size images.
 
-    if(not isempty(loadDir)) then
+    local imageBaseUrl = dom.SelectValue('//div[contains(@class,"gthumb")]//img/@data-src')
+        :beforelast('/') .. '/'
 
-        http.Headers['Accept'] = '*/*'
-        http.Headers['X-Requested-With'] = 'XMLHttpRequest'
-    
-        http.PostData['server'] = server
-        http.PostData['u_id'] = galleryId
-        http.PostData['g_id'] = loadId
-        http.PostData['img_dir'] = loadDir
-        http.PostData['visible_pages'] = '0'
-        http.PostData['total_pages'] = tostring(totalPages)
-        http.PostData['type'] = '2'
+    local imagesJsonStr = dom.selectValue('//script[contains(text(),"g_th")]')
+        :regex("parseJSON\\('(.+?)'\\);", 1)
 
-        local apiResponse = http.Post(apiEndpoint)
+    if(not isempty(imageBaseUrl) and not isempty(imagesJsonStr)) then
 
-        dom = dom.New(apiResponse)
+        local imagesJson = Json.New(imagesJsonStr)
+        
+        for key in imagesJson.Keys do
+
+            local fileExtensionKey = tostring(imagesJson[key]):split(',')[0]
+            local fileExtension = GetFileExtensionFromKey(fileExtensionKey)
+            local imageUrl = imageBaseUrl .. key .. fileExtension
+
+            pages.Add(imageUrl)
+
+        end
 
     end
 
-    return dom.SelectValues('//div[contains(@class,"gthumb")]//img/@data-src')
+end
+
+function RedirectBackToGallery()
+
+    local backToGalleryUrl = dom.SelectValue('//a[contains(@class,"return_btn") or contains(@class,"back_btn")]/@href')
+
+    if(not isempty(backToGalleryUrl)) then
+
+        url = backToGalleryUrl
+        dom = Dom.New(http.Get(url))
+
+    end
+
+end
+
+function GetFileExtensionFromKey(key)
+
+    if(key == 'j') then 
+        return '.jpg'
+    elseif(key == 'p') then 
+        return '.png'
+    elseif(key == 'b') then 
+        return '.bmp'
+    elseif(key == 'g') then 
+        return '.gif'
+    else
+        return '.jpg'
+    end
 
 end
