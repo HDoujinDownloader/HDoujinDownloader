@@ -69,3 +69,31 @@ function GetChapters()
     end
 
 end
+
+function Login()
+
+    if(isempty(http.Cookies)) then
+
+        http.Headers['accept'] = '*/*'
+        http.Headers['content-type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
+        http.Headers['referer'] = 'https://' .. module.Domain .. '/'
+        http.Headers['x-requested-with'] = 'XMLHttpRequest'
+
+        local loginEndpoint = '/wp-admin/admin-ajax.php'
+
+        http.PostData.Add('action', 'wp_manga_signin')
+        http.PostData.Add('login', username)
+        http.PostData.Add('pass', password)
+        http.PostData.Add('rememberme', 'forever')
+
+        local response = http.PostResponse(loginEndpoint)
+
+        if(not toboolean(Json.New(response.Body).SelectValue('success'))) then
+            Fail(Error.LoginFailed)
+        end
+
+        global.SetCookies(response.Cookies)
+
+    end
+
+end
