@@ -63,8 +63,6 @@ function GetImageServerFromGalleryId(galleryId)
 
     -- The logic that selects an image server is in main.js.
     
-    local imageServer = 'm5'
-
     if(galleryId > 0 and galleryId <= 274825) then
         imageServer = 'm1'
     elseif(galleryId > 274825 and galleryId <= 403818) then
@@ -75,10 +73,12 @@ function GetImageServerFromGalleryId(galleryId)
         imageServer = 'm4'
     elseif(galleryId > 632481 and galleryId <= 816010) then
         imageServer = 'm5'
-     elseif(galleryId > 816010 and galleryId <= 970099) then
+    elseif(galleryId > 816010 and galleryId <= 970098) then
         imageServer = 'm6'
-    elseif(galleryId > 970099) then
+    elseif(galleryId > 970098 and galleryId <= 1121113) then
         imageServer = 'm7'
+    else
+        imageServer = 'm8'
     end
 
     return imageServer
