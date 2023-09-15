@@ -6,6 +6,7 @@ function Register()
     module.Language = 'french'
 
     module.Domains.Add('jpmangas.cc', 'Jpmangas')
+    module.Domains.Add('lelscanvf.cc', 'LelscanVF')
     module.Domains.Add('lelscanvf.com', 'LelscanVF')
 
 end
