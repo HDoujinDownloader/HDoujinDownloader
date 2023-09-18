@@ -9,10 +9,13 @@ function Register()
     module.Adult = true
 
     module.Domains.Add('newtoki94.com', '뉴토끼')
+    module.Domains.Add('newtoki307.com', '뉴토끼')
 
 end
 
 function GetInfo()
+
+    SolveCaptcha()
 
     info.Title = dom.SelectValue('//div[contains(@class,"view-title")]//span')
     info.Summary = dom.SelectValue('//div[contains(@class,"view-title")]//div[contains(@class,"view-content")][2]')
@@ -24,7 +27,9 @@ function GetInfo()
 end
 
 function GetChapters()
-    
+   
+    SolveCaptcha()
+
     for chapterNode in dom.SelectElements('//ul[contains(@class,"list-body")]//a') do
 
         local chapterUrl = chapterNode.SelectValue('@href')
@@ -66,5 +71,49 @@ function GetPages()
     -- Note that some galleries have images in the html_data that aren't actually displayed (?). They have a style="display: none" attribute.
 
     pages.AddRange(dom.SelectValues('//img[not(@style)]/@*[last()]'))
+
+end
+
+function SolveCaptcha()
+
+    -- We need to solve a captcha before we can access the chapter list.
+
+    -- Refresh the DOM in case the CAPTCHA was already solved previously (e.g. in "GetInfo").
+    -- Make sure to bypass the response cache.
+
+    dom = Dom.New(http.Get(url .. '#'))
+
+    local hasCaptchaElement = dom.SelectElements('//fieldset[@id="captcha"]').Count() > 0
+    
+    if(hasCaptchaElement) then
+
+        -- Create a new KCAPTCHA session.
+
+        http.Headers['Accept'] = '*/*'
+        http.Headers['X-Requested-With'] = 'XMLHttpRequest'
+
+        http.Post('/plugin/kcaptcha/kcaptcha_session.php')
+
+        -- This URL is generated in "kcaptcha.js".
+
+        local captchaImageUrl = GetRooted(JavaScript.New().Execute('"/plugin/kcaptcha/kcaptcha_image.php?t=" + (new Date).getTime()').ToString(), url)
+        local captcha = Captcha.New(http)
+        local captchaSolution = captcha.Solve(captchaImageUrl)
+
+        if(not isempty(captchaSolution)) then
+            
+            local payload = 'url=' .. EncodeUriComponent(url) .. '&captcha_key=' .. captchaSolution
+
+            -- The captcha will redirect to the given URL.
+
+            local response = http.PostResponse('/bbs/captcha_check.php', payload)
+
+            dom = Dom.New(response.Body)
+
+            global.SetCookies(response.Cookies)
+
+        end
+
+    end
 
 end
