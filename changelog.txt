@@ -1,6 +1,21 @@
 As of version 2021.5.1.0, the changelog will only contain updates made to the HDoujin Downloader application.
 For module updates, see: https://github.com/HDoujinDownloader/HDoujinDownloader/commits/master/modules/lua
 
+[v2023.9.19.0]
+
+- [NEW] Added option to set series to title
+- [FIX] Fixed "split wide images" setting not saving
+- [FIX] Fixed config file not saving when using CrossOver
+- [FIX] Fixed error when importing web browser cookies
+- [FIX] Fixed incorrect cookie handling for some domains
+- [FIX] Fixed module-specified HTTP headers not being applied
+- [FIX] Fixed some image conversion rules being incorrectly applied
+- [FIX] Improved FlareSolverr version checking
+- [MISC] Improved download queue load time and performance
+- [MISC] Improved favicon extraction
+- [MISC] %ORIG% token now respects content-disposition header
+- [MISC] Various improvements and bug fixes
+
 [v2023.8.21.0]
 
 - [NEW] Added rate limiting for MangaDex
