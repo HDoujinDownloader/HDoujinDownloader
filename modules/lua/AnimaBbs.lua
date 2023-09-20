@@ -8,8 +8,10 @@ function Register()
     module.Language = 'Korean'
     module.Adult = true
 
+    module.Domains.Add('newtoki*.com', '뉴토끼')
     module.Domains.Add('newtoki94.com', '뉴토끼')
     module.Domains.Add('newtoki307.com', '뉴토끼')
+    module.Domains.Add('newtoki308.com', '뉴토끼')
 
 end
 
