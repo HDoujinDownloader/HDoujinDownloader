@@ -155,6 +155,15 @@ function GetInfo()
         info.Tags = dom.SelectValues('//span[contains(@class,"mgen")]//a')
     end
 
+    if(module.GetName(url) == 'Flame Scans') then
+        
+        -- The numeric prefix at the beginning of the URL isn't constant, and URLs will be invalidated when it changes.
+        -- Strip the numeric prefix to get a permalink.
+
+        info.Url = RegexReplace(url, '\\/\\d+-', '/')
+
+    end
+
     -- Get the page count if we're on a site that doesn't use chapters (lectorhentai.com).
 
     local pageCount = GetPageCount()
