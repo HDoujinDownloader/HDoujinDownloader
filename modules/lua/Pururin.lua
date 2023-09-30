@@ -40,12 +40,18 @@ function GetPages()
 
     RedirectToSummaryPage()
 
-    for thumbnailUrl in dom.SelectValues('//div[contains(@class,"gallery-preview")]//img/@src') do
+    for thumbnailNode in dom.SelectElements('//div[contains(@class,"gallery-preview")]//img') do
         
-        local imageUrl = RegexReplace(thumbnailUrl, '\\/(\\d+)t\\.', '/$1.')
+        local imageUrl = thumbnailNode.SelectValue('./@src')
+
+        if(isempty(imageUrl)) then
+            imageUrl = thumbnailNode.SelectValue('./@data-src') 
+        end
+        
+        imageUrl = RegexReplace(imageUrl, '\\/(\\d+)t\\.', '/$1.')
 
         pages.Add(imageUrl)
-
+        
     end
 
 end

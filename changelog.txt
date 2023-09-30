@@ -1,6 +1,10 @@
 As of version 2021.5.1.0, the changelog will only contain updates made to the HDoujin Downloader application.
 For module updates, see: https://github.com/HDoujinDownloader/HDoujinDownloader/commits/master/modules/lua
 
+[v2023.9.27.0]
+
+- [FIX] Fixed lag when scrolling through download queue
+
 [v2023.9.19.0]
 
 - [NEW] Added option to set series to title
