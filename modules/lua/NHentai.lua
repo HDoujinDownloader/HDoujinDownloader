@@ -8,6 +8,7 @@ function Register()
     module.Domains.Add('3hentai.net', '3hentai')
     module.Domains.Add('nhentai.to')
     module.Domains.Add('nhentai.uk')
+    module.Domains.Add('nhentai.xxx')
 
     module.Settings.AddCheck('Use pretty titles', false)
         .WithToolTip('Use shorter titles with the artist, series, and language information removed.')
