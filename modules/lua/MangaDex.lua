@@ -195,6 +195,7 @@ function GetPages()
     if(API_VERSION >= 20230612) then
 
         pages.Headers['accept'] = '*/*'
+        pages.Headers['origin'] = 'https://' .. module.Domain
 
     end
 
@@ -209,6 +210,7 @@ end
 function PrepareHttpHeaders()
 
     http.Headers['accept'] = '*/*'
+    http.Headers['origin'] = 'https://' .. module.Domain
 
 end
 
