@@ -32,6 +32,7 @@ function Register()
 
     module.Language = 'Indonesian'
 
+    module.Domains.Add('kanzenin.info', 'kanzenin')
     module.Domains.Add('kiryuu.id', 'Kiryuu')
 
     RegisterModule(module)
