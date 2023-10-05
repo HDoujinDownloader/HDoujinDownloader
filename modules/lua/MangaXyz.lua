@@ -20,10 +20,25 @@ end
 
 function GetChapters()
 
-    dom = Dom.New(GetApiChapters())
+    if(url:contains('/chapter-')) then
+        return
+    end
 
-    for chapterNode in dom.SelectElements('//a') do
+    -- There is an API available, but the frontend doesn't use it anymore.
+    -- Just extract the chapters from the page, and fall back to the API if we need to.
 
+    local chapterNodes = dom.SelectElements('//ul[contains(@class,"chapter-list")]//a')
+
+    if(isempty(chapterNodes)) then
+        
+        dom = Dom.New(GetApiChapters())
+
+        chapterNodes = dom.SelectElements('//a')
+
+    end
+
+    for chapterNode in chapterNodes do
+    
         local chapterUrl = chapterNode.SelectValue('@href')
         local chapterTitle = chapterNode.SelectValue('.//*[contains(@class,"chapter-title")]')
 
