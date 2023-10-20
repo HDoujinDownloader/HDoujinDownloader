@@ -5,6 +5,7 @@ function Register()
     module.Language = 'English'
 
     module.Domains.Add('manhwa18.com')
+    module.Domains.Add('manhwa18.net', 'MyManga')
 
 end
 
