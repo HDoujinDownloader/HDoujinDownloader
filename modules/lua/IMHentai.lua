@@ -10,14 +10,44 @@ end
 
 function GetInfo()
 
-    info.Title = dom.SelectValue('//h1')
-    info.Parody = dom.SelectValues('//span[contains(text(),"Parodies")]/following-sibling::a/text()[1]')
-    info.Characters = dom.SelectValues('//span[contains(text(),"Characters")]/following-sibling::a/text()[1]')
-    info.Tags = dom.SelectValues('//span[contains(text(),"Tags")]/following-sibling::a/text()[1]')
-    info.Artist = dom.SelectValues('//span[contains(text(),"Artists")]/following-sibling::a/text()[1]')
-    info.Circle = dom.SelectValues('//span[contains(text(),"Groups")]/following-sibling::a/text()[1]')
-    info.Language = dom.SelectValues('//span[contains(text(),"Languages")]/following-sibling::a/text()[1]')
-    info.Type = dom.SelectValues('//span[contains(text(),"Category")]/following-sibling::a/text()[1]')
+    if(url:contains('/view/')) then
+        
+        -- Go to the main gallery page.
+
+        local backToGalleryUrl = dom.SelectValue('//a[contains(@class,"return_btn")]/@href')
+
+        if(not isempty(url)) then
+
+            url = backToGalleryUrl
+            dom = Dom.New(http.Get(backToGalleryUrl))
+
+        end
+
+    end
+
+    if(url:contains('/gallery/')) then
+        
+        info.Title = dom.SelectValue('//h1')
+        info.Parody = dom.SelectValues('//span[contains(text(),"Parodies")]/following-sibling::a/text()[1]')
+        info.Characters = dom.SelectValues('//span[contains(text(),"Characters")]/following-sibling::a/text()[1]')
+        info.Tags = dom.SelectValues('//span[contains(text(),"Tags")]/following-sibling::a/text()[1]')
+        info.Artist = dom.SelectValues('//span[contains(text(),"Artists")]/following-sibling::a/text()[1]')
+        info.Circle = dom.SelectValues('//span[contains(text(),"Groups")]/following-sibling::a/text()[1]')
+        info.Language = dom.SelectValues('//span[contains(text(),"Languages")]/following-sibling::a/text()[1]')
+        info.Type = dom.SelectValues('//span[contains(text(),"Category")]/following-sibling::a/text()[1]')
+        info.Url = url
+
+    else
+
+        -- Assume a tag URL was added, and add all galleries to the download queue.
+
+        for galleryUrl in dom.SelectValues('//h2[contains(@class,"gallery_title")]//a/@href') do
+            Enqueue(galleryUrl)
+        end
+
+        info.Ignore = true
+
+    end
 
 end
 
