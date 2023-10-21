@@ -13,6 +13,7 @@ function GetInfo()
 
         info.Title = dom.SelectValue('//h1')
         info.Parody = dom.SelectValues('//ul[@class="parodies"]//a/text()[1]')
+        info.Characters = dom.SelectValues('//ul[@class="characters"]//a/text()[1]')
         info.Tags = dom.SelectValues('//ul[@class="tags"]//a/text()[1]')
         info.Artist = dom.SelectValues('//ul[@class="artists"]//a/text()[1]')
         info.Circle = dom.SelectValues('//ul[@class="groups"]//a/text()[1]')
