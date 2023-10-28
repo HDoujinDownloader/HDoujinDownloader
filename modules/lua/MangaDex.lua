@@ -44,7 +44,7 @@ function GetInfo()
 
     info.Title = json.SelectValue('data.attributes.title.*')
     info.AlternativeTitle = json.SelectValues('data.attributes.altTitles.*')
-    info.Summary = json.SelectValue('data.attributes.description.*')
+    info.Summary = json.SelectValue('data.attributes.description')
     info.Tags = json.SelectValues('data.attributes.tags[*].attributes.name.*')
     info.DateReleased = json.SelectValue('data.attributes.year')
     info.Type = json.SelectValue('data.attributes.originalLanguage')
@@ -54,6 +54,30 @@ function GetInfo()
     info.Artist = json.SelectValues("data.relationships[?(@.type=='artist')].attributes.name")
     info.Scanlator = json.SelectValues("data.relationships[?(@.type=='scanlation_group')].attributes.name")
     info.Url = url
+
+    -- Get the summary in the user's preferred language where possible.
+
+    local preferredLanguages = GetPreferredLanguages()
+
+    for summaryNode in json.SelectToken('data.attributes.description') do
+        
+        if(preferredLanguages.Contains(GetLanguageId(summaryNode.Key))) then
+           
+            info.Summary = summaryNode.Value
+
+            break
+            
+        end
+
+    end
+
+    -- Default to English if we couldn't find a summary in the user's preferred language.
+
+    if(isempty(info.Summary)) then
+        
+        info.Summary = json.SelectValue('data.attributes.description.en')
+
+    end
 
     if(toboolean(module.Settings['Prefer scanlation status over publishing status'])) then
 
@@ -85,8 +109,8 @@ function GetChapters()
     local limit = 96
     local total = 0
 
-    local userLanguages = GetPreferredLanguages()
-    local acceptAny = userLanguages.Count() <= 0 or userLanguages.Contains(GetLanguageId("all"))
+    local preferredLanguages = GetPreferredLanguages()
+    local acceptAny = preferredLanguages.Count() <= 0 or preferredLanguages.Contains(GetLanguageId("all"))
     local groupUuids = List.New()
 
     repeat
@@ -132,7 +156,7 @@ function GetChapters()
             chapter.Chapter = chapterNumber
             chapter.Volume = volumeNumber
 
-            if(acceptAny or userLanguages.Contains(GetLanguageId(chapter.Language))) then
+            if(acceptAny or preferredLanguages.Contains(GetLanguageId(chapter.Language))) then
 
                 groupUuids.Add(chapter.ScanlationGroup)
 
