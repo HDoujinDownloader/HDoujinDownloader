@@ -12,7 +12,6 @@ function Register()
     module.Language = 'English'
 
     module.Domains.Add('hentai20.com', 'Hentai20')
-    module.Domains.Add('hentaidexy.com', 'hentaidexy')
     module.Domains.Add('hiperdex.com', 'Hiperdex')
     module.Domains.Add('hscans.com', 'Hscans')
     module.Domains.Add('isekaiscanmanga.com', 'Isekaiscan Manga')
