@@ -54,6 +54,8 @@ function Register()
     module.Domains.Add('lectorhentai.com', 'Lector Hentai')
     module.Domains.Add('legionscans.com', 'LEGION SCAN')
     module.Domains.Add('miauscan.com', 'miauscan.com')
+    module.Domains.Add('miauscans.com', 'miauscans.com')
+    module.Domains.Add('ragnascan.com', 'Ragna Scan')
     module.Domains.Add('raikiscan.com', 'Raiki Scan')
     module.Domains.Add('shotasekai.club', 'Shota Sekai')
 
