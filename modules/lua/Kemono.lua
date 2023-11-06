@@ -6,6 +6,7 @@ function Register()
     module.Strict = false
 
     module.Domains.Add('kemono.party')
+    module.Domains.Add('kemono.su')
 
 end
 
