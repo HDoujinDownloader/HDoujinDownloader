@@ -4,6 +4,7 @@ function Register()
     module.Language = 'es'
 
     module.Domains.Add('yugenmangas.com')
+    module.Domains.Add('yugenmangas.lat')
     module.Domains.Add('yugenmangas.net')
 
 end
