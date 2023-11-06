@@ -1,6 +1,13 @@
 As of version 2021.5.1.0, the changelog will only contain updates made to the HDoujin Downloader application.
 For module updates, see: https://github.com/HDoujinDownloader/HDoujinDownloader/commits/master/modules/lua
 
+[v2023.11.6.0]
+
+- [FIX] Fixed file size column now always showing final file size
+- [FIX] Fixed original image download for e-hentai/exhentai
+- [FIX] Fixed proxy settings being ignored under some circumstances
+- [MISC] Various improvements and bug fixes
+
 [v2023.9.27.0]
 
 - [FIX] Fixed lag when scrolling through download queue
