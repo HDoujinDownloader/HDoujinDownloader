@@ -4,6 +4,7 @@ function Register()
     module.Language = 'English'
 
     module.Domains.Add('onepiecechapters.com')
+    module.Domains.Add('tcbscans.com')
 
 end
 
