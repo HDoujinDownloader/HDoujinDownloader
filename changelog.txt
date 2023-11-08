@@ -1,6 +1,10 @@
 As of version 2021.5.1.0, the changelog will only contain updates made to the HDoujin Downloader application.
 For module updates, see: https://github.com/HDoujinDownloader/HDoujinDownloader/commits/master/modules/lua
 
+[v2023.11.8.0]
+
+- [FIX] Fixed error when downloading files with FlareSolverr
+
 [v2023.11.6.0]
 
 - [FIX] Fixed file size column now always showing final file size
