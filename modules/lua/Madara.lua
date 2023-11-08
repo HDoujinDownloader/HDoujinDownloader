@@ -40,10 +40,20 @@ function Register()
     RegisterModule(module)
 
     module = module.New()
+
+    module.Language = 'Arabic'
+
+    module.Domains.Add('3asq.org', 'مانجا العاشق')
+
+    RegisterModule(module)
+
+    module = module.New()
     
     module.Language = 'Korean'
 
     module.Domains.Add('manhwaraw.com', 'ManhwaRaw')
+
+    RegisterModule(module)
 
     module = module.New()
 
@@ -106,19 +116,20 @@ function GetInfo()
 
         info.Title = dom.SelectValue('//h1/text()[last()]')
         info.AlternativeTitle = dom.SelectValue('//div[contains(h5/text(), "Alternative") or contains(h5/text(), "Diğer Adları") or contains(h5/text(), "Alternativo") or contains(h5/text(), "Nombre Alternativo")]/following-sibling::div')
-        info.Author = dom.SelectValues('//div[contains(h5/text(), "Author(s)") or contains(h5/text(), "Auth.") or contains(h5/text(), "Yazar") or contains(h5/text(), "Autor(es)") or contains(h5/text(), "Autor/a")]/following-sibling::div//a')
-        info.Artist = dom.SelectValues('//div[contains(h5/text(), "Artist") or contains(h5/text(), "Çizer") or contains(h5/text(), "Artista(s)")]/following-sibling::div//a')
+        info.Author = dom.SelectValues('//div[contains(h5/text(), "Author(s)") or contains(h5/text(), "Auth.") or contains(h5/text(), "Yazar") or contains(h5/text(), "Autor(es)") or contains(h5/text(), "Autor/a") or contains(h5/text(), "الكاتب")]/following-sibling::div//a')
+        info.Artist = dom.SelectValues('//div[contains(h5/text(), "Artist") or contains(h5/text(), "Çizer") or contains(h5/text(), "Artista(s)") or contains(h5/text(), "الرسام")]/following-sibling::div//a')
         info.Characters = dom.SelectValues('//div[contains(h5/text(), "Character")]/following-sibling::div//a')
         info.Parody = dom.SelectValues('//div[contains(h5/text(), "Parodi(es)")]/following-sibling::div//a')
         info.Circle = dom.SelectValues('//div[contains(h5/text(), "Circle")]/following-sibling::div//a')
-        info.Tags = dom.SelectValues('(//div[contains(h5/text(), "Genre") or contains(h5/text(), "Tag(s)") or contains(h5/text(), "Kategori") or contains(h5/text(), "Tür") or contains(h5/text(), "Género(s)") or contains(h5/text(), "Genero(s)") or contains(h5/text(), "Generos")])[1]/following-sibling::div//a')
-        info.Type = dom.SelectValue('//div[contains(h5/text(), "Type") or contains(h5/text(), "Tip") or contains(h5/text(), "Tipo")]/following-sibling::div')
-        info.DateReleased = dom.SelectValue('//div[contains(h5/text(), "Release") or contains(h5/text(), "Yayınlanma")]/following-sibling::div')
-        info.Status = dom.SelectValue('//div[contains(h5/text(), "Status") or contains(h5/text(), "Durum")]/following-sibling::div')
+        info.Tags = dom.SelectValues('(//div[contains(h5/text(), "Genre") or contains(h5/text(), "Tag(s)") or contains(h5/text(), "Kategori") or contains(h5/text(), "Tür") or contains(h5/text(), "Género(s)") or contains(h5/text(), "Genero(s)") or contains(h5/text(), "Generos") or contains(h5/text(), "التصنيفات")])[1]/following-sibling::div//a')
+        info.Type = dom.SelectValue('//div[contains(h5/text(), "Type") or contains(h5/text(), "Tip") or contains(h5/text(), "Tipo") or contains(h5/text(), "النوع")]/following-sibling::div')
+        info.DateReleased = dom.SelectValue('//div[contains(h5/text(), "Release") or contains(h5/text(), "Yayınlanma") or contains(h5/text(), "سنة الإصدار")]/following-sibling::div')
+        info.Status = dom.SelectValue('//div[contains(h5/text(), "Status") or contains(h5/text(), "Durum") or contains(h5/text(), "الحالة")]/following-sibling::div')
         info.Summary = dom.SelectValues('//div[contains(@class, "description-summary") or contains(@class, "dsct") or contains(@class,"summary-text") or contains(@class,"summary-container") or contains(@class,"manga-excerpt")]//p'):join('\n\n') -- note that some content has multiple paragraphs (e.g. on astrallibrary.net)
         info.Adult = not isempty(dom.SelectValue('//h1/span[contains(@class, "adult")]'))
         info.Language = dom.SelectValues('//div[contains(h5/text(), "Language")]/following-sibling::div//a')
-    
+        info.Translator = dom.SelectValue('//div[contains(h5/text(), "فرق الترجمة")]/following-sibling::div//a')
+
         if(module.GetName(url):endswith('Scans')) then
             info.Scanlator = module.GetName(url)
         end
