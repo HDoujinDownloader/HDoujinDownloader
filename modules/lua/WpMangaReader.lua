@@ -76,6 +76,7 @@ function Register()
 
     module.Domains.Add('108read.com', '108Read')
     module.Domains.Add('god-doujin.com', 'God-Doujin')
+    module.Domains.Add('hippomanga.com', 'Hippomanga')
     module.Domains.Add('inu-manga.com', 'Inu Manga')
     module.Domains.Add('joji-manga.com', 'Joji-Manga')
     module.Domains.Add('mangakimi.com', 'MangaKimi')
