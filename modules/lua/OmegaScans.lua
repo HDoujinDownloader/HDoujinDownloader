@@ -19,7 +19,8 @@ function GetInfo()
     info.Scanlator = module.Name
     info.Publisher = dom.SelectValue('//p[contains(text(),"This is a series produced by")]/strong')
 
-    local checkEndStatus = dom.SelectValue('//div[@id="radix-:R4hmmmeja:-content-1"]/ul//a[starts-with(@href, "/series/")][1]//li//span[contains(@class, "line-clamp-1" ) and contains(text(),"END") or contains(text(),"end")]')
+    local checkEndStatus = dom.SelectValue(
+        '//div[@id="radix-:R4hmmmeja:-content-1"]/ul//a[starts-with(@href, "/series/")][1]//li//span[contains(@class, "line-clamp-1" ) and contains(text(),"END") or contains(text(),"end")]')
 
     if (not isempty(checkEndStatus)) then
 
@@ -31,15 +32,16 @@ end
 
 function GetChapters()
 
-    for chapterNode in dom.SelectElements('//div[@id="radix-:R4hmmmeja:-content-1"]/ul//a[starts-with(@href, "/series/")]') do
+    for chapterNode in dom.SelectElements(
+        '//div[@id="radix-:R4hmmmeja:-content-1"]/ul//a[starts-with(@href, "/series/")]') do
 
         local premiumChapter = chapterNode.SelectElements('.//span/*[name()="svg"]')
-        
+
         if (premiumChapter.Count() == 0) then
 
             local chapterUrl = chapterNode.SelectValue('@href')
             local chapterTitle = chapterNode.SelectValue('.//li//span[contains(@class, "line-clamp-1")]')
-            
+
             chapters.Add(chapterUrl, chapterTitle)
 
         end
@@ -52,6 +54,6 @@ end
 
 function GetPages()
 
-    pages.AddRange(dom.SelectValues('//img[contains(@data-src, "/uploads/series/")]/@data-src'))
+    pages.AddRange(dom.SelectValues('//img[contains(@data-src, "/uploads/series/")]/@data-src|//img[contains(@src, "/uploads/series/")]/@src'))
 
 end
