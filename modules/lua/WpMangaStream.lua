@@ -14,6 +14,7 @@ function Register()
     module.Domains.Add('asuratoon.com', 'Asura Scans')
     module.Domains.Add('luminousscans.com', 'Luminous Scans')
     module.Domains.Add('luminousscans.gg', 'Luminous Scans')
+    module.Domains.Add('luminousscans.net', 'Luminous Scans')
     module.Domains.Add('www.asurascans.com', 'Asura Scans')
 
     if(API_VERSION >= 20230823) then      
