@@ -1,3 +1,10 @@
+function Register()
+
+    module.Name = 'MangaPark'
+    module.Language = 'English'
+
+end
+
 function GetInfo()
 
     info.Title = dom.SelectValue('//div[contains(@class,"md:block")]//h3')
