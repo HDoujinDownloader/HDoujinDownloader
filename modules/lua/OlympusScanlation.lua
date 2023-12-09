@@ -6,6 +6,7 @@ function Register()
 
     module.Domains.Add('olympusscans.com')
     module.Domains.Add('olympusv2.gg')
+    module.Domains.Add('olympusvisor.com')
 
 end
 
