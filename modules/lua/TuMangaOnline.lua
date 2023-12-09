@@ -5,6 +5,7 @@ function Register()
     module.Type = 'Manga'
 
     module.Domains.Add('lectortmo.com', 'TuMangaOnline')
+    module.Domains.Add('visortmo.com', 'TuMangaOnline')
 
 end
 
@@ -63,12 +64,7 @@ end
 
 function GetPages()
 
-    -- Set the Referer to blank, because we won't be redirected to the right page if it isn't.
-
-    http.Referer = ''
-
-    dom = dom.New(http.Get(url))
-
+    -- Note that a referer is required when accessing the reader, or else we'll get a 404.
     -- Follow the redirect and get the final viewer URL.
     
     url = dom.SelectValue('//meta[@property="og:url"]/@content')
