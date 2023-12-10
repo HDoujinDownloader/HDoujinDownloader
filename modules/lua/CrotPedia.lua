@@ -5,7 +5,14 @@ function Register()
     module.Adult = true
 
     module.Domains.Add('38.242.194.12')
+    module.Domains.Add('158.220.106.212')
     module.Domains.Add('crotpedia.net')
+
+    module = Module.New()
+
+    module.Language = 'Thai'
+
+    module.Domains.Add('skoiiz-manga.com', 'skoiiz-manga')
 
 end
 
@@ -28,7 +35,7 @@ function GetChapters()
     for chapterNode in dom.SelectElements('//ul[contains(@class,"chapterlist")]//div[contains(@class,"flexch-infoz")]//a') do
         
         local chapterUrl = chapterNode.SelectValue('./@href')
-        local chapterTitle = chapterNode.SelectValue('./span')
+        local chapterTitle = chapterNode.SelectValue('./span/text()[1]')
 
         chapters.Add(chapterUrl, chapterTitle)
 
