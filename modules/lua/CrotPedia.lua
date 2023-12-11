@@ -12,6 +12,7 @@ function Register()
 
     module.Language = 'Thai'
 
+    module.Domains.Add('germa-66.com', 'Germa-66')
     module.Domains.Add('skoiiz-manga.com', 'skoiiz-manga')
 
 end
