@@ -4,8 +4,10 @@ function Register()
     module.Language = 'English'
 
     module.Domains.Add('chapmanganato.com', 'Manganato')
+    module.Domains.Add('chapmanganelo.com', 'Manganelo')
     module.Domains.Add('isekaiscan.site', 'IsekaiScan')
     module.Domains.Add('m.mangabat.com', 'Mangabat.com')
+    module.Domains.Add('m.manganelo.com', 'Manganelo')
     module.Domains.Add('mangabat.com', 'Mangabat.com')
     module.Domains.Add('mangakakalot.city', 'Mangakakalot')
     module.Domains.Add('mangakakalot.com', 'Mangakakalot')
@@ -103,7 +105,7 @@ function GetChapters()
         for chapter in chapters do
             chapter.Language = language
         end
-
+        
     end
 
     chapters.Reverse()
@@ -205,6 +207,10 @@ function GetImageUrls()
 
         imageList.AddRange(dom.SelectValues('//div[not(contains(@class,"shuffled"))]/@data-url'))
 
+    end
+
+    if(isempty(imageList)) then
+        imageList.AddRange(dom.SelectValues('//div[contains(@class, "chapter-reader")]/img/@src'))
     end
 
     return imageList
