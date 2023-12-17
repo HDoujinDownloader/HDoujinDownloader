@@ -3,6 +3,7 @@ function Register()
     module.Name = 'FurAffinity'
 
     module.Domains.Add('furaffinity.net', 'FurAffinity')
+    module.Domains.Add('www.furaffinity.net', 'FurAffinity')
 
 end
 
