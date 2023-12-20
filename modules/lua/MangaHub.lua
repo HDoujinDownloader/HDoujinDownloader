@@ -25,7 +25,7 @@ end
 
 function GetChapters()
 
-    for node in dom.SelectElements('//li[contains(@class, "list-group-item")]/a') do
+    for node in dom.SelectElements('//li[contains(@class, "list-group-item")]//a[not(@rel)]') do
         chapters.Add(node.GetAttribute('href'), node.SelectValue('span'))
     end
 
@@ -35,26 +35,56 @@ end
 
 function GetPages()
 
-    doc = http.Get(url)
-
-    local apiBase = 'https://api.mghubcdn.com/graphql'
-    local cdnBase = 'https://img.mghubcdn.com/file/imghub/'
-
+    local cdnBase = '//imgx.mghubcdn.com/'
     local dataSourceKey = GetDataSourceKey()    
-    local slug = url:regex('\\/chapter\\/(.+?)\\/', 1)
+    local slug = GetMangaSlug()
     local number = url:regex('\\/chapter-(\\d+)$', 1)
+    local query = '{"query":"{chapter(x:' .. dataSourceKey .. ',slug:\\"' .. slug .. '\\",number:' .. number .. '){pages}}"}'
+    
+    local json = GetApiJson(query)
+    local pagesJson = Json.New(json.SelectToken('data.chapter.pages'))
+    local pagesPath = pagesJson.SelectValue('p')
 
-    local query = '{"query":"{chapter(x:'..dataSourceKey..',slug:\\"'..slug..'\\",number:'..number..'){pages}}"}'
- 
+    for fileName in pagesJson.SelectValues('i[*]') do
+        pages.Add(cdnBase .. pagesPath .. fileName)
+    end
+
+end
+
+function GetMangaSlug()
+
+    return url:regex('\\/(?:chapter|manga)\\/([^\\/?#]+)', 1)
+
+end
+
+function GetApiUrl()
+
+    return '//api.mghubcdn.com/graphql'
+
+end
+
+function SetUpApiHeaders()
+
+    local mhubAccess = http.Cookies['mhub_access']    
+
     http.Headers['accept'] = 'application/json'
     http.Headers['content-type'] = 'application/json'
+    http.Headers['origin'] = GetRoot(url):trim('/')
+    http.Referer = GetRoot(url)
 
-    local response = http.Post(apiBase, query)
-    local pagesJson = Json.New(Json.New(response).SelectToken('data.chapter.pages'))
-
-    for pageUrl in pagesJson.SelectValues('*') do
-        pages.Add(cdnBase..pageUrl)
+    if(not isempty(mhubAccess)) then
+        http.Headers['x-mhub-access'] = mhubAccess
     end
+
+end
+
+function GetApiJson(query)
+    
+    SetUpApiHeaders()
+
+    local response = http.Post(GetApiUrl(), query)
+
+    return Json.New(response)
 
 end
 
@@ -63,8 +93,9 @@ function GetDataSourceKey()
     -- The "dataSourceKey" value is passed along with API requests.
     -- Each affiliated site has an "/assets/client.xxxxxxxx.js" file where the key(s) are defined.
 
+    local html = http.Get(url)
     local dataSourceKey = '' 
-    local clientJsPath = doc:regex('\\/assets\\/client\\.\\w+\\.js')
+    local clientJsPath = html:regex('\\/assets\\/client\\.\\w+\\.js')
     
     if(not isempty(clientJsPath)) then
 
