@@ -21,9 +21,8 @@ function Register()
     module.Domains.Add('paragonscans.com', 'Paragonscans')
     module.Domains.Add('www.betafox.net', 'Beta Fox')
 
-    RegisterModule(module)
-
     module = Module.New()
+
     module.Language = 'Spanish'
 
     module.Domains.Add('bokugents.com', 'Bokugen Translations')
@@ -32,9 +31,13 @@ function Register()
     module.Domains.Add('ragnarokscanlation.com', 'Ragnarok Scanlation')
     module.Domains.Add('selevertranslation.com', 'Selever Translation')
     module.Domains.Add('taurusfansub.com', 'Taurus Fansub')
-
-    RegisterModule(module)
     
+    module = Module.New()
+    
+    module.Language = 'Thai'
+
+    module.Domains.Add('fcmanga.com', 'Fcmanga')
+
 end
 
 function GetPages()
