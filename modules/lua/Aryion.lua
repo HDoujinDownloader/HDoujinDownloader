@@ -9,6 +9,7 @@ function Register()
     module.Domains.Add('aryion.com')
 
     module.Settings.AddCheck('Download folders recursively', true)
+    module.Settings.AddCheck('Create subfolders', true)
 
 end
 
@@ -163,8 +164,9 @@ end
 
 function GetAllPages(url, folderPath)
 
-    local dom = Dom.New(http.Get(url))
+    local createSubfolders = toboolean(module.Settings['Create subfolders'])
 
+    local dom = Dom.New(http.Get(url))
     local pageList = PageList.New()
     local pageUrls = dom.SelectValues('//li[contains(@class,"gallery-item") and not(.//span[contains(@class,"type-Folder") or contains(@class,"type-Comics")])]//@href')
 
@@ -172,7 +174,7 @@ function GetAllPages(url, folderPath)
 
         local page = PageInfo.New(pageUrl)
 
-        if(not isempty(folderPath)) then
+        if(createSubfolders and not isempty(folderPath)) then
             page.DirectoryPath = folderPath
         end
 
