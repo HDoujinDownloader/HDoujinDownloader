@@ -10,6 +10,7 @@ function Register()
 
     module.Domains.Add('bato.to', 'BATO.TO')
     module.Domains.Add('batotoo.com', 'BATO.TO')
+    module.Domains.Add('battwo.com', 'Bato.To')
     module.Domains.Add('comiko.net', 'BATO.TO')
     module.Domains.Add('dto.to', 'BATO.TO')
     module.Domains.Add('mangaseinen.com', 'mangaseinen.com')
@@ -39,7 +40,7 @@ function GetInfo()
         info.Status = json.SelectValue('originalStatus[1]')
         info.DateReleased = json.SelectValue('originalPubFrom[1]')
         info.ReadingDirection = json.SelectValue('readDirection[1]')
-        info.Summary = json.SelectValue('summary[1].code')
+        info.Summary = json.SelectValue('summary[1].code[-1:]')
 
     end
 
