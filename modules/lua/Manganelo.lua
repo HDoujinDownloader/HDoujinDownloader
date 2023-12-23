@@ -4,6 +4,7 @@ function Register()
     module.Language = 'English'
 
     module.Domains.Add('chapmanganato.com', 'Manganato')
+    module.Domains.Add('chapmanganato.to', 'Manganato')
     module.Domains.Add('chapmanganelo.com', 'Manganelo')
     module.Domains.Add('isekaiscan.site', 'IsekaiScan')
     module.Domains.Add('m.mangabat.com', 'Mangabat.com')
