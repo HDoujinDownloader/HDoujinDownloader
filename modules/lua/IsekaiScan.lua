@@ -20,6 +20,7 @@ function Register()
     module.Domains.Add('manhwahentai.me', 'ManhwaHentai.me')
     module.Domains.Add('mm-scans.org', 'Mmscans')
     module.Domains.Add('paragonscans.com', 'Paragonscans')
+    module.Domains.Add('reset-scans.us', 'RESET SCANS')
     module.Domains.Add('www.betafox.net', 'Beta Fox')
 
     module = Module.New()
@@ -109,6 +110,10 @@ function GetChaptersFromNode(node, volumeNumber)
 
         if(isempty(chapterInfo.Title)) then -- mm-scans.org
             chapterInfo.Title = chapterNode.SelectValue('.//p')
+        end
+
+        if(isempty(chapterInfo.Title)) then -- reset-scans.us
+            chapterInfo.Title = chapterNode.SelectValue('.//following-sibling::div/a/text()')
         end
 
         if(volumeNumber ~= nil) then
