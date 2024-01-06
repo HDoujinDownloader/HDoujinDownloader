@@ -90,7 +90,13 @@ function GetApiJson(path)
     SetUpApiHeaders()
 
     local endpoint = GetApiEndpoint() .. path
-    local json = Json.New(http.Get(endpoint))
+    local jsonStr = http.Get(endpoint)
+
+    if(jsonStr:startswith("<")) then
+        Fail(Error.LoginRequired)
+    end
+
+    local json = Json.New(jsonStr)
 
     -- Each API request updates cookies.
 
@@ -102,7 +108,17 @@ end
 
 function Login()
 
-    if(isempty(http.Cookies)) then
+    local alreadyLoggedIn = false
+
+    for cookie in http.Cookies do
+
+        if(cookie.Name:startswith('remember_web_')) then
+            alreadyLoggedIn = true
+        end
+
+    end
+
+    if(not alreadyLoggedIn) then
 
         local endpoint = 'https://' .. module.Domain .. '/login'
 
