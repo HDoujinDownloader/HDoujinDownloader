@@ -47,7 +47,13 @@ function GetPages()
     local chapterId = GetChapterId()
     local json = GetApiJson('mangas/' .. mangaId .. '/' .. chapterId .. '/manifest')
 
-    pages.AddRange(json.SelectValues('readingOrder[*].href'))
+    for imageNode in json.SelectNodes('readingOrder[*]') do
+
+        if(imageNode.SelectValue('type'):startswith('image')) then       
+            pages.Add(imageNode.SelectValue('href'))
+        end
+
+    end
 
 end
 
