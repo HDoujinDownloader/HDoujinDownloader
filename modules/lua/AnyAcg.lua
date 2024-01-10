@@ -17,6 +17,8 @@ function Register()
     module.Domains.Add('mangatensei.com', 'MangaTensei.com')
     module.Domains.Add('mangatoto.com', 'BATO.TO')
     module.Domains.Add('rawmanga.info', 'raw manga')
+    module.Domains.Add('wto.to', 'BATO.TO')
+    module.Domains.Add('zbato.net', 'BATO.TO')
 
 end
 
