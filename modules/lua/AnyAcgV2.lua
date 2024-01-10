@@ -38,7 +38,11 @@ function GetPages()
     local js = JavaScript.New()
 
     js.Execute(http.Get('https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js'))
-    js.Execute(dom.SelectValue('//script[contains(text(),"imgHttpLis")]'))
+    js.Execute(dom.SelectValue('//script[contains(text(),"batoWord")]'))
+
+    -- The image list may be in the "imgHttpLis" or "imgHttps" variable.
+
+    js.Execute('var imgHttpLis = imgHttpLis || imgHttps')
 
     local imageKeys = Json.New(js.Execute('CryptoJS.AES.decrypt(batoWord, batoPass).toString(CryptoJS.enc.Utf8)'))
     local images = Json.New(js.Execute("JSON.stringify(imgHttpLis)"))
