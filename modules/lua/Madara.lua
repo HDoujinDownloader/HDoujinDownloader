@@ -324,6 +324,13 @@ function GetPages()
 
     end
 
+    -- Fix broken image URLs (toonily.com).
+    -- Some will have HTML entities that need to be decoded.
+
+    for page in pages do
+        page.Url = page.Url:replace('&#039;', '\'')
+    end
+
 end
 
 function CleanTitle(title)
