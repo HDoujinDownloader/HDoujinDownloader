@@ -26,32 +26,49 @@ end
 
 function GetChapters()
 
-    local json = GetApiJson('comic/' .. GetComicSlug())
-    local slug = json.SelectValue('comic.slug')
-    local hid = json.SelectValue('comic.hid')
+    local chapterPageNumber = 1
+    local totalChapters = 0
 
-    json = GetApiJson('comic/' .. hid .. '/chapters')
+    repeat
 
-    for chapterNode in json.SelectNodes('chapters[*]') do
+        local json = GetApiJson('comic/' .. GetComicSlug())
+        local slug = json.SelectValue('comic.slug')
+        local hid = json.SelectValue('comic.hid')
+    
+        json = GetApiJson('comic/' .. hid .. '/chapters?page=' .. chapterPageNumber)
 
-        local title = chapterNode.SelectValue('title')
-        local chapterNumber = chapterNode.SelectValue('chap')
-        local volumeNumber = chapterNode.SelectValue('vol')
-        local translator = chapterNode.SelectValues('group_name[*]')
-        local language = chapterNode.SelectValue('lang')
-        local hid = chapterNode.SelectValue('hid')
-        
-        local chapterInfo = ChapterInfo.New()
+        totalChapters = tonumber(json.SelectValue('total'))
 
-        chapterInfo.Title = 'Ch. ' .. chapterNumber .. ' ' .. title
-        chapterInfo.Volume = volumeNumber
-        chapterInfo.Translator = translator
-        chapterInfo.Language = language
-        chapterInfo.Url = '/comic/' .. slug .. '/' .. hid .. '-chapter-' .. chapterNumber .. '-' .. language
+        local chapterNodes = json.SelectNodes('chapters[*]')
+    
+        if(chapterNodes.Count() <= 0) then
+            return
+        end
 
-        chapters.Add(chapterInfo)
+        for chapterNode in chapterNodes do
+    
+            local title = chapterNode.SelectValue('title')
+            local chapterNumber = chapterNode.SelectValue('chap')
+            local volumeNumber = chapterNode.SelectValue('vol')
+            local translator = chapterNode.SelectValues('group_name[*]')
+            local language = chapterNode.SelectValue('lang')
+            local hid = chapterNode.SelectValue('hid')
+            
+            local chapterInfo = ChapterInfo.New()
+    
+            chapterInfo.Title = 'Ch. ' .. chapterNumber .. ' ' .. title
+            chapterInfo.Volume = volumeNumber
+            chapterInfo.Translator = translator
+            chapterInfo.Language = language
+            chapterInfo.Url = '/comic/' .. slug .. '/' .. hid .. '-chapter-' .. chapterNumber .. '-' .. language
+    
+            chapters.Add(chapterInfo)
+    
+        end
 
-    end
+        chapterPageNumber = chapterPageNumber + 1
+
+    until(chapters.Count() >= totalChapters)
 
     chapters.Reverse()
 
