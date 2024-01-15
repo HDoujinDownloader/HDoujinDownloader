@@ -4,7 +4,9 @@ function Register()
     module.Type = 'photography'
 
     module.Domains.Add('v2ph.com')
+    module.Domains.Add('v2ph.net')
     module.Domains.Add('www.v2ph.com')
+    module.Domains.Add('www.v2ph.net')
 
 end
 
