@@ -21,12 +21,12 @@ function GetChapters()
     -- We have to query the API to get the chapter list.
 
     local comicId = GetComicId()
-    local payload =
-        '{"query":"\\n  query get_content_comicChapterRangeList($select: Content_ComicChapterRangeList_Select) {\\n    get_content_comicChapterRangeList(\\n      select: $select\\n    ) {\\n      reqRange{x y}\\n      missing\\n      pager {x y}\\n      items{\\n        serial \\n        chapterNodes {\\n          \\n  id\\n  data {\\n    \\n\\n  id\\n  sourceId\\n\\n  dbStatus\\n  isNormal\\n  isHidden\\n  isDeleted\\n  isFinal\\n  \\n  dateCreate\\n  datePublic\\n  dateModify\\n  lang\\n  volume\\n  serial\\n  dname\\n  title\\n  urlPath\\n\\n  srcTitle srcColor\\n\\n  count_images\\n\\n  stat_count_post_child\\n  stat_count_post_reply\\n  stat_count_views_login\\n  stat_count_views_guest\\n  \\n  userId\\n  userNode {\\n    \\n  id \\n  data {\\n    \\nid\\nname\\nuniq\\navatarUrl \\nurlPath\\n\\nverified\\ndeleted\\nbanned\\n\\ndateCreate\\ndateOnline\\n\\nstat_count_chapters_normal\\nstat_count_chapters_others\\n\\nis_adm is_mod is_vip is_upr\\n\\n  }\\n\\n  }\\n\\n  disqusId\\n\\n\\n  }\\n\\n          sser_read\\n        }\\n      }\\n\\n    }\\n  }\\n  ","variables":{"select":{"comicId":' ..
-        comicId .. ',"range":null,"isAsc":false}},"operationName":"get_content_comicChapterRangeList"}'
+
+    local payload = '{"query":"query get_comicChapterList($comicId: ID!) {\\n    get_comicChapterList(comicId: $comicId){\\n      id\\n      data {\\n        \\n  id comicId\\n\\n  isFinal\\n  \\n  volume\\n  serial\\n\\n  dname\\n  title\\n\\n  urlPath\\n\\n  sfw_result\\n\\n      }\\n      # sser_read\\n      # sser_read_serial\\n    }\\n  }","variables":{"comicId":"' .. comicId .. '"}}'
+
     local chaptersJson = GetApiJson(payload)
 
-    for chapterNode in chaptersJson.SelectTokens('..chapterNodes[*].data') do
+    for chapterNode in chaptersJson.SelectTokens('data.get_comicChapterList[*].data') do
 
         local chapterInfo = ChapterInfo.New()
 
@@ -40,8 +40,6 @@ function GetChapters()
 
     end
 
-    chapters.Reverse()
-
 end
 
 function GetPages()
@@ -51,9 +49,15 @@ function GetPages()
     local imagesScript = dom.SelectValue('//script[contains(@type,"qwik/json")]')
 
     for imageUrl in imagesScript:regexmany('"(https:\\/\\/[^"]+&exp=[^"]+)', 1) do
-        pages.Add(imageUrl)
-    end
 
+        -- Ignore thumbnail images.
+
+        if(imageUrl:contains('/comic/')) then          
+            pages.Add(imageUrl)
+        end
+
+    end
+print(pages)
 end
 
 function IsMangaParkV3()
