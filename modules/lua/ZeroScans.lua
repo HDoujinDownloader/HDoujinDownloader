@@ -3,7 +3,7 @@ function Register()
     module.Name = 'Zero Scans'
     module.Language = 'en'
 
-    module.Domains.Add('zeroscans.com')
+    module.Domains.Add('zscans.com')
 
 end
 
@@ -64,7 +64,7 @@ end
 
 local function GetApiUrl()
 
-    return '//zeroscans.com/swordflake/'
+    return '//zscans.com/swordflake/'
 
 end
 
