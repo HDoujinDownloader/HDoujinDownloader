@@ -44,12 +44,20 @@ function GetPages()
 
     js.Execute('var imgHttpLis = imgHttpLis || imgHttps')
 
+    -- Note that not all chapters have image keys associated with them (we can access the images directly in that case).
+
     local imageKeys = Json.New(js.Execute('CryptoJS.AES.decrypt(batoWord, batoPass).toString(CryptoJS.enc.Utf8)'))
     local images = Json.New(js.Execute("JSON.stringify(imgHttpLis)"))
+    local imageCount = images.Count()
 
-    for i = 0, imageKeys.Count() - 1 do
+    for i = 0, imageCount - 1 do
 
-        local imageUrl = tostring(images[i]) .. '?' .. tostring(imageKeys[i])
+        local imageUrl = tostring(images[i])
+        local imageKey = i < imageKeys.Count() and tostring(imageKeys[i]) or nil
+
+        if(not isempty(imageKey)) then
+            imageUrl = imageUrl .. '?' .. imageKey
+        end
 
         pages.Add(imageUrl)
 
