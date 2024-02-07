@@ -24,6 +24,7 @@ function Register()
     module.Domains.Add('realmscans.com', 'Realm Scans')
     module.Domains.Add('realmscans.to', 'Realm Scans')
     module.Domains.Add('realmscans.xyz', 'Realm Scans')
+    module.Domains.Add('rizzcomic.com', 'Rizz Comics')
     module.Domains.Add('suryascans.com', 'Surya Scans')
     module.Domains.Add('void-scans.com', 'Void Scans')
     module.Domains.Add('xcalibrscans.com', 'xCaliBR Scans')
@@ -99,6 +100,7 @@ end
 function GetInfo()
 
     info.Title = CleanTitle(dom.SelectValue('//h1'))
+    info.AlternativeTitle = dom.SelectValue('//span[contains(@class,"alternative")]')
     info.Summary = dom.SelectValue('//div[@itemprop="description"]')
     info.Status = dom.SelectValue('//div[@class="imptdt" and (contains(.,"Status") or contains(.,"สถานะ") or contains(.,"Estado"))]/*[last()]')
     info.Type = dom.SelectValue('//div[@class="imptdt" and (contains(.,"Type") or contains(.,"ประเภทการ์ตูน") or contains(.,"พิมพ์") or contains(.,"Tipo"))]/*[last()]')
@@ -155,6 +157,10 @@ function GetInfo()
 
     if(isempty(info.Publisher)) then -- nocturnalscans.com
         info.Publisher = dom.SelectValue('//b[contains(text(),"Serialization")]/following-sibling::span')
+    end
+
+    if(isempty(info.Summary)) then -- rizzcomic.com
+        info.Summary = dom.SelectValue('//div[contains(@id,"description-container")]')
     end
 
     if(module.GetName(url):endsWith('Scans') or module.GetName(url):endsWith('Scanlations')) then
@@ -241,7 +247,7 @@ function GetPages()
     -- Some sites use external image hosts from which downloads will fail if we set a referer.
     -- However, some other sites require a referer in order to download.
 
-    if(module.Domain:startswith('realmscans.')) then
+    if(module.Domain:startswith('realmscans.') or module.Domain:startswith('rizzcomic.')) then
         pages.Referer = GetRoot(url)
     else
         pages.Referer = '' 
