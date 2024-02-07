@@ -48,16 +48,16 @@ function GetPages()
 
     local imagesScript = dom.SelectValue('//script[contains(@type,"qwik/json")]')
 
-    for imageUrl in imagesScript:regexmany('"(https:\\/\\/[^"]+&exp=[^"]+)', 1) do
+    for imageUrl in imagesScript:regexmany('"(https:\\/\\/[^"]+)"', 1) do
 
         -- Ignore thumbnail images.
 
-        if(imageUrl:contains('/comic/')) then          
+        if(imageUrl:contains('/comic/') or imageUrl:contains('/image/mpup/')) then          
             pages.Add(imageUrl)
         end
 
     end
-print(pages)
+
 end
 
 function IsMangaParkV3()
