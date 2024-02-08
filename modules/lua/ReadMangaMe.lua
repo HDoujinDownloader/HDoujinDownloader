@@ -6,6 +6,7 @@ function Register()
 
     module.Domains.Add('allhen.online', 'AllHentai')
     module.Domains.Add('mintmanga.live', 'MintManga')
+    module.Domains.Add('mintmanga.one', 'MintManga')
     module.Domains.Add('readmanga.io', 'ReadManga')
     module.Domains.Add('readmanga.live', 'ReadManga')
     module.Domains.Add('readmanga.me', 'ReadManga')
