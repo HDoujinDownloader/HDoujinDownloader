@@ -37,7 +37,7 @@ end
 
 function GetChapters()
 
-    chapters.AddRange(dom.SelectElements('//div[contains(@class, "chapters-link")]//a'))
+    chapters.AddRange(dom.SelectElements('//div[contains(@id,"chapters-list")]//a'))
 
     chapters.Reverse()
 
@@ -49,13 +49,13 @@ function GetPages()
     -- e.g. /rainbow/vol15/153
 
     url = SetParameter(url, 'mtr', 'true')
-
-    src = http.Get(url)
+    dom = Dom.New(http.Get(url))
 
     -- Pages are located in array passed to "rm_h.init" or "rm_h.initReader".
     -- Each item is a tuple consisting of the host and the path for each image.
 
-    local imagesArray = src:regex('rm_h\\.(?:init|initReader)\\(.+?(\\[\\[.+?\\]\\])', 1)
+    local imagesScript = dom.SelectValue('//script[contains(text(),"readerInit")]')
+    local imagesArray = imagesScript:regex('rm_h\\.(?:init|initReader|readerDoInit)\\(.*?(\\[\\[.+?\\]\\])', 1)
 
     for jsonToken in Json.New(imagesArray) do
 
