@@ -16,11 +16,17 @@ end
 
 function GetPages()
 
-    for imageUrl in dom.SelectValues('//a[contains(@class,"gallerythumb")]//img/@data-src') do
+    local thumbnailUrls = dom.SelectValues('//a[contains(@class,"gallerythumb")]//img/@data-src')
 
-        local fullImageUrl = imageUrl:replace('_thumb', '')
+    if(isempty(thumbnailUrls)) then
+        thumbnailUrls = dom.SelectValues('//a[contains(@class,"gallerythumb")]//img/@src')
+    end
 
-        pages.Add(fullImageUrl)
+    for thumbnailUrl in thumbnailUrls do
+
+        local imageUrl = thumbnailUrl:replace('_thumb', '')
+
+        pages.Add(imageUrl)
 
     end
 
