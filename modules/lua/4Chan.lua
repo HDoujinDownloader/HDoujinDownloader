@@ -19,7 +19,7 @@ function GetInfo()
 
     else
 
-        info.Title = dom.SelectValue('//span[contains(@class,"subject")]')
+        info.Title = dom.SelectValue('//div[contains(@class,"desktop")]//span[contains(@class,"subject")]')
         info.Author = dom.SelectValue('//div[contains(@class,"thread")]//span[@class="name"]')
         info.Summary = dom.SelectValue('//*[contains(@class,"postMessage")]')
         info.Tags = dom.SelectValue('//div[contains(@class,"boardTitle")]')
