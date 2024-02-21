@@ -54,22 +54,32 @@ function GetPages()
     local baseUrl = RegexReplace(url, '\\/(?:\\d+\\.html)?$', '') .. '/'
     local pageCount = tonumber(ParsePageCount())
 
-    for i = 1, pageCount do
-
-        local imageUrl = dom.SelectValue('//div[contains(@class,"read_img")]/a/img/@src')
-        local nextPageUrl = dom.SelectValue('//a[contains(@class,"next_page")]/@href')
-
-        -- Annoying workaround for bug involving relative URIs in v1.19.9.32-r.8.
-
-        if(not nextPageUrl:startsWith('/')) then
-            nextPageUrl = baseUrl .. nextPageUrl
-        end
+    if(pageCount ~= nil) then
         
-        pages.Add(imageUrl)
+        for i = 1, pageCount do
 
-        if(not isempty(nextPageUrl)) then
-            dom = Dom.New(http.Get(nextPageUrl))
+            local imageUrl = dom.SelectValue('//div[contains(@class,"read_img")]/a/img/@src')
+            local nextPageUrl = dom.SelectValue('//a[contains(@class,"next_page")]/@href')
+    
+            -- Annoying workaround for bug involving relative URIs in v1.19.9.32-r.8.
+    
+            if(not nextPageUrl:startsWith('/')) then
+                nextPageUrl = baseUrl .. nextPageUrl
+            end
+            
+            pages.Add(imageUrl)
+    
+            if(not isempty(nextPageUrl)) then
+                dom = Dom.New(http.Get(nextPageUrl))
+            end
+    
         end
+
+    else
+
+        -- This chapter isn't paginated, so we can just get all of the images directly.
+
+        pages.AddRange(dom.SelectValues('//div[contains(@id,"viewer")]//img/@src'))
 
     end
 
