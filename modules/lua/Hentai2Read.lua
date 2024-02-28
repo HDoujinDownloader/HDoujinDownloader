@@ -54,7 +54,7 @@ end
 function GetPages()
 
     local imagesArray = tostring(dom):regex("'images'\\s*:\\s*(\\[.+?\\])", 1)
-    local cdnUrl = GetRoot(dom.SelectValue('//img[contains(@id,"arf-reader")]/@src'))..'hentai/'
+    local cdnUrl = dom.SelectValue('//img[contains(@id,"arf-reader")]/@src')
 
     for imageUrl in Json.New(imagesArray) do
         pages.Add(cdnUrl..tostring(imageUrl))
