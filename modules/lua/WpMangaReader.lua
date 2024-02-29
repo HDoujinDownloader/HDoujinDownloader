@@ -89,10 +89,12 @@ function Register()
     module.Domains.Add('popsmanga.com', 'PopsManga')
     module.Domains.Add('reapertrans.com', 'Reapertrans.com')
     module.Domains.Add('rom-manga.com', 'ROM-Manga')
+    module.Domains.Add('slow-manga.com', 'SLOW-MANGA')
     module.Domains.Add('spy-manga.com', 'Spy-manga')
     module.Domains.Add('webtoonmanga.com', 'webtoonmanga')
     module.Domains.Add('www.inu-manga.com', 'Inu Manga')
     module.Domains.Add('www.rom-manga.com', 'ROM-Manga')
+    module.Domains.Add('www.slow-manga.com', 'SLOW-MANGA')
 
     RegisterModule(module)
 
