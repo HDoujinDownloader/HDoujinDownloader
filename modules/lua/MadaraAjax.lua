@@ -3,6 +3,15 @@ require "Madara"
 function Register()
 
     module.Name = 'Madara (Ajax)'
+
+    module = Module.New()
+
+    module.Language = 'Arabic'
+
+    module.Domains.Add('niji-translations.com', 'بحث متقدم')
+
+    module = Module.New()
+
     module.Language = 'English'
 
     module.Domains.Add('aloalivn.com', 'Aloalivn.com')
@@ -24,24 +33,18 @@ function Register()
     module.Domains.Add('pornwha.com', 'Pornwha')
     module.Domains.Add('x2manga.com', 'X2MANGA')
 
-    RegisterModule(module)
-    
     module = Module.New()
 
     module.Language = 'Spanish'
 
     module.Domains.Add('desuhentai.net', 'DesuHentai')
 
-    RegisterModule(module)
-    
     module = Module.New()
 
     module.Language = 'Thai'
 
     module.Domains.Add('cartoon-th.com', 'Cartoon-TH')
     module.Domains.Add('wwww.cartoon-th.com', 'Cartoon-TH')
-
-    RegisterModule(module)
 
 end
 
