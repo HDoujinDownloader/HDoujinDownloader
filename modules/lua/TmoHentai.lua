@@ -11,8 +11,8 @@ function GetInfo()
 
     info.Title = dom.SelectValue('//h3')
     info.Type = dom.SelectValue('//div[contains(@class,"content-type")]')
-    info.Artist = dom.SelectValues('//li[contains(.,"Artists")]/following-sibling::li[1]/a')
-    info.Tags = dom.SelectValues('//li[contains(.,"Tags")]/following-sibling::li/a')
+    info.Artist = dom.SelectValues('//li[contains(.,"Artists")]/following-sibling::li[1]//a')
+    info.Tags = dom.SelectValues('//li[contains(.,"Tags") or contains(.,"Genders")]/following-sibling::li/a')
     info.Language = dom.SelectValue('//li[contains(.,"Language")]/following-sibling::li/a'):after(';')
     info.PageCount = dom.SelectValue('//img[contains(@alt,"Image")]/@alt'):regex('\\d+\\/(\\d+)', 1)
 
