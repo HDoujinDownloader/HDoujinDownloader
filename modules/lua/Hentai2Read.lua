@@ -7,6 +7,8 @@ function Register()
 
     module.Domains.Add('hentai2read.com')
 
+    module.Settings.AddChoice('Preferred image format', 'Jpeg', GetImageFormats())
+
 end
 
 function GetInfo()
@@ -32,6 +34,10 @@ function GetInfo()
             info.Title = dom.SelectValue('//span[contains(@class,"reader-left-text")]')
         end
 
+        if(info.OriginalTitle == '-') then
+            info.OriginalTitle = ''
+        end
+
     end
 
 end
@@ -54,10 +60,10 @@ end
 function GetPages()
 
     local imagesArray = tostring(dom):regex("'images'\\s*:\\s*(\\[.+?\\])", 1)
-    local cdnUrl = 'https://hentai2read.com/cdn-cgi/image/format=webp/https://static.hentaicdn.com/hentai'
+    local cdnUrl = GetCdnUrl()
 
     for imageUrl in Json.New(imagesArray) do
-        pages.Add(cdnUrl..tostring(imageUrl))
+        pages.Add(cdnUrl .. tostring(imageUrl))
     end
 
 end
@@ -69,5 +75,24 @@ function EnqueueAllGalleries()
     end
 
     info.Ignore = true
+
+end
+
+function GetCdnUrl()
+
+    local imageFormat = module.Settings['Preferred image format'] or GetImageFormats()[1]
+
+    return "/cdn-cgi/image/format=" .. imageFormat:lower() .. "/https://static.hentai.direct/hentai/"
+
+end
+
+function GetImageFormats() 
+
+    return {
+        "Auto",
+        "Avif",
+        "Jpeg",
+        "WebP",
+    }
 
 end
