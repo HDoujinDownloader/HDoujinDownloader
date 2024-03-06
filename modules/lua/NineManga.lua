@@ -81,9 +81,12 @@ function GetPages()
 
         -- It will paginate into the next chapter, so make sure we only get the pages for this chapter.
 
-        local chapterSlug = url:regex('\\/chapter(\\/[^\\/]+\\/)', 1)
+        -- URLs may be of the form "/chapter/<title>/<chapter-id>-10.html" or "/chapter/<chapter-title>/<chapter-id>/".
+        -- It's important that we look at both parts to determine whether we're on the same chapter or not.
 
-        for page in Paginator.New(http, dom, '//div[contains(@class,"btn-next")]/a[contains(@href, "' .. chapterSlug .. '")]/@href') do
+        local chapterSlug = url:regex('\\/chapter(.+?)(-\\d+-\\d+\\.html|\\/$|$)', 1)
+
+        for page in Paginator.New(http, dom, '//div[contains(@class,"btn-next") or contains(@class,"share")]/a[contains(@href, "' .. chapterSlug .. '")]/@href') do
     
             local imageUrls = page.SelectValues('//img[contains(@class,"manga_pic")]/@src')
 
