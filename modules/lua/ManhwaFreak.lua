@@ -4,6 +4,7 @@ function Register()
     module.Language = 'English'
     module.Adult = false
 
+    module.Domains.Add('freakcomic.com')
     module.Domains.Add('manhwafreak.com')
     module.Domains.Add('manhwa-freak.com')
 
