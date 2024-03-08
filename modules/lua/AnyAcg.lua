@@ -19,6 +19,7 @@ function Register()
     module.Domains.Add('rawmanga.info', 'raw manga')
     module.Domains.Add('wto.to', 'BATO.TO')
     module.Domains.Add('zbato.net', 'BATO.TO')
+    module.Domains.Add('zbato.org', 'BATO.TO')
 
 end
 
