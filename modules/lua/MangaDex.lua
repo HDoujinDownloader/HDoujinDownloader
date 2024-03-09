@@ -217,24 +217,26 @@ function GetPages()
     pages.Referer = 'https://' .. module.Domain .. '/'
 
     if(API_VERSION >= 20230612) then
-
-        pages.Headers['Accept'] = '*/*'
-        pages.Headers['Origin'] = 'https://' .. module.Domain
-
+        PrepareHttpHeaders(pages)
     end
 
 end
 
 function GetGalleryUuid()
-
     return url:regex('\\/(?:title|chapter)\\/([^\\/?#]+)', 1)
-
 end
 
-function PrepareHttpHeaders()
+function PrepareHttpHeaders(obj)
 
-    http.Headers['Accept'] = '*/*'
-    http.Headers['Origin'] = 'https://' .. module.Domain
+    obj = obj or http
+
+    obj.Headers['Accept'] = '*/*'
+    obj.Headers['Origin'] = 'https://' .. module.Domain
+    obj.Headers['Referer'] = 'https://' .. module.Domain .. '/'
+
+    if(API_VERSION > 20230927) then
+        obj.Headers['User-Agent'] = API_CLIENT
+    end
 
 end
 
