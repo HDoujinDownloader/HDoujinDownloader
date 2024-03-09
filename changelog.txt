@@ -1,6 +1,16 @@
 As of version 2021.5.1.0, the changelog will only contain updates made to the HDoujin Downloader application.
 For module updates, see: https://github.com/HDoujinDownloader/HDoujinDownloader/commits/master/modules/lua
 
+[v2024.3.8.0]
+
+- [NEW] Added %REGEX% and %REPLACE% tokens
+- [NEW] Lazy file size calculation can now be disabled under advanced settings
+- [NEW] %TAGS% token can now extract namespaced tags, e.g.: %TAGS(cosplayer:)%
+- [NEW] %WEB% token now works in chapter formatting strings
+- [MISC] Improved download queue saving
+- [MISC] Page count from metadata is now saved in metadata file by default instead of file count
+- [MISC] Various improvements and bug fixes
+
 [v2023.11.8.0]
 
 - [FIX] Fixed error when downloading files with FlareSolverr
