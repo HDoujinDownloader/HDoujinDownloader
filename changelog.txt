@@ -1,6 +1,11 @@
 As of version 2021.5.1.0, the changelog will only contain updates made to the HDoujin Downloader application.
 For module updates, see: https://github.com/HDoujinDownloader/HDoujinDownloader/commits/master/modules/lua
 
+[v2024.3.9.0]
+
+- [FIX] User agent randomization no longer replaces explicitly set user agent
+- [FIX] Fixed splash screen not disappearing until startup dialog dismissed
+
 [v2024.3.8.0]
 
 - [NEW] Added %REGEX% and %REPLACE% tokens
