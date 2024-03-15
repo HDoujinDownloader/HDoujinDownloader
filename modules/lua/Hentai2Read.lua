@@ -80,9 +80,19 @@ end
 
 function GetCdnUrl()
 
-    local imageFormat = module.Settings['Preferred image format'] or GetImageFormats()[1]
+    -- Note that the CDN URL always ends with "/hentai/".
 
-    return "/cdn-cgi/image/format=" .. imageFormat:lower() .. "/https://static.hentai.direct/hentai/"
+    local cdnUrl = dom.SelectValue('//img[contains(@id,"arf-reader")]/@src')
+
+    cdnUrl = cdnUrl:regex('.+?\\/hentai\\/')
+
+    -- We used to be able to specify the image format by prepending the CDN URL with "/cdn-cgi/image/format=<fornmat>".
+    -- This doesn't seem to be possible anymore.
+
+    -- local imageFormat = module.Settings['Preferred image format'] or GetImageFormats()[1]
+    -- return "/cdn-cgi/image/format=" .. imageFormat:lower() .. "/https://static.hentai.direct/hentai/"
+    
+    return cdnUrl
 
 end
 
