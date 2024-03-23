@@ -1,56 +1,100 @@
 function Register()
 
-    module.Name = 'Omega Scans'
-    module.Language = 'English'
-    module.Adult = true
+    module.Name = 'Omega Scans'
+    module.Language = 'English'
+    module.Adult = true
 
-    module.Domains.Add('omegascans.org')
+    module.Domains.Add('omegascans.org')
 
 end
 
 function GetInfo()
 
-    info.Title = dom.SelectValue('//h1')
-    info.Summary = dom.SelectValue('//h5[contains(text(),"Description")]//following-sibling::div/p')
-    info.AlternativeTitle = dom.SelectValue('//h1//following-sibling::p')
-    info.DateReleased = dom.SelectValue('//p[contains(text(),"Release year")]/strong')
-    info.Author = dom.SelectValue('//p[contains(text(),"Author: ")]/strong')
-    info.Artist = dom.SelectValue('//p[contains(text(),"Author: ")]/strong')
-    info.Scanlator = module.Name
-    info.Publisher = dom.SelectValue('//p[contains(text(),"This is a series produced by")]/strong')
+    info.Title = dom.SelectValue('//h1')
+    info.Summary = dom.SelectValue('//*[@id="content"]/div[1]/div/div[1]/div/div[1]/div[3]/div/p')
+    info.AlternativeTitle = dom.SelectValue('//h1//following-sibling::span')
+    info.DateReleased = dom.SelectValue('//span[contains(text(),"Release year")]//following-sibling::span')
+    info.Author = dom.SelectValue('//span[contains(text(),"Author")]//following-sibling::span')
+    info.Artist = dom.SelectValue('//span[contains(text(),"Author")]//following-sibling::span')
+    info.Scanlator = module.Name
+    info.Tags = dom.SelectValues('//*[@id="content"]/div[1]/div/div[1]/div/div[1]//span[contains(@class,"font-bold") and contains(@class,"rounded")]')
 
-    local checkEndStatus = dom.SelectValue(
-        '//div[@id="radix-:R4hmmmeja:-content-1"]/ul//a[starts-with(@href, "/series/")][1]//li//span[contains(@class, "line-clamp-1" ) and contains(text(),"END") or contains(text(),"end")]')
-
-    if (not isempty(checkEndStatus)) then
-        info.Status = 'Completed'
-    end
+    if (info.Tags:contains('Completed')) then
+        info.Status = 'completed'
+    else
+        info.Status = 'ongoing'
+    end
 
 end
 
 function GetChapters()
 
-    for chapterNode in dom.SelectElements('//div[contains(@role,"tabpanel")]//a[contains(@href,"/series/")]') do
-        
-        local isPremiumChapter = chapterNode.SelectElements('.//span/*[name()="svg"]').Count() > 0
+    local comicId = GetAppJs():regex('series_id\\\\":(\\d+),', 1)
 
-        if(not isPremiumChapter) then
+    if(isempty(comicId)) then
+        return
+    end
 
-            local chapterUrl = chapterNode.SelectValue('@href')
-            local chapterTitle = chapterNode.SelectValue('.//li//span[contains(@class, "line-clamp-1")]')
-            
-            chapters.Add(chapterUrl, chapterTitle)
+    local baseUrl = StripParameters(url):trim('/') .. '/'
+    local apiUrl = 'chapter/query/?series_id=' .. comicId .. '&perPage=30'
+    local pageIndex = 1
+    local pageCount = 0
 
-        end
+    repeat
 
-    end
+        local endpoint = SetParameter(apiUrl, 'page', pageIndex)
+        local json = GetApiJson(endpoint)
+ 
+        for chapterJson in json.SelectTokens('data[*]') do
 
-    chapters.Reverse()
+            if(chapterJson.SelectValue('price') == '0') then
+
+                local chapterUrl = baseUrl .. chapterJson.SelectValue('chapter_slug')
+                local chapterTitle = ''
+
+                if(chapterJson.SelectValue('chapter_title') == '') then
+                    chapterTitle = chapterJson.SelectValue('chapter_name')
+                else
+                    chapterTitle = chapterJson.SelectValue('chapter_name') .. ' - ' .. chapterJson.SelectValue('chapter_title')
+                end
+
+                chapters.Add(chapterUrl, chapterTitle)
+
+            end
+
+        end
+
+        pageIndex = pageIndex + 1
+        pageCount = tonumber(json.SelectValue('meta.last_page'))
+
+    until(pageIndex > pageCount)
+
+    chapters.Reverse()
 
 end
 
 function GetPages()
 
-    pages.AddRange(dom.SelectValues('//img[contains(@data-src, "/uploads/series/")]/@data-src|//img[contains(@src, "/uploads/series/")]/@src'))
+    pages.AddRange(dom.SelectValues('//img[contains(@data-src, "/uploads/series/")]/@data-src|//img[contains(@src, "/uploads/series/")]/@src'))
+
+end
+
+function GetApiUrl()
+
+    return '//api.omegascans.org/'
+
+end
+
+function GetApiJson(endpoint)
+
+    http.Headers['accept'] = 'application/json, text/plain, */*'
+
+    return Json.New(http.Get(GetApiUrl() .. endpoint))
+
+end
+
+function GetAppJs()
+
+    return dom.SelectValue('//script[contains(text(),"series_id")]')
 
 end
