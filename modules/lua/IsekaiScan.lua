@@ -2,7 +2,8 @@
 
 require "Madara"
 
-local MadaraGetPages = GetPages
+local BaseGetInfo = GetInfo
+local BaseGetPages = GetPages
 
 function Register()
 
@@ -20,6 +21,7 @@ function Register()
     module.Domains.Add('manhwahentai.me', 'ManhwaHentai.me')
     module.Domains.Add('mm-scans.org', 'Mmscans')
     module.Domains.Add('paragonscans.com', 'Paragonscans')
+    module.Domains.Add('rackusreads.com', 'New Rackus!')
     module.Domains.Add('reset-scans.us', 'RESET SCANS')
     module.Domains.Add('reset-scans.xyz', 'RESET SCANS')
     module.Domains.Add('www.betafox.net', 'Beta Fox')
@@ -43,9 +45,21 @@ function Register()
 
 end
 
+function GetInfo()
+
+    BaseGetInfo()
+
+    -- rackusreads.com uses an anti-adblocker that messes with the title.
+
+    if(info.Title:contains('DETECTED ADBLOCKER')) then
+        info.Title = dom.SelectValue('//div[contains(@class,"post-title")]//h1')
+    end
+
+end
+
 function GetPages()
 
-    MadaraGetPages()
+    BaseGetPages()
 
     for page in pages do
 
