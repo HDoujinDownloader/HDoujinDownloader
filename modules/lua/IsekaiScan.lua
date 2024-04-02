@@ -24,6 +24,7 @@ function Register()
     module.Domains.Add('rackusreads.com', 'New Rackus!')
     module.Domains.Add('reset-scans.us', 'RESET SCANS')
     module.Domains.Add('reset-scans.xyz', 'RESET SCANS')
+    module.Domains.Add('theblank.net', 'The Blank')
     module.Domains.Add('www.betafox.net', 'Beta Fox')
 
     module = Module.New()
