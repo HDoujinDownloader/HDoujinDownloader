@@ -46,6 +46,8 @@ function Register()
     module.Language = 'Arabic'
 
     module.Domains.Add('3asq.org', 'مانجا العاشق')
+    module.Domains.Add('lekmanga.net', 'مانجا ليك')
+    module.Domains.Add('like-manga.net', 'مانجا ليك')
 
     RegisterModule(module)
 
