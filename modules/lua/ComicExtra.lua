@@ -6,6 +6,7 @@ function Register()
     module.Language = 'en'
 
     module.Domains.Add('comicextra.net')
+    module.Domains.Add('comicextra.org')
 
 end
 
