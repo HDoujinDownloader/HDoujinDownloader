@@ -21,7 +21,17 @@ local function GetApiJson(path)
     http.Headers['Referer'] = url
     http.Headers['X-Requested-With'] = 'XMLHttpRequest'
 
-    return Json.New(http.Get(path))
+    local jsonStr = http.Get(path)
+
+    if(not jsonStr:startswith('{')) then
+        
+        -- We're probably encountering a reader catcha.
+
+        Fail(Error.CaptchaRequired.WithHelpLink("https://github.com/HDoujinDownloader/HDoujinDownloader/wiki/Downloading-from-Anchira"))
+
+    end
+
+    return Json.New(jsonStr)
     
 end
 
