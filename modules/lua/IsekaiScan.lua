@@ -37,6 +37,7 @@ function Register()
     module.Domains.Add('ragnarokscanlation.com', 'Ragnarok Scanlation')
     module.Domains.Add('selevertranslation.com', 'Selever Translation')
     module.Domains.Add('taurusfansub.com', 'Taurus Fansub')
+    module.Domains.Add('taurusmanga.com', 'Templo de las Traducciones')
     
     module = Module.New()
     
