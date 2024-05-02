@@ -5,12 +5,13 @@ function Register()
 
     module.Domains.Add('onepiecechapters.com')
     module.Domains.Add('tcbscans.com')
+    module.Domains.Add('tcb-backup.bihar-mirchi.com')
 
 end
 
 function GetInfo()
 
-    info.Title = dom.SelectValue('//h1')
+    info.Title = dom.SelectValue('//h1[contains(text(),"Chapter")]')
     info.Summary = dom.SelectValue('//h1/following-sibling::p')
     info.Scanlator = 'TCB Scans'
 
@@ -38,6 +39,6 @@ end
 
 function GetPages()
 
-    pages.AddRange(dom.SelectValues('//picture/img/@src'))
+    pages.AddRange(dom.SelectValues('//img[contains(@class, "fixed-ratio-content")]/@src'))
 
 end
