@@ -38,6 +38,14 @@ function Register()
 
     module = Module.New()
 
+    module.Language = 'Arabic'
+
+    module.Domains.Add('manjanoon.org', 'مانجا نون')
+
+    RegisterModule(module)
+
+    module = Module.New()
+
     module.Language = 'Indonesian'
 
     module.Domains.Add('159.223.38.69', 'sasangeyou')
@@ -147,6 +155,10 @@ function GetInfo()
 
     if(isempty(info.Artist)) then -- nocturnalscans.com
         info.Artist = dom.SelectValue('//b[contains(text(),"Artist")]/following-sibling::span')
+    end
+
+    if(isempty(info.Artist)) then -- manjanoon.org
+        info.Artist = dom.SelectValue('//div[contains(.,"الرسام")]/span')
     end
 
     if(isempty(info.DateReleased)) then
