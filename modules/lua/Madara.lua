@@ -205,10 +205,17 @@ end
 function GetChapters()
 
     -- Sometimes chapters are grouped into volumes (e.g. araznovel.com).
+    -- Note that it's possible to still have ungrouped chapters even when some chapters are grouped (#321).
+    -- If both grouped and ungrouped chapters are present, the ungrouped chapters should be listed first.
 
     local volumeNodes = dom.SelectElements('//ul[contains(@class, "sub-chap")]')
 
     if(volumeNodes.Count() > 0) then
+        
+        -- Reselect the group nodes with the ungrouped node included.
+        -- Subgroups are nested under the main group, so we need to be careful when selecting chapters to avoid duplicates.
+        
+        volumeNodes = dom.SelectElements('//ul[contains(@class, "sub-chap") or contains(@class,"main version-chap")]')
 
         -- We need to get them per-volume or else the ordering will be messed up.
         -- For example, Volume 1 might have Chapters 10 -> 1, and Volume 2 20 -> 11. We need to reverse each group separately.
@@ -216,41 +223,57 @@ function GetChapters()
         for i = 0, volumeNodes.Count() - 1 do
 
             local volumeNode = volumeNodes[i]
+            local volumeName = volumeNode.SelectValue('./preceding-sibling::a')
+            local volumeNumber = ''
+ 
+            if(not isempty(volumeName)) then
+                volumeNumber = volumeName:regex('\\d+')
+            end
 
-            local chapterList = ChapterList.New()
+            local groupedChapters = ChapterList.New()
 
-            chapterList.AddRange(volumeNode.SelectElements('li/a'))
+            groupedChapters.AddRange(volumeNode.SelectElements('li/a'))
 
-            chapterList.Reverse()
+            groupedChapters.Reverse()
 
-            for j = 0, chapterList.Count() - 1 do
-                chapters.Add(chapterList[j])
+            for j = 0, groupedChapters.Count() - 1 do
+
+                local chapter = groupedChapters[j]
+
+                if(chapter.Url:startswith('http')) then -- Ignore subgroups (they'll start with "javascript:").
+
+                    chapter.Volume = volumeNumber
+
+                    chapters.Add(chapter)
+
+                end
+
             end
 
         end
 
     else
 
-        -- This site doesn't have volumes, so just get the chapter list normally.
+    -- Get all chapters.
 
-        for chapterNode in dom.SelectElements('//div[contains(@class, "listing-chapters") or @id="chapterlist"]//li') do
+    for chapterNode in dom.SelectElements('//div[contains(@class, "listing-chapters") or @id="chapterlist"]//li') do
             
-            local chapterUrl = chapterNode.SelectValue('.//a/@href')
-            local chapterTitle = chapterNode.SelectValue('.//a')
+        local chapterUrl = chapterNode.SelectValue('.//a/@href')
+        local chapterTitle = chapterNode.SelectValue('.//a')
 
-            if(isempty(chapterTitle)) then
-                
-                -- reset-scans.com
-                
-                chapterTitle = chapterNode.SelectValue('./div[contains(@class,"li__text")]/a')
-
-            end
-
-            chapters.Add(chapterUrl, chapterTitle)
+        if(isempty(chapterTitle)) then
+            
+            -- reset-scans.com
+            
+            chapterTitle = chapterNode.SelectValue('./div[contains(@class,"li__text")]/a')
 
         end
 
-        chapters.Reverse()
+        chapters.Add(chapterUrl, chapterTitle)
+
+    end
+
+    chapters.Reverse()
 
     end
 
