@@ -7,6 +7,7 @@ function Register()
 
     module.Domains.Add('comicextra.net')
     module.Domains.Add('comicextra.org')
+    module.Domains.Add('comixextra.com')
 
 end
 
