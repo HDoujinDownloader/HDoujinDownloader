@@ -1,3 +1,6 @@
+-- This website uses the same reader as Non Stop Scans (with some minor changes), so the code has been copied from there.
+-- It's built with WordPress, and uses the "mangareaderfix" theme.
+
 function Register()
 
     module.Name = 'Manhwa Freak'
@@ -5,8 +8,9 @@ function Register()
     module.Adult = false
 
     module.Domains.Add('freakcomic.com')
-    module.Domains.Add('manhwafreak.com')
     module.Domains.Add('manhwa-freak.com')
+    module.Domains.Add('manhwa-freak.org')
+    module.Domains.Add('manhwafreak.com')
 
 end
 
@@ -29,8 +33,8 @@ function GetChapters()
 
     for chapterNode in dom.SelectElements('//div[contains(@class,"chapter-li")]//a') do
 
-        local chapterUrl = chapterNode.SelectValue('@href')
-        local chapterTitle = chapterNode.SelectValue('.//div[contains(@class,"chapter-info")]/p[(count(preceding-sibling::*)+1) = 1]')
+        local chapterUrl = chapterNode.SelectValue('./@href')
+        local chapterTitle = chapterNode.SelectValue('.//p[1]')
 
         chapters.Add(chapterUrl, chapterTitle)
 
@@ -42,17 +46,22 @@ end
 
 function GetPages()
 
-    pages.AddRange(dom.SelectValues('//div[@id="readerarea"]//img/@data-src'))
-    
-    -- We need to extract pages from a script that should add them in the reader view
+    local json = Json.New(dom.SelectValue('//script[contains(text(),"ts_reader.run")]'):regex('ts_reader\\.run\\((.+?)\\);', 1))
+    local defaultSource = json.SelectValue('defaultSource')
+    local sourceJson = json.SelectToken("$.sources[?(@.source=='" .. defaultSource .. "')]")
 
-    if(isempty(pages)) then
+    if(isempty(sourceJson)) then
+        sourceJson = json.SelectToken('$.sources[0]')
+    end
 
-        local mangaParameters = tostring(dom):regex('ts_reader.run\\(({.+?})\\);', 1)..';'
-        local mangaJson = Json.New(mangaParameters)
+    for imageUrl in sourceJson.SelectValues('images[*]') do
 
-        pages.AddRange(mangaJson['sources'][0]['images'])
+        -- Avoid adding the loading spinner at the bottom of the page.
+        
+        if(not imageUrl:contains('/page-views-count/')) then
+            pages.Add(imageUrl) 
+        end
 
     end
-     
+
 end
