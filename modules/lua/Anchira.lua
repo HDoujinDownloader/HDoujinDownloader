@@ -56,18 +56,21 @@ function GetPages()
     -- local appJs = http.Get(appJsUrl)
     -- local dataUrl = appJs:regex('DATA_URL:\\s*\\"([^"]+)', 1)
 
+    -- We get the image file names from the gallery metadata, and the path information from the library data.
+
     local dataUrl = '//kisakisexo.xyz'
 
-    local json = GetApiJson('library/' .. GetGalleryPath() .. '/data')
-
-    local id = json.SelectValue('id')
-    local key = json.SelectValue('key')
-    local hash = json.SelectValue('hash')
+    local galleryJson = GetApiJson('library/' .. GetGalleryPath())
+    local libraryJson = GetApiJson('library/' .. GetGalleryPath() .. '/data')
+    
+    local id = libraryJson.SelectValue('id')
+    local key = libraryJson.SelectValue('key')
+    local hash = libraryJson.SelectValue('hash')
     local server = toboolean(module.Settings['Data saver']) and 'b' or 'a'
 
-    for name in json.SelectValues('names[*]') do
+    for name in galleryJson.SelectValues('data[*].n') do
         
-        local pageUrl = dataUrl .. '/' .. id .. '/' .. key .. '/' .. hash .. '/' .. server .. '/' .. name
+        local pageUrl = dataUrl .. '/' .. id .. '/' .. key .. '/' .. hash .. '/' .. server .. '/' .. EncodeUriComponent(name)
 
         pages.Add(pageUrl)
 
