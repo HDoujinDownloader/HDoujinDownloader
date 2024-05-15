@@ -1,177 +1,178 @@
 function Register()
 
-    module.Name = 'Coolmic'
-    module.Language = 'English'
-    module.Adult = true
+    module.Name = 'Coolmic'
+    module.Language = 'English'
+    module.Adult = true
 
-    module.Domains.Add('coolmic.me')
+    module.Domains.Add('coolmic.me')
 
-    -- The following cookie(s) are required to access mature content.
+    -- The following cookie(s) are required to access mature content.
 
-    global.SetCookie(module.Domain, 'is_mature', 'true')
+    global.SetCookie(module.Domain, 'is_mature', 'true')
 
 end
 
 function GetInfo()
 
-    local json = GetJsonPageObjects().SelectToken('title')
+    local json = GetJsonPageObjects().SelectToken('title')
 
-    info.Title = json.SelectValue('name')
-    info.Summary = json.SelectValue('summary')
-    info.Artist = json.SelectValues('artists[*].name')
-    info.Publisher = json.SelectValue('agency')
-    info.Tags = json.SelectValues('tags[*].name')
+    info.Title = json.SelectValue('name')
+    info.Summary = json.SelectValue('summary')
+    info.Artist = json.SelectValues('artists[*].name')
+    info.Publisher = json.SelectValue('agency')
+    info.Tags = json.SelectValues('tags[*].name')
 
-    if(isempty(info.Tags)) then
-        info.Tags = json.SelectValues('genres[*].name')
-    end
+    if(isempty(info.Tags)) then
+        info.Tags = json.SelectValues('genres[*].name')
+    end
 
-    if (json.SelectValues('is_completed'):contains('true')) then
-        info.Status = 'completed'
-    else
-        info.Status = 'ongoing'
-    end
+    if (json.SelectValues('is_completed'):contains('true')) then
+        info.Status = 'completed'
+    else
+        info.Status = 'ongoing'
+    end
 
 end
 
 function GetChapters()
-    
-    local json = GetJsonPageObjects()
+    
+    local json = GetJsonPageObjects()
 
-    for chapterJson in json.SelectTokens('episodes[*]') do
+    for chapterJson in json.SelectTokens('episodes[*]') do
 
-        local chapterUrl = GetRoot(url) .. 'episodes/' .. chapterJson.SelectValue('id')
-        local chapterTitle = ''
+        local chapterUrl = GetRoot(url) .. 'episodes/' .. chapterJson.SelectValue('id')
+        local chapterTitle = ''
 
-        if (chapterJson.SelectValue('name') == json.SelectToken('title').SelectValue('name')) then
-            chapterTitle = 'Chapter ' .. chapterJson.SelectValue('number')
-        else
-            chapterTitle = 'Chapter ' .. ' - ' .. chapterJson.SelectValue('name')
-        end
+        if (chapterJson.SelectValue('name') == json.SelectToken('title').SelectValue('name')) then
+            chapterTitle = 'Chapter ' .. chapterJson.SelectValue('number')
+        else
+            chapterTitle = 'Chapter ' .. ' - ' .. chapterJson.SelectValue('name')
+        end
 
-        if(chapterJson.SelectValue('is_free'):contains('true')) then
+        if(chapterJson.SelectValue('is_free'):contains('true')) then
 
-            -- Get Free Chapters
+            -- Get Free Chapters
 
-            chapters.Add(chapterUrl, chapterTitle)
+            chapters.Add(chapterUrl, chapterTitle)
 
-        end
+        end
 
-        if(chapterJson.SelectValue('is_free'):contains('false') and json.SelectToken('user').SelectValue('is_login'):contains('true')) then
+        if(chapterJson.SelectValue('is_free'):contains('false') and json.SelectToken('user').SelectValue('is_login'):contains('true')) then
 
-            -- Get Paid Chapters
+            -- Get Paid Chapters
 
-            chapters.Add(chapterUrl, chapterTitle)
+            chapters.Add(chapterUrl, chapterTitle)
 
-        end
+        end
 
-    end
+    end
 
-    -- Default Reverse
+    -- Default Reverse
 
-    -- chapters.Reverse()
+    -- chapters.Reverse()
 
 end
 
 function GetPages()
 
-    -- Check if need to log in.
+    -- Check if need to log in.
 
-    if(DetectLoginRequired()) then
+    if(DetectLoginRequired()) then
 
-        Fail(Error.LoginRequired)
+        Fail(Error.LoginRequired)
 
-    end
+    end
 
-    local json = GetApiJson(GetChapterId())
+    local json = GetApiJson(GetChapterId())
 
-    local signedCookies = json.SelectToken('signed_cookie')
+    local signedCookies = json.SelectToken('signed_cookie')
+    local policy = signedCookies.SelectValue('CloudFront-Policy')
+    local signature = signedCookies.SelectValue('CloudFront-Signature')
+    local keyPairId = signedCookies.SelectValue('CloudFront-Key-Pair-Id')
 
-    global.SetCookie('.' .. module.Domains.First(), "CloudFront-Policy", signedCookies.SelectValue('CloudFront-Policy'))
-    global.SetCookie('.' .. module.Domains.First(), "CloudFront-Signature", signedCookies.SelectValue('CloudFront-Signature'))
-    global.SetCookie('.' .. module.Domains.First(), "CloudFront-Key-Pair-Id", signedCookies.SelectValue('CloudFront-Key-Pair-Id'))
+    for pageUrl in json.SelectValues('image_data[*].path') do
 
-    for pageJson in json.SelectTokens('image_data[*]') do
+        pageUrl = pageUrl .. '?Policy=' .. policy .. '&Signature=' .. signature .. '&Key-Pair-Id=' .. keyPairId
 
-        pages.Add(pageJson.SelectValue('path'))
-        
-    end
+        pages.Add(pageUrl)
+        
+    end
 
 end
 
 function Login()
 
-    local loginCookieName = 'remember_me_token'
+    local loginCookieName = 'remember_me_token'
 
-    if(not http.Cookies.Contains(loginCookieName)) then
-    
-        http.Referer = 'https://'..module.Domain
+    if(not http.Cookies.Contains(loginCookieName)) then
+    
+        http.Referer = 'https://'..module.Domain
 
-        local dom = Dom.New(http.Get('https://' .. module.Domain .. '/login'))   
-        http.PostData.Add('authenticity_token', dom.SelectValue('//meta[@name="csrf-token"]/@content'))
-        http.PostData.Add('recaptcha_token', '')
-        http.PostData.Add('email', username)
-        http.PostData.Add('password', password)
-        http.PostData.Add('remember', true)
+        local dom = Dom.New(http.Get('https://' .. module.Domain .. '/login'))
 
-        local response = http.PostResponse('https://' .. module.Domain .. '/user/sessions')
-    
-        if(not response.Cookies.Contains(loginCookieName)) then
-            Fail(Error.LoginFailed)
-        end
-    
-        global.SetCookies(response.Cookies)
-    
-    end
+        http.PostData.Add('authenticity_token', dom.SelectValue('//meta[@name="csrf-token"]/@content'))
+        http.PostData.Add('recaptcha_token', '')
+        http.PostData.Add('email', username)
+        http.PostData.Add('password', password)
+        http.PostData.Add('remember', true)
+
+        local response = http.PostResponse('https://' .. module.Domain .. '/user/sessions')
+    
+        if(not response.Cookies.Contains(loginCookieName)) then
+            Fail(Error.LoginFailed)
+        end
+    
+        global.SetCookies(response.Cookies)
+    
+    end
 
 end
 
 function DetectLoginRequired()
 
-    local js = JavaScript.New()
+    local js = JavaScript.New()
 
-    js.Execute('window = {}')
-    js.Execute(dom.SelectValue('//script[contains(text(),"is_login")]'))
+    js.Execute('window = {}')
+    js.Execute(dom.SelectValue('//script[contains(text(),"is_login")]'))
 
-    return tostring(Json.New(js.Execute('JSON.stringify(window.is_login)'))) == 'false' and dom.SelectElement('//div[@id="v-episodes-show"]').Count() == 0
-    
+    return tostring(Json.New(js.Execute('JSON.stringify(window.is_login)'))) == 'false' and dom.SelectElement('//div[@id="v-episodes-show"]').Count() == 0
+    
 end
 
 function GetJsonEpisodeObject()
 
-    local episode_object = tostring(dom):regex(':episode-object="(.*}})"', 1)
+    local episodeObject = dom.SelectValue("//@*[local-name()=':episode-object']")
 
-    return Json.New(episode_object:replace('&quot;', '\"'))
+    return Json.New(episodeObject:replace('&quot;', '\"'))
 
 end
 
 function GetJsonPageObjects()
 
-    local page_objects = tostring(dom):regex(':page-objects="(.*}})"', 1)
+    local pageObjects = dom.SelectValue("//@*[local-name()=':page-objects']")
 
-    return Json.New(page_objects:replace('&quot;', '\"'))
+    return Json.New(pageObjects:replace('&quot;', '\"'))
 
 end
 
 function GetApiUrl()
 
-    return '//' .. module.Domain .. '/api/v1/viewer/episodes/'
+    return '//' .. module.Domain .. '/api/v1/viewer/episodes/'
 
 end
 
 function GetApiJson(id)
 
-    http.Headers['accept'] = 'application/json, text/plain, */*'
-    
-
-    return Json.New(http.Get(GetApiUrl() .. id))
+    http.Headers['accept'] = 'application/json, text/plain, */*'
+    
+    return Json.New(http.Get(GetApiUrl() .. id))
 
 end
 
 function GetChapterId()
 
-    local episodeJson = GetJsonEpisodeObject().SelectToken('episode')
+    local episodeJson = GetJsonEpisodeObject().SelectToken('episode')
 
-    return episodeJson.SelectValue('id')
+    return episodeJson.SelectValue('id')
 
 end
