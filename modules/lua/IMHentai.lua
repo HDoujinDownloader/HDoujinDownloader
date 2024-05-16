@@ -8,6 +8,48 @@ function Register()
 
 end
 
+local function GetFileExtensionFromKey(key)
+
+    if(key == 'j') then 
+        return '.jpg'
+    elseif(key == 'p') then 
+        return '.png'
+    elseif(key == 'b') then 
+        return '.bmp'
+    elseif(key == 'g') then 
+        return '.gif'
+    else
+        return '.jpg' -- default to .jpg
+    end
+
+end
+
+local function GetImageServerFromGalleryId(galleryId)
+
+    -- The logic that selects an image server is in main.js.
+    
+    if(galleryId > 0 and galleryId <= 274825) then
+        imageServer = 'm1'
+    elseif(galleryId > 274825 and galleryId <= 403818) then
+        imageServer = 'm2'
+    elseif(galleryId > 403818 and galleryId <= 527143) then
+        imageServer = 'm3'
+    elseif(galleryId > 527143 and galleryId <= 632481) then
+        imageServer = 'm4'
+    elseif(galleryId > 632481 and galleryId <= 816010) then
+        imageServer = 'm5'
+    elseif(galleryId > 816010 and galleryId <= 970098) then
+        imageServer = 'm6'
+    elseif(galleryId > 970098 and galleryId <= 1121113) then
+        imageServer = 'm7'
+    else
+        imageServer = 'm8'
+    end
+
+    return imageServer
+
+end
+
 function GetInfo()
 
     if(url:contains('/view/')) then
@@ -70,47 +112,5 @@ function GetPages()
         pages.Add(imageUrl)
 
     end
-
-end
-
-function GetFileExtensionFromKey(key)
-
-    if(key == 'j') then 
-        return '.jpg'
-    elseif(key == 'p') then 
-        return '.png'
-    elseif(key == 'b') then 
-        return '.bmp'
-    elseif(key == 'g') then 
-        return '.gif'
-    else
-        return '.jpg' -- default to .jpg
-    end
-
-end
-
-function GetImageServerFromGalleryId(galleryId)
-
-    -- The logic that selects an image server is in main.js.
-    
-    if(galleryId > 0 and galleryId <= 274825) then
-        imageServer = 'm1'
-    elseif(galleryId > 274825 and galleryId <= 403818) then
-        imageServer = 'm2'
-    elseif(galleryId > 403818 and galleryId <= 527143) then
-        imageServer = 'm3'
-    elseif(galleryId > 527143 and galleryId <= 632481) then
-        imageServer = 'm4'
-    elseif(galleryId > 632481 and galleryId <= 816010) then
-        imageServer = 'm5'
-    elseif(galleryId > 816010 and galleryId <= 970098) then
-        imageServer = 'm6'
-    elseif(galleryId > 970098 and galleryId <= 1121113) then
-        imageServer = 'm7'
-    else
-        imageServer = 'm8'
-    end
-
-    return imageServer
 
 end

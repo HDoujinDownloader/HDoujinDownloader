@@ -40,6 +40,12 @@ function Register()
 
 end
 
+local function CleanTitle(title)
+
+    return RegexReplace(title, '(?:^(?:\\s*↛\\s*)|(?:\\:\\s*)$)', '')
+
+end
+
 function GetInfo()
 
     info.Title = dom.SelectValue('//h2[contains(@class,"widget-title") or contains(@class,"listmanga-header")]')
@@ -124,11 +130,5 @@ function GetPages()
         pages.Add(GetRooted(imageUrl, GetRooted(baseUrl, url)))
 
     end
-
-end
-
-function CleanTitle(title)
-
-    return RegexReplace(title, '(?:^(?:\\s*↛\\s*)|(?:\\:\\s*)$)', '')
 
 end

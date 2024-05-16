@@ -7,6 +7,12 @@ function Register()
 
 end
 
+local function CleanTitle(title)
+
+    return RegexReplace(title, '^\\[(.+?)\\]|(?:\\[DL.\\])?(?:\\[\\d+P\\])?$', '')    
+
+end
+
 function GetInfo()
 
     info.Title = dom.SelectValue('//h1')
@@ -37,11 +43,5 @@ function GetPages()
         pages.AddRange(page.SelectValues('//p/img/@data-lazy-src'))
     
     end
-
-end
-
-function CleanTitle(title)
-
-    return RegexReplace(title, '^\\[(.+?)\\]|(?:\\[DL.\\])?(?:\\[\\d+P\\])?$', '')    
 
 end

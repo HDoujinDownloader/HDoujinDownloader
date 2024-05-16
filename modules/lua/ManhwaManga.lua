@@ -9,6 +9,16 @@ function Register()
 
 end
 
+local function ParsePages()
+
+    local pages = PageList.New()
+
+    pages.AddRange(dom.SelectValues('//div[contains(@class,"chapter-content")]//img/@src'))
+
+    return pages
+
+end
+
 function GetInfo()
 
     info.Title = dom.SelectValue('//h2')
@@ -53,15 +63,5 @@ end
 function GetPages()
 
     pages.AddRange(ParsePages())
-
-end
-
-function ParsePages()
-
-    local pages = PageList.New()
-
-    pages.AddRange(dom.SelectValues('//div[contains(@class,"chapter-content")]//img/@src'))
-
-    return pages
 
 end

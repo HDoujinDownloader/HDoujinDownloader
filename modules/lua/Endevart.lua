@@ -6,6 +6,23 @@ function Register()
 
 end
 
+local function GetApiEndpoint()
+
+    return '/api/__api_party/party'
+
+end
+
+local function GetApiJson(payload)
+
+    http.Headers['accept'] = 'application/json'
+    http.Headers['content-type'] = 'application/json'
+
+    local endpoint = GetApiEndpoint()
+
+    return Json.New(http.Post(endpoint, payload))
+
+end
+
 function GetInfo()
 
     info.Title = dom.SelectValue('//h1')
@@ -68,22 +85,5 @@ function GetPages()
     local comicJson = js.GetObject('window.__NUXT__').ToJson()
 
     pages.AddRange(comicJson.SelectValues('..pages[*].image'))
-
-end
-
-function GetApiEndpoint()
-
-    return '/api/__api_party/party'
-
-end
-
-function GetApiJson(payload)
-
-    http.Headers['accept'] = 'application/json'
-    http.Headers['content-type'] = 'application/json'
-
-    local endpoint = GetApiEndpoint()
-
-    return Json.New(http.Post(endpoint, payload))
 
 end

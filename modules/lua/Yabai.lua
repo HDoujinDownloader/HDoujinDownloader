@@ -7,6 +7,12 @@ function Register()
 
 end
 
+local function GetGalleryJson()
+
+    return Json.New(dom.SelectValue('//div/@data-page'))
+
+end
+
 function GetInfo()
 
     local json = GetGalleryJson()
@@ -62,11 +68,5 @@ function GetPages()
     for i = 1, pageCount do
         pages.Add(pagesDict[i])
     end
-
-end
-
-function GetGalleryJson()
-
-    return Json.New(dom.SelectValue('//div/@data-page'))
 
 end

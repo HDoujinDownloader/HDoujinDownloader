@@ -8,6 +8,12 @@ function Register()
 
 end
 
+local function CleanTitle(title)
+
+    return RegexReplace(title, '(?i)español$', '')
+
+end
+
 function GetInfo()
 
     info.Title = CleanTitle(dom.SelectValue('//h3[contains(@class,"post-title")]'))
@@ -42,11 +48,5 @@ end
 function GetPages()
 
     pages.AddRange(dom.SelectValues('//div[contains(@class,"post-body")]//a/img/@src'))
-
-end
-
-function CleanTitle(title)
-
-    return RegexReplace(title, '(?i)español$', '')
 
 end

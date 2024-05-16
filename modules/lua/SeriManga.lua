@@ -7,6 +7,13 @@ function Register()
 
 end
 
+local function CleanTitle(title)
+
+    return tostring(title)
+        :beforelast(' Manga Oku - Seri Manga')
+
+end
+
 function GetInfo()
 
     info.Title = dom.SelectValue('//div[contains(@class, "name")]')
@@ -77,12 +84,5 @@ function GetPages()
 
     pages.AddRange(dom.SelectValues('//img[contains(@class, "chapter-pages")]/@src'))
     pages.AddRange(dom.SelectValues('//img[contains(@class, "chapter-pages")]/@data-src'))
-
-end
-
-function CleanTitle(title)
-
-    return tostring(title)
-        :beforelast(' Manga Oku - Seri Manga')
 
 end

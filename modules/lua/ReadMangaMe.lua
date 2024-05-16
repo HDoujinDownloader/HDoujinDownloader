@@ -13,6 +13,13 @@ function Register()
 
 end
 
+local function CleanTitle(title)
+
+    return tostring(title)
+        :before(' Read manga ')
+
+end
+
 function GetInfo()
 
     info.Title = dom.SelectValue('//h1/span[contains(@class, "name")]')
@@ -72,12 +79,5 @@ function GetPages()
         end
 
     end
-
-end
-
-function CleanTitle(title)
-
-    return tostring(title)
-        :before(' Read manga ')
 
 end

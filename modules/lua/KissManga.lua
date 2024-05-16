@@ -8,6 +8,18 @@ function Register()
 
 end
 
+local function CleanTitle(title)
+
+    return tostring(title)
+        :after('Read manga')
+        :beforelast(' online')
+        :beforelast(' | ')
+        :trim()
+        :trim('manga')
+        :trim()
+
+end
+
 function GetInfo()
 
     info.Title = dom.SelectValue('//*[contains(@class,"bigChar")]')
@@ -34,17 +46,5 @@ end
 function GetPages()
 
     pages.AddRange(dom.SelectValues('//div[contains(@id,"centerDivVideo")]/img/@src'))
-
-end
-
-function CleanTitle(title)
-
-    return tostring(title)
-        :after('Read manga')
-        :beforelast(' online')
-        :beforelast(' | ')
-        :trim()
-        :trim('manga')
-        :trim()
 
 end

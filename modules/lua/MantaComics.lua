@@ -7,50 +7,6 @@ function Register()
 
 end
 
-function GetInfo()
-
-    local json = GetComicJson()
-
-    info.Title = json.SelectValue('data.data.title.en')  
-    info.Author = json.SelectValue("data.data.creators[?(@.role == 'Writer')].name")
-    info.Artist = json.SelectValue("data.data.creators[?(@.role == 'Illustration')].name")
-    info.Translator = json.SelectValue("data.data.creators[?(@.role == 'Localization')].name")
-    info.Summary = json.SelectValue("data.data.description.long")
-    info.Publisher = module.Name
-
-    if(toboolean(json.SelectValue('data.data.isCompleted'))) then
-        info.Status = 'completed'
-    else
-        info.Status = 'ongoing'
-    end
-
-end
-
-function GetChapters()
-
-    local json = GetComicJson()
-
-    for episodeNode in json.SelectTokens('data.episodes[*]') do
-
-        local episodeId = episodeNode.SelectValue('id')
-        local episodeNumber = episodeNode.SelectValue('ord')
-        local episodeTitle = 'Episode '.. episodeNumber
-        local episodeUrl = '/episodes/' .. episodeId
-
-        chapters.Add(episodeUrl, episodeTitle)
-
-    end
-
-end
-
-function GetPages()
-
-    local json = GetEpisodeJson()
-
-    pages.AddRange(json.SelectValues('data.cutImages[*].downloadUrl'))
-
-end
-
 local function GetApiUrl()
 
     return '/front/v1/'
@@ -105,7 +61,7 @@ local function GetEpisodeId()
 
 end
 
-function GetComicJson()
+local function GetComicJson()
 
     local endpoint = 'series/' .. GetComicId()
 
@@ -113,10 +69,54 @@ function GetComicJson()
 
 end
 
-function GetEpisodeJson()
+local function GetEpisodeJson()
 
     local endpoint = 'episodes/' .. GetEpisodeId()
 
     return GetApiJson(endpoint)
+
+end
+
+function GetInfo()
+
+    local json = GetComicJson()
+
+    info.Title = json.SelectValue('data.data.title.en')  
+    info.Author = json.SelectValue("data.data.creators[?(@.role == 'Writer')].name")
+    info.Artist = json.SelectValue("data.data.creators[?(@.role == 'Illustration')].name")
+    info.Translator = json.SelectValue("data.data.creators[?(@.role == 'Localization')].name")
+    info.Summary = json.SelectValue("data.data.description.long")
+    info.Publisher = module.Name
+
+    if(toboolean(json.SelectValue('data.data.isCompleted'))) then
+        info.Status = 'completed'
+    else
+        info.Status = 'ongoing'
+    end
+
+end
+
+function GetChapters()
+
+    local json = GetComicJson()
+
+    for episodeNode in json.SelectTokens('data.episodes[*]') do
+
+        local episodeId = episodeNode.SelectValue('id')
+        local episodeNumber = episodeNode.SelectValue('ord')
+        local episodeTitle = 'Episode '.. episodeNumber
+        local episodeUrl = '/episodes/' .. episodeId
+
+        chapters.Add(episodeUrl, episodeTitle)
+
+    end
+
+end
+
+function GetPages()
+
+    local json = GetEpisodeJson()
+
+    pages.AddRange(json.SelectValues('data.cutImages[*].downloadUrl'))
 
 end

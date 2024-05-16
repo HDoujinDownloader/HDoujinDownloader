@@ -8,6 +8,12 @@ function Register()
 
 end
 
+local function DoAgeVerification()
+
+    http.Get('//'..module.Domain..'/en/index/set_display/?display=A')
+
+end
+
 function GetInfo()
 
     info.Title = dom.SelectValue('//div[contains(@class,"title_content")]/h1')
@@ -45,12 +51,6 @@ function GetPages()
     end
 
     pages.AddRange(dom.SelectValues('//img[contains(@id, "set_image")]/@data-src'))
-
-end
-
-function DoAgeVerification()
-
-    http.Get('//'..module.Domain..'/en/index/set_display/?display=A')
 
 end
 

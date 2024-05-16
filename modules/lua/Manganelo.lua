@@ -26,6 +26,97 @@ function Register()
     
 end
 
+local function FollowRedirect()
+
+    -- Mangakakalot (mangakakalot.com) has some URLs redirecting to new ones.
+    -- https://doujindownloader.com/forum/viewtopic.php?f=9&t=1612
+
+    -- Follow the redirect to make sure we're on the correct page.
+
+    local redirectUrl = dom.SelectValue('//head/script/text()')
+        :regex('window\\.location\\.assign\\("([^"]+)', 1)
+
+    if(not isempty(redirectUrl)) then
+        dom = Dom.New(http.Get(redirectUrl))
+    end
+
+end
+
+local function GetImageUrls()
+
+    local imageList = List.New()
+
+    imageList.AddRange(dom.SelectValues('//div[contains(@class, "chapter-reader") or contains(@class, "vung-doc") or contains(@class, "vung_doc")]/img/@src'))
+
+    -- Update (09/03/2021): We need to use the data-src attribute for Manganelo (manganelo.tv).
+
+    if(isempty(imageList)) then
+        imageList.AddRange(dom.SelectValues('//div[contains(@class, "chapter-reader") or @id="vungdoc"]/img/@data-src'))
+    end
+
+    -- Update (23/03/2021): The images are stored in an array on mangakakalot.city.
+
+    if(isempty(imageList)) then
+
+        local pageArray = dom.SelectValue('//p[@id="arraydata"]')
+
+        if(not isempty(pageArray)) then
+            imageList.AddRange(pageArray:split(','))
+        end
+
+    end
+
+    if(isempty(imageList)) then -- mangakakalot.to
+
+        -- Try to get the image URLs from the API response.
+
+        imageList.AddRange(dom.SelectValues('//div[not(contains(@class,"shuffled"))]/@data-url'))
+
+    end
+
+    if(isempty(imageList)) then
+        imageList.AddRange(dom.SelectValues('//div[contains(@class, "chapter-reader")]/img/@src'))
+    end
+
+    return imageList
+
+end
+
+local function CleanTitle(title)
+
+    return RegexReplace(title, '(?i)^Read\\s| manga on Mangakakalot$', '')
+
+end
+
+local function GetMangaId()
+
+    return dom.SelectValue('//div[@id="main"]/@data-id')
+
+end
+
+local function GetChapterId()
+
+    return dom.SelectValue('//div[@id="reading"]/@data-reading-id')
+
+end
+
+local function GetApiEndpoint()
+
+    return GetRoot(url) .. 'ajax/manga/'
+
+end
+
+local function GetApiResponse(path)
+
+    local endpoint = GetApiEndpoint() .. path
+
+    http.Headers['accept'] = '*/*'
+    http.Headers['x-requested-with'] = 'XMLHttpRequest'
+
+    return http.Get(endpoint)
+
+end
+
 function GetInfo()
 
     FollowRedirect()
@@ -160,96 +251,5 @@ function GetPages()
         end
 
     end
-
-end
-
-function FollowRedirect()
-
-    -- Mangakakalot (mangakakalot.com) has some URLs redirecting to new ones.
-    -- https://doujindownloader.com/forum/viewtopic.php?f=9&t=1612
-
-    -- Follow the redirect to make sure we're on the correct page.
-
-    local redirectUrl = dom.SelectValue('//head/script/text()')
-        :regex('window\\.location\\.assign\\("([^"]+)', 1)
-
-    if(not isempty(redirectUrl)) then
-        dom = Dom.New(http.Get(redirectUrl))
-    end
-
-end
-
-function GetImageUrls()
-
-    local imageList = List.New()
-
-    imageList.AddRange(dom.SelectValues('//div[contains(@class, "chapter-reader") or contains(@class, "vung-doc") or contains(@class, "vung_doc")]/img/@src'))
-
-    -- Update (09/03/2021): We need to use the data-src attribute for Manganelo (manganelo.tv).
-
-    if(isempty(imageList)) then
-        imageList.AddRange(dom.SelectValues('//div[contains(@class, "chapter-reader") or @id="vungdoc"]/img/@data-src'))
-    end
-
-    -- Update (23/03/2021): The images are stored in an array on mangakakalot.city.
-
-    if(isempty(imageList)) then
-
-        local pageArray = dom.SelectValue('//p[@id="arraydata"]')
-
-        if(not isempty(pageArray)) then
-            imageList.AddRange(pageArray:split(','))
-        end
-
-    end
-
-    if(isempty(imageList)) then -- mangakakalot.to
-
-        -- Try to get the image URLs from the API response.
-
-        imageList.AddRange(dom.SelectValues('//div[not(contains(@class,"shuffled"))]/@data-url'))
-
-    end
-
-    if(isempty(imageList)) then
-        imageList.AddRange(dom.SelectValues('//div[contains(@class, "chapter-reader")]/img/@src'))
-    end
-
-    return imageList
-
-end
-
-function CleanTitle(title)
-
-    return RegexReplace(title, '(?i)^Read\\s| manga on Mangakakalot$', '')
-
-end
-
-function GetMangaId()
-
-    return dom.SelectValue('//div[@id="main"]/@data-id')
-
-end
-
-function GetChapterId()
-
-    return dom.SelectValue('//div[@id="reading"]/@data-reading-id')
-
-end
-
-function GetApiEndpoint()
-
-    return GetRoot(url) .. 'ajax/manga/'
-
-end
-
-function GetApiResponse(path)
-
-    local endpoint = GetApiEndpoint() .. path
-
-    http.Headers['accept'] = '*/*'
-    http.Headers['x-requested-with'] = 'XMLHttpRequest'
-
-    return http.Get(endpoint)
 
 end

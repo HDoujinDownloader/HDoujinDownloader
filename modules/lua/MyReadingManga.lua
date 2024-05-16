@@ -8,6 +8,30 @@ function Register()
 
 end
 
+local function IsTagsPage()
+
+    return isempty(dom.SelectElement('//h1[contains(@class,"entry-title")]'))
+
+end
+
+local function EnqueueAllEntriesForTag()
+
+    for entryUrl in dom.SelectValues('//a[contains(@class,"entry-title-link")]/@href') do
+
+        Enqueue(entryUrl)
+
+    end
+
+    local nextUrl = dom.SelectValue('//li[contains(@class,"pagination-next")]/a/@href')
+
+    if(not isempty(nextUrl)) then
+
+        Enqueue(nextUrl)
+
+    end
+
+end
+
 function GetInfo()
 
     if(IsTagsPage()) then
@@ -84,30 +108,6 @@ function GetPages()
 
     if(isempty(pages)) then
         pages.AddRange(dom.SelectValues('//div[contains(@class,"entry-content")]//img/@data-lazy-src'))
-    end
-
-end
-
-function IsTagsPage()
-
-    return isempty(dom.SelectElement('//h1[contains(@class,"entry-title")]'))
-
-end
-
-function EnqueueAllEntriesForTag()
-
-    for entryUrl in dom.SelectValues('//a[contains(@class,"entry-title-link")]/@href') do
-
-        Enqueue(entryUrl)
-
-    end
-
-    local nextUrl = dom.SelectValue('//li[contains(@class,"pagination-next")]/a/@href')
-
-    if(not isempty(nextUrl)) then
-
-        Enqueue(nextUrl)
-
     end
 
 end

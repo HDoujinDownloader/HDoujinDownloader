@@ -7,6 +7,15 @@ function Register() -- required
 
 end
 
+local function CleanTitle(title)
+
+    return tostring(title)
+        :beforelast(' - ')
+        :beforelast('|')
+        :trim()
+
+end
+
 function GetInfo() -- required
 
     if(GetDepth(url) > 0) then -- ignore the homepage
@@ -107,14 +116,5 @@ function Login() -- required
         global.SetCookies(response.Cookies)
     
     end
-
-end
-
-function CleanTitle(title)
-
-    return tostring(title)
-        :beforelast(' - ')
-        :beforelast('|')
-        :trim()
 
 end

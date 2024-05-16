@@ -6,24 +6,6 @@ function Register()
 
 end
 
-function GetInfo()
-
-    local json = GetGalleryJson()
-
-    info.Title = json.SelectValue('title')
-    info.Tags = json.SelectValue('tags'):split(',')
-    info.PageCount = json.SelectValue('pagecount')
-
-end
-
-function GetPages()
-
-    local json = GetImagesJson()
-
-    pages.AddRange(json.SelectValues('pages[*]'))
-
-end
-
 local function GetApiUrl()
 
     return  '/api/archives/'
@@ -53,7 +35,7 @@ local function GetGalleryId()
 
 end
 
-function GetGalleryJson()
+local function GetGalleryJson()
 
     local galleryId = GetGalleryId()
     local endpoint = galleryId .. '/metadata'
@@ -62,11 +44,29 @@ function GetGalleryJson()
 
 end
 
-function GetImagesJson()
+local function GetImagesJson()
 
     local galleryId = GetGalleryId()
     local endpoint = galleryId .. '/files?force=false'
 
     return GetApiJson(endpoint)
+
+end
+
+function GetInfo()
+
+    local json = GetGalleryJson()
+
+    info.Title = json.SelectValue('title')
+    info.Tags = json.SelectValue('tags'):split(',')
+    info.PageCount = json.SelectValue('pagecount')
+
+end
+
+function GetPages()
+
+    local json = GetImagesJson()
+
+    pages.AddRange(json.SelectValues('pages[*]'))
 
 end

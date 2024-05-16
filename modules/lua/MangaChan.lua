@@ -16,6 +16,102 @@ function Register()
 
 end
 
+local function CleanTitle(title)
+
+    return tostring(title)
+        :before('&raquo;')
+        :before('читать онлайн')
+        :before('онлайн')
+
+end
+
+local function FailIfLoginRequired()
+
+    if(tostring(dom):contains('Гости не могут просматривать этот раздел.')) then
+        Fail(Error.LoginRequired)
+    end
+
+end
+
+local function ParseChapters()
+
+    local chapterList = ChapterList.New()
+
+    chapterList.AddRange(dom.SelectElements('//table[contains(@class, "table_cha")]//a'))
+
+    chapterList.Reverse()
+
+    return chapterList
+
+end
+
+local function ParsePages(url)
+
+    local pageList = PageList.New()
+
+    doc = http.Get(url)
+
+    FailIfLoginRequired()
+
+    local pagesJson = Json.New(doc:regex('"fullimg":\\s*(\\[.+?\\])', 1))
+
+    pageList.AddRange(pagesJson)
+
+    return pageList
+
+end
+
+local function SetDevelopmentAccessParameter(url)
+
+    if(GetDomain(url) == 'exhentai-dono.me' and isempty(GetParameter(url, 'development_access'))) then
+
+        -- We need to add the "development_access" URI parameter to get the reader to load on this domain.
+
+        url = SetParameter(url, 'development_access', 'true')
+
+        dom = Dom.New(http.Get(url))
+
+    end
+
+    return url
+
+end
+
+local function ReadTitleFromMetadata()
+
+    local title = dom.SelectValue('//h1')
+
+    if(isempty(title)) then
+        title = dom.SelectValue('//a[contains(@class,"title_top_a")]')
+    end
+
+    -- We might not have a title yet if added from the reader.
+
+    if(isempty(title)) then
+        title = CleanTitle(dom.Title)
+    end
+
+    return title
+
+end
+
+local function MakeSureGalleryIsLoaded()
+
+        -- We may need to get the current URL repeatedly to make sure we have the proper cookies.
+        -- Otherwise, we get redirected to the login page on the first request.
+
+        for i = 0, 2 do
+
+            if(not isempty(ReadTitleFromMetadata())) then
+                break
+            end
+
+            dom = Dom.New(http.Get(url))
+
+        end
+
+end
+
 function GetInfo()
 
     FailIfLoginRequired()
@@ -92,15 +188,6 @@ function GetPages()
 
 end
 
-function CleanTitle(title)
-
-    return tostring(title)
-        :before('&raquo;')
-        :before('читать онлайн')
-        :before('онлайн')
-
-end
-
 function Login()
 
     if(http.Cookies.Empty()) then
@@ -121,92 +208,5 @@ function Login()
         global.SetCookies(response.Cookies)
 
     end
-
-end
-
-function ParseChapters()
-
-    local chapterList = ChapterList.New()
-
-    chapterList.AddRange(dom.SelectElements('//table[contains(@class, "table_cha")]//a'))
-
-    chapterList.Reverse()
-
-    return chapterList
-
-end
-
-function ParsePages(url)
-
-    local pageList = PageList.New()
-
-    doc = http.Get(url)
-
-    FailIfLoginRequired()
-
-    local pagesJson = Json.New(doc:regex('"fullimg":\\s*(\\[.+?\\])', 1))
-
-    pageList.AddRange(pagesJson)
-
-    return pageList
-
-end
-
-function SetDevelopmentAccessParameter(url)
-
-    if(GetDomain(url) == 'exhentai-dono.me' and isempty(GetParameter(url, 'development_access'))) then
-
-        -- We need to add the "development_access" URI parameter to get the reader to load on this domain.
-
-        url = SetParameter(url, 'development_access', 'true')
-
-        dom = Dom.New(http.Get(url))
-
-    end
-
-    return url
-
-end
-
-function ReadTitleFromMetadata()
-
-    local title = dom.SelectValue('//h1')
-
-    if(isempty(title)) then
-        title = dom.SelectValue('//a[contains(@class,"title_top_a")]')
-    end
-
-    -- We might not have a title yet if added from the reader.
-
-    if(isempty(title)) then
-        title = CleanTitle(dom.Title)
-    end
-
-    return title
-
-end
-
-function FailIfLoginRequired()
-
-    if(tostring(dom):contains('Гости не могут просматривать этот раздел.')) then
-        Fail(Error.LoginRequired)
-    end
-
-end
-
-function MakeSureGalleryIsLoaded()
-
-        -- We may need to get the current URL repeatedly to make sure we have the proper cookies.
-        -- Otherwise, we get redirected to the login page on the first request.
-
-        for i = 0, 2 do
-
-            if(not isempty(ReadTitleFromMetadata())) then
-                break
-            end
-
-            dom = Dom.New(http.Get(url))
-
-        end
 
 end

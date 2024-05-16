@@ -8,6 +8,12 @@ function Register()
 
 end
 
+local function CleanTitle(title)
+
+    return RegexReplace(tostring(title), '(?i)comic porn$', '')
+
+end
+
 function GetInfo()
 
     info.Title = CleanTitle(dom.SelectValue('//h1'))
@@ -36,11 +42,5 @@ function GetPages()
     if(isempty(pages)) then
         pages.AddRange(dom.SelectValues('//div[contains(@id,"imageContainer")]//img/@src'))
     end
-
-end
-
-function CleanTitle(title)
-
-    return RegexReplace(tostring(title), '(?i)comic porn$', '')
 
 end

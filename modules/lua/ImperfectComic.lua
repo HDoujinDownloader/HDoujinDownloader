@@ -8,6 +8,18 @@ function Register()
 
 end
 
+local function CleanMetadataFieldValue(value)
+
+    -- Empty metadata fields have the value " - ", which should be blanked out.
+
+    if(tostring(value):trim() == '-') then
+        return ""
+    end
+
+    return value
+
+end
+
 function GetInfo()
 
     info.Title = dom.SelectValue('//h1[contains(@class,"entry-title")]')
@@ -53,17 +65,5 @@ function GetPages()
     -- if(isempty(pages)) then
     --     pages.AddRange(dom.SelectValues('//div[@id="readerarea"]//img[not(self::node()[not(following-sibling::*)])][(count(preceding-sibling::*)+1)>=4 and ((count(preceding-sibling::*)+1)-4) mod 1=0]/@src'))
     -- end
-
-end
-
-function CleanMetadataFieldValue(value)
-
-    -- Empty metadata fields have the value " - ", which should be blanked out.
-
-    if(tostring(value):trim() == '-') then
-        return ""
-    end
-
-    return value
 
 end

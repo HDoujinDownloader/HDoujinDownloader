@@ -12,6 +12,12 @@ function Register()
 
 end
 
+local function CleanTitle(title)
+
+    return RegexReplace(tostring(title):trim(), '(?i)\\s*(?:manga online)$', '')
+
+end
+
 function GetInfo()
 
     info.Title = CleanTitle(dom.SelectValue('//h1'))
@@ -55,11 +61,5 @@ function GetPages()
         pages.AddRange(dom.SelectValues('//div[contains(@class,"entry-content")]//img/@src'))
 
     end
-
-end
-
-function CleanTitle(title)
-
-    return RegexReplace(tostring(title):trim(), '(?i)\\s*(?:manga online)$', '')
 
 end

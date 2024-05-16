@@ -6,6 +6,12 @@ function Register()
 
 end
 
+local function GetChapterId()
+
+    return url:regex('\\/chapter\\/(.+?)\\/', 1)
+
+end
+
 function GetInfo()
 
     info.Title = dom.SelectValue('//h1')
@@ -44,11 +50,5 @@ function GetPages()
     local json = Json.New(http.Post('/Manga/UpdateView'))
 
     pages.AddRange(Json.New(json.SelectValue('view')).SelectValues('[*]'))
-
-end
-
-function GetChapterId()
-
-    return url:regex('\\/chapter\\/(.+?)\\/', 1)
 
 end

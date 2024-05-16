@@ -10,6 +10,12 @@ function Register()
 
 end
 
+local function GetVariableValue(name) 
+
+    return tostring(dom):regex(name..'\\s*=\\s*(.+?)\\s*;', 1):trim('"')
+
+end
+
 function GetInfo()
 
     info.Title = dom.SelectValue('//div[contains(@class,"info")]/p[span and contains(@class,"title")]/text()')
@@ -111,11 +117,5 @@ function GetPages()
         if(pages.Count() >= DM5_IMAGE_COUNT) then break end
 
     end
-
-end
-
-function GetVariableValue(name) 
-
-    return tostring(dom):regex(name..'\\s*=\\s*(.+?)\\s*;', 1):trim('"')
 
 end

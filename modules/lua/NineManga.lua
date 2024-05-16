@@ -16,6 +16,23 @@ function Register()
 
 end
 
+local function CleanTitle(title)
+
+    return RegexReplace(tostring(title), '(?:Manga)$', '')
+
+end
+
+local function GetPagesFromArray()
+
+    local imagesJsonStr = dom.SelectValue('//script[contains(.,"all_imgs_url")]')
+        :regex('all_imgs_url:\\s*(\\[[^\\]]+\\])', 1)
+
+    if(not isempty(imagesJsonStr)) then
+        pages.AddRange(Json.New(imagesJsonStr))
+    end
+
+end
+
 function GetInfo()
 
     info.Title = CleanTitle(dom.SelectValue('//h1'))
@@ -98,23 +115,6 @@ function GetPages()
         
         end
 
-    end
-
-end
-
-function CleanTitle(title)
-
-    return RegexReplace(tostring(title), '(?:Manga)$', '')
-
-end
-
-function GetPagesFromArray()
-
-    local imagesJsonStr = dom.SelectValue('//script[contains(.,"all_imgs_url")]')
-        :regex('all_imgs_url:\\s*(\\[[^\\]]+\\])', 1)
-
-    if(not isempty(imagesJsonStr)) then
-        pages.AddRange(Json.New(imagesJsonStr))
     end
 
 end

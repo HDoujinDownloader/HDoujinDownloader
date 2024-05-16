@@ -12,6 +12,28 @@ function Register()
 
 end
 
+local function GetMotionToonPages()
+
+    local documentUrl = tostring(dom):regex("documentURL:\\s*'([^']+)'", 1)
+    local jpgFormat = tostring(dom):regex("\\bjpg:\\s*'([^']+)'", 1):replace('{=filename}', '{0}')
+    local pngFormat = tostring(dom):regex("\\bpng:\\s*'([^']+)'", 1):replace('{=filename}', '{0}')
+    
+    local json = Json.New(http.Get(documentUrl))
+
+    for filename in json.SelectValues('assets.stillcut.*') do
+
+        if(not isempty(pngFormat) and filename:endswith('.png')) then
+            filename = FormatString(pngFormat, filename)
+        else
+            filename = FormatString(jpgFormat, filename)
+        end
+
+        pages.Add(filename)
+
+    end
+
+end
+
 function GetInfo()
 
     -- There are three different areas of the site we need to consider:
@@ -90,28 +112,6 @@ function GetPages()
 
     if(isempty(pages)) then
         GetMotionToonPages()
-    end
-
-end
-
-function GetMotionToonPages()
-
-    local documentUrl = tostring(dom):regex("documentURL:\\s*'([^']+)'", 1)
-    local jpgFormat = tostring(dom):regex("\\bjpg:\\s*'([^']+)'", 1):replace('{=filename}', '{0}')
-    local pngFormat = tostring(dom):regex("\\bpng:\\s*'([^']+)'", 1):replace('{=filename}', '{0}')
-    
-    local json = Json.New(http.Get(documentUrl))
-
-    for filename in json.SelectValues('assets.stillcut.*') do
-
-        if(not isempty(pngFormat) and filename:endswith('.png')) then
-            filename = FormatString(pngFormat, filename)
-        else
-            filename = FormatString(jpgFormat, filename)
-        end
-
-        pages.Add(filename)
-
     end
 
 end

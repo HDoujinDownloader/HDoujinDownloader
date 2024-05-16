@@ -7,6 +7,32 @@ function Register()
 
 end
 
+local function GetApiUrl()
+
+    return '//zscans.com/swordflake/'
+
+end
+
+local function GetApiJson(endpoint)
+
+    local xsrfToken = http.Cookies.GetCookie('XSRF-TOKEN')
+
+    http.Headers['accept'] = 'application/json, text/plain, */*'
+
+    if(not isempty(xsrfToken)) then
+        http.Headers['x-xsrf-token'] = xsrfToken
+    end
+
+    return Json.New(http.Get(GetApiUrl() .. endpoint))
+
+end
+
+local function GetAppJs()
+
+    return dom.SelectValue('//script[contains(text(),"window.__ZEROSCANS__")]')
+
+end
+
 function GetInfo()
 
     info.Title = dom.SelectValue('//div[contains(@class,"v-card__title")]')
@@ -59,31 +85,5 @@ function GetPages()
     local pagesJson = Json.New(pagesJs)
 
     pages.AddRange(pagesJson.SelectValues('[*]'))
-
-end
-
-local function GetApiUrl()
-
-    return '//zscans.com/swordflake/'
-
-end
-
-function GetApiJson(endpoint)
-
-    local xsrfToken = http.Cookies.GetCookie('XSRF-TOKEN')
-
-    http.Headers['accept'] = 'application/json, text/plain, */*'
-
-    if(not isempty(xsrfToken)) then
-        http.Headers['x-xsrf-token'] = xsrfToken
-    end
-
-    return Json.New(http.Get(GetApiUrl() .. endpoint))
-
-end
-
-function GetAppJs()
-
-    return dom.SelectValue('//script[contains(text(),"window.__ZEROSCANS__")]')
 
 end

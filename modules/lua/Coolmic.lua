@@ -12,6 +12,55 @@ function Register()
 
 end
 
+local function DetectLoginRequired()
+
+    local js = JavaScript.New()
+
+    js.Execute('window = {}')
+    js.Execute(dom.SelectValue('//script[contains(text(),"is_login")]'))
+
+    return tostring(Json.New(js.Execute('JSON.stringify(window.is_login)'))) == 'false' and dom.SelectElement('//div[@id="v-episodes-show"]').Count() == 0
+    
+end
+
+local function GetJsonEpisodeObject()
+
+    local episodeObject = dom.SelectValue("//@*[local-name()=':episode-object']")
+
+    return Json.New(episodeObject:replace('&quot;', '\"'))
+
+end
+
+local function GetJsonPageObjects()
+
+    local pageObjects = dom.SelectValue("//@*[local-name()=':page-objects']")
+
+    return Json.New(pageObjects:replace('&quot;', '\"'))
+
+end
+
+local function GetApiUrl()
+
+    return '//' .. module.Domain .. '/api/v1/viewer/episodes/'
+
+end
+
+local function GetApiJson(id)
+
+    http.Headers['accept'] = 'application/json, text/plain, */*'
+    
+    return Json.New(http.Get(GetApiUrl() .. id))
+
+end
+
+local function GetChapterId()
+
+    local episodeJson = GetJsonEpisodeObject().SelectToken('episode')
+
+    return episodeJson.SelectValue('id')
+
+end
+
 function GetInfo()
 
     local json = GetJsonPageObjects().SelectToken('title')
@@ -125,54 +174,5 @@ function Login()
         global.SetCookies(response.Cookies)
     
     end
-
-end
-
-function DetectLoginRequired()
-
-    local js = JavaScript.New()
-
-    js.Execute('window = {}')
-    js.Execute(dom.SelectValue('//script[contains(text(),"is_login")]'))
-
-    return tostring(Json.New(js.Execute('JSON.stringify(window.is_login)'))) == 'false' and dom.SelectElement('//div[@id="v-episodes-show"]').Count() == 0
-    
-end
-
-function GetJsonEpisodeObject()
-
-    local episodeObject = dom.SelectValue("//@*[local-name()=':episode-object']")
-
-    return Json.New(episodeObject:replace('&quot;', '\"'))
-
-end
-
-function GetJsonPageObjects()
-
-    local pageObjects = dom.SelectValue("//@*[local-name()=':page-objects']")
-
-    return Json.New(pageObjects:replace('&quot;', '\"'))
-
-end
-
-function GetApiUrl()
-
-    return '//' .. module.Domain .. '/api/v1/viewer/episodes/'
-
-end
-
-function GetApiJson(id)
-
-    http.Headers['accept'] = 'application/json, text/plain, */*'
-    
-    return Json.New(http.Get(GetApiUrl() .. id))
-
-end
-
-function GetChapterId()
-
-    local episodeJson = GetJsonEpisodeObject().SelectToken('episode')
-
-    return episodeJson.SelectValue('id')
 
 end

@@ -13,6 +13,94 @@ function Register() -- required
 
 end
 
+local function ParsePageCount(doc)
+
+    local pageCount = doc:regex('(?:> of |data-pages=")(\\d+)', 1)
+
+    if(isnumber(pageCount)) then
+        return tonumber(pageCount)
+    else
+        return 0
+    end
+
+end
+
+local function ParseChapters(doc, chapters)
+
+    for match in RegexMatches(doc:between('collection-table">', 'no-margin">'), '<a href="([^"]+).+?width="100%">([^<]+)') do
+
+        local chapterInfo = ChapterInfo.New()
+
+        chapterInfo.Url = match[1]
+        chapterInfo.Title = match[2]
+
+        chapters.Add(chapterInfo)
+
+   end
+
+   return chapters
+
+end
+
+local function ParsePages(doc, pages)
+
+    local pageCount = ParsePageCount(doc)
+    local pageFormat = doc:regex('data-cdn="([^"]+)', 1)
+
+    for i = 1, tonumber(pageCount) do
+
+        pages.Add(pageFormat:replace('[PAGE]', i))
+
+    end
+
+    return pages
+
+end
+
+local function DetectLoginRequired(doc)
+
+    local pageTitle = doc:between('<title>', '</title>')
+
+    return pageTitle:contains(': Login') or pageTitle:contains('Issue Occured (404)')
+
+end
+
+local function DetectCaptcha(doc)
+
+    return doc:contains(': Auth</title>')
+
+end
+
+local function IsReaderPageUrl(url)
+
+    return url:contains('/Read/')
+
+end
+
+local function IsSummaryPageUrl(url)
+
+    return url:contains('/entry/') or url:contains('/Book/')
+
+end
+
+local function ParseBookData(doc, id)
+
+    return doc:regexmany('"book-data" id="' .. EscapeRegexString(id) .. '">.+?>([^<]+)', 1)
+
+end
+
+local function GetGalleryIdFromUrl(url)
+
+    return url:regex('\\/(\\d+)(?:$|#|\\?)', 1)
+
+end
+
+local function GetReaderUrlFromUrl(url)
+
+    return FormatString("{0}Read/Index/{1}?page=1", GetRoot(url), GetGalleryIdFromUrl(url))
+
+end
+
 function GetInfo() -- required
 
     -- Check if we got a captcha (reCAPTCHA) or need to log in.
@@ -131,93 +219,5 @@ function Login()
         global.SetCookies(response.Cookies)
     
     end
-
-end
-
-function ParseChapters(doc, chapters)
-
-    for match in RegexMatches(doc:between('collection-table">', 'no-margin">'), '<a href="([^"]+).+?width="100%">([^<]+)') do
-
-        local chapterInfo = ChapterInfo.New()
-
-        chapterInfo.Url = match[1]
-        chapterInfo.Title = match[2]
-
-        chapters.Add(chapterInfo)
-
-   end
-
-   return chapters
-
-end
-
-function ParsePages(doc, pages)
-
-    local pageCount = ParsePageCount(doc)
-    local pageFormat = doc:regex('data-cdn="([^"]+)', 1)
-
-    for i = 1, tonumber(pageCount) do
-
-        pages.Add(pageFormat:replace('[PAGE]', i))
-
-    end
-
-    return pages
-
-end
-
-function DetectLoginRequired(doc)
-
-    local pageTitle = doc:between('<title>', '</title>')
-
-    return pageTitle:contains(': Login') or pageTitle:contains('Issue Occured (404)')
-
-end
-
-function DetectCaptcha(doc)
-
-    return doc:contains(': Auth</title>')
-
-end
-
-function IsReaderPageUrl(url)
-
-    return url:contains('/Read/')
-
-end
-
-function IsSummaryPageUrl(url)
-
-    return url:contains('/entry/') or url:contains('/Book/')
-
-end
-
-function ParsePageCount(doc)
-
-    local pageCount = doc:regex('(?:> of |data-pages=")(\\d+)', 1)
-
-    if(isnumber(pageCount)) then
-        return tonumber(pageCount)
-    else
-        return 0
-    end
-
-end
-
-function ParseBookData(doc, id)
-
-    return doc:regexmany('"book-data" id="' .. EscapeRegexString(id) .. '">.+?>([^<]+)', 1)
-
-end
-
-function GetGalleryIdFromUrl(url)
-
-    return url:regex('\\/(\\d+)(?:$|#|\\?)', 1)
-
-end
-
-function GetReaderUrlFromUrl(url)
-
-    return FormatString("{0}Read/Index/{1}?page=1", GetRoot(url), GetGalleryIdFromUrl(url))
 
 end

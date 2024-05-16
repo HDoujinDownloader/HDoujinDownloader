@@ -16,6 +16,24 @@ function Register()
 
 end
 
+local function CleanTitle(title)
+
+    return tostring(title):before('[')
+
+end
+
+local function GetMetadataFromTitle(info, title)
+
+    title = tostring(title)
+
+    info.Language = title:regex('\\[([^\\]]+)\\]', 1)
+    info.Type = title:regex('doujinshi')
+    info.Parody = title:regex('parodying(?: the )?(.+?)(?:$|,| game)', 1)
+    info.Artist = title:regex('by (.+?)(?:$|,|\\()', 1)
+    info.Circle = title:regex('\\(circle (.+?)\\)', 1)
+
+end
+
 function GetInfo()
 
     if(not url:contains('/gal')) then
@@ -99,23 +117,5 @@ function BeforeDownloadPage()
     elseif(GetDomain(page.Url) == 'turboimagehost.com') then
         BeforeDownloadPageTurboImageHost()
     end
-
-end
-
-function CleanTitle(title)
-
-    return tostring(title):before('[')
-
-end
-
-function GetMetadataFromTitle(info, title)
-
-    title = tostring(title)
-
-    info.Language = title:regex('\\[([^\\]]+)\\]', 1)
-    info.Type = title:regex('doujinshi')
-    info.Parody = title:regex('parodying(?: the )?(.+?)(?:$|,| game)', 1)
-    info.Artist = title:regex('by (.+?)(?:$|,|\\()', 1)
-    info.Circle = title:regex('\\(circle (.+?)\\)', 1)
 
 end
