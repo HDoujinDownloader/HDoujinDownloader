@@ -8,6 +8,13 @@ function Register()
 
 end
 
+local function CleanTitle(title)
+
+    return tostring(title)
+        :before(' Story Viewer - ')
+
+end
+
 function GetInfo()
 
     info.Title = dom.SelectValue('//h2')
@@ -35,12 +42,5 @@ function GetPages()
     end
 
     pages.AddRange(dom.SelectValues('//amp-img/@src'))
-
-end
-
-function CleanTitle(title)
-
-    return tostring(title)
-        :before(' Story Viewer - ')
 
 end

@@ -6,6 +6,27 @@ function Register()
 
 end
 
+local function CleanTitle(title)
+
+    return tostring(title)
+        :beforelast('&#8211;')
+        :beforelast(' | VK')
+
+end
+
+local function GetImageCount()
+
+    return tonumber(dom.SelectValue('(//span[contains(@class,"ui_crumb_count")])[last()]'))
+
+end
+
+local function PrepareHttpHeaders()
+
+    http.Headers['accept'] = '*/*'
+    http.Headers['x-requested-with'] = 'XMLHttpRequest'
+
+end
+
 function GetInfo()
 
     info.Title = CleanTitle(dom.Title)
@@ -139,26 +160,5 @@ function BeforeDownloadPage()
     end
 
     page.Url = imageUrl
-
-end
-
-function CleanTitle(title)
-
-    return tostring(title)
-        :beforelast('&#8211;')
-        :beforelast(' | VK')
-
-end
-
-function GetImageCount()
-
-    return tonumber(dom.SelectValue('(//span[contains(@class,"ui_crumb_count")])[last()]'))
-
-end
-
-function PrepareHttpHeaders()
-
-    http.Headers['accept'] = '*/*'
-    http.Headers['x-requested-with'] = 'XMLHttpRequest'
 
 end

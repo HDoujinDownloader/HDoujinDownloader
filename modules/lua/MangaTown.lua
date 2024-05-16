@@ -8,6 +8,12 @@ function Register()
 
 end
 
+local function ParsePageCount()
+
+    return dom.SelectValue('//div[contains(@class,"page_select")]/select/option[last()-1]/text()')
+
+end
+
 function GetInfo()
 
     info.Title = dom.SelectValue('//h1')
@@ -82,11 +88,5 @@ function GetPages()
         pages.AddRange(dom.SelectValues('//div[contains(@id,"viewer")]//img/@src'))
 
     end
-
-end
-
-function ParsePageCount()
-
-    return dom.SelectValue('//div[contains(@class,"page_select")]/select/option[last()-1]/text()')
 
 end

@@ -7,6 +7,12 @@ function Register()
 
 end
 
+local function GetPageCount()
+
+    return tonumber(dom.SelectValue('//span[contains(@class, "pages")]'):after(':'))
+
+end
+
 function GetInfo()
 
     if(url:contains('/gallery/')) then
@@ -71,11 +77,5 @@ function GetPages()
         pages.Add(FormatString('//i.{0}/{1}/{2}/{3}{4}', module.Domain, imageDir, galleryId, pageNumber, pageExtension))
 
     end
-
-end
-
-function GetPageCount()
-
-    return tonumber(dom.SelectValue('//span[contains(@class, "pages")]'):after(':'))
 
 end

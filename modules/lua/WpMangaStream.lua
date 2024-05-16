@@ -26,6 +26,65 @@ function Register()
 
 end
 
+local function CleanMetadataFieldValue(value)
+
+    -- Empty metadata fields have the value " - ", which should be blanked out.
+
+    if(tostring(value):trim() == '-') then
+        return ""
+    end
+
+    return value
+
+end
+
+local function RedirectToNewMangaUrl()
+
+    -- For some manga, the path looks like like this: 
+    -- /manga/title/
+    -- But some other manga can only be accessed with a numeric prefix: 
+    -- /manga/1901917615-title/
+    -- That numeric prefix changes occassionally, breaking existing URLs in bookmarks or the download queue.
+    -- If we hit a 404 page for a manga URL, attempt to find the current numeric ID and update the URL.
+    -- See https://github.com/HDoujinDownloader/HDoujinDownloader/issues/238
+
+    -- Checks if the URL contains a numeric prefix.
+    
+    local urlPrefix = url:regex('\\/(?:manga|series)\\/(\\d+)', 1)
+
+    if(not isempty(urlPrefix)) then
+        
+        local numericPrefixKey = module.Domain .. '-NumericPrefix'
+
+        if(url:contains('/manga/') or url:contains('/series/')) then
+    
+            if(isempty(module.Data[numericPrefixKey])) then
+
+                -- If we haven't gotten the prefix yet, extract it from a URL on the home page and save it.
+
+                local homePageDom = Dom.New(http.Get(GetRoot(url)))
+                local numericPrefix = homePageDom.SelectValue('//div[contains(@class,"listupd")]//a[contains(@href,"/manga/") or contains(@href,"/series/")]/@href')
+                    :regex('\\/(?:manga|series)\\/(\\d+)', 1)
+        
+                module.Data[numericPrefixKey] = numericPrefix
+
+            end
+
+            if(not isempty(module.Data[numericPrefixKey])) then
+
+                -- Apply the prefix to the URL.
+
+                url = RegexReplace(url, '\\/(manga|series)\\/\\d*-?', '/$1/' .. module.Data[numericPrefixKey] .. '-')
+                dom = Dom.New(http.Get(url))
+                
+            end
+
+        end
+        
+    end
+
+end
+
 function GetInfo()
 
     RedirectToNewMangaUrl()
@@ -71,65 +130,6 @@ function GetPages()
 
     if(isempty(pages)) then
         pages.AddRange(dom.SelectValues('//div[@id="readerarea"]//img[@class and not(ancestor::div[contains(@class,"asurascans.rights")])]/@src'))
-    end
-
-end
-
-function CleanMetadataFieldValue(value)
-
-    -- Empty metadata fields have the value " - ", which should be blanked out.
-
-    if(tostring(value):trim() == '-') then
-        return ""
-    end
-
-    return value
-
-end
-
-function RedirectToNewMangaUrl()
-
-    -- For some manga, the path looks like like this: 
-    -- /manga/title/
-    -- But some other manga can only be accessed with a numeric prefix: 
-    -- /manga/1901917615-title/
-    -- That numeric prefix changes occassionally, breaking existing URLs in bookmarks or the download queue.
-    -- If we hit a 404 page for a manga URL, attempt to find the current numeric ID and update the URL.
-    -- See https://github.com/HDoujinDownloader/HDoujinDownloader/issues/238
-
-    -- Checks if the URL contains a numeric prefix.
-    
-    local urlPrefix = url:regex('\\/(?:manga|series)\\/(\\d+)', 1)
-
-    if(not isempty(urlPrefix)) then
-        
-        local numericPrefixKey = module.Domain .. '-NumericPrefix'
-
-        if(url:contains('/manga/') or url:contains('/series/')) then
-    
-            if(isempty(module.Data[numericPrefixKey])) then
-
-                -- If we haven't gotten the prefix yet, extract it from a URL on the home page and save it.
-
-                local homePageDom = Dom.New(http.Get(GetRoot(url)))
-                local numericPrefix = homePageDom.SelectValue('//div[contains(@class,"listupd")]//a[contains(@href,"/manga/") or contains(@href,"/series/")]/@href')
-                    :regex('\\/(?:manga|series)\\/(\\d+)', 1)
-        
-                module.Data[numericPrefixKey] = numericPrefix
-
-            end
-
-            if(not isempty(module.Data[numericPrefixKey])) then
-
-                -- Apply the prefix to the URL.
-
-                url = RegexReplace(url, '\\/(manga|series)\\/\\d*-?', '/$1/' .. module.Data[numericPrefixKey] .. '-')
-                dom = Dom.New(http.Get(url))
-                
-            end
-
-        end
-        
     end
 
 end

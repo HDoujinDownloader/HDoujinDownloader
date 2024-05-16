@@ -8,6 +8,24 @@ function Register()
 
 end
 
+local function GetApplicationJson()
+
+    local jsonStr = dom.SelectValue('//script[@id="__NEXT_DATA__"]')
+
+    return Json.New(jsonStr)
+
+end
+
+local function GetApiResponse(endpoint)
+
+    http.Headers['accept'] = 'application/json, text/plain, */*'
+    http.Headers['platform'] = 'PC_WEB'
+    http.Headers['rate'] = 'ALL'
+
+    return Json.New(http.Get(endpoint))
+
+end
+
 function GetInfo()
 
     local json = GetApplicationJson()
@@ -63,23 +81,5 @@ function GetPages()
     json = GetApiResponse(apiEndpoint)
 
     pages.AddRange(json.SelectValues('body.imgs[*]'))
-
-end
-
-function GetApplicationJson()
-
-    local jsonStr = dom.SelectValue('//script[@id="__NEXT_DATA__"]')
-
-    return Json.New(jsonStr)
-
-end
-
-function GetApiResponse(endpoint)
-
-    http.Headers['accept'] = 'application/json, text/plain, */*'
-    http.Headers['platform'] = 'PC_WEB'
-    http.Headers['rate'] = 'ALL'
-
-    return Json.New(http.Get(endpoint))
 
 end

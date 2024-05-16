@@ -7,6 +7,17 @@ function Register()
 
 end
 
+local function GetGalleryJson()
+
+    local js = JavaScript.New()
+
+    js.Execute('window = {}')
+    js.Execute(dom.SelectValue('//script[contains(text(),"__NUXT__")]'))
+
+    return Json.New(js.Execute('JSON.stringify(window.__NUXT__)'))
+
+end
+
 function GetInfo()
 
     info.Title = dom.SelectValue('//h1')
@@ -31,16 +42,5 @@ function GetPages()
         pages.Add(imageUrl)
 
     end
-
-end
-
-function GetGalleryJson()
-
-    local js = JavaScript.New()
-
-    js.Execute('window = {}')
-    js.Execute(dom.SelectValue('//script[contains(text(),"__NUXT__")]'))
-
-    return Json.New(js.Execute('JSON.stringify(window.__NUXT__)'))
 
 end

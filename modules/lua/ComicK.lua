@@ -9,6 +9,40 @@ function Register()
 
 end
 
+local function GetComicSlug()
+
+    return url:regex('\\/comic\\/([^\\/]+)', 1)
+
+end
+
+local function GetChapterHid()
+
+    return url:regex('\\/comic\\/[^\\/]+\\/([^\\-]+)', 1)
+
+end
+
+local function GetApiUrl()
+
+    return '//api.' .. module.Domain .. '/'
+
+end
+
+local function SetUpApiHeaders()
+
+    http.Headers['accept'] = '*/*'
+    http.Headers['origin'] = GetRoot(url):trim('/')
+    http.Headers['referer'] = GetRoot(url)
+
+end
+
+local function GetApiJson(endpoint)
+
+    SetUpApiHeaders()
+
+    return Json.New(http.Get(GetApiUrl() .. endpoint))
+
+end
+
 function GetInfo()
 
     local json = GetApiJson('comic/' .. GetComicSlug())
@@ -91,38 +125,4 @@ function GetPages()
 
     end
     
-end
-
-function GetComicSlug()
-
-    return url:regex('\\/comic\\/([^\\/]+)', 1)
-
-end
-
-function GetChapterHid()
-
-    return url:regex('\\/comic\\/[^\\/]+\\/([^\\-]+)', 1)
-
-end
-
-function GetApiUrl()
-
-    return '//api.' .. module.Domain .. '/'
-
-end
-
-function SetUpApiHeaders()
-
-    http.Headers['accept'] = '*/*'
-    http.Headers['origin'] = GetRoot(url):trim('/')
-    http.Headers['referer'] = GetRoot(url)
-
-end
-
-function GetApiJson(endpoint)
-
-    SetUpApiHeaders()
-
-    return Json.New(http.Get(GetApiUrl() .. endpoint))
-
 end

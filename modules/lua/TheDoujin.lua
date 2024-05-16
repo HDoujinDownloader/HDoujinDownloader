@@ -10,6 +10,24 @@ function Register()
 
 end
 
+local function FormatTitle(title)
+
+    local formattedTitle = tostring(title)
+
+    if(toboolean(module.Settings['Prefer English titles'])) then
+
+        local englishTitle = formattedTitle:split(' - ').Last()
+
+        if(not isempty(englishTitle)) then
+            formattedTitle = englishTitle
+        end
+
+    end
+
+    return formattedTitle
+
+end
+
 function GetInfo()
 
     if(url:contains('/pages/')) then
@@ -42,23 +60,5 @@ function GetPages()
             :replace('/thumbnail_', '/')
 
     end
-
-end
-
-function FormatTitle(title)
-
-    local formattedTitle = tostring(title)
-
-    if(toboolean(module.Settings['Prefer English titles'])) then
-
-        local englishTitle = formattedTitle:split(' - ').Last()
-
-        if(not isempty(englishTitle)) then
-            formattedTitle = englishTitle
-        end
-
-    end
-
-    return formattedTitle
 
 end

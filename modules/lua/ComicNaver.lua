@@ -8,6 +8,39 @@ function Register()
 
 end
 
+local function GetApiUrl()
+
+    return '/api/'
+
+end
+
+local function SetUpApiHeaders()
+
+    http.Headers['accept'] = 'application/json, text/plain, */*'
+
+    if(http.Cookies.Contains('XSRF-TOKEN')) then
+        http.Headers['X-Xsrf-Token'] = http.Cookies['XSRF-TOKEN']
+    end
+    
+end
+
+local function GetApiJson(endpoint)
+
+    SetUpApiHeaders()
+
+    return Json.New(http.Get(endpoint))
+
+end
+
+local function GetComicJson()
+
+    local titleId = GetParameter(url, 'titleId')
+    local endpoint = GetApiUrl() .. 'article/list/info?titleId=' .. titleId
+
+    return GetApiJson(endpoint)
+
+end
+
 function GetInfo()
 
     local json = GetComicJson()
@@ -61,38 +94,5 @@ end
 function GetPages()
 
     pages.AddRange(dom.SelectValues('//div[contains(@class,"wt_viewer")]/img/@src'))
-
-end
-
-function GetApiUrl()
-
-    return '/api/'
-
-end
-
-function SetUpApiHeaders()
-
-    http.Headers['accept'] = 'application/json, text/plain, */*'
-
-    if(http.Cookies.Contains('XSRF-TOKEN')) then
-        http.Headers['X-Xsrf-Token'] = http.Cookies['XSRF-TOKEN']
-    end
-    
-end
-
-function GetApiJson(endpoint)
-
-    SetUpApiHeaders()
-
-    return Json.New(http.Get(endpoint))
-
-end
-
-function GetComicJson()
-
-    local titleId = GetParameter(url, 'titleId')
-    local endpoint = GetApiUrl() .. 'article/list/info?titleId=' .. titleId
-
-    return GetApiJson(endpoint)
 
 end

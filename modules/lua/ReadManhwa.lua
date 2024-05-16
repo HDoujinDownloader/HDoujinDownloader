@@ -7,6 +7,48 @@ function Register()
 
 end
 
+local function GetApiBase()
+
+    return 'https://'..module.Domain..'/api/'
+
+end
+
+local function GetApiJson(requestUri)
+
+    http.Headers['accept'] = 'application/json, text/plain, */*'
+    http.Headers['x-requested-with'] = 'XMLHttpRequest'
+    http.Headers['x-csrf-token'] = dom.SelectValue('//meta[@name="csrf-token"]/@content')
+    
+    return Json.New(http.Get(requestUri))
+
+end
+
+local function GetSummaryJson()
+
+    -- The "nsfw" parameter is required to access NSFW content (404 error otherwise).
+
+    local slug = url:regex('\\/webtoon\\/([^\\/]+)', 1)
+
+    return GetApiJson(GetApiBase()..'comics/'..slug..'?nsfw=true')   
+
+end
+
+local function GetChaptersJson()
+
+    local slug = url:regex('\\/webtoon\\/([^\\/]+)', 1)
+
+    return GetApiJson(GetApiBase()..'comics/'..slug..'/chapters?nsfw=true')   
+
+end
+
+local function GetImagesJson()
+
+    local slug = url:regex('\\/webtoon\\/([^\\/]+\\/[^\\/]+)', 1)
+
+    return GetApiJson(GetApiBase()..'comics/'..slug..'/images?nsfw=true')   
+
+end
+
 function GetInfo()
 
     info.Language = url:regex('\\/\\/.+?\\/([^\\/]+)', 1)
@@ -60,47 +102,5 @@ function GetPages()
     local json = GetImagesJson()
 
     pages.AddRange(json.SelectValues('images[*].source_url'))
-
-end
-
-function GetApiBase()
-
-    return 'https://'..module.Domain..'/api/'
-
-end
-
-function GetApiJson(requestUri)
-
-    http.Headers['accept'] = 'application/json, text/plain, */*'
-    http.Headers['x-requested-with'] = 'XMLHttpRequest'
-    http.Headers['x-csrf-token'] = dom.SelectValue('//meta[@name="csrf-token"]/@content')
-    
-    return Json.New(http.Get(requestUri))
-
-end
-
-function GetSummaryJson()
-
-    -- The "nsfw" parameter is required to access NSFW content (404 error otherwise).
-
-    local slug = url:regex('\\/webtoon\\/([^\\/]+)', 1)
-
-    return GetApiJson(GetApiBase()..'comics/'..slug..'?nsfw=true')   
-
-end
-
-function GetChaptersJson()
-
-    local slug = url:regex('\\/webtoon\\/([^\\/]+)', 1)
-
-    return GetApiJson(GetApiBase()..'comics/'..slug..'/chapters?nsfw=true')   
-
-end
-
-function GetImagesJson()
-
-    local slug = url:regex('\\/webtoon\\/([^\\/]+\\/[^\\/]+)', 1)
-
-    return GetApiJson(GetApiBase()..'comics/'..slug..'/images?nsfw=true')   
 
 end
