@@ -106,6 +106,30 @@ function Register()
 
 end
 
+local function CleanTitle(title)
+
+    title = tostring(title)
+        :beforelast(' - Webtoon ') -- Remove " - Webtoon Manhwa Hentai" suffix (manhwahentai.me)
+        :beforelast(' &#8211; Webtoon ') -- Remove " — Webtoon Manhwa Hentai" suffix (manhwahentai.me)
+        :trim()
+        :trim(' Manhwa Hentai') -- Remove " Manhwa Hentai" suffix (manhwahentai.me)
+        :trim()
+
+    title = RegexReplace(title, '(?i)(?:español\\s*»\\s*manhwa-latino)$', '')
+
+    return title
+
+end
+
+local function IsTagPage()
+
+    -- There can be many different URLs for this depending on the type of tag page we're on.
+    -- It's easier just to check the content of the page for the search navigation instead.
+
+    return dom.SelectElements('//div[contains(@class,"tab-wrap")]').Count() > 0
+
+end
+
 function GetInfo()
 
     if(IsTagPage()) then
@@ -356,29 +380,5 @@ function GetPages()
     for page in pages do
         page.Url = page.Url:replace('&#039;', '\'')
     end
-
-end
-
-function CleanTitle(title)
-
-    title = tostring(title)
-        :beforelast(' - Webtoon ') -- Remove " - Webtoon Manhwa Hentai" suffix (manhwahentai.me)
-        :beforelast(' &#8211; Webtoon ') -- Remove " — Webtoon Manhwa Hentai" suffix (manhwahentai.me)
-        :trim()
-        :trim(' Manhwa Hentai') -- Remove " Manhwa Hentai" suffix (manhwahentai.me)
-        :trim()
-
-    title = RegexReplace(title, '(?i)(?:español\\s*»\\s*manhwa-latino)$', '')
-
-    return title
-
-end
-
-function IsTagPage()
-
-    -- There can be many different URLs for this depending on the type of tag page we're on.
-    -- It's easier just to check the content of the page for the search navigation instead.
-
-    return dom.SelectElements('//div[contains(@class,"tab-wrap")]').Count() > 0
 
 end

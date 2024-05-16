@@ -8,6 +8,12 @@ function Register()
 
 end
 
+local function CleanTitle(title)
+
+    return tostring(title):before(' Bahasa Indonesia')
+
+end
+
 function GetInfo()
     
     info.Title = CleanTitle(dom.SelectValue('//h1'))
@@ -32,11 +38,5 @@ end
 function GetPages()
 
     pages.AddRange(dom.SelectValues('//div[contains(@class,"main-reading-area")]/img/@src'))
-
-end
-
-function CleanTitle(title)
-
-    return tostring(title):before(' Bahasa Indonesia')
 
 end

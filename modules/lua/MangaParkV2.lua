@@ -11,6 +11,17 @@ function Register()
 
 end
 
+local function CleanTitle(title)
+
+    title = tostring(title)
+        :beforelast(' - Page ')
+
+    title = RegexReplace(title, '(?:Manhwa|Manga)$', '')
+
+    return title
+
+end
+
 function GetInfo()
 
     info.AlternativeTitle = dom.SelectValue('//th[contains(text(), "Alternative")]/following-sibling::td'):split(';')
@@ -94,16 +105,5 @@ function GetPages()
     local arrayJson = Json.New(arrayStr)
 
     pages.AddRange(arrayJson.SelectValues('[*].u'))
-
-end
-
-function CleanTitle(title)
-
-    title = tostring(title)
-        :beforelast(' - Page ')
-
-    title = RegexReplace(title, '(?:Manhwa|Manga)$', '')
-
-    return title
 
 end

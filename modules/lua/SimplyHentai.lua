@@ -9,6 +9,12 @@ function Register()
 
 end
 
+local function CleanTitle(title)
+
+    return RegexReplace(tostring(title):trim(), '^All\\s*\\d+\\s+pages\\s+from\\s+', '')
+
+end
+
 function GetInfo()
 
     info.Title = CleanTitle(dom.SelectValue('//h1'))
@@ -44,11 +50,5 @@ function GetPages()
             :replace('/thumb_', '/')
 
     end
-
-end
-
-function CleanTitle(title)
-
-    return RegexReplace(tostring(title):trim(), '^All\\s*\\d+\\s+pages\\s+from\\s+', '')
 
 end

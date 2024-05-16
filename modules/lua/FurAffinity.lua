@@ -7,6 +7,13 @@ function Register()
 
 end
 
+local function DetectRegisteredOnly()
+
+    return dom.SelectValue('//p[contains(@class,"link-override")]')
+        :contains('registered users only')
+
+end
+
 function GetInfo()
 
     -- Some users' galleries are only accessible when logged in.
@@ -119,12 +126,5 @@ function Login()
         global.SetCookies(response.Cookies)
 
     end
-
-end
-
-function DetectRegisteredOnly()
-
-    return dom.SelectValue('//p[contains(@class,"link-override")]')
-        :contains('registered users only')
 
 end

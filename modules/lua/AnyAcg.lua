@@ -23,6 +23,13 @@ function Register()
 
 end
 
+local function IsAnyAcgV2()
+
+    return url:contains('/series/') or
+    url:contains('/chapter/')
+
+end
+
 function GetInfo()
 
     if(IsAnyAcgV2()) then
@@ -77,12 +84,5 @@ function GetPages()
         pages.AddRange(imagesJson.SelectValues('[*][1]'))
 
     end
-
-end
-
-function IsAnyAcgV2()
-
-    return url:contains('/series/') or
-    url:contains('/chapter/')
 
 end

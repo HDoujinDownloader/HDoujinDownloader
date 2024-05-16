@@ -8,43 +8,6 @@ function Register()
 
 end
 
-function GetInfo()
-
-    local json = GetComicJson('getContent')
-
-    info.Title = json.SelectValue('data.comicInfo.comicName')
-    info.Language = json.SelectValue('data.comicInfo.languageName')
-    info.Publisher = json.SelectValue('data.comicInfo.publisher')
-
-end
-
-function GetChapters()
-
-    local json = GetComicJson('getChapterList')
-    local baseUrl = StripParameters(url):trim('/')
-
-    for episodeNode in json.SelectTokens('data.comicChapters[*]') do
-
-        local chapterId = episodeNode.SelectValue('chapterId')
-        local chapterNumber = episodeNode.SelectValue('chapterIndex')
-        local chapterName = episodeNode.SelectValue('chapterName')
-        local chapterTitle = chapterNumber .. ' - ' .. chapterName
-        local chapterUrl = baseUrl .. '/' .. chapterTitle:lower():replace(' ', '-') .. '_' .. chapterId
-
-        chapters.Add(chapterUrl, chapterTitle)
-
-    end
-
-end
-
-function GetPages()
-
-    local json = GetEpisodeJson()
-
-    pages.AddRange(json.SelectValues('data.chapterInfo.chapterPage[*].url'))
-
-end
-
 local function GetComicId()
 
     -- From reader
@@ -111,7 +74,7 @@ local function GetApiJson(path)
 
 end
 
-function GetComicJson(path)
+local function GetComicJson(path)
 
     local comicId = GetComicId()
 
@@ -122,11 +85,48 @@ function GetComicJson(path)
 
 end
 
-function GetEpisodeJson()
+local function GetEpisodeJson()
 
     local endpoint = 'getContent?_csrfToken=' .. GetCsrfToken() .. '&chapterId=' .. GetEpisodeId() .. '&comicId=' .. GetComicId()
     local json = GetApiJson(endpoint)
 
     return json
+
+end
+
+function GetInfo()
+
+    local json = GetComicJson('getContent')
+
+    info.Title = json.SelectValue('data.comicInfo.comicName')
+    info.Language = json.SelectValue('data.comicInfo.languageName')
+    info.Publisher = json.SelectValue('data.comicInfo.publisher')
+
+end
+
+function GetChapters()
+
+    local json = GetComicJson('getChapterList')
+    local baseUrl = StripParameters(url):trim('/')
+
+    for episodeNode in json.SelectTokens('data.comicChapters[*]') do
+
+        local chapterId = episodeNode.SelectValue('chapterId')
+        local chapterNumber = episodeNode.SelectValue('chapterIndex')
+        local chapterName = episodeNode.SelectValue('chapterName')
+        local chapterTitle = chapterNumber .. ' - ' .. chapterName
+        local chapterUrl = baseUrl .. '/' .. chapterTitle:lower():replace(' ', '-') .. '_' .. chapterId
+
+        chapters.Add(chapterUrl, chapterTitle)
+
+    end
+
+end
+
+function GetPages()
+
+    local json = GetEpisodeJson()
+
+    pages.AddRange(json.SelectValues('data.chapterInfo.chapterPage[*].url'))
 
 end
