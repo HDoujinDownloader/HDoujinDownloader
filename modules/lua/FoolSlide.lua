@@ -13,6 +13,20 @@ function Register()
 
 end
 
+local function BypassMatureContentWarning()
+
+    local isMatureContent = dom.SelectElements('//form//input[@name="adult"]').Count() > 0
+
+    if(isMatureContent) then
+
+        http.PostData['adult'] = 'true'
+
+        dom = dom.New(http.Post(url))
+
+    end
+
+end
+
 function GetInfo()
 
     BypassMatureContentWarning()
@@ -51,19 +65,5 @@ function GetPages()
     end
 
     pages.AddRange(Json.New(pageArray).SelectValues('[*].url'))
-
-end
-
-function BypassMatureContentWarning()
-
-    local isMatureContent = dom.SelectElements('//form//input[@name="adult"]').Count() > 0
-
-    if(isMatureContent) then
-
-        http.PostData['adult'] = 'true'
-
-        dom = dom.New(http.Post(url))
-
-    end
 
 end

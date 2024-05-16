@@ -49,6 +49,39 @@ function Register()
 
 end
 
+local function GetChaptersFromNode(node, volumeNumber)
+
+    local chapterNodes = node.SelectElements('.//li[contains(@class,"wp-manga-chapter") or contains(@class,"chapter-li")]/a')
+
+    for chapterNode in chapterNodes do
+
+        local chapterInfo = ChapterInfo.New()
+
+        chapterInfo.Url = chapterNode.SelectValue('./@href')
+        chapterInfo.Title = chapterNode.SelectValue('./text()[1]')
+
+        if(isempty(chapterInfo.Title)) then -- mm-scans.org
+            chapterInfo.Title = chapterNode.SelectValue('.//p')
+        end
+
+        if(isempty(chapterInfo.Title)) then -- reset-scans.us
+            chapterInfo.Title = chapterNode.SelectValue('.//following-sibling::div/a/text()')
+        end
+
+        if(volumeNumber ~= nil) then
+            
+            chapterInfo.Volume = volumeNumber
+
+            chapterInfo.Title = 'Volume ' .. volumeNumber .. ' ' .. chapterInfo.Title
+
+        end
+
+        chapters.Add(chapterInfo)
+
+    end
+
+end
+
 function GetInfo()
 
     BaseGetInfo()
@@ -111,39 +144,6 @@ function GetChapters()
         end
 
         chapters.Reverse()
-
-    end
-
-end
-
-function GetChaptersFromNode(node, volumeNumber)
-
-    local chapterNodes = node.SelectElements('.//li[contains(@class,"wp-manga-chapter") or contains(@class,"chapter-li")]/a')
-
-    for chapterNode in chapterNodes do
-
-        local chapterInfo = ChapterInfo.New()
-
-        chapterInfo.Url = chapterNode.SelectValue('./@href')
-        chapterInfo.Title = chapterNode.SelectValue('./text()[1]')
-
-        if(isempty(chapterInfo.Title)) then -- mm-scans.org
-            chapterInfo.Title = chapterNode.SelectValue('.//p')
-        end
-
-        if(isempty(chapterInfo.Title)) then -- reset-scans.us
-            chapterInfo.Title = chapterNode.SelectValue('.//following-sibling::div/a/text()')
-        end
-
-        if(volumeNumber ~= nil) then
-            
-            chapterInfo.Volume = volumeNumber
-
-            chapterInfo.Title = 'Volume ' .. volumeNumber .. ' ' .. chapterInfo.Title
-
-        end
-
-        chapters.Add(chapterInfo)
 
     end
 

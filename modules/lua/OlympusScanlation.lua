@@ -11,6 +11,14 @@ function Register()
 
 end
 
+local function GetApiUrl()
+    return '//dashboard.' .. module.Domain .. '/api/series/'
+end
+
+local function GetSlug()
+    return url:regex('\\/series\\/(?:comic-)?([^\\/]+)', 1)    
+end
+
 function GetInfo()
 
     local apiEndpoint = GetApiUrl() .. GetSlug()
@@ -68,12 +76,4 @@ function GetPages()
         pages.AddRange(dom.SelectValues('//img[@loading]/@src'))
     end
         
-end
-
-function GetApiUrl()
-    return '//dashboard.' .. module.Domain .. '/api/series/'
-end
-
-function GetSlug()
-    return url:regex('\\/series\\/(?:comic-)?([^\\/]+)', 1)    
 end

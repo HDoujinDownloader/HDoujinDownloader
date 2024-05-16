@@ -8,6 +8,18 @@ function Register()
 
 end
 
+local function CleanTitle(title)
+
+    return RegexReplace(tostring(title):trim(), '(?:manga|doujinshi)\\s+\\d+\\s+pages$', '')
+
+end
+
+local function GetPageCount()
+
+    return dom.SelectValue('//span[contains(@class,"pages")]'):after(':')
+
+end
+
 function GetInfo()
 
     info.Title = CleanTitle(dom.SelectValue('//h1'))
@@ -50,17 +62,5 @@ function GetPages()
     for page in pages do
         page.Url = RegexReplace(page.Url, '-r_\\d+x\\d+', '')
     end
-
-end
-
-function CleanTitle(title)
-
-    return RegexReplace(tostring(title):trim(), '(?:manga|doujinshi)\\s+\\d+\\s+pages$', '')
-
-end
-
-function GetPageCount()
-
-    return dom.SelectValue('//span[contains(@class,"pages")]'):after(':')
 
 end

@@ -10,6 +10,37 @@ function Register()
 
 end
 
+local function GetGalleryId()
+
+    return url:regex('\\/g\\/(\\d+)', 1)
+
+end
+
+local function GetApiEndpoint()
+
+    return GetRoot(url) .. 'api/getBookByID'
+
+end
+
+local function GetGalleryJson()
+
+    local apiEndpoint = GetApiEndpoint()
+    
+    http.Headers['content-type'] = 'application/json;charset=UTF-8'
+    http.Headers['origin'] = GetRoot(url)
+    http.Headers['x-csrf-token'] = dom.SelectValue('//meta[@name="csrf-token"]/@content')
+    http.Headers['x-requested-with'] = 'XMLHttpRequest'
+
+    if(not isempty(http.Cookies.GetCookie('XSRF-TOKEN'))) then
+        http.Headers['x-xsrf-token'] = http.Cookies.GetCookie('XSRF-TOKEN')
+    end
+
+    local json = http.Post(apiEndpoint, '{"id":'..GetGalleryId()..'}')
+    
+    return Json.New(json)
+
+end
+
 function GetInfo()
 
     info.Title = dom.SelectValue('//div[@id="info"]/h1')
@@ -33,36 +64,5 @@ function GetPages()
     for i = 1, totalPages do
         pages.Add(imageServer..galleryId..'/'..i..fileExtension)
     end
-
-end
-
-function GetGalleryId()
-
-    return url:regex('\\/g\\/(\\d+)', 1)
-
-end
-
-local function GetApiEndpoint()
-
-    return GetRoot(url) .. 'api/getBookByID'
-
-end
-
-function GetGalleryJson()
-
-    local apiEndpoint = GetApiEndpoint()
-    
-    http.Headers['content-type'] = 'application/json;charset=UTF-8'
-    http.Headers['origin'] = GetRoot(url)
-    http.Headers['x-csrf-token'] = dom.SelectValue('//meta[@name="csrf-token"]/@content')
-    http.Headers['x-requested-with'] = 'XMLHttpRequest'
-
-    if(not isempty(http.Cookies.GetCookie('XSRF-TOKEN'))) then
-        http.Headers['x-xsrf-token'] = http.Cookies.GetCookie('XSRF-TOKEN')
-    end
-
-    local json = http.Post(apiEndpoint, '{"id":'..GetGalleryId()..'}')
-    
-    return Json.New(json)
 
 end

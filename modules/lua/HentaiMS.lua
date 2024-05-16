@@ -9,6 +9,22 @@ function Register()
 
 end
 
+local function ShowAllThumbnails()
+
+    local load = GetParameter(url, 'load')
+
+    if(isempty(load)) then
+
+        url = dom.SelectValue('//a[contains(text(),"View all")]/@href')
+
+        if(not isempty(url)) then
+            dom = Dom.New(http.Get(url))
+        end
+
+    end
+
+end
+
 function GetInfo()
 
     info.Title = dom.SelectValue('//h2/a[last()]')
@@ -44,21 +60,5 @@ function BeforeDownloadPage()
     end
 
     page.Url = dom.SelectValue('//center//img/@src')
-
-end
-
-function ShowAllThumbnails()
-
-    local load = GetParameter(url, 'load')
-
-    if(isempty(load)) then
-
-        url = dom.SelectValue('//a[contains(text(),"View all")]/@href')
-
-        if(not isempty(url)) then
-            dom = Dom.New(http.Get(url))
-        end
-
-    end
 
 end

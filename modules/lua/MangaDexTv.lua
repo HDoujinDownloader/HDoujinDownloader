@@ -11,6 +11,15 @@ function Register()
 
 end
 
+local function CleanTitle(title)
+
+    title = tostring(title):trim()
+    title = RegexReplace(title, '^Read\\s|\\s-\\sMangadex$', '')
+
+    return title
+
+end
+
 function GetInfo()
 
     GetInfoBase()
@@ -32,14 +41,5 @@ end
 function GetPages()
 
     pages.AddRange(dom.SelectValues('//div[contains(@class,"reader-images")]//img/@data-src'))
-
-end
-
-function CleanTitle(title)
-
-    title = tostring(title):trim()
-    title = RegexReplace(title, '^Read\\s|\\s-\\sMangadex$', '')
-
-    return title
 
 end

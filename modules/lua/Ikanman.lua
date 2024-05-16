@@ -11,6 +11,44 @@ function Register()
 
 end
 
+local function GetFromMainDomainIfMobileDomain()
+
+    if(GetHost(url):startsWith('m.')) then
+
+        url = RegexReplace(url, '\\/\\/m\\.', '//')
+
+        Log("Redirecting to "..url)
+
+        dom = dom.New(http.Get(url))
+
+    end
+
+end
+
+local function GetChapterBlocks()
+
+    -- 18+ content has the chapter list stored as an LZString-compressed string in the "__VIEWSTATE" element.
+    -- This element will not be present for other content, and the chapters can be read directly.
+    
+    local rootElement = dom
+    local compressedChapterBlocks = dom.SelectValue('//input[@id="__VIEWSTATE"]/@value')
+
+    if(not isempty(compressedChapterBlocks)) then
+
+        local js = JavaScript.New()
+
+        js.Execute(http.Get(LZStringDownloadUrl))
+
+        local uncompressedChapterBlocks = tostring(js.Execute('LZString.decompressFromBase64("'..compressedChapterBlocks..'")'))
+
+        rootElement = Dom.New(uncompressedChapterBlocks)
+
+    end
+
+    return rootElement.SelectElements('//div[contains(@class,"chapter-list")]/ul')
+
+end
+
 function GetInfo()
 
     GetFromMainDomainIfMobileDomain()
@@ -108,43 +146,5 @@ function GetPages()
     -- The referer must be from the domain "www.manhuagui.com", NOT just "manhuagui.com", even though galleries can be accessed through either (otherwise we get a 403).
 
     pages.Referer = "https://www.manhuagui.com/"
-
-end
-
-function GetFromMainDomainIfMobileDomain()
-
-    if(GetHost(url):startsWith('m.')) then
-
-        url = RegexReplace(url, '\\/\\/m\\.', '//')
-
-        Log("Redirecting to "..url)
-
-        dom = dom.New(http.Get(url))
-
-    end
-
-end
-
-function GetChapterBlocks()
-
-    -- 18+ content has the chapter list stored as an LZString-compressed string in the "__VIEWSTATE" element.
-    -- This element will not be present for other content, and the chapters can be read directly.
-    
-    local rootElement = dom
-    local compressedChapterBlocks = dom.SelectValue('//input[@id="__VIEWSTATE"]/@value')
-
-    if(not isempty(compressedChapterBlocks)) then
-
-        local js = JavaScript.New()
-
-        js.Execute(http.Get(LZStringDownloadUrl))
-
-        local uncompressedChapterBlocks = tostring(js.Execute('LZString.decompressFromBase64("'..compressedChapterBlocks..'")'))
-
-        rootElement = Dom.New(uncompressedChapterBlocks)
-
-    end
-
-    return rootElement.SelectElements('//div[contains(@class,"chapter-list")]/ul')
 
 end

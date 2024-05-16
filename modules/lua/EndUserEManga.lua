@@ -13,6 +13,12 @@ function Register()
 
 end
 
+local function CleanTitle(title)
+
+    return RegexReplace(tostring(title), ' Manga$', '')        
+
+end
+
 function GetInfo()
    
     info.Title = CleanTitle(dom.SelectValue('//h1'))
@@ -51,11 +57,5 @@ function GetPages()
     pages.AddRange(dom.SelectValue('//p[@id="arraydata"]/text()'))
 
     pages.Referer = '' -- Hosts like mangapark.net 403 with a referer
-
-end
-
-function CleanTitle(title)
-
-    return RegexReplace(tostring(title), ' Manga$', '')        
 
 end

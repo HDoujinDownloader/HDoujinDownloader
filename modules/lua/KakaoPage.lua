@@ -9,6 +9,26 @@ function Register()
 
 end
 
+local function GetApiUrl()
+
+    return 'https://api2-page.kakao.com/api/'
+
+end
+
+local function GetApiResponse(endpoint)
+
+    http.Headers['accept'] = 'application/json'
+
+    return Json.New(http.Post(GetApiUrl() .. endpoint))
+
+end
+
+local function GetNextDataJson()
+
+    return Json.New(dom.SelectValue('//script[@id="__NEXT_DATA__"]'))
+
+end
+
 function GetInfo()
 
     local json = GetNextDataJson()
@@ -78,25 +98,5 @@ function GetPages()
     for pageUrl in episodeJson.SelectValues('downloadData.members.files[*].secureUrl') do
         pages.Add(serverUrl .. pageUrl)
     end 
-
-end
-
-function GetApiUrl()
-
-    return 'https://api2-page.kakao.com/api/'
-
-end
-
-function GetApiResponse(endpoint)
-
-    http.Headers['accept'] = 'application/json'
-
-    return Json.New(http.Post(GetApiUrl() .. endpoint))
-
-end
-
-function GetNextDataJson()
-
-    return Json.New(dom.SelectValue('//script[@id="__NEXT_DATA__"]'))
 
 end
