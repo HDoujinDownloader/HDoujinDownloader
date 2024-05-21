@@ -35,8 +35,8 @@ function GetPages()
 
     local imagesStr = tostring(dom):regex("var\\s+toon_img\\s*=\\s*'([^']+)'", 1)
     
-    imageStr = DecodeBase64(imagesStr)
+    imagesStr = DecodeBase64(imagesStr)
 
-    pages.AddRange(Dom.New(imageStr).SelectValues('//img/@src'))
+    pages.AddRange(Dom.New(imagesStr).SelectValues('//img/@src'))
 
 end

@@ -75,7 +75,7 @@ local function EnsureOnGalleryPage()
 
     if(not isempty(backToGalleryUrl)) then
 
-        src = http.Get(backToGalleryUrl)
+        local src = http.Get(backToGalleryUrl)
         dom = Dom.New(src)
 
     end

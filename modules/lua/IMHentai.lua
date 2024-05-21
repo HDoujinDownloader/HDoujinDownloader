@@ -27,7 +27,8 @@ end
 local function GetImageServerFromGalleryId(galleryId)
 
     -- The logic that selects an image server is in main.js.
-    
+    local imageServer
+
     if(galleryId > 0 and galleryId <= 274825) then
         imageServer = 'm1'
     elseif(galleryId > 274825 and galleryId <= 403818) then
