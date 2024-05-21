@@ -31,7 +31,7 @@ local function SetUpApiHeaders()
     http.Headers['authorization'] = dom.SelectValue('//meta[@name="api-token"]/@content')
     http.Headers['referer'] = url
     http.Headers['csrf-token'] = dom.SelectValue('//meta[@name="csrf-token"]/@content')
-    http.Headers['x-requested-with'] = 'XMLHttpRequest'    
+    http.Headers['x-requested-with'] = 'XMLHttpRequest'
     http.Headers['x-xsrf-token'] = Unescape(http.Cookies['XSRF-TOKEN'])
 
 end
@@ -98,7 +98,7 @@ function GetPages()
 
     for imageNode in json.SelectNodes('readingOrder[*]') do
 
-        if(imageNode.SelectValue('type'):startswith('image')) then       
+        if(imageNode.SelectValue('type'):startswith('image')) then
             pages.Add(imageNode.SelectValue('href'))
         end
 

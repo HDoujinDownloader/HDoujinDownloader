@@ -29,7 +29,7 @@ function GetInfo() -- required
         info.Url = StripParameters(url) -- Ensures that we are on the first pagination page
         
         if(List.New(info.Tags).Contains('mangaka')) then
-            info.Artist = info.Title             
+            info.Artist = info.Title
         end
 
     end

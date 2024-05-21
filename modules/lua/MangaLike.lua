@@ -44,7 +44,7 @@ end
 
 function GetPages()
 
-    local pagesJson = Json.New(tostring(dom):regex('"pages":(\\[.+?\\])', 1))    
+    local pagesJson = Json.New(tostring(dom):regex('"pages":(\\[.+?\\])', 1))
 
     pages.AddRange(pagesJson.SelectValues('[*].imageSrc'))
 

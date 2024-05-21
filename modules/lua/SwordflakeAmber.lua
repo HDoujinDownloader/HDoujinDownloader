@@ -1,4 +1,4 @@
--- This a design by Swordflake named "Amber". 
+-- This a design by Swordflake named "Amber".
 -- https://swordflake.com/#amber
 
 function Register()
