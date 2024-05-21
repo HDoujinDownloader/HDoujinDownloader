@@ -5,7 +5,7 @@ function Register()
     
     -- Because artworks can be made up of multiple images, we'll often have more images than expected.
 
-    module.Strict = false 
+    module.Strict = false
 
     module.Domains.Add('pixiv.net')
     module.Domains.Add('www.pixiv.net')

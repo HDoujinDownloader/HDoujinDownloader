@@ -1,10 +1,10 @@
 local function BuildLanguageSelection(module)
 
-    local options = { 
-        "All", 
-        "sa", "bd", "bg", "mm", "ct", "cn", "hk", "cz", "dk", "nl", 
-        "gb", "ph", "fi", "fr", "de", "gr", "hu", "id", "it", "jp", 
-        "kr", "my", "mn", "ir", "pl", "br", "pt", "ro", "ru", "rs", 
+    local options = {
+        "All",
+        "sa", "bd", "bg", "mm", "ct", "cn", "hk", "cz", "dk", "nl",
+        "gb", "ph", "fi", "fr", "de", "gr", "hu", "id", "it", "jp",
+        "kr", "my", "mn", "ir", "pl", "br", "pt", "ro", "ru", "rs",
         "es", "mx", "se", "th", "tr", "ua", "vn", "hi", "fa"
     }
 
@@ -52,8 +52,8 @@ function Register()
 
     end
 
-    --[[     
-    
+    --[[
+
     -- The following rate limits are from:
     -- https://api.mangadex.org/docs/rate-limits/
 
@@ -67,7 +67,7 @@ function Register()
 
         module.RateLimits.Add('uploads.' .. module.Domains.First(), 5, 1000)
 
-    end 
+    end
     
     ]]
 
@@ -107,7 +107,7 @@ local function GetTitleJson()
     local type = url:regex('\\/(title|chapter)', 1):replace('title', 'manga')
     local apiEndpoint = GetApiEndpoint() .. type .. '/' .. uuid
 
-    if(type == 'manga') then      
+    if(type == 'manga') then
         apiEndpoint = apiEndpoint .. '?includes[]=artist&includes[]=author&includes[]=cover_art'
     elseif(type == 'chapter') then
         apiEndpoint = apiEndpoint .. '?includes[]=scanlation_group&includes[]=manga&includes[]=user'
@@ -209,7 +209,7 @@ local function RedirectFromOldUrl()
         local json = Json.New(http.Post(GetApiEndpoint() .. '/legacy/mapping', '{"type":"manga","ids":[' .. galleryId .. ']}'))
         local newId = json.SelectValue('data[0].attributes.newId')
 
-        if(not isempty(newId)) then         
+        if(not isempty(newId)) then
             url = '/title/' .. newId
         end
 
@@ -358,7 +358,7 @@ function GetChapters()
                 chapter.Url = '/chapter/' .. chapterNode.SelectValue('id')
             end
 
-            chapter.Title = chapterNumber .. ' - ' .. GetChapterTitleFromJson(chapterNode)         
+            chapter.Title = chapterNumber .. ' - ' .. GetChapterTitleFromJson(chapterNode)
             chapter.Language = chapterNode.SelectValue('attributes.translatedLanguage')
             chapter.ScanlationGroup = chapterNode.SelectValues("relationships[?(@.type=='scanlation_group')].attributes.name")
             chapter.Chapter = chapterNumber

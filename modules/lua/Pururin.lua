@@ -66,7 +66,7 @@ function GetPages()
         local imageUrl = thumbnailNode.SelectValue('./@src')
 
         if(isempty(imageUrl)) then
-            imageUrl = thumbnailNode.SelectValue('./@data-src') 
+            imageUrl = thumbnailNode.SelectValue('./@data-src')
         end
         
         imageUrl = RegexReplace(imageUrl, '\\/(\\d+)t\\.', '/$1.')

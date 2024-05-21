@@ -42,7 +42,7 @@ function GetPages()
         pages.AddRange(imagesScript:regexmany('"url":"([^"]+)', 1))
     end
 
-    if(isempty(pages)) then        
+    if(isempty(pages)) then
         pages.AddRange(dom.SelectValues('//article/img[not(@width)]/@src'))
     end
 
