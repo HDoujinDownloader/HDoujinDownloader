@@ -6,6 +6,7 @@ function Register()
     module.Domains.Add('comick.cc')
     module.Domains.Add('comick.fun')
     module.Domains.Add('comick.ink')
+    module.Domains.Add('comick.io')
 
 end
 
