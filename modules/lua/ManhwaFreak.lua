@@ -59,7 +59,7 @@ function GetPages()
         -- Avoid adding the loading spinner at the bottom of the page.
         
         if(not imageUrl:contains('/page-views-count/')) then
-            pages.Add(imageUrl) 
+            pages.Add(imageUrl)
         end
 
     end

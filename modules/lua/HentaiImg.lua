@@ -18,7 +18,7 @@ end
 function GetInfo()
 
     info.Title = dom.SelectValue('//h2')
-    info.Tags = dom.SelectValues('//p[@id="detail_tag"]//a') 
+    info.Tags = dom.SelectValues('//p[@id="detail_tag"]//a')
 
     -- If the user added a story URL, we need to get the gallery title this way.
 

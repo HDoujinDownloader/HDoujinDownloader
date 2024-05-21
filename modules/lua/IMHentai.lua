@@ -10,13 +10,13 @@ end
 
 local function GetFileExtensionFromKey(key)
 
-    if(key == 'j') then 
+    if(key == 'j') then
         return '.jpg'
-    elseif(key == 'p') then 
+    elseif(key == 'p') then
         return '.png'
-    elseif(key == 'b') then 
+    elseif(key == 'b') then
         return '.bmp'
-    elseif(key == 'g') then 
+    elseif(key == 'g') then
         return '.gif'
     else
         return '.jpg' -- default to .jpg

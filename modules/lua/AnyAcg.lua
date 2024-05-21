@@ -64,7 +64,7 @@ function GetChapters()
 
     else
 
-        chapters.AddRange(dom.SelectElements('//div[contains(@name,"chapter-list")]//a[contains(@href,"/title/")]'))    
+        chapters.AddRange(dom.SelectElements('//div[contains(@name,"chapter-list")]//a[contains(@href,"/title/")]'))
 
     end
 

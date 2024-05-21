@@ -12,7 +12,7 @@ end
 
 local function GetGalleryJson()
 
-    return Json.New(dom.SelectValue('//script[@id="__NEXT_DATA__"]'))    
+    return Json.New(dom.SelectValue('//script[@id="__NEXT_DATA__"]'))
 
 end
 

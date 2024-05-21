@@ -120,7 +120,7 @@ local function GetAllPagesRecursively(url, folderPath, recursionDepth)
     -- Recursively add images from each nested folder.
 
     for folder in GetAllFolders(url) do
-        GetAllPagesRecursively(folder.Url, folderPath .. '\\' .. folder.Title, recursionDepth + 1)    
+        GetAllPagesRecursively(folder.Url, folderPath .. '\\' .. folder.Title, recursionDepth + 1)
     end
 
 end
@@ -186,7 +186,7 @@ local function GetWorkMetadata(dom, page)
     end
 
     if(not isempty(downloadUrl)) then
-        page.Url = GetRooted(downloadUrl, baseUrl)    
+        page.Url = GetRooted(downloadUrl, baseUrl)
     end
 
 end
@@ -260,7 +260,7 @@ function Login()
         http.Referer = 'https://'..module.Domain
         
         local loginEndpoint = 'https://' .. module.Domain .. '/forum/ucp.php?mode=login'
-        local dom = Dom.New(http.Get(loginEndpoint))   
+        local dom = Dom.New(http.Get(loginEndpoint))
 
         http.PostData.Add('username', username)
         http.PostData.Add('password', password)

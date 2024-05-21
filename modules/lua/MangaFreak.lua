@@ -22,7 +22,7 @@ end
 function GetInfo()
 
     info.Title = dom.SelectValue('//h1')
-    info.AlternativeTitle = dom.SelectValue('//h1/following-sibling::div')  
+    info.AlternativeTitle = dom.SelectValue('//h1/following-sibling::div')
     info.DateReleased = dom.SelectValue('//div[contains(text(),"Release:")]'):after(":")
     info.Status = dom.SelectValue('//div[contains(text(),"Status:")]'):after(":")
     info.Author = dom.SelectValue('//div[contains(text(),"Author:")]'):after(":")
@@ -39,7 +39,7 @@ end
 
 function GetChapters()
 
-   chapters.AddRange(dom.SelectElements('//div[contains(@class,"manga_series_list")]//a[not(@download)]')) 
+    chapters.AddRange(dom.SelectElements('//div[contains(@class,"manga_series_list")]//a[not(@download)]'))
 
 end
 

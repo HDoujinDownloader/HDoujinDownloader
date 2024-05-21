@@ -12,7 +12,7 @@ function GetInfo()
     info.Title = dom.SelectValue('//h1')
     info.AlternativeTitle = dom.SelectValue('(//h1)[2]')
     info.Summary = dom.SelectValues('//div[contains(@class,"theme-post-content")]//p'):join('\n\n')
-    info.Tags = dom.SelectValues('//span[contains(@class,"info__terms-list")]/a')    
+    info.Tags = dom.SelectValues('//span[contains(@class,"info__terms-list")]/a')
 
 end
 

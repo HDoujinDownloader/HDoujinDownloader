@@ -21,7 +21,7 @@ end
 
 function GetChapters()
 
-    chapters.AddRange(dom.SelectElements('//span[contains(@class,"lchx")]/a'))    
+    chapters.AddRange(dom.SelectElements('//span[contains(@class,"lchx")]/a'))
 
     chapters.Reverse()
 

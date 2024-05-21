@@ -156,7 +156,7 @@ function GetInfo() -- required
 
                 for chapter in ParseChapters(doc, ChapterList.New()) do
 
-                    -- Append a marker we can check for to avoid repeating this process infinitely.     
+                    -- Append a marker we can check for to avoid repeating this process infinitely.
 
                     Enqueue(chapter.Url .. '#')
 

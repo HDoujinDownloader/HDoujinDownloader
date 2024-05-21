@@ -22,7 +22,7 @@ end
 
 function GetChapters()
 
-    local feedUrl = dom.SelectValue('//ul[@id="listado_epis"]/script/@src'):replace('&amp;', '&')   
+    local feedUrl = dom.SelectValue('//ul[@id="listado_epis"]/script/@src'):replace('&amp;', '&')
     local feedScript = http.Get(feedUrl)
     local feedJson = Json.New(feedScript:regex('lista\\((.+}})\\);', 1))
 

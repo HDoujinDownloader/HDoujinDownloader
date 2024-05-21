@@ -46,7 +46,7 @@ function GetChapters()
         V3GetChapters()
     else
         V5GetChapters()
-    end  
+    end
 
 end
 

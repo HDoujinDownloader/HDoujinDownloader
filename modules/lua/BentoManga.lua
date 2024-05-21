@@ -46,7 +46,7 @@ local function GetMangaJson()
 
     end
 
-    local json = GetChapterJson()  
+    local json = GetChapterJson()
     local mangaId = json.SelectValue('manga_id')
     local endpoint = GetApiEndpoint() .. '?id=' .. mangaId .. '&type=manga'
 

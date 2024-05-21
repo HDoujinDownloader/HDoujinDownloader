@@ -13,7 +13,7 @@ end
 
 function GetInfo()
 
-    info.Title = dom.SelectValue('//h1'):beforelast('/') 
+    info.Title = dom.SelectValue('//h1'):beforelast('/')
     info.Tags = dom.SelectValues('//span[contains(@class,"tag-links")]//a')
     info.Author = dom.SelectValues('//div[contains(text(),"Автор:")]/a[contains(@href,"mangaka/")]')
     info.Circle = dom.SelectValues('//div[contains(text()," Группа/цикл:")]/a[contains(@href,"group/")]')
@@ -41,7 +41,7 @@ function Login()
 
     if(not http.Cookies.Contains('fusion_user')) then
 
-        local loginUrl = 'https://'..module.Domain..'/setuser.php'        
+        local loginUrl = 'https://'..module.Domain..'/setuser.php'
 
         http.Referer = GetRoot(loginUrl)
 

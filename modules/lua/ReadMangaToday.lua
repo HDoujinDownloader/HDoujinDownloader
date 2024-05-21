@@ -58,11 +58,11 @@ function GetPages()
     pages.AddRange(pagesJson.SelectTokens('[*].url'))
 
     if(isempty(pages)) then -- readmng.com
-        pages.AddRange(pagesJson.SelectTokens('[*]')) 
+        pages.AddRange(pagesJson.SelectTokens('[*]'))
     end
 
-    for page in pages do 
-        
+    for page in pages do
+
         -- Newer chapters uploaded after April 1st, 2020 can contain images with malformed URLs (starting with "https:///").
         -- Version 1.19.9.32-r.9+ can handle this situation automatically, but it's fixed manually here for backwards compatibility.
 

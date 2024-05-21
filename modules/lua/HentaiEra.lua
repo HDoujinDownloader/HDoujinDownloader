@@ -25,13 +25,13 @@ end
 
 local function GetFileExtensionFromKey(key)
 
-    if(key == 'j') then 
+    if(key == 'j') then
         return '.jpg'
-    elseif(key == 'p') then 
+    elseif(key == 'p') then
         return '.png'
-    elseif(key == 'b') then 
+    elseif(key == 'b') then
         return '.bmp'
-    elseif(key == 'g') then 
+    elseif(key == 'g') then
         return '.gif'
     else
         return '.jpg'
@@ -44,7 +44,7 @@ function GetInfo()
     RedirectBackToGallery()
 
     info.Title = dom.SelectValue('//h1')
-    info.OriginalTitle = dom.SelectValue('//p[contains(@class,"subtitle")]')    
+    info.OriginalTitle = dom.SelectValue('//p[contains(@class,"subtitle")]')
     info.Tags = dom.SelectValues('//span[contains(text(),"Tags")]/following-sibling::div//a')
     info.Circle = dom.SelectValues('//span[contains(text(),"Groups")]/following-sibling::div//a')
     info.Language = dom.SelectValues('//span[contains(text(),"Languages")]/following-sibling::div//a')

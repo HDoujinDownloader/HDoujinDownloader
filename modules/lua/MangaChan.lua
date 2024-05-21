@@ -165,7 +165,7 @@ function GetInfo()
 
     if(ParseChapters().Count() <= 0) then
 
-        info.Url = SetDevelopmentAccessParameter(dom.SelectValue('//a[contains(text(), "Читать онлайн")]/@href'))        
+        info.Url = SetDevelopmentAccessParameter(dom.SelectValue('//a[contains(text(), "Читать онлайн")]/@href'))
         info.PageCount = ParsePages(info.Url).Count()
 
     end

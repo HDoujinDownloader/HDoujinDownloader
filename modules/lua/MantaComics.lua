@@ -81,7 +81,7 @@ function GetInfo()
 
     local json = GetComicJson()
 
-    info.Title = json.SelectValue('data.data.title.en')  
+    info.Title = json.SelectValue('data.data.title.en')
     info.Author = json.SelectValue("data.data.creators[?(@.role == 'Writer')].name")
     info.Artist = json.SelectValue("data.data.creators[?(@.role == 'Illustration')].name")
     info.Translator = json.SelectValue("data.data.creators[?(@.role == 'Localization')].name")

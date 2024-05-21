@@ -105,7 +105,7 @@ end
 
 function GetPages()
 
-    pages.AddRange(dom.SelectValues('//div[contains(@class,"viewer_lst")]//img/@data-url'))    
+    pages.AddRange(dom.SelectValues('//div[contains(@class,"viewer_lst")]//img/@data-url'))
 
     -- For motion toons we need to get the images from the API.
     -- Ex: https://www.webtoons.com/en/thriller/chiller/my-name-is-hyunjeong-kim-hyejinyang-last-episode/viewer?title_no=536&episode_no=37

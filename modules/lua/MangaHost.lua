@@ -13,7 +13,7 @@ function GetInfo()
 
     info.Title = dom.SelectValue('//h1')
     info.AlternativeTitle = dom.SelectValue("//h3[contains(@class,'subtitle')]")
-    info.Status = dom.SelectValue("//h3[contains(@class,'subtitle')]/strong")    
+    info.Status = dom.SelectValue("//h3[contains(@class,'subtitle')]/strong")
     info.Tags = dom.SelectValues('//div[contains(@class,"tags")]/a[contains(@class,"tag")]')
     info.Type = dom.SelectValue('//strong[contains(.,"Tipo:")]/following-sibling::a')
     info.Author = dom.SelectValue('//strong[contains(.,"Autor:")]/following-sibling::text()')
