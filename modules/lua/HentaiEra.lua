@@ -61,7 +61,7 @@ function GetPages()
     local imageBaseUrl = dom.SelectValue('//div[contains(@class,"gthumb")]//img/@data-src')
         :beforelast('/') .. '/'
 
-    local imagesJsonStr = dom.selectValue('//script[contains(text(),"g_th")]')
+    local imagesJsonStr = dom.SelectValue('//script[contains(text(),"g_th")]')
         :regex("parseJSON\\('(.+?)'\\);", 1)
 
     if(not isempty(imageBaseUrl) and not isempty(imagesJsonStr)) then
