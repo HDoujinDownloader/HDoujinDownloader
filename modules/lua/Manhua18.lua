@@ -9,6 +9,20 @@ function Register()
 
 end
 
+local function GetLanguageFromTitle(title)
+
+    title = tostring(title):lower():trim()
+
+    if(title:endswith('raw')) then
+        return 'Korean'
+    elseif(title:endswith('engsub')) then
+        return 'English'
+    end
+
+    return ''
+
+end
+
 function GetInfo()
 
     info.Title = dom.SelectValue('//span[contains(@class,"series-name")]')
@@ -39,19 +53,5 @@ end
 function GetPages()
 
     pages.AddRange(dom.SelectValues('//div[@id="chapter-content"]//img/@data-src'))
-
-end
-
-function GetLanguageFromTitle(title)
-
-    title = tostring(title):lower():trim()
-
-    if(title:endswith('raw')) then
-        return 'Korean'
-    elseif(title:endswith('engsub')) then
-        return 'English'
-    end
-
-    return ''
 
 end

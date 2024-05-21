@@ -7,6 +7,29 @@ function Register()
 
 end
 
+local function GetApiUrl()
+
+    -- https://mangaxyz.com/api/manga/
+
+    return 'https://' .. module.Domain .. '/api/manga/'
+
+end
+
+local function GetMangaSlug()
+
+    return dom.SelectValue('//script[contains(.,"bookSlug")]')
+        :regex('bookSlug\\s*=\\s*"(?<slug>[^"]+)', 1)
+
+end
+
+local function GetApiChapters()
+
+    local bookSlug = GetMangaSlug()
+
+    return http.Get(GetApiUrl() .. bookSlug .. '/chapters?source=detail')
+
+end
+
 function GetInfo()
 
     info.Title = dom.SelectValue('//h1')
@@ -73,28 +96,5 @@ function GetPages()
         pages.Add(server .. image)
 
     end
-
-end
-
-function GetApiUrl()
-
-    -- https://mangaxyz.com/api/manga/
-
-    return 'https://' .. module.Domain .. '/api/manga/'
-
-end
-
-function GetMangaSlug()
-
-    return dom.SelectValue('//script[contains(.,"bookSlug")]')
-        :regex('bookSlug\\s*=\\s*"(?<slug>[^"]+)', 1)
-
-end
-
-function GetApiChapters()
-
-    local bookSlug = GetMangaSlug()
-
-    return http.Get(GetApiUrl() .. bookSlug .. '/chapters?source=detail')
 
 end

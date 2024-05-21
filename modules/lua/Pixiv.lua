@@ -12,6 +12,46 @@ function Register()
 
 end
 
+local function GetPreloadJson()
+
+    local jsonStr = dom.SelectValue('//meta[@id="meta-preload-data"]/@content')
+
+    if(isempty(jsonStr)) then
+
+        Fail(Error.LoginRequired)
+
+    end
+
+    return Json.New(jsonStr)
+
+end
+
+local function GetUserArtworksJson()
+
+    local json = GetPreloadJson()
+    local userId = json.SelectValue('user..userId')
+    local apiEndpoint = '/ajax/user/' .. userId .. '/profile/all'
+
+    return Json.New(http.Get(apiEndpoint))
+
+end
+
+local function GetArtworkImagesJson(artworkId)
+
+    if(artworkId == nil) then
+
+        local json = GetPreloadJson()
+
+        artworkId = json.SelectValue('illust..illustId')
+
+    end
+
+    local apiEndpoint = '/ajax/illust/' .. artworkId .. '/pages'
+
+    return Json.New(http.Get(apiEndpoint))
+
+end
+
 function GetInfo()
 
     local json = GetPreloadJson()
@@ -153,45 +193,5 @@ function GetChapters()
     -- Reverse the chapter list so that older items are listed first.
 
     chapters.Reverse()
-
-end
-
-function GetPreloadJson()
-
-    local jsonStr = dom.SelectValue('//meta[@id="meta-preload-data"]/@content')
-
-    if(isempty(jsonStr)) then
-
-        Fail(Error.LoginRequired)
-
-    end
-
-    return Json.New(jsonStr)
-
-end
-
-function GetUserArtworksJson()
-
-    local json = GetPreloadJson()
-    local userId = json.SelectValue('user..userId')
-    local apiEndpoint = '/ajax/user/' .. userId .. '/profile/all'
-
-    return Json.New(http.Get(apiEndpoint))
-
-end
-
-function GetArtworkImagesJson(artworkId)
-
-    if(artworkId == nil) then
-
-        local json = GetPreloadJson()
-
-        artworkId = json.SelectValue('illust..illustId')
-
-    end
-
-    local apiEndpoint = '/ajax/illust/' .. artworkId .. '/pages'
-
-    return Json.New(http.Get(apiEndpoint))
 
 end

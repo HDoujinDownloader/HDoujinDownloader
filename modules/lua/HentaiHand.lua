@@ -8,6 +8,40 @@ function Register()
 
 end
 
+local function GetGalleryId()
+
+    return url:regex('\\/comic\\/([^\\/?#]+)', 1)
+
+end
+
+local function GetGalleryApiEndpoint()
+
+    return '//'..module.Domain..'/api/comics/'..GetGalleryId()..'?nsfw=false'
+
+end
+
+local function GetReaderApiEndpoint()
+
+    return '//'..module.Domain..'/api/comics/'..GetGalleryId()..'/images?nsfw=false'
+
+end
+
+local function GetApiResponse(apiEndpoint)
+
+    http.Referer = url
+
+    http.Headers['accept'] = 'application/json, text/plain, */*'
+    http.Headers['x-csrf-token'] = dom.SelectValue('//meta[@name="csrf-token"]/@content')
+    http.Headers['x-requested-with'] = 'XMLHttpRequest'
+
+    if(not isempty(http.Cookies.GetCookie('XSRF-TOKEN'))) then
+        http.Headers['x-xsrf-token'] = http.Cookies.GetCookie('XSRF-TOKEN')
+    end
+
+    return Json.New(http.Get(apiEndpoint))
+
+end
+
 function GetInfo()
 
     local json = GetApiResponse(GetGalleryApiEndpoint())
@@ -37,39 +71,5 @@ function GetPages()
     local json = GetApiResponse(GetReaderApiEndpoint())
 
     pages.AddRange(json.SelectValues('images[*].source_url'))
-
-end
-
-function GetGalleryId()
-
-    return url:regex('\\/comic\\/([^\\/?#]+)', 1)
-
-end
-
-function GetGalleryApiEndpoint()
-
-    return '//'..module.Domain..'/api/comics/'..GetGalleryId()..'?nsfw=false'
-
-end
-
-function GetReaderApiEndpoint()
-
-    return '//'..module.Domain..'/api/comics/'..GetGalleryId()..'/images?nsfw=false'
-
-end
-
-function GetApiResponse(apiEndpoint)
-
-    http.Referer = url
-
-    http.Headers['accept'] = 'application/json, text/plain, */*'
-    http.Headers['x-csrf-token'] = dom.SelectValue('//meta[@name="csrf-token"]/@content')
-    http.Headers['x-requested-with'] = 'XMLHttpRequest'
-
-    if(not isempty(http.Cookies.GetCookie('XSRF-TOKEN'))) then
-        http.Headers['x-xsrf-token'] = http.Cookies.GetCookie('XSRF-TOKEN')
-    end
-
-    return Json.New(http.Get(apiEndpoint))
 
 end

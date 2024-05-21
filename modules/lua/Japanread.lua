@@ -8,6 +8,30 @@ function Register()
 
 end
 
+local function GetApiUrl()
+
+    return 'api/'
+
+end
+
+local function GetApiJson(endpoint)
+
+    http.Headers['accept'] = 'application/json, text/plain, */*'
+    http.Headers['x-requested-with'] = 'XMLHttpRequest'
+    http.Headers['a'] = JavaScript.New().Execute('Math.random().toString(16).substr(2, 12)') 
+
+    return Json.New(http.Get(GetApiUrl() .. endpoint))
+
+end
+
+local function GetChapterJson()
+
+    local chapterId = dom.SelectValue('//meta/@data-chapter-id')
+
+    return GetApiJson('?id=' .. chapterId .. '&type=chapter')
+
+end
+
 function GetInfo()
 
     info.Title = dom.SelectValue('//h1')
@@ -61,29 +85,5 @@ function GetPages()
     for imageUrl in json.SelectValues('page_array[*]') do
         pages.Add(baseImageUrl .. '/' .. imageUrl)
     end
-
-end
-
-local function GetApiUrl()
-
-    return 'api/'
-
-end
-
-local function GetApiJson(endpoint)
-
-    http.Headers['accept'] = 'application/json, text/plain, */*'
-    http.Headers['x-requested-with'] = 'XMLHttpRequest'
-    http.Headers['a'] = JavaScript.New().Execute('Math.random().toString(16).substr(2, 12)') 
-
-    return Json.New(http.Get(GetApiUrl() .. endpoint))
-
-end
-
-function GetChapterJson()
-
-    local chapterId = dom.SelectValue('//meta/@data-chapter-id')
-
-    return GetApiJson('?id=' .. chapterId .. '&type=chapter')
 
 end

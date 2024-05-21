@@ -11,6 +11,12 @@ function Register()
 
 end
 
+local function CleanTitle(title)
+
+    return tostring(title):trim():trim(':')
+
+end
+
 function GetInfo()
 
     info.Title = dom.SelectValue('//h2')
@@ -42,11 +48,5 @@ end
 function GetPages()
 
     pages.AddRange(dom.SelectValues('//div[@id="all"]/img/@data-src'))
-
-end
-
-function CleanTitle(title)
-
-    return tostring(title):trim():trim(':')
 
 end
