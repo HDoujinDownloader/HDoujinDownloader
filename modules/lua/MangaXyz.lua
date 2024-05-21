@@ -3,6 +3,7 @@ function Register()
     module.Name = 'MangaXYZ'
     module.Language = 'en'
 
+    module.Domains.Add('kaliscan.io', 'KaliScan')
     module.Domains.Add('mangaxyz.com')
 
 end
