@@ -306,7 +306,7 @@ end
 
 function GetPages()
 
-    src = http.Get(url)
+    local src = http.Get(url)
 
     -- Sometimes the images are stored in an array (www.porncomixonline.net).
 

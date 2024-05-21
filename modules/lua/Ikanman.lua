@@ -1,4 +1,4 @@
-LZStringDownloadUrl = 'https://raw.githubusercontent.com/pieroxy/lz-string/4a94308c1e684fb98866f7ba1288f3db6d9f8801/libs/lz-string.min.js'
+local LZStringDownloadUrl = 'https://raw.githubusercontent.com/pieroxy/lz-string/4a94308c1e684fb98866f7ba1288f3db6d9f8801/libs/lz-string.min.js'
 
 function Register()
 
@@ -110,7 +110,7 @@ function GetPages()
 
     local js = JavaScript.New()
 
-    -- Download the LZString utility. 
+    -- Download the LZString utility.
 
     js.Execute(http.Get(LZStringDownloadUrl))
 
