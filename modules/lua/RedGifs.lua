@@ -49,7 +49,7 @@ function GetPages()
     -- Unescape all page URLs.
 
     for page in pages do
-        page.Url = page.Url:replace('\\u002F', '/') -- Unescape(page.Url)        
+        page.Url = page.Url:replace('\\u002F', '/') -- Unescape(page.Url)
     end
     
 end

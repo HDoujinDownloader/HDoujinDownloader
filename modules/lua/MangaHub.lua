@@ -25,7 +25,7 @@ end
 
 local function SetUpApiHeaders()
 
-    local mhubAccess = http.Cookies['mhub_access']    
+    local mhubAccess = http.Cookies['mhub_access']
 
     http.Headers['accept'] = 'application/json'
     http.Headers['content-type'] = 'application/json'
@@ -54,7 +54,7 @@ local function GetDataSourceKey()
     -- Each affiliated site has an "/assets/client.xxxxxxxx.js" file where the key(s) are defined.
 
     local html = http.Get(url)
-    local dataSourceKey = '' 
+    local dataSourceKey = ''
     local clientJsPath = html:regex('\\/assets\\/client\\.\\w+\\.js')
     
     if(not isempty(clientJsPath)) then
@@ -99,7 +99,7 @@ end
 function GetPages()
 
     local cdnBase = '//imgx.mghubcdn.com/'
-    local dataSourceKey = GetDataSourceKey()    
+    local dataSourceKey = GetDataSourceKey()
     local slug = GetMangaSlug()
     local number = url:regex('\\/chapter-(\\d+)$', 1)
     local query = '{"query":"{chapter(x:' .. dataSourceKey .. ',slug:\\"' .. slug .. '\\",number:' .. number .. '){pages}}"}'

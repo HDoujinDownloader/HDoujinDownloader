@@ -88,7 +88,7 @@ function GetPages()
 
 end
 
-function Login() 
+function Login()
 
     if(not http.Cookies.Contains('JSESSIONID')) then
 

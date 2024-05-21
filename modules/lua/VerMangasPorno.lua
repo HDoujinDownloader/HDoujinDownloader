@@ -41,7 +41,7 @@ function GetPages()
     -- We may need to get the tags a little differently for some posts (chochox.com).
 
     if(pages.Count() <= 0) then
-       pages.AddRange(dom.SelectValues('//div[contains(@class, "wp-content")]//img/@src')) 
+       pages.AddRange(dom.SelectValues('//div[contains(@class, "wp-content")]//img/@src'))
     end
 
 end

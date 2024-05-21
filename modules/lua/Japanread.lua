@@ -18,7 +18,7 @@ local function GetApiJson(endpoint)
 
     http.Headers['accept'] = 'application/json, text/plain, */*'
     http.Headers['x-requested-with'] = 'XMLHttpRequest'
-    http.Headers['a'] = JavaScript.New().Execute('Math.random().toString(16).substr(2, 12)') 
+    http.Headers['a'] = JavaScript.New().Execute('Math.random().toString(16).substr(2, 12)')
 
     return Json.New(http.Get(GetApiUrl() .. endpoint))
 

@@ -119,7 +119,7 @@ function GetChapters()
 
     if(chapterListNodeCount > 0) then
 
-        local endpoint = url:trim('/') .. '/ajax/chapters/' 
+        local endpoint = url:trim('/') .. '/ajax/chapters/'
 
         http.Headers['x-requested-with'] = 'XMLHttpRequest'
 
@@ -127,7 +127,7 @@ function GetChapters()
 
         -- Chapters may be split up into separate volumes.
 
-        local volumeNodes = dom.SelectElements('//li[a[contains(text(),"Volume")]]')        
+        local volumeNodes = dom.SelectElements('//li[a[contains(text(),"Volume")]]')
 
         for volumeNode in volumeNodes do
            
