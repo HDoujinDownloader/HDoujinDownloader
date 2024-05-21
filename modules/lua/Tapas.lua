@@ -35,7 +35,7 @@ function GetInfo()
     info.Summary = dom.SelectValue('//span[contains(@class,"description__body")]')
     info.Tags = dom.SelectValues('//div[contains(@class,"info-detail")]//a[contains(@class,"genre-btn")]')
     
-    if(info.Title:endsWith('(Mature)')) then
+    if(info.Title:endswith('(Mature)')) then
         info.Adult = true
     end
 
