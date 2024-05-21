@@ -10,6 +10,46 @@ function Register()
 
 end
 
+local function CleanTitle(title)
+
+    return RegexReplace(title, '(^\\s*(?:Popular Hot free)|(?:, page \\d|at XXX 3D Comix|at 3d Comix Sex|3D Galleries and XXX 3D Comics)\\s*$)', '')
+        :trim()
+
+end
+
+local function GetPageCount()
+
+    pages = PageList.New()
+
+    GetPages()
+
+    return pages.Count()
+
+end
+
+local function GetCurrentGalleryCount()
+
+    return dom.SelectValues('//div[contains(@class,"thumb-img-wrapper") or contains(@class,"item_wrapper")]').Count()
+
+end
+
+local function GetTotalGalleryCount()
+
+    local galleriesPerPage = GetCurrentGalleryCount()
+    local lastPaginationUrl = dom.SelectValue('//*[contains(@class,"pagination")]//li[last()]/a/@href')
+
+    if(isempty(lastPaginationUrl)) then
+        return galleriesPerPage
+    end
+    
+    dom = dom.New(http.Get(lastPaginationUrl))
+
+    local totalPaginationPages = tonumber(lastPaginationUrl:regex('\\d+$'))
+
+    return ((totalPaginationPages - 1) * galleriesPerPage) + GetCurrentGalleryCount()
+
+end
+
 function GetInfo()
 
     info.Title = CleanTitle(dom.Title)
@@ -66,45 +106,5 @@ function GetPages()
         pages.AddRange(Json.New(sourcesArray))
 
     end
-
-end
-
-function CleanTitle(title)
-
-    return RegexReplace(title, '(^\\s*(?:Popular Hot free)|(?:, page \\d|at XXX 3D Comix|at 3d Comix Sex|3D Galleries and XXX 3D Comics)\\s*$)', '')
-        :trim()
-
-end
-
-function GetPageCount()
-
-    pages = PageList.New()
-
-    GetPages()
-
-    return pages.Count()
-
-end
-
-function GetCurrentGalleryCount()
-
-    return dom.SelectValues('//div[contains(@class,"thumb-img-wrapper") or contains(@class,"item_wrapper")]').Count()
-
-end
-
-function GetTotalGalleryCount()
-
-    local galleriesPerPage = GetCurrentGalleryCount()
-    local lastPaginationUrl = dom.SelectValue('//*[contains(@class,"pagination")]//li[last()]/a/@href')
-
-    if(isempty(lastPaginationUrl)) then
-        return galleriesPerPage
-    end
-    
-    dom = dom.New(http.Get(lastPaginationUrl))
-
-    local totalPaginationPages = tonumber(lastPaginationUrl:regex('\\d+$'))
-
-    return ((totalPaginationPages - 1) * galleriesPerPage) + GetCurrentGalleryCount()
 
 end

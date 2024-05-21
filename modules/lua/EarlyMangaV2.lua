@@ -11,6 +11,28 @@ function Register()
 
 end
 
+local function GetApiEndpoint()
+
+    return '/api/manga/'
+
+end
+
+local function GetApiJson(path)
+
+    local endpoint = GetApiEndpoint() .. path:trim('/')
+
+    http.Headers['Accept'] = 'application/json, text/plain, */*'
+    http.Headers['X-CSRF-TOKEN'] = dom.SelectValue('//meta[@name="csrf-token"]/@content')
+    http.Headers['X-Requested-With'] = 'XMLHttpRequest'
+
+    if(not isempty(http.Cookies.GetCookie('XSRF-TOKEN'))) then
+        http.Headers['X-XSRF-TOKEN'] = http.Cookies.GetCookie('XSRF-TOKEN')
+    end
+
+    return Json.New(http.Get(endpoint))
+
+end
+
 function GetInfo()
 
     local slug = url:after('/manga/'):before('/')
@@ -71,27 +93,5 @@ function GetPages()
     for fileName in json.SelectValues('chapter.images[*]') do
         pages.Add(baseUrl .. fileName)
     end
-
-end
-
-function GetApiEndpoint()
-
-    return '/api/manga/'
-
-end
-
-function GetApiJson(path)
-
-    local endpoint = GetApiEndpoint() .. path:trim('/')
-
-    http.Headers['Accept'] = 'application/json, text/plain, */*'
-    http.Headers['X-CSRF-TOKEN'] = dom.SelectValue('//meta[@name="csrf-token"]/@content')
-    http.Headers['X-Requested-With'] = 'XMLHttpRequest'
-
-    if(not isempty(http.Cookies.GetCookie('XSRF-TOKEN'))) then
-        http.Headers['X-XSRF-TOKEN'] = http.Cookies.GetCookie('XSRF-TOKEN')
-    end
-
-    return Json.New(http.Get(endpoint))
 
 end

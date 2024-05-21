@@ -20,6 +20,76 @@ function Register()
 
 end
 
+local function IsGalleryUrl()
+
+    return url:contains('/g/') or
+        url:contains('/d') -- 3hentai.net
+
+end
+
+local function GetGalleryId()
+
+    -- 3hentai.net uses "/d/" instead of "/g/"
+
+    return url:regex('\\/[gd]\\/(\\d+)', 1)
+
+end
+
+local function GetPrettyTitle()
+
+    local prettyTitle = dom.SelectValue('//span[contains(@class,"pretty")]')
+
+    -- 3hentai.net
+
+    if(isempty(prettyTitle)) then
+        prettyTitle = dom.SelectValue('//span[contains(@class,"middle-title")]')
+    end
+
+    -- nhentai.uk
+
+    if(isempty(prettyTitle)) then
+        prettyTitle = RegexReplace(dom.SelectValue('//div[@id="bigcontainer"]//h1'):trim(), '(?i)(?:^Nhentai|hentai$)', '')
+    end
+
+    return prettyTitle
+
+end
+
+local function GetTagsFromTagGroup(groupName)
+
+    local tags = dom.SelectValues('//div[contains(@class, "tag-container") and contains(text(), "'..groupName..'")]//span[@class="name"]')
+
+    -- For sites using the old nhentai theme, we'll need to get the tags differently.
+
+    if(isempty(tags)) then
+        tags = dom.SelectValues('//div[contains(@class, "tag-container") and contains(text(), "'..groupName..'")]//a')
+    end
+
+    return tags
+
+end
+
+local function EnsureOnGalleryPage()
+
+    local backToGalleryUrl = dom.SelectValue('//*[contains(@class,"back-to-gallery") or contains(@class,"go-back")]//@href')
+
+    if(not isempty(backToGalleryUrl)) then
+
+        src = http.Get(backToGalleryUrl)
+        dom = Dom.New(src)
+
+    end
+
+end
+
+local function EnqueueAllGalleries()
+
+    for galleryUrl in dom.SelectValues('//div[contains(@class,"container")][last()]//div[contains(@class,"gallery")]/a/@href') do
+        Enqueue(galleryUrl)
+    end
+
+end
+
 function GetInfo()
 
     if(IsGalleryUrl()) then
@@ -126,76 +196,6 @@ function Login()
 
         global.SetCookies(response.Cookies)
 
-    end
-
-end
-
-function IsGalleryUrl()
-
-    return url:contains('/g/') or
-        url:contains('/d') -- 3hentai.net
-
-end
-
-function GetGalleryId()
-
-    -- 3hentai.net uses "/d/" instead of "/g/"
-
-    return url:regex('\\/[gd]\\/(\\d+)', 1)
-
-end
-
-function GetPrettyTitle()
-
-    local prettyTitle = dom.SelectValue('//span[contains(@class,"pretty")]')
-
-    -- 3hentai.net
-
-    if(isempty(prettyTitle)) then
-        prettyTitle = dom.SelectValue('//span[contains(@class,"middle-title")]')
-    end
-
-    -- nhentai.uk
-
-    if(isempty(prettyTitle)) then
-        prettyTitle = RegexReplace(dom.SelectValue('//div[@id="bigcontainer"]//h1'):trim(), '(?i)(?:^Nhentai|hentai$)', '')
-    end
-
-    return prettyTitle
-
-end
-
-function GetTagsFromTagGroup(groupName)
-
-    local tags = dom.SelectValues('//div[contains(@class, "tag-container") and contains(text(), "'..groupName..'")]//span[@class="name"]')
-
-    -- For sites using the old nhentai theme, we'll need to get the tags differently.
-
-    if(isempty(tags)) then
-        tags = dom.SelectValues('//div[contains(@class, "tag-container") and contains(text(), "'..groupName..'")]//a')
-    end
-
-    return tags
-
-end
-
-function EnsureOnGalleryPage()
-
-    local backToGalleryUrl = dom.SelectValue('//*[contains(@class,"back-to-gallery") or contains(@class,"go-back")]//@href')
-
-    if(not isempty(backToGalleryUrl)) then
-
-        src = http.Get(backToGalleryUrl)
-        dom = Dom.New(src)
-
-    end
-
-end
-
-function EnqueueAllGalleries()
-
-    for galleryUrl in dom.SelectValues('//div[contains(@class,"container")][last()]//div[contains(@class,"gallery")]/a/@href') do
-        Enqueue(galleryUrl)
     end
 
 end

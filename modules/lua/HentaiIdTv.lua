@@ -11,6 +11,20 @@ function Register()
 
 end
 
+local function CleanTitle(title)
+
+    return tostring(title)
+        :beforelast(' | ')
+        :before(' - MangaH')
+
+end
+
+local function GetPageCount(dom)
+
+    return dom.SelectValue('//option[last()]/@value') + 1 -- page numbers start at 0
+
+end
+
 function GetInfo()
 
     info.Title = CleanTitle(dom.SelectValue('//title'))
@@ -65,19 +79,5 @@ function GetPages()
         end
 
     end
-
-end
-
-function CleanTitle(title)
-
-    return tostring(title)
-        :beforelast(' | ')
-        :before(' - MangaH')
-
-end
-
-function GetPageCount(dom)
-
-    return dom.SelectValue('//option[last()]/@value') + 1 -- page numbers start at 0
 
 end

@@ -8,6 +8,52 @@ function Register()
 
 end
 
+local function GetAlbumId(url)
+
+    return url:regex('(\\d+)\\/*$', 1)
+
+end
+
+local function GetApiUrl()
+
+    -- https://api.luscious.net/graphql/nobatch/
+
+    return 'https://apicdn.'.. GetDomain(module.Domain) ..'/graphql/nobatch/'
+
+end
+
+local function GetApiJson(requestUrl)
+
+    local responseBody = http.Get(requestUrl)
+
+    -- The JSON response may be wrapped in HTML.
+
+    if(responseBody:startswith('<')) then
+        responseBody = Dom.New(responseBody).SelectValue('//pre')
+    end
+    
+    return Json.New(responseBody)
+
+end
+
+local function GetAlbumJson(id)
+
+    local requestUrl = GetApiUrl()..'?operationName=AlbumGet&query= query AlbumGet($id: ID!) { album { get(id: $id) { ... on Album { ...AlbumStandard } ... on MutationError { errors { code message } } } } } fragment AlbumStandard on Album { id title description number_of_pictures is_manga url download_url cover { url } content { id title url } language { id title url } tags { category text url count } genres { id title slug url } audiences { id title url url } } &variables={"id":"'..id..'"}'
+    local json = GetApiJson(requestUrl)
+
+    return json.SelectToken('data.album.get')
+
+end
+
+local function GetAlbumImagesJson(id, pageIndex)
+
+    local requestUrl = GetApiUrl()..'?operationName=AlbumListOwnPictures&query= query AlbumListOwnPictures($input: PictureListInput!) { picture { list(input: $input) { info { ...FacetCollectionInfo } items { ...PictureStandardWithoutAlbum } } } } fragment FacetCollectionInfo on FacetCollectionInfo { page has_next_page total_items total_pages items_per_page } fragment PictureStandardWithoutAlbum on Picture { url_to_original } &variables={"input":{"filters":[{"name":"album_id","value":"'..id..'"}],"display":"position","page":'..pageIndex..'}}'
+    local json = GetApiJson(requestUrl)
+
+    return json.SelectToken('data.picture.list')
+
+end
+
 function GetInfo()
 
     if(url:contains('/albums/')) then
@@ -91,51 +137,5 @@ function Login()
         Fail(Error.LoginFailed)
 
     end
-
-end
-
-function GetAlbumId(url)
-
-    return url:regex('(\\d+)\\/*$', 1)
-
-end
-
-function GetApiUrl()
-
-    -- https://api.luscious.net/graphql/nobatch/
-
-    return 'https://apicdn.'.. GetDomain(module.Domain) ..'/graphql/nobatch/'
-
-end
-
-function GetApiJson(requestUrl)
-
-    local responseBody = http.Get(requestUrl)
-
-    -- The JSON response may be wrapped in HTML.
-
-    if(responseBody:startswith('<')) then
-        responseBody = Dom.New(responseBody).SelectValue('//pre')
-    end
-    
-    return Json.New(responseBody)
-
-end
-
-function GetAlbumJson(id)
-
-    local requestUrl = GetApiUrl()..'?operationName=AlbumGet&query= query AlbumGet($id: ID!) { album { get(id: $id) { ... on Album { ...AlbumStandard } ... on MutationError { errors { code message } } } } } fragment AlbumStandard on Album { id title description number_of_pictures is_manga url download_url cover { url } content { id title url } language { id title url } tags { category text url count } genres { id title slug url } audiences { id title url url } } &variables={"id":"'..id..'"}'
-    local json = GetApiJson(requestUrl)
-
-    return json.SelectToken('data.album.get')
-
-end
-
-function GetAlbumImagesJson(id, pageIndex)
-
-    local requestUrl = GetApiUrl()..'?operationName=AlbumListOwnPictures&query= query AlbumListOwnPictures($input: PictureListInput!) { picture { list(input: $input) { info { ...FacetCollectionInfo } items { ...PictureStandardWithoutAlbum } } } } fragment FacetCollectionInfo on FacetCollectionInfo { page has_next_page total_items total_pages items_per_page } fragment PictureStandardWithoutAlbum on Picture { url_to_original } &variables={"input":{"filters":[{"name":"album_id","value":"'..id..'"}],"display":"position","page":'..pageIndex..'}}'
-    local json = GetApiJson(requestUrl)
-
-    return json.SelectToken('data.picture.list')
 
 end

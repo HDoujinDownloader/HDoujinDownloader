@@ -117,6 +117,24 @@ function Register()
 
 end
 
+local function CleanTitle(title)
+
+    return RegexReplace(title, '(?i)Bahasa Indonesia$', '')
+
+end
+
+local function GetPageCount()
+
+    return dom.SelectElements('//div[@id="chapterlist"]//div[contains(@class,"bsx")]').Count()
+
+end
+
+local function GetReaderUrl()
+
+    return dom.SelectValue('//div[contains(@class,"releases")]//a/@href')
+
+end
+
 function GetInfo()
 
     info.Title = CleanTitle(dom.SelectValue('//h1'))
@@ -276,23 +294,5 @@ function GetPages()
     else
         pages.Referer = '' 
     end
-
-end
-
-function CleanTitle(title)
-
-    return RegexReplace(title, '(?i)Bahasa Indonesia$', '')
-
-end
-
-function GetPageCount()
-
-    return dom.SelectElements('//div[@id="chapterlist"]//div[contains(@class,"bsx")]').Count()
-
-end
-
-function GetReaderUrl()
-
-    return dom.SelectValue('//div[contains(@class,"releases")]//a/@href')
 
 end

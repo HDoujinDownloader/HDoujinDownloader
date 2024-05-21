@@ -8,6 +8,56 @@ function Register()
 
 end
 
+local function GetTag()
+
+    -- If we have multiple tags, we may need to do further processing, but this will work for now.
+
+    url = url:before('#')
+
+    local tag = EncodeUriComponent(RegexReplace(GetParameter(url, 'q'), '[\\/]', ''))
+
+    return tag
+
+end
+
+local function GetNozomiUrl()
+
+    -- Defined in nozomi.js
+
+    local tag = GetTag()
+
+    return '//j.nozomi.la/nozomi/' .. tag .. '.nozomi'
+
+end
+
+local function FullPathFromHash(hash)
+
+    -- Defined in main.js
+
+    if(hash:len() < 3) then
+        return hash
+    end
+
+    return RegexReplace(hash, '^.*(..)(.)$', '$2/$1/' .. hash)
+
+end
+
+local function GetPostId(url)
+
+    return url:regex('\\/post\\/(\\d+)', 1)
+
+end
+
+local function GetPostJson(url)
+
+    local postId = GetPostId(url)
+    local fullPath = RegexReplace(postId, '^.*(..)(.)$', '$2/$1/' .. postId)
+    local jsonPath = '//j.nozomi.la/post/'.. fullPath .. '.json'
+
+    return Json.New(http.Get(jsonPath))
+
+end
+
 function GetInfo()
 
     if(url:contains('/post/')) then
@@ -80,55 +130,5 @@ function BeforeDownloadPage()
         page.Url = '//' .. (imageType == 'gif' and 'g' or 'w') .. '.nozomi.la/' .. FullPathFromHash(imageHash) .. '.' .. (imageType == 'gif' and 'gif' or 'webp')
 
     end
-
-end
-
-function GetTag()
-
-    -- If we have multiple tags, we may need to do further processing, but this will work for now.
-
-    url = url:before('#')
-
-    local tag = EncodeUriComponent(RegexReplace(GetParameter(url, 'q'), '[\\/]', ''))
-
-    return tag
-
-end
-
-function GetNozomiUrl()
-
-    -- Defined in nozomi.js
-
-    local tag = GetTag()
-
-    return '//j.nozomi.la/nozomi/' .. tag .. '.nozomi'
-
-end
-
-function FullPathFromHash(hash)
-
-    -- Defined in main.js
-
-    if(hash:len() < 3) then
-        return hash
-    end
-
-    return RegexReplace(hash, '^.*(..)(.)$', '$2/$1/' .. hash)
-
-end
-
-function GetPostId(url)
-
-    return url:regex('\\/post\\/(\\d+)', 1)
-
-end
-
-function GetPostJson(url)
-
-    local postId = GetPostId(url)
-    local fullPath = RegexReplace(postId, '^.*(..)(.)$', '$2/$1/' .. postId)
-    local jsonPath = '//j.nozomi.la/post/'.. fullPath .. '.json'
-
-    return Json.New(http.Get(jsonPath))
 
 end
