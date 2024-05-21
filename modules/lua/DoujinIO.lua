@@ -31,8 +31,8 @@ local function SetUpApiHeaders()
     http.Headers['authorization'] = dom.SelectValue('//meta[@name="api-token"]/@content')
     http.Headers['referer'] = url
     http.Headers['csrf-token'] = dom.SelectValue('//meta[@name="csrf-token"]/@content')
-    http.headers['x-requested-with'] = 'XMLHttpRequest'    
-    http.headers['x-xsrf-token'] = Unescape(http.Cookies['XSRF-TOKEN'])
+    http.Headers['x-requested-with'] = 'XMLHttpRequest'    
+    http.Headers['x-xsrf-token'] = Unescape(http.Cookies['XSRF-TOKEN'])
 
 end
 

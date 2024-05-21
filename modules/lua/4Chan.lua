@@ -31,7 +31,7 @@ end
 
 function GetInfo()
 
-    if(doc:startsWith('{')) then
+    if(doc:startswith('{')) then
 
         GetMetadataFromJson(doc)
 
