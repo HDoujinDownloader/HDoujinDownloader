@@ -9,6 +9,12 @@ function Register()
 
 end
 
+local function CleanTitle(title)
+
+    return RegexReplace(title, '(?i)(?:^Read|Manga$)', '')
+
+end
+
 function GetInfo()
 
     info.Title = CleanTitle(dom.SelectValue('(//h1)[last()]'))
@@ -41,11 +47,5 @@ end
 function GetPages()
 
     pages.AddRange(dom.SelectValues('//div[contains(@class,"pages-container")]//img/@src'))
-
-end
-
-function CleanTitle(title)
-
-    return RegexReplace(title, '(?i)(?:^Read|Manga$)', '')
 
 end

@@ -15,50 +15,7 @@ function Register()
 
 end
 
-function GetInfo()
-
-    info.Title = CleanTitle(dom.SelectValue('(//div[contains(@class,"top-menu-breadcrumb")]//li)[last()]'))
-
-end
-
-function GetChapters()
-
-    -- If this directory has any images, we won't return any chapters.
-    -- This is so we can still get the images in the current directory (the remaining albums can be downloaded recursively).
-
-    if(GetAllPages(url).Count() > 0) then
-        return
-    end
-
-    -- Note that albums are listed newest to oldest.
-
-    for album in GetAllAlbums(url) do
-        chapters.Add(album)
-    end
-
-end
-
-function GetPages()
-
-    local downloadAlbumsRecursively = toboolean(module.Settings['Download albums recursively'])
-
-    if(downloadAlbumsRecursively) then
-
-        GetAllPagesRecursively(url)
-
-    else
-
-        -- Simply download all images for the current album.
-
-        for page in GetAllPages(url) do
-            pages.Add(page)
-        end
-
-    end
-
-end
-
-function CleanTitle(title)
+local function CleanTitle(title)
 
     return tostring(title):before('|')
 
@@ -73,7 +30,7 @@ local function CleanPaginationUrl(url)
 
 end
 
-function SetPaginationIndex(url, index)
+local function SetPaginationIndex(url, index)
 
     if(module.Domain == '8muses.io') then
         url = CleanPaginationUrl(url) .. '?page=' .. index
@@ -85,7 +42,7 @@ function SetPaginationIndex(url, index)
 
 end
 
-function GetAllAlbums(url)
+local function GetAllAlbums(url)
 
     local albumList = ChapterList.New()
     local paginationCount = 1
@@ -136,7 +93,7 @@ function GetAllAlbums(url)
     
 end
 
-function GetAllPages(url, albumPath)
+local function GetAllPages(url, albumPath)
 
     local dom = Dom.New(http.Get(url))
 
@@ -162,7 +119,7 @@ function GetAllPages(url, albumPath)
 
 end
 
-function GetAllPagesRecursively(url, albumPath, recursionDepth)
+local function GetAllPagesRecursively(url, albumPath, recursionDepth)
     
     -- Download images from nested albums recursively.
 
@@ -186,6 +143,49 @@ function GetAllPagesRecursively(url, albumPath, recursionDepth)
 
     for album in GetAllAlbums(url) do
         GetAllPagesRecursively(album.Url, albumPath .. '\\' .. album.Title, recursionDepth + 1)    
+    end
+
+end
+
+function GetInfo()
+
+    info.Title = CleanTitle(dom.SelectValue('(//div[contains(@class,"top-menu-breadcrumb")]//li)[last()]'))
+
+end
+
+function GetChapters()
+
+    -- If this directory has any images, we won't return any chapters.
+    -- This is so we can still get the images in the current directory (the remaining albums can be downloaded recursively).
+
+    if(GetAllPages(url).Count() > 0) then
+        return
+    end
+
+    -- Note that albums are listed newest to oldest.
+
+    for album in GetAllAlbums(url) do
+        chapters.Add(album)
+    end
+
+end
+
+function GetPages()
+
+    local downloadAlbumsRecursively = toboolean(module.Settings['Download albums recursively'])
+
+    if(downloadAlbumsRecursively) then
+
+        GetAllPagesRecursively(url)
+
+    else
+
+        -- Simply download all images for the current album.
+
+        for page in GetAllPages(url) do
+            pages.Add(page)
+        end
+
     end
 
 end

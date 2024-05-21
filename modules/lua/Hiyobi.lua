@@ -7,6 +7,12 @@ function Register()
 
 end
 
+local function GetGalleryId(url)
+
+    return tostring(url):regex('\\/reader\\/(.+?)$', 1)
+
+end
+
 function GetInfo()
 
     http.Headers['content-type'] = 'application/json'
@@ -51,11 +57,5 @@ function GetPages()
         pages.Add(imageUrl)
 
     end
-
-end
-
-function GetGalleryId(url)
-
-    return tostring(url):regex('\\/reader\\/(.+?)$', 1)
 
 end

@@ -11,6 +11,24 @@ function Register()
     
 end
 
+local function GetThreadId(url)
+
+    return tostring(url):regex('\\/thread\\/(\\d+)', 1)
+
+end
+
+local function GetMetadataFromJson(jsonStr)
+
+    local json = Json.New(jsonStr)
+
+    info.Title = json.SelectValue('posts[*].sub')
+    info.Author = json.SelectValue('posts[*].name')
+    info.Summary = json.SelectValue('posts[*].com')
+    info.PageCount = json.SelectValues('posts[*].filename').Count()
+    info.Tags = '/'..url:between(module.Domain..'/', '/')..'/' -- board
+
+end
+
 function GetInfo()
 
     if(doc:startsWith('{')) then
@@ -40,23 +58,5 @@ end
 function GetPages()
 
     pages.AddRange(dom.SelectValues('//a[contains(@class,"fileThumb")]/@href'))
-
-end
-
-function GetThreadId(url)
-
-    return tostring(url):regex('\\/thread\\/(\\d+)', 1)
-
-end
-
-function GetMetadataFromJson(jsonStr)
-
-    local json = Json.New(jsonStr)
-
-    info.Title = json.SelectValue('posts[*].sub')
-    info.Author = json.SelectValue('posts[*].name')
-    info.Summary = json.SelectValue('posts[*].com')
-    info.PageCount = json.SelectValues('posts[*].filename').Count()
-    info.Tags = '/'..url:between(module.Domain..'/', '/')..'/' -- board
 
 end

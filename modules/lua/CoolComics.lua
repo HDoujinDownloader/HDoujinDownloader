@@ -11,6 +11,42 @@ function Register()
 
 end
 
+local function GetApiUrl()
+
+    return '//cool-comics.com/ajax_h/'
+
+end
+
+local function GetApiJson(endpoint)
+
+    http.Headers['accept'] = 'application/json, text/javascript, */*; q=0.01'
+    http.Headers['x-requested-with'] = 'XMLHttpRequest'
+
+    return Json.New(http.Get(GetApiUrl() .. endpoint))
+
+end
+
+local function GetGalleryId()
+
+    return url:regex('\\/h\\/(\\d+)', 1)
+
+end
+
+local function GetPageCount()
+
+    return dom.SelectValue('//div[contains(@id,"pages")]//a[last()-1]')
+
+end
+
+local function GetPageJson(index)
+
+    local galleryId = GetGalleryId()
+    local endpoint = galleryId .. '-' .. index .. '.html?ajax=1'
+
+    return GetApiJson(endpoint)
+
+end
+
 function GetInfo()
 
     info.Title = dom.SelectValue('//h2')
@@ -33,41 +69,5 @@ function GetPages()
         pages.Add(imageUrl)
 
     end
-
-end
-
-local function GetApiUrl()
-
-    return '//cool-comics.com/ajax_h/'
-
-end
-
-local function GetApiJson(endpoint)
-
-    http.Headers['accept'] = 'application/json, text/javascript, */*; q=0.01'
-    http.Headers['x-requested-with'] = 'XMLHttpRequest'
-
-    return Json.New(http.Get(GetApiUrl() .. endpoint))
-
-end
-
-local function GetGalleryId()
-
-    return url:regex('\\/h\\/(\\d+)', 1)
-
-end
-
-function GetPageCount()
-
-    return dom.SelectValue('//div[contains(@id,"pages")]//a[last()-1]')
-
-end
-
-function GetPageJson(index)
-
-    local galleryId = GetGalleryId()
-    local endpoint = galleryId .. '-' .. index .. '.html?ajax=1'
-
-    return GetApiJson(endpoint)
 
 end

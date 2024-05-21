@@ -12,6 +12,12 @@ function Register()
 
 end
 
+local function GetImageUrls()
+
+    return dom.SelectValues('//div[contains(@class,"entry-content")]//img/@src')
+
+end
+
 function GetInfo()
 
     info.Title = dom.SelectValue('//h1')
@@ -41,11 +47,5 @@ end
 function GetPages()
 
     pages.AddRange(GetImageUrls())
-
-end
-
-function GetImageUrls()
-
-    return dom.SelectValues('//div[contains(@class,"entry-content")]//img/@src')
 
 end

@@ -8,6 +8,39 @@ function Register()
 
 end
 
+local function GetGid()
+
+    return tostring(url:regex('\\/book\\/([^\\/#?]+)', 1))
+
+end
+
+local function SetApiHttpHeaders()
+
+    http.Headers['origin'] = 'https://app.'..module.Domain
+    http.Headers['accept-language'] = 'en-US,en;q=0.9'
+    http.Headers['content-type'] = 'application/json'
+    http.Referer = 'https://app.'..module.Domain..'/'
+
+end
+
+local function GetApiUrl()
+
+    SetApiHttpHeaders()
+
+    local config = Json.New(http.Get('//app.'..module.Domain..'/config.json'))
+
+    return tostring(config['urlApi'])
+
+end
+
+local function GetApiResponse(path)
+
+    SetApiHttpHeaders()
+
+    return Json.New(http.Get(GetApiUrl()..'/'..path..'/'..GetGid()))
+
+end
+
 function GetInfo()
 
     local bookJson = GetApiResponse('book')
@@ -28,38 +61,5 @@ function GetPages()
     for page in pagesJson.SelectValues('[*].url') do
         pages.Add(mediaBaseUrl..page)
     end
-
-end
-
-function GetGid()
-
-    return tostring(url:regex('\\/book\\/([^\\/#?]+)', 1))
-
-end
-
-function SetApiHttpHeaders()
-
-    http.Headers['origin'] = 'https://app.'..module.Domain
-    http.Headers['accept-language'] = 'en-US,en;q=0.9'
-    http.Headers['content-type'] = 'application/json'
-    http.Referer = 'https://app.'..module.Domain..'/'
-
-end
-
-function GetApiUrl()
-
-    SetApiHttpHeaders()
-
-    local config = Json.New(http.Get('//app.'..module.Domain..'/config.json'))
-
-    return tostring(config['urlApi'])
-
-end
-
-function GetApiResponse(path)
-
-    SetApiHttpHeaders()
-
-    return Json.New(http.Get(GetApiUrl()..'/'..path..'/'..GetGid()))
 
 end

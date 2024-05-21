@@ -14,6 +14,20 @@ function Register()
 
 end
 
+local function GetComicId()
+
+    return GetParameter(dom.SelectValue('//a[contains(@class,"subscribe-cnt")]/@href'), "series_id")
+
+end
+
+local function CleanTitle(title)
+
+    -- Read The Beginning After the End | Tapas Web Comics
+
+    return RegexReplace(tostring(title), '(?i)^(?:Read\\s*)|(?:\\(mature\\)|\\s*\\|\\s*Tapas Web Comics)$', '')
+
+end
+
 function GetInfo()
 
     info.Title = dom.SelectValue('//div[contains(@class,"title-wrapper")]')
@@ -97,19 +111,5 @@ function Login()
         global.SetCookies(response.Cookies)
 
     end
-
-end
-
-function GetComicId()
-
-    return GetParameter(dom.SelectValue('//a[contains(@class,"subscribe-cnt")]/@href'), "series_id")
-
-end
-
-function CleanTitle(title)
-
-    -- Read The Beginning After the End | Tapas Web Comics
-
-    return RegexReplace(tostring(title), '(?i)^(?:Read\\s*)|(?:\\(mature\\)|\\s*\\|\\s*Tapas Web Comics)$', '')
 
 end

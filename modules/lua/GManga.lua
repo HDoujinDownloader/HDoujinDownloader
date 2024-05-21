@@ -7,6 +7,58 @@ function Register()
 
 end
 
+local function GetApiUrl(path)
+
+    local endpoint = '//api2.' .. module.Domain .. '/api/'
+
+    if(not isempty(path)) then
+        endpoint = endpoint .. path:trim('/')
+    end
+ 
+    return endpoint
+
+end
+
+local function GetApiJson(path)
+
+    http.Headers['accept'] = 'application/json'
+    http.Headers['content-type'] = 'application/json'
+    http.Headers['origin'] = 'https://' .. module.Domain
+    http.Headers['referer'] = 'https://' .. module.Domain .. '/'
+
+    return Json.New(http.Get(GetApiUrl(path)))
+
+end
+
+local function GetGalleryId()
+
+    return url:regex('\\/mangas\\/([^\\/]+)', 1)
+
+end
+
+local function GetGallerySlug()
+
+    return url:regex('\\/mangas\\/[^\\/]+\\/([^\\/]+)', 1)
+
+end
+
+local function BuildTeamDict(json)
+
+    local dict = Dict.New()
+
+    for node in json.SelectNodes('teams[*]') do
+        
+        local teamId = node.SelectValue('id')
+        local teamName = node.SelectValue('name')
+
+        dict[teamId] = teamName
+
+    end
+
+    return dict
+
+end
+
 function GetInfo() 
 
     local json = GetApiJson('mangas/' .. GetGalleryId())
@@ -63,56 +115,4 @@ function GetPages()
         pages.Add(imageUrl)
 
     end
-end
-
-function GetApiUrl(path)
-
-    local endpoint = '//api2.' .. module.Domain .. '/api/'
-
-    if(not isempty(path)) then
-        endpoint = endpoint .. path:trim('/')
-    end
- 
-    return endpoint
-
-end
-
-function GetApiJson(path)
-
-    http.Headers['accept'] = 'application/json'
-    http.Headers['content-type'] = 'application/json'
-    http.Headers['origin'] = 'https://' .. module.Domain
-    http.Headers['referer'] = 'https://' .. module.Domain .. '/'
-
-    return Json.New(http.Get(GetApiUrl(path)))
-
-end
-
-function GetGalleryId()
-
-    return url:regex('\\/mangas\\/([^\\/]+)', 1)
-
-end
-
-function GetGallerySlug()
-
-    return url:regex('\\/mangas\\/[^\\/]+\\/([^\\/]+)', 1)
-
-end
-
-function BuildTeamDict(json)
-
-    local dict = Dict.New()
-
-    for node in json.SelectNodes('teams[*]') do
-        
-        local teamId = node.SelectValue('id')
-        local teamName = node.SelectValue('name')
-
-        dict[teamId] = teamName
-
-    end
-
-    return dict
-
 end

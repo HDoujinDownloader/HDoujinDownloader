@@ -11,6 +11,64 @@ function Register()
 
 end
 
+local function CleanTitle(title)
+
+    return tostring(title)
+        :before('&#233;')
+        :before('  - Read ')
+
+end
+
+local function GetPagesFromChapterFun(imagesScript)
+
+    local js = JavaScript.New()
+
+    js.Execute(imagesScript:split(';')[0])
+
+    local chapterJs = dom.SelectValue('//script[contains(.,"chapterid")]')
+    local chapterId = chapterJs:regex('chapterid\\s*=\\s*([^\\s;]+)', 1)
+    local imageCount = tonumber(chapterJs:regex('imagecount\\s*=\\s*([^\\s;]+)', 1))
+    local pageNumber = 1
+    local guidkey = tostring(js.GetObject('guidkey'))
+
+    repeat
+        
+        -- We won't get a consistent number of pages with each iteration.
+
+        local endpoint = 'chapterfun.ashx?cid=' .. chapterId .. '&page=' .. pageNumber .. '&key=' .. guidkey
+
+        http.Headers['accept'] = '*/*'
+        http.Headers['x-requested-with'] = 'XMLHttpRequest'
+
+        local pagesJs = JavaScript.Deobfuscate(http.Get(endpoint))
+
+        js.Execute(pagesJs)
+
+        local imagesJson = js.GetObject('d').ToJson()
+        local pagesAdded = 0;
+
+        for imageUrl in imagesJson do
+
+            if(not pages.Contains(imageUrl)) then
+
+                pages.Add(imageUrl)
+
+                pagesAdded = pagesAdded + 1
+
+            end
+
+        end
+
+        if(pagesAdded <= 0) then
+            break
+        end
+
+        pageNumber = pageNumber + 1
+
+    until (pages.Count() >= imageCount)
+
+end
+
 function GetInfo()
 
     info.Title = dom.SelectValue('//span[contains(@class,"detail-info-right-title-font")]')
@@ -64,63 +122,5 @@ function GetPages()
         end
 
     end
-
-end
-
-function CleanTitle(title)
-
-    return tostring(title)
-        :before('&#233;')
-        :before('  - Read ')
-
-end
-
-function GetPagesFromChapterFun(imagesScript)
-
-    local js = JavaScript.New()
-
-    js.Execute(imagesScript:split(';')[0])
-
-    local chapterJs = dom.SelectValue('//script[contains(.,"chapterid")]')
-    local chapterId = chapterJs:regex('chapterid\\s*=\\s*([^\\s;]+)', 1)
-    local imageCount = tonumber(chapterJs:regex('imagecount\\s*=\\s*([^\\s;]+)', 1))
-    local pageNumber = 1
-    local guidkey = tostring(js.GetObject('guidkey'))
-
-    repeat
-        
-        -- We won't get a consistent number of pages with each iteration.
-
-        local endpoint = 'chapterfun.ashx?cid=' .. chapterId .. '&page=' .. pageNumber .. '&key=' .. guidkey
-
-        http.Headers['accept'] = '*/*'
-        http.Headers['x-requested-with'] = 'XMLHttpRequest'
-
-        local pagesJs = JavaScript.Deobfuscate(http.Get(endpoint))
-
-        js.Execute(pagesJs)
-
-        local imagesJson = js.GetObject('d').ToJson()
-        local pagesAdded = 0;
-
-        for imageUrl in imagesJson do
-
-            if(not pages.Contains(imageUrl)) then
-
-                pages.Add(imageUrl)
-
-                pagesAdded = pagesAdded + 1
-
-            end
-
-        end
-
-        if(pagesAdded <= 0) then
-            break
-        end
-
-        pageNumber = pageNumber + 1
-
-    until (pages.Count() >= imageCount)
 
 end

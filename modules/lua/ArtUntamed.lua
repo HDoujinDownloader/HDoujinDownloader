@@ -7,6 +7,12 @@ function Register()
 
 end
 
+local function GetImagesFromMediaPage()
+
+    return dom.SelectValues('//div[contains(@class,"media-container")]//img/@src')
+
+end
+
 function GetInfo()
 
     info.Title = dom.SelectValue('//title'):beforelast('|')
@@ -57,11 +63,5 @@ function BeforeDownloadPage()
     end
 
     page.Url = GetImagesFromMediaPage()[0]
-
-end
-
-function GetImagesFromMediaPage()
-
-    return dom.SelectValues('//div[contains(@class,"media-container")]//img/@src')
 
 end

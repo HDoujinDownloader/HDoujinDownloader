@@ -12,6 +12,13 @@ function Register()
 
 end
 
+local function CleanTitle(title)
+
+    return RegexReplace(tostring(title), '^Read|- MangaFreak$', '')
+        :trim()
+
+end
+
 function GetInfo()
 
     info.Title = dom.SelectValue('//h1')
@@ -39,12 +46,5 @@ end
 function GetPages()
 
     pages.AddRange(dom.SelectValues('//img[@id="gohere"]/@src'))
-
-end
-
-function CleanTitle(title)
-
-    return RegexReplace(tostring(title), '^Read|- MangaFreak$', '')
-        :trim()
 
 end

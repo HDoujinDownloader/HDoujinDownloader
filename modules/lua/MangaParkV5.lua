@@ -5,6 +5,27 @@ function Register()
 
 end
 
+local function IsMangaParkV3()
+    return url:contains('/comic/')
+end
+
+local function GetComicId()
+    return url:regex('\\/(?:title|comic)\\/(\\d+)', 1)
+end
+
+local function GetApiUrl()
+    return '/apo/'
+end
+
+local function GetApiJson(postDataStr)
+
+    http.Headers['accept'] = '*/*'
+    http.Headers['content-type'] = 'application/json'
+
+    return Json.New(http.Post(GetApiUrl(), postDataStr))
+
+end
+
 function GetInfo()
 
     info.Title = dom.SelectValue('//div[contains(@class,"md:block")]//h3')
@@ -57,26 +78,5 @@ function GetPages()
         end
 
     end
-
-end
-
-function IsMangaParkV3()
-    return url:contains('/comic/')
-end
-
-function GetComicId()
-    return url:regex('\\/(?:title|comic)\\/(\\d+)', 1)
-end
-
-function GetApiUrl()
-    return '/apo/'
-end
-
-function GetApiJson(postDataStr)
-
-    http.Headers['accept'] = '*/*'
-    http.Headers['content-type'] = 'application/json'
-
-    return Json.New(http.Post(GetApiUrl(), postDataStr))
 
 end

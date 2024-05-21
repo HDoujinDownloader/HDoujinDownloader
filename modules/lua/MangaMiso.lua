@@ -8,6 +8,60 @@ function Register()
 
 end
 
+local function GetApiUrl()
+
+    -- https://mangamiso.net/mangas/
+
+    return 'https://' .. module.Domain .. '/mangas/'
+
+end
+
+local function GetApiJson(requestUrl)
+
+    http.Headers['accept'] = 'application/json, text/plain, */*'
+
+    return Json.New(http.Get(requestUrl))
+
+end
+
+local function GetMangaJson()
+
+    local js = JavaScript.New()
+    local mangaJs = dom.SelectValue('//script[contains(text(),"__NUXT__")]')
+    
+    js.Execute('window = {}')
+    js.Execute(mangaJs)
+
+    local mangaJson = Json.New(js.GetObject('window.__NUXT__').ToJson())
+
+    return mangaJson.SelectToken('data[*].manga')
+
+end
+
+local function GetChaptersJson(pageIndex)
+
+    local slug = url:regex('\\/manga\\/([^\\/#?]+)', 1)
+    local perPage = 50
+    local apiUrl = GetApiUrl() .. slug .. '/get-manga-chapters-12345?page=' .. tostring(pageIndex) .. '&perPage=' .. tostring(perPage) .. '&sort=-1'
+
+    local json = GetApiJson(apiUrl)
+
+    return json
+
+end
+
+local function GetPagesJson()
+
+    local slug = url:regex('\\/manga\\/(.+?\\/[^\\/#?]+)', 1)
+    local perPage = 50
+    local apiUrl = GetApiUrl() .. slug
+
+    local json = GetApiJson(apiUrl)
+
+    return json
+
+end
+
 function GetInfo()
 
     local mangaJson = GetMangaJson()
@@ -69,59 +123,5 @@ function GetPages()
     local pagesJson = GetPagesJson()
 
     pages.AddRange(pagesJson.SelectValues('chapter.pages[*].path'))
-
-end
-
-function GetApiUrl()
-
-    -- https://mangamiso.net/mangas/
-
-    return 'https://' .. module.Domain .. '/mangas/'
-
-end
-
-function GetApiJson(requestUrl)
-
-    http.Headers['accept'] = 'application/json, text/plain, */*'
-
-    return Json.New(http.Get(requestUrl))
-
-end
-
-function GetMangaJson()
-
-    local js = JavaScript.New()
-    local mangaJs = dom.SelectValue('//script[contains(text(),"__NUXT__")]')
-    
-    js.Execute('window = {}')
-    js.Execute(mangaJs)
-
-    local mangaJson = Json.New(js.GetObject('window.__NUXT__').ToJson())
-
-    return mangaJson.SelectToken('data[*].manga')
-
-end
-
-function GetChaptersJson(pageIndex)
-
-    local slug = url:regex('\\/manga\\/([^\\/#?]+)', 1)
-    local perPage = 50
-    local apiUrl = GetApiUrl() .. slug .. '/get-manga-chapters-12345?page=' .. tostring(pageIndex) .. '&perPage=' .. tostring(perPage) .. '&sort=-1'
-
-    local json = GetApiJson(apiUrl)
-
-    return json
-
-end
-
-function GetPagesJson()
-
-    local slug = url:regex('\\/manga\\/(.+?\\/[^\\/#?]+)', 1)
-    local perPage = 50
-    local apiUrl = GetApiUrl() .. slug
-
-    local json = GetApiJson(apiUrl)
-
-    return json
 
 end

@@ -8,6 +8,53 @@ function Register()
 
 end
 
+local function GetApiEndpoint()
+
+    return '/api/'
+
+end
+
+local function SetUpApiHeaders()
+
+    http.Headers['accept'] = 'application/json, text/plain, */*'
+    http.Headers['x-requested-with'] = 'XMLHttpRequest'
+
+end
+
+local function GetChapterJson()
+
+    local chapterId = dom.SelectValue('//meta/@data-chapter-id')
+    local endpoint = GetApiEndpoint() .. '?id=' .. chapterId .. '&type=chapter'
+
+    SetUpApiHeaders()
+
+    return Json.New(http.Get(endpoint))
+
+end
+
+local function GetMangaJson()
+
+    -- We need to access the reader in order to get the manga ID.
+    -- We can then use the ID to access the API.
+
+    local readerUrl = dom.SelectValue('//div[contains(@class,"manga-read")]/a/@href')
+
+    if(not isempty(readerUrl)) then
+
+        url = readerUrl
+        dom = Dom.New(http.Get(readerUrl))
+
+    end
+
+    local json = GetChapterJson()  
+    local mangaId = json.SelectValue('manga_id')
+    local endpoint = GetApiEndpoint() .. '?id=' .. mangaId .. '&type=manga'
+
+    SetUpApiHeaders()
+
+    return Json.New(http.Get(endpoint))
+
+end
 
 function GetInfo()
 
@@ -67,53 +114,5 @@ function GetPages()
         pages.Add(pageUrl)
 
     end
-
-end
-
-function GetApiEndpoint()
-
-    return '/api/'
-
-end
-
-function SetUpApiHeaders()
-
-    http.Headers['accept'] = 'application/json, text/plain, */*'
-    http.Headers['x-requested-with'] = 'XMLHttpRequest'
-
-end
-
-function GetMangaJson()
-
-    -- We need to access the reader in order to get the manga ID.
-    -- We can then use the ID to access the API.
-
-    local readerUrl = dom.SelectValue('//div[contains(@class,"manga-read")]/a/@href')
-
-    if(not isempty(readerUrl)) then
-
-        url = readerUrl
-        dom = Dom.New(http.Get(readerUrl))
-
-    end
-
-    local json = GetChapterJson()  
-    local mangaId = json.SelectValue('manga_id')
-    local endpoint = GetApiEndpoint() .. '?id=' .. mangaId .. '&type=manga'
-
-    SetUpApiHeaders()
-
-    return Json.New(http.Get(endpoint))
-
-end
-
-function GetChapterJson()
-
-    local chapterId = dom.SelectValue('//meta/@data-chapter-id')
-    local endpoint = GetApiEndpoint() .. '?id=' .. chapterId .. '&type=chapter'
-
-    SetUpApiHeaders()
-
-    return Json.New(http.Get(endpoint))
 
 end

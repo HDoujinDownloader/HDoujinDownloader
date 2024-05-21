@@ -8,6 +8,26 @@ function Register()
 
 end
 
+local function GetApiUrl()
+
+    return '//api.omegascans.org/'
+
+end
+
+local function GetApiJson(endpoint)
+
+    http.Headers['accept'] = 'application/json, text/plain, */*'
+
+    return Json.New(http.Get(GetApiUrl() .. endpoint))
+
+end
+
+local function GetAppJs()
+
+    return dom.SelectValue('//script[contains(text(),"series_id")]')
+
+end
+
 function GetInfo()
 
     info.Title = dom.SelectValue('//h1')
@@ -76,25 +96,5 @@ end
 function GetPages()
 
     pages.AddRange(dom.SelectValues('//img[contains(@data-src, "/uploads/series/")]/@data-src|//img[contains(@src, "/uploads/series/")]/@src'))
-
-end
-
-function GetApiUrl()
-
-    return '//api.omegascans.org/'
-
-end
-
-function GetApiJson(endpoint)
-
-    http.Headers['accept'] = 'application/json, text/plain, */*'
-
-    return Json.New(http.Get(GetApiUrl() .. endpoint))
-
-end
-
-function GetAppJs()
-
-    return dom.SelectValue('//script[contains(text(),"series_id")]')
 
 end

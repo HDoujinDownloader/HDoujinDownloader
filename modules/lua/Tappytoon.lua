@@ -10,6 +10,38 @@ function Register()
 
 end
 
+local function GetGalleryJson()
+
+    return Json.New(dom.SelectValue('//script[@id="__NEXT_DATA__"]'))    
+
+end
+
+local function SetApiHttpHeaders()
+
+    local bearerToken = module.Settings['Bearer token']
+
+    if(not isempty(bearerToken)) then
+
+        local authorizationHeader = bearerToken
+
+        if(not authorizationHeader:startswith('Bearer ')) then
+            authorizationHeader = 'Bearer ' .. authorizationHeader
+        end
+
+        http.Headers['authorization'] = authorizationHeader
+
+    end
+    
+end
+
+local function GetApiJson(endpoint)
+
+    SetApiHttpHeaders()
+
+    return Json.New(http.Get(endpoint))
+
+end
+
 function GetInfo()
 
     local json = GetGalleryJson()
@@ -75,37 +107,5 @@ function GetPages()
     local apiResponse = GetApiJson('https://api-global.tappytoon.com/chapters/'..chapterId..'?includes=images&locale='..locale)
 
     pages.AddRange(apiResponse.SelectValues('images[*].url'))
-
-end
-
-function GetGalleryJson()
-
-    return Json.New(dom.SelectValue('//script[@id="__NEXT_DATA__"]'))    
-
-end
-
-function SetApiHttpHeaders()
-
-    local bearerToken = module.Settings['Bearer token']
-
-    if(not isempty(bearerToken)) then
-
-        local authorizationHeader = bearerToken
-
-        if(not authorizationHeader:startswith('Bearer ')) then
-            authorizationHeader = 'Bearer ' .. authorizationHeader
-        end
-
-        http.Headers['authorization'] = authorizationHeader
-
-    end
-    
-end
-
-function GetApiJson(endpoint)
-
-    SetApiHttpHeaders()
-
-    return Json.New(http.Get(endpoint))
 
 end

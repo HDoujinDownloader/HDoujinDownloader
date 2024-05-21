@@ -24,6 +24,12 @@ function Register()
 
 end
 
+local function IsMangaParkV3()
+
+    return url:contains('/comic/')
+
+end
+
 function GetInfo()
 
     if(IsMangaParkV3()) then
@@ -51,11 +57,5 @@ function GetPages()
     else
         V5GetPages()
     end
-
-end
-
-function IsMangaParkV3()
-
-    return url:contains('/comic/')
 
 end

@@ -11,6 +11,12 @@ function Register()
 
 end
 
+local function CleanTitle(title)
+
+    return RegexReplace(tostring(title):trim(), '\\/$', '')
+
+end
+
 function GetInfo()
 
     info.Title = CleanTitle(dom.SelectValue('//h1'))
@@ -51,10 +57,4 @@ function GetChapters()
 
     chapters.Reverse()
     
-end
-
-function CleanTitle(title)
-
-    return RegexReplace(tostring(title):trim(), '\\/$', '')
-
 end

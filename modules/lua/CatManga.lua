@@ -7,6 +7,12 @@ function Register()
 
 end
 
+local function GetNextDataJson()
+
+    return Json.New(dom.SelectValue('//script[@id="__NEXT_DATA__"]'))
+
+end
+
 function GetInfo()
 
     local json = GetNextDataJson()
@@ -56,11 +62,5 @@ function GetPages()
     local json = GetNextDataJson()
 
     pages.AddRange(json.SelectValues('props.pageProps.pages[*]'))
-
-end
-
-function GetNextDataJson()
-
-    return Json.New(dom.SelectValue('//script[@id="__NEXT_DATA__"]'))
 
 end

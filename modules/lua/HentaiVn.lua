@@ -11,6 +11,23 @@ function Register()
 
 end
 
+local function CleanTitle(title)
+
+    return RegexReplace(tostring(title), '(?:^Đọc Online:|Full$)', '')
+        :trim()
+
+end
+
+local function GetPageCount()
+
+    pages = PageList.New()
+
+    GetPages()
+
+    return pages.Count()
+
+end
+
 function GetInfo()
 
     info.Title = dom.SelectValue('//h1[@itemprop="name"]')
@@ -74,22 +91,5 @@ function GetPages()
     end
 
     pages.Referer = url
-
-end
-
-function CleanTitle(title)
-
-    return RegexReplace(tostring(title), '(?:^Đọc Online:|Full$)', '')
-        :trim()
-
-end
-
-function GetPageCount()
-
-    pages = PageList.New()
-
-    GetPages()
-
-    return pages.Count()
 
 end

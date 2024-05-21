@@ -7,6 +7,30 @@ function Register()
 
 end
 
+local function GetFieldFromAuthCache(authCacheJson, field)
+
+    local authCacheUrl = tostring(authCacheJson['span.authcache-p13n-asm-field-node-'..field])
+
+    if(not isempty(authCacheUrl)) then
+
+        http.Referer = url
+        http.Headers['accept'] = 'application/json, text/javascript, */*; q=0.01'
+        http.Headers['x-requested-with'] = 'XMLHttpRequest'
+        http.Headers['x-authcache'] = '1'
+
+        local authCacheJson = Json.New(http.Get(authCacheUrl..'&v=null'))
+        local authCacheDom = Dom.New(authCacheJson.SelectValue('field.*'))
+
+        return authCacheDom.DocumentElement.InnerText
+            :after(':')
+            :replace('&nbsp;', '')
+
+    end
+
+    return ""
+
+end
+
 function GetInfo()
 
     info.Title = dom.SelectValue('//h1'):beforelast('/')
@@ -37,29 +61,5 @@ function GetPages()
     local pagesJson = Json.New(pagesArray)
 
     pages.AddRange(pagesJson.SelectValues('[*]'))
-
-end
-
-function GetFieldFromAuthCache(authCacheJson, field)
-
-    local authCacheUrl = tostring(authCacheJson['span.authcache-p13n-asm-field-node-'..field])
-
-    if(not isempty(authCacheUrl)) then
-
-        http.Referer = url
-        http.Headers['accept'] = 'application/json, text/javascript, */*; q=0.01'
-        http.Headers['x-requested-with'] = 'XMLHttpRequest'
-        http.Headers['x-authcache'] = '1'
-
-        local authCacheJson = Json.New(http.Get(authCacheUrl..'&v=null'))
-        local authCacheDom = Dom.New(authCacheJson.SelectValue('field.*'))
-
-        return authCacheDom.DocumentElement.InnerText
-            :after(':')
-            :replace('&nbsp;', '')
-
-    end
-
-    return ""
 
 end
