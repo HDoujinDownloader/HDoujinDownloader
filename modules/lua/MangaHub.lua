@@ -11,6 +11,69 @@ function Register()
 
 end
 
+local function GetMangaSlug()
+
+    return url:regex('\\/(?:chapter|manga)\\/([^\\/?#]+)', 1)
+
+end
+
+local function GetApiUrl()
+
+    return '//api.mghubcdn.com/graphql'
+
+end
+
+local function SetUpApiHeaders()
+
+    local mhubAccess = http.Cookies['mhub_access']    
+
+    http.Headers['accept'] = 'application/json'
+    http.Headers['content-type'] = 'application/json'
+    http.Headers['origin'] = GetRoot(url):trim('/')
+    http.Referer = GetRoot(url)
+
+    if(not isempty(mhubAccess)) then
+        http.Headers['x-mhub-access'] = mhubAccess
+    end
+
+end
+
+local function GetApiJson(query)
+    
+    SetUpApiHeaders()
+
+    local response = http.Post(GetApiUrl(), query)
+
+    return Json.New(response)
+
+end
+
+local function GetDataSourceKey()
+    
+    -- The "dataSourceKey" value is passed along with API requests.
+    -- Each affiliated site has an "/assets/client.xxxxxxxx.js" file where the key(s) are defined.
+
+    local html = http.Get(url)
+    local dataSourceKey = '' 
+    local clientJsPath = html:regex('\\/assets\\/client\\.\\w+\\.js')
+    
+    if(not isempty(clientJsPath)) then
+
+        local clientJs = http.Get(clientJsPath)
+        local dataSourceKeyPattern = '(?i)domain:"'..GetDomain(url)..'".+?dataSourceKey:"(.+?)"'
+        
+        dataSourceKey = clientJs:regex(dataSourceKeyPattern, 1)
+        
+    end
+
+    if(isempty(dataSourceKey)) then
+        dataSourceKey = 'm01' -- This is the default for mangahub.io
+    end
+
+    return dataSourceKey
+
+end
+
 function GetInfo()
 
     info.Title = dom.SelectValue('//*[self::h1 or self::h3]/text()[1]')
@@ -48,68 +111,5 @@ function GetPages()
     for fileName in pagesJson.SelectValues('i[*]') do
         pages.Add(cdnBase .. pagesPath .. fileName)
     end
-
-end
-
-function GetMangaSlug()
-
-    return url:regex('\\/(?:chapter|manga)\\/([^\\/?#]+)', 1)
-
-end
-
-function GetApiUrl()
-
-    return '//api.mghubcdn.com/graphql'
-
-end
-
-function SetUpApiHeaders()
-
-    local mhubAccess = http.Cookies['mhub_access']    
-
-    http.Headers['accept'] = 'application/json'
-    http.Headers['content-type'] = 'application/json'
-    http.Headers['origin'] = GetRoot(url):trim('/')
-    http.Referer = GetRoot(url)
-
-    if(not isempty(mhubAccess)) then
-        http.Headers['x-mhub-access'] = mhubAccess
-    end
-
-end
-
-function GetApiJson(query)
-    
-    SetUpApiHeaders()
-
-    local response = http.Post(GetApiUrl(), query)
-
-    return Json.New(response)
-
-end
-
-function GetDataSourceKey()
-    
-    -- The "dataSourceKey" value is passed along with API requests.
-    -- Each affiliated site has an "/assets/client.xxxxxxxx.js" file where the key(s) are defined.
-
-    local html = http.Get(url)
-    local dataSourceKey = '' 
-    local clientJsPath = html:regex('\\/assets\\/client\\.\\w+\\.js')
-    
-    if(not isempty(clientJsPath)) then
-
-        local clientJs = http.Get(clientJsPath)
-        local dataSourceKeyPattern = '(?i)domain:"'..GetDomain(url)..'".+?dataSourceKey:"(.+?)"'
-        
-        dataSourceKey = clientJs:regex(dataSourceKeyPattern, 1)
-        
-    end
-
-    if(isempty(dataSourceKey)) then
-        dataSourceKey = 'm01' -- This is the default for mangahub.io
-    end
-
-    return dataSourceKey
 
 end

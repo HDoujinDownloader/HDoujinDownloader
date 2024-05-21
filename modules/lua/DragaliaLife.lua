@@ -8,6 +8,30 @@ function Register()
 
 end
 
+local function GetWindowVariable(name)
+
+    return tostring(dom):regex("window\\."..name.."\\s*\\=\\s*'([^']+)", 1)
+
+end
+
+local function GetApiResponse(endpoint)
+
+    http.Headers['accept'] = 'application/json, text/javascript, */*; q=0.01'
+    http.Headers['x-requested-with'] = 'XMLHttpRequest'
+
+    http.PostData['lang'] = GetWindowVariable('lang')
+    http.PostData['type'] = GetWindowVariable('type')
+
+    return Json.New(http.Post(endpoint))
+
+end
+
+local function GetChapterCount()
+
+    return GetApiResponse('/api/index').SelectValue('latest_comic.episode_num')
+
+end
+
 function GetInfo()
 
     info.Title = dom.Title:before('|')
@@ -61,29 +85,5 @@ function GetPages()
     local json = GetApiResponse('/api/detail/'..chapterId)
 
     pages.AddRange(json.SelectValues('[*].cartoon'))
-
-end
-
-function GetWindowVariable(name)
-
-    return tostring(dom):regex("window\\."..name.."\\s*\\=\\s*'([^']+)", 1)
-
-end
-
-function GetApiResponse(endpoint)
-
-    http.Headers['accept'] = 'application/json, text/javascript, */*; q=0.01'
-    http.Headers['x-requested-with'] = 'XMLHttpRequest'
-
-    http.PostData['lang'] = GetWindowVariable('lang')
-    http.PostData['type'] = GetWindowVariable('type')
-
-    return Json.New(http.Post(endpoint))
-
-end
-
-function GetChapterCount()
-
-    return GetApiResponse('/api/index').SelectValue('latest_comic.episode_num')
 
 end

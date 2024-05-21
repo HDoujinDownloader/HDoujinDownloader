@@ -1,3 +1,40 @@
+local function BuildLanguageSelection(module)
+
+    local options = { 
+        "All", 
+        "sa", "bd", "bg", "mm", "ct", "cn", "hk", "cz", "dk", "nl", 
+        "gb", "ph", "fi", "fr", "de", "gr", "hu", "id", "it", "jp", 
+        "kr", "my", "mn", "ir", "pl", "br", "pt", "ro", "ru", "rs", 
+        "es", "mx", "se", "th", "tr", "ua", "vn", "hi", "fa"
+    }
+
+    for i = 2, #options do
+        options[i] = GetLanguageName(options[i])
+    end
+
+    local oldSettingName = 'sssMangadexPreferredLanguages'
+    local oldSettingValue = global.GetSetting(oldSettingName)
+    local defaultSettingValue = nil
+
+    if(not isempty(oldSettingValue)) then
+
+        local languageIds = oldSettingValue:split(',')
+
+        for i = 0, languageIds.Count() - 1 do
+            languageIds[i] = GetLanguageName(languageIds[i])
+        end
+
+        defaultSettingValue = tostring(languageIds)
+
+    end
+
+    local setting = module.Settings.AddChoice('Preferred language(s)', defaultSettingValue, options)
+        .WithMultiSelect()
+
+    setting.Options.Sort()
+
+end
+
 function Register()
 
     module.Name = 'MangaDex'
@@ -33,6 +70,177 @@ function Register()
     end 
     
     ]]
+
+end
+
+local function GetGalleryUuid()
+    return url:regex('\\/(?:title|chapter)\\/([^\\/?#]+)', 1)
+end
+
+local function PrepareHttpHeaders(obj)
+
+    obj = obj or http
+
+    obj.Headers['Accept'] = '*/*'
+    obj.Headers['Origin'] = 'https://' .. module.Domain
+    obj.Headers['Referer'] = 'https://' .. module.Domain .. '/'
+
+    if(API_VERSION > 20230927) then
+        obj.Headers['User-Agent'] = API_CLIENT
+    end
+
+end
+
+local function GetApiEndpoint()
+
+    -- //api.mangadex.org/
+
+    return '//api.' .. module.Domain .. '/'
+
+end
+
+local function GetTitleJson()
+
+    PrepareHttpHeaders()
+
+    local uuid = GetGalleryUuid()
+    local type = url:regex('\\/(title|chapter)', 1):replace('title', 'manga')
+    local apiEndpoint = GetApiEndpoint() .. type .. '/' .. uuid
+
+    if(type == 'manga') then      
+        apiEndpoint = apiEndpoint .. '?includes[]=artist&includes[]=author&includes[]=cover_art'
+    elseif(type == 'chapter') then
+        apiEndpoint = apiEndpoint .. '?includes[]=scanlation_group&includes[]=manga&includes[]=user'
+    end
+
+    return Json.New(http.Get(apiEndpoint))
+
+end
+
+local function GetChapterTitleFromJson(json)
+
+    local result = ''
+
+    local chapterTitle = tostring(json.SelectValue('attributes.title'))
+    local volumeNumber = tostring(json.SelectValue('attributes.volume'))
+    local chapterNumber = tostring(json.SelectValue('attributes.chapter'))
+
+    if(volumeNumber == 'null') then
+        volumeNumber = ''
+    end
+
+    if(chapterNumber == 'null') then
+        chapterNumber = ''
+    end
+
+    if(chapterTitle == 'null') then
+        chapterTitle = ''
+    end
+
+    if(not isempty(volumeNumber)) then
+        result = result .. ' Vol. ' .. volumeNumber
+    end
+
+    if(not isempty(chapterNumber)) then
+        result = result .. ' Ch. ' .. chapterNumber
+    end
+
+    if(not isempty(chapterTitle)) then
+        result = result .. ' - ' .. chapterTitle
+    end
+
+    if(isempty(result)) then
+        
+        -- If the chapter has no chapter, volume, or title metadata, it's probably a oneshot.
+        -- See https://doujindownloader.com/forum/viewtopic.php?f=9&t=2419
+
+        result = 'Oneshot'
+
+    end
+
+    return result
+
+end
+
+local function GetScanlationStatusFromJson(json)
+
+    local lastChapterNumber = json.SelectValue('data.attributes.lastChapter')
+    local lastVolumeNumber = json.SelectValue('data.attributes.lastVolume')
+
+    if(lastVolumeNumber == 'null') then
+        lastVolumeNumber = ''
+    end
+
+    chapters = ChapterList.New()
+
+    GetChapters()
+
+    if(isempty(chapters)) then
+        return 'ongoing'
+    end
+
+    -- We can't just check the most recent chapter, because sometimes there is content uploaded after the last chapter.
+    -- See https://github.com/HDoujinDownloader/HDoujinDownloader/issues/76#issuecomment-1065185376
+    -- Sometimes the "lastVolume" property will be null, in which case we should just check the chapter number.
+
+    for chapter in chapters do
+
+        if(chapter.Chapter == lastChapterNumber and (isempty(lastVolumeNumber) or chapter.Volume == lastVolumeNumber)) then
+            return 'completed'
+        end
+
+    end
+
+    return 'ongoing'
+
+end
+
+local function RedirectFromOldUrl()
+
+    local galleryId = GetGalleryUuid()
+
+    if(not galleryId:contains("-")) then
+
+        -- We have an old URL and need to follow the redirect to the new one to get the UUID.
+        -- e.g. https://mangadex.org/title/45502/veil
+
+        PrepareHttpHeaders()
+
+        local json = Json.New(http.Post(GetApiEndpoint() .. '/legacy/mapping', '{"type":"manga","ids":[' .. galleryId .. ']}'))
+        local newId = json.SelectValue('data[0].attributes.newId')
+
+        if(not isempty(newId)) then         
+            url = '/title/' .. newId
+        end
+
+    end
+
+end
+
+local function GetPreferredLanguages()
+
+    local preferredLanguagesStr = module.Settings['Preferred language(s)']
+    local modulePreferredLanguageSettingIsSet = not isempty(preferredLanguagesStr)
+
+    if(not modulePreferredLanguageSettingIsSet) then
+        preferredLanguagesStr = global.GetSetting('sssMangadexPreferredLanguages')
+    end
+
+    if(isempty(preferredLanguagesStr)) then
+        return List.New()
+    end
+
+    local preferredLanguages = preferredLanguagesStr:split(',')
+
+    if(modulePreferredLanguageSettingIsSet) then
+
+        for i = 0, preferredLanguages.Count() - 1 do
+            preferredLanguages[i] = tostring(GetLanguageId(preferredLanguages[i]))
+        end
+
+    end
+
+    return preferredLanguages
 
 end
 
@@ -219,213 +427,5 @@ function GetPages()
     if(API_VERSION >= 20230612) then
         PrepareHttpHeaders(pages)
     end
-
-end
-
-function GetGalleryUuid()
-    return url:regex('\\/(?:title|chapter)\\/([^\\/?#]+)', 1)
-end
-
-function PrepareHttpHeaders(obj)
-
-    obj = obj or http
-
-    obj.Headers['Accept'] = '*/*'
-    obj.Headers['Origin'] = 'https://' .. module.Domain
-    obj.Headers['Referer'] = 'https://' .. module.Domain .. '/'
-
-    if(API_VERSION > 20230927) then
-        obj.Headers['User-Agent'] = API_CLIENT
-    end
-
-end
-
-function GetApiEndpoint()
-
-    -- //api.mangadex.org/
-
-    return '//api.' .. module.Domain .. '/'
-
-end
-
-function GetTitleJson()
-
-    PrepareHttpHeaders()
-
-    local uuid = GetGalleryUuid()
-    local type = url:regex('\\/(title|chapter)', 1):replace('title', 'manga')
-    local apiEndpoint = GetApiEndpoint() .. type .. '/' .. uuid
-
-    if(type == 'manga') then      
-        apiEndpoint = apiEndpoint .. '?includes[]=artist&includes[]=author&includes[]=cover_art'
-    elseif(type == 'chapter') then
-        apiEndpoint = apiEndpoint .. '?includes[]=scanlation_group&includes[]=manga&includes[]=user'
-    end
-
-    return Json.New(http.Get(apiEndpoint))
-
-end
-
-function GetChapterTitleFromJson(json)
-
-    local result = ''
-
-    local chapterTitle = tostring(json.SelectValue('attributes.title'))
-    local volumeNumber = tostring(json.SelectValue('attributes.volume'))
-    local chapterNumber = tostring(json.SelectValue('attributes.chapter'))
-
-    if(volumeNumber == 'null') then
-        volumeNumber = ''
-    end
-
-    if(chapterNumber == 'null') then
-        chapterNumber = ''
-    end
-
-    if(chapterTitle == 'null') then
-        chapterTitle = ''
-    end
-
-    if(not isempty(volumeNumber)) then
-        result = result .. ' Vol. ' .. volumeNumber
-    end
-
-    if(not isempty(chapterNumber)) then
-        result = result .. ' Ch. ' .. chapterNumber
-    end
-
-    if(not isempty(chapterTitle)) then
-        result = result .. ' - ' .. chapterTitle
-    end
-
-    if(isempty(result)) then
-        
-        -- If the chapter has no chapter, volume, or title metadata, it's probably a oneshot.
-        -- See https://doujindownloader.com/forum/viewtopic.php?f=9&t=2419
-
-        result = 'Oneshot'
-
-    end
-
-    return result
-
-end
-
-function GetScanlationStatusFromJson(json)
-
-    local lastChapterNumber = json.SelectValue('data.attributes.lastChapter')
-    local lastVolumeNumber = json.SelectValue('data.attributes.lastVolume')
-
-    if(lastVolumeNumber == 'null') then
-        lastVolumeNumber = ''
-    end
-
-    chapters = ChapterList.New()
-
-    GetChapters()
-
-    if(isempty(chapters)) then
-        return 'ongoing'
-    end
-
-    -- We can't just check the most recent chapter, because sometimes there is content uploaded after the last chapter.
-    -- See https://github.com/HDoujinDownloader/HDoujinDownloader/issues/76#issuecomment-1065185376
-    -- Sometimes the "lastVolume" property will be null, in which case we should just check the chapter number.
-
-    for chapter in chapters do
-
-        if(chapter.Chapter == lastChapterNumber and (isempty(lastVolumeNumber) or chapter.Volume == lastVolumeNumber)) then
-            return 'completed'
-        end
-
-    end
-
-    return 'ongoing'
-
-end
-
-function RedirectFromOldUrl()
-
-    local galleryId = GetGalleryUuid()
-
-    if(not galleryId:contains("-")) then
-
-        -- We have an old URL and need to follow the redirect to the new one to get the UUID.
-        -- e.g. https://mangadex.org/title/45502/veil
-
-        PrepareHttpHeaders()
-
-        local json = Json.New(http.Post(GetApiEndpoint() .. '/legacy/mapping', '{"type":"manga","ids":[' .. galleryId .. ']}'))
-        local newId = json.SelectValue('data[0].attributes.newId')
-
-        if(not isempty(newId)) then         
-            url = '/title/' .. newId
-        end
-
-    end
-
-end
-
-function BuildLanguageSelection(module)
-
-    local options = { 
-        "All", 
-        "sa", "bd", "bg", "mm", "ct", "cn", "hk", "cz", "dk", "nl", 
-        "gb", "ph", "fi", "fr", "de", "gr", "hu", "id", "it", "jp", 
-        "kr", "my", "mn", "ir", "pl", "br", "pt", "ro", "ru", "rs", 
-        "es", "mx", "se", "th", "tr", "ua", "vn", "hi", "fa"
-    }
-
-    for i = 2, #options do
-        options[i] = GetLanguageName(options[i])
-    end
-
-    local oldSettingName = 'sssMangadexPreferredLanguages'
-    local oldSettingValue = global.GetSetting(oldSettingName)
-    local defaultSettingValue = nil
-
-    if(not isempty(oldSettingValue)) then
-
-        local languageIds = oldSettingValue:split(',')
-
-        for i = 0, languageIds.Count() - 1 do
-            languageIds[i] = GetLanguageName(languageIds[i])
-        end
-
-        defaultSettingValue = tostring(languageIds)
-
-    end
-
-    local setting = module.Settings.AddChoice('Preferred language(s)', defaultSettingValue, options)
-        .WithMultiSelect()
-
-    setting.Options.Sort()
-
-end
-
-function GetPreferredLanguages()
-
-    local preferredLanguagesStr = module.Settings['Preferred language(s)']
-    local modulePreferredLanguageSettingIsSet = not isempty(preferredLanguagesStr)
-
-    if(not modulePreferredLanguageSettingIsSet) then
-        preferredLanguagesStr = global.GetSetting('sssMangadexPreferredLanguages')
-    end
-
-    if(isempty(preferredLanguagesStr)) then
-        return List.New()
-    end
-
-    local preferredLanguages = preferredLanguagesStr:split(',')
-
-    if(modulePreferredLanguageSettingIsSet) then
-
-        for i = 0, preferredLanguages.Count() - 1 do
-            preferredLanguages[i] = tostring(GetLanguageId(preferredLanguages[i]))
-        end
-
-    end
-
-    return preferredLanguages
 
 end

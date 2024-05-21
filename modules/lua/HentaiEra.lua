@@ -10,6 +10,35 @@ function Register()
 
 end
 
+local function RedirectBackToGallery()
+
+    local backToGalleryUrl = dom.SelectValue('//a[contains(@class,"return_btn") or contains(@class,"back_btn")]/@href')
+
+    if(not isempty(backToGalleryUrl)) then
+
+        url = backToGalleryUrl
+        dom = Dom.New(http.Get(url))
+
+    end
+
+end
+
+local function GetFileExtensionFromKey(key)
+
+    if(key == 'j') then 
+        return '.jpg'
+    elseif(key == 'p') then 
+        return '.png'
+    elseif(key == 'b') then 
+        return '.bmp'
+    elseif(key == 'g') then 
+        return '.gif'
+    else
+        return '.jpg'
+    end
+
+end
+
 function GetInfo()
 
     RedirectBackToGallery()
@@ -49,35 +78,6 @@ function GetPages()
 
         end
 
-    end
-
-end
-
-function RedirectBackToGallery()
-
-    local backToGalleryUrl = dom.SelectValue('//a[contains(@class,"return_btn") or contains(@class,"back_btn")]/@href')
-
-    if(not isempty(backToGalleryUrl)) then
-
-        url = backToGalleryUrl
-        dom = Dom.New(http.Get(url))
-
-    end
-
-end
-
-function GetFileExtensionFromKey(key)
-
-    if(key == 'j') then 
-        return '.jpg'
-    elseif(key == 'p') then 
-        return '.png'
-    elseif(key == 'b') then 
-        return '.bmp'
-    elseif(key == 'g') then 
-        return '.gif'
-    else
-        return '.jpg'
     end
 
 end

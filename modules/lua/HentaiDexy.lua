@@ -9,6 +9,44 @@ function Register()
     
 end
 
+local function GetGalleryId()
+
+    if(url:contains('/chapter/')) then
+        return url:regex('\\/chapter\\/([^\\/]+)', 1)
+    end
+
+    return url:regex('\\/manga\\/([^\\/]+)', 1)
+
+end
+
+local function GetApiUrl(path)
+
+    local apiUrl = '//backend.hentaidexy.net/api/v1'
+
+    if(not isempty(path)) then
+
+        if(not path:startswith('/')) then
+            path = '/' .. path
+        end
+
+        apiUrl = apiUrl .. path
+
+    end
+
+    return apiUrl
+
+end
+
+local function GetApiJson(path)
+
+    http.Headers['accept'] = 'application/json, text/plain, */*'
+    http.Headers['origin'] = 'https://' .. module.Domain
+    http.Headers['referer'] = 'https://' .. module.Domain .. '/'
+
+    return Json.New(http.Get(GetApiUrl(path)))
+
+end
+
 function GetInfo()
 
     local json = GetApiJson('mangas/' .. GetGalleryId())
@@ -77,43 +115,5 @@ function GetPages()
         pages.Add(imageHost .. fileName)
 
     end
-
-end
-
-function GetGalleryId()
-
-    if(url:contains('/chapter/')) then
-        return url:regex('\\/chapter\\/([^\\/]+)', 1)
-    end
-
-    return url:regex('\\/manga\\/([^\\/]+)', 1)
-
-end
-
-function GetApiUrl(path)
-
-    local apiUrl = '//backend.hentaidexy.net/api/v1'
-
-    if(not isempty(path)) then
-
-        if(not path:startswith('/')) then
-            path = '/' .. path
-        end
-
-        apiUrl = apiUrl .. path
-
-    end
-
-    return apiUrl
-
-end
-
-function GetApiJson(path)
-
-    http.Headers['accept'] = 'application/json, text/plain, */*'
-    http.Headers['origin'] = 'https://' .. module.Domain
-    http.Headers['referer'] = 'https://' .. module.Domain .. '/'
-
-    return Json.New(http.Get(GetApiUrl(path)))
 
 end

@@ -10,6 +10,41 @@ function Register()
 
 end
 
+local function GetAttachmentsAndFiles()
+
+    -- Some posts display the same file twice, so make sure we only download it once.
+    -- The order these selectors appear are the same order they appear on the page.
+    
+    local items = List.New()
+
+    for item in dom.SelectValues('//div[contains(@class,"post__content")]//img/@src') do
+
+        if(not items.Contains(item)) then
+            items.Add(item)
+        end
+
+    end
+
+    for item in dom.SelectValues('//li[contains(@class,"post__attachment")]//@href') do
+
+        if(not items.Contains(item)) then
+            items.Add(item)
+        end
+
+    end
+
+    for item in dom.SelectValues('//div[contains(@class,"post__thumbnail")]//@href') do
+
+        if(not items.Contains(item)) then
+            items.Add(item)
+        end
+
+    end
+
+    return items
+
+end
+
 function GetInfo()
 
     info.Title = dom.SelectValue('//h1')
@@ -71,40 +106,5 @@ function GetPages()
         end
 
     end
-
-end
-
-function GetAttachmentsAndFiles()
-
-    -- Some posts display the same file twice, so make sure we only download it once.
-    -- The order these selectors appear are the same order they appear on the page.
-    
-    local items = List.New()
-
-    for item in dom.SelectValues('//div[contains(@class,"post__content")]//img/@src') do
-
-        if(not items.Contains(item)) then
-            items.Add(item)
-        end
-
-    end
-
-    for item in dom.SelectValues('//li[contains(@class,"post__attachment")]//@href') do
-
-        if(not items.Contains(item)) then
-            items.Add(item)
-        end
-
-    end
-
-    for item in dom.SelectValues('//div[contains(@class,"post__thumbnail")]//@href') do
-
-        if(not items.Contains(item)) then
-            items.Add(item)
-        end
-
-    end
-
-    return items
 
 end

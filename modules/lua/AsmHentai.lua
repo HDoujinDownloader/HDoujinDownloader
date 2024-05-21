@@ -7,6 +7,62 @@ function Register()
 
 end
 
+local function GetGalleryId(url)
+
+    return url:regex('\\/g(?:allery)?\\/(\\d+)', 1)
+
+end
+
+local function GetPageCount()
+
+    local pageCount = dom.SelectValue('//h3[contains(text(),"Pages:")]'):after(':')
+
+    if(isempty(pageCount)) then
+        pageCount = dom.SelectValue('//*[@id="pages_btn"]//text()'):before('Pages')
+    end
+
+    return pageCount
+
+end
+
+local function GetThumbnailUrls()
+
+    -- Make request to get session cookies.
+
+    dom = dom.New(http.Get(url))
+
+    -- Get thumbnail URLs through the API.
+
+    local apiEndpoint = '//' .. module.Domain .. '/inc/thumbs_loader.php'
+    local galleryId = GetGalleryId(url)
+    local dir = dom.SelectValue('//input[@id="load_dir"]/@value')
+    local totalPages = GetPageCount()
+    local token = dom.SelectValue('//meta[@name="csrf-token"]/@content')
+
+    -- Galleries with < 10 pages will not have a "load_dir" value, so we can just get the thumbnails directly.
+
+    if(not isempty(dir)) then
+
+        http.Headers['Accept'] = '*/*'
+        http.Headers['X-Requested-With'] = 'XMLHttpRequest'
+    
+        http.PostData['_token'] = token
+        http.PostData['id'] = galleryId
+        http.PostData['dir'] = dir
+        http.PostData['visible_pages'] = '0'
+        http.PostData['t_pages'] = tostring(totalPages)
+        http.PostData['type'] = '2'
+
+        local apiResponse = http.Post(apiEndpoint)
+
+        dom = dom.New(apiResponse)
+
+    end
+
+    return dom.SelectValues('//div[contains(@class,"preview_thumb")]//img/@data-src')
+
+end
+
 function GetInfo()
 
     local backToGalleryUrl = dom.SelectValue('//a[contains(@class,"return_btn") or contains(@class,"back_btn")]/@href')
@@ -49,61 +105,5 @@ function GetPages()
         pages.Add(imageUrl)
 
     end
-
-end
-
-function GetGalleryId(url)
-
-    return url:regex('\\/g(?:allery)?\\/(\\d+)', 1)
-
-end
-
-function GetPageCount()
-
-    local pageCount = dom.SelectValue('//h3[contains(text(),"Pages:")]'):after(':')
-
-    if(isempty(pageCount)) then
-        pageCount = dom.SelectValue('//*[@id="pages_btn"]//text()'):before('Pages')
-    end
-
-    return pageCount
-
-end
-
-function GetThumbnailUrls()
-
-    -- Make request to get session cookies.
-
-    dom = dom.New(http.Get(url))
-
-    -- Get thumbnail URLs through the API.
-
-    local apiEndpoint = '//' .. module.Domain .. '/inc/thumbs_loader.php'
-    local galleryId = GetGalleryId(url)
-    local dir = dom.SelectValue('//input[@id="load_dir"]/@value')
-    local totalPages = GetPageCount()
-    local token = dom.SelectValue('//meta[@name="csrf-token"]/@content')
-
-    -- Galleries with < 10 pages will not have a "load_dir" value, so we can just get the thumbnails directly.
-
-    if(not isempty(dir)) then
-
-        http.Headers['Accept'] = '*/*'
-        http.Headers['X-Requested-With'] = 'XMLHttpRequest'
-    
-        http.PostData['_token'] = token
-        http.PostData['id'] = galleryId
-        http.PostData['dir'] = dir
-        http.PostData['visible_pages'] = '0'
-        http.PostData['t_pages'] = tostring(totalPages)
-        http.PostData['type'] = '2'
-
-        local apiResponse = http.Post(apiEndpoint)
-
-        dom = dom.New(apiResponse)
-
-    end
-
-    return dom.SelectValues('//div[contains(@class,"preview_thumb")]//img/@data-src')
 
 end

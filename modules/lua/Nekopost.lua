@@ -8,6 +8,62 @@ function Register()
 
 end
 
+local function GetGalleryApiUrl()
+
+    return '//api.osemocphoto.com/frontAPI/'
+
+end
+
+local function GetChapterApiUrl()
+
+    return '//www.osemocphoto.com/'
+
+end
+
+local function GetGalleryId()
+
+    return tostring(url):regex('\\/(?:comic|manga)\\/(\\d+)', 1)
+
+end
+
+local function GetChapterId()
+
+    return tostring(url):regex('\\/(?:comic|manga)\\/\\d+\\/([\\d\\.]+)', 1)
+
+end
+
+local function GetGalleryJson()
+
+    local endpoint = GetGalleryApiUrl() .. 'getProjectInfo/' .. GetGalleryId()
+    local json = Json.New(http.Get(endpoint)) 
+
+    return json
+
+end
+
+local function GetChapterJson()
+
+    local galleryId = GetGalleryId()
+    local chapterNumber = GetChapterId()
+    local galleryJson = GetGalleryJson()
+
+    -- Get the ID of the current chapter from the gallery JSON.
+
+    local chapterId = galleryJson.SelectValue("listChapter[?(@.chapterNo == '" ..chapterNumber .. "')].chapterId")
+
+    local endpoint = GetChapterApiUrl() .. FormatString('collectManga/{0}/{1}/{0}_{1}.json', galleryId, chapterId)
+    local json = Json.New(http.Get(endpoint)) 
+    
+    return json
+
+end
+
+local function CleanTitle(title)
+
+    return RegexReplace(tostring(title), '^.+?:', '')
+
+end
+
 function GetInfo() 
 
     local json = GetGalleryJson()
@@ -71,61 +127,5 @@ function GetPages()
         pages.Add(imageUrl)
 
     end
-
-end
-
-local function GetGalleryApiUrl()
-
-    return '//api.osemocphoto.com/frontAPI/'
-
-end
-
-function GetChapterApiUrl()
-
-    return '//www.osemocphoto.com/'
-
-end
-
-local function GetGalleryId()
-
-    return tostring(url):regex('\\/(?:comic|manga)\\/(\\d+)', 1)
-
-end
-
-local function GetChapterId()
-
-    return tostring(url):regex('\\/(?:comic|manga)\\/\\d+\\/([\\d\\.]+)', 1)
-
-end
-
-function GetGalleryJson()
-
-    local endpoint = GetGalleryApiUrl() .. 'getProjectInfo/' .. GetGalleryId()
-    local json = Json.New(http.Get(endpoint)) 
-
-    return json
-
-end
-
-function GetChapterJson()
-
-    local galleryId = GetGalleryId()
-    local chapterNumber = GetChapterId()
-    local galleryJson = GetGalleryJson()
-
-    -- Get the ID of the current chapter from the gallery JSON.
-
-    local chapterId = galleryJson.SelectValue("listChapter[?(@.chapterNo == '" ..chapterNumber .. "')].chapterId")
-
-    local endpoint = GetChapterApiUrl() .. FormatString('collectManga/{0}/{1}/{0}_{1}.json', galleryId, chapterId)
-    local json = Json.New(http.Get(endpoint)) 
-    
-    return json
-
-end
-
-function CleanTitle(title)
-
-    return RegexReplace(tostring(title), '^.+?:', '')
 
 end

@@ -8,6 +8,55 @@ function Register()
 
 end
 
+local function GetMangaId()
+
+    return url:regex('\\/manga\\/([^\\/]+)', 1)
+
+end
+
+local function GetChapterId()
+
+    return url:regex('\\/chapter\\/([^\\/]+)', 1)
+
+end
+
+local function GetApiEndpoint()
+
+    return '/api/'
+
+end
+
+local function SetUpApiHeaders()
+
+    http.Headers['authorization'] = dom.SelectValue('//meta[@name="api-token"]/@content')
+    http.Headers['referer'] = url
+    http.Headers['csrf-token'] = dom.SelectValue('//meta[@name="csrf-token"]/@content')
+    http.headers['x-requested-with'] = 'XMLHttpRequest'    
+    http.headers['x-xsrf-token'] = Unescape(http.Cookies['XSRF-TOKEN'])
+
+end
+
+local function GetApiJson(path)
+
+    SetUpApiHeaders()
+
+    local endpoint = GetApiEndpoint() .. path
+    local jsonStr = http.Get(endpoint)
+
+    if(jsonStr:startswith("<")) then
+        Fail(Error.LoginRequired)
+    end
+
+    local json = Json.New(jsonStr)
+
+    -- Each API request updates cookies.
+
+    global.SetCookies(http.Cookies)
+
+    return json
+
+end
+
 function GetInfo()
 
     local json = GetApiJson('mangas/' .. GetMangaId())
@@ -54,55 +103,6 @@ function GetPages()
         end
 
     end
-
-end
-
-function GetMangaId()
-
-    return url:regex('\\/manga\\/([^\\/]+)', 1)
-
-end
-
-function GetChapterId()
-
-    return url:regex('\\/chapter\\/([^\\/]+)', 1)
-
-end
-
-function GetApiEndpoint()
-
-    return '/api/'
-
-end
-
-function SetUpApiHeaders()
-
-    http.Headers['authorization'] = dom.SelectValue('//meta[@name="api-token"]/@content')
-    http.Headers['referer'] = url
-    http.Headers['csrf-token'] = dom.SelectValue('//meta[@name="csrf-token"]/@content')
-    http.headers['x-requested-with'] = 'XMLHttpRequest'    
-    http.headers['x-xsrf-token'] = Unescape(http.Cookies['XSRF-TOKEN'])
-
-end
-
-function GetApiJson(path)
-
-    SetUpApiHeaders()
-
-    local endpoint = GetApiEndpoint() .. path
-    local jsonStr = http.Get(endpoint)
-
-    if(jsonStr:startswith("<")) then
-        Fail(Error.LoginRequired)
-    end
-
-    local json = Json.New(jsonStr)
-
-    -- Each API request updates cookies.
-
-    global.SetCookies(http.Cookies)
-
-    return json
 
 end
 

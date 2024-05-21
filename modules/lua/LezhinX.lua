@@ -12,6 +12,72 @@ function Register()
 
 end
 
+local function GetApiUrl()
+
+    -- https://www.lezhinx.com/balcony-api-v2/contents/
+
+    return 'https://www.' .. module.Domain:trim('www.') .. '/api/balcony-api-v2/contents/'
+    
+end
+
+local function GetBalconyId()
+
+    return module.Domain
+        :trim('www.')
+        :replace('.', '_')
+        :upper()
+
+end
+
+local function GetApiJson(apiEndpoint)
+
+    http.Headers['accept'] = 'application/json'
+    http.Headers['referer'] = url
+    http.Headers['x-balcony-id'] = GetBalconyId()
+    http.Headers['x-platform'] = 'WEB'
+    
+    local bearerToken = module.Settings['Bearer token']
+
+    if(not isempty(bearerToken)) then
+
+        local authorizationHeader = bearerToken
+
+        if(not authorizationHeader:startswith('Bearer ')) then
+            authorizationHeader = 'Bearer ' .. authorizationHeader
+        end
+
+        http.Headers['authorization'] = authorizationHeader
+
+    end
+
+    return Json.New(http.Get(apiEndpoint))
+
+end
+
+local function GetComicSlug()
+
+    return url:regex('\\/(?:detail|viewer)\\/([^\\/?#]+)', 1)
+
+end
+
+local function GetComicJson()
+
+    return GetApiJson(GetApiUrl() .. GetComicSlug() .. '?isNotLoginAdult=false')
+
+end
+
+local function GetEpisodeSlug()
+
+    return url:regex('\\/viewer\\/([^\\/?#]+\\/[a-z\\d]+)', 1)
+
+end
+
+local function GetEpisodeJson()
+
+    return GetApiJson(GetApiUrl() .. GetEpisodeSlug() .. '?isNotLoginAdult=false')
+
+end
+
 function GetInfo()
 
     local isViewerUrl = url:contains('/viewer/')
@@ -68,71 +134,5 @@ function GetPages()
     local json = GetEpisodeJson()
 
     pages.AddRange(json.SelectValues('data.images[*].imagePath'))
-
-end
-
-function GetApiUrl()
-
-    -- https://www.lezhinx.com/balcony-api-v2/contents/
-
-    return 'https://www.' .. module.Domain:trim('www.') .. '/api/balcony-api-v2/contents/'
-    
-end
-
-function GetBalconyId()
-
-    return module.Domain
-        :trim('www.')
-        :replace('.', '_')
-        :upper()
-
-end
-
-function GetApiJson(apiEndpoint)
-
-    http.Headers['accept'] = 'application/json'
-    http.Headers['referer'] = url
-    http.Headers['x-balcony-id'] = GetBalconyId()
-    http.Headers['x-platform'] = 'WEB'
-    
-    local bearerToken = module.Settings['Bearer token']
-
-    if(not isempty(bearerToken)) then
-
-        local authorizationHeader = bearerToken
-
-        if(not authorizationHeader:startswith('Bearer ')) then
-            authorizationHeader = 'Bearer ' .. authorizationHeader
-        end
-
-        http.Headers['authorization'] = authorizationHeader
-
-    end
-
-    return Json.New(http.Get(apiEndpoint))
-
-end
-
-function GetComicSlug()
-
-    return url:regex('\\/(?:detail|viewer)\\/([^\\/?#]+)', 1)
-
-end
-
-function GetComicJson()
-
-    return GetApiJson(GetApiUrl() .. GetComicSlug() .. '?isNotLoginAdult=false')
-
-end
-
-function GetEpisodeSlug()
-
-    return url:regex('\\/viewer\\/([^\\/?#]+\\/[a-z\\d]+)', 1)
-
-end
-
-function GetEpisodeJson()
-
-    return GetApiJson(GetApiUrl() .. GetEpisodeSlug() .. '?isNotLoginAdult=false')
 
 end

@@ -7,6 +7,18 @@ function Register()
 
 end
 
+local function GetApiResponse(requestUri)
+
+    local csrfToken = dom.SelectValue('//meta[@name="csrf-token"]/@content')
+
+    http.Headers['Accept'] = '*/*'
+    http.Headers['X-Requested-With'] = 'XMLHttpRequest'
+    http.Headers['X-CSRF-TOKEN'] = csrfToken
+
+    return http.Get(requestUri)
+
+end
+
 function GetInfo()
 
     info.Title = dom.SelectValue('//span[contains(@class, "post-name")]')
@@ -54,17 +66,5 @@ function GetPages()
         pages.Add(pageUrl)
 
     end
-
-end
-
-function GetApiResponse(requestUri)
-
-    local csrfToken = dom.SelectValue('//meta[@name="csrf-token"]/@content')
-
-    http.Headers['Accept'] = '*/*'
-    http.Headers['X-Requested-With'] = 'XMLHttpRequest'
-    http.Headers['X-CSRF-TOKEN'] = csrfToken
-
-    return http.Get(requestUri)
 
 end

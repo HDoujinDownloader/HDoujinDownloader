@@ -1,3 +1,14 @@
+local function GetImageFormats() 
+
+    return {
+        "Auto",
+        "Avif",
+        "Jpeg",
+        "WebP",
+    }
+
+end
+
 function Register()
 
     module.Name = 'Hentai2Read'
@@ -8,6 +19,34 @@ function Register()
     module.Domains.Add('hentai2read.com')
 
     module.Settings.AddChoice('Preferred image format', 'Jpeg', GetImageFormats())
+
+end
+
+local function EnqueueAllGalleries()
+
+    for url in dom.SelectValues('//div[contains(@class,"book-grid-item")]/a/@href') do
+        Enqueue(url)
+    end
+
+    info.Ignore = true
+
+end
+
+local function GetCdnUrl()
+
+    -- Note that the CDN URL always ends with "/hentai/".
+
+    local cdnUrl = dom.SelectValue('//img[contains(@id,"arf-reader")]/@src')
+
+    cdnUrl = cdnUrl:regex('.+?\\/hentai\\/')
+
+    -- We used to be able to specify the image format by prepending the CDN URL with "/cdn-cgi/image/format=<fornmat>".
+    -- This doesn't seem to be possible anymore.
+
+    -- local imageFormat = module.Settings['Preferred image format'] or GetImageFormats()[1]
+    -- return "/cdn-cgi/image/format=" .. imageFormat:lower() .. "/https://static.hentai.direct/hentai/"
+    
+    return cdnUrl
 
 end
 
@@ -65,44 +104,5 @@ function GetPages()
     for imageUrl in Json.New(imagesArray) do
         pages.Add(cdnUrl .. tostring(imageUrl))
     end
-
-end
-
-function EnqueueAllGalleries()
-
-    for url in dom.SelectValues('//div[contains(@class,"book-grid-item")]/a/@href') do
-        Enqueue(url)
-    end
-
-    info.Ignore = true
-
-end
-
-function GetCdnUrl()
-
-    -- Note that the CDN URL always ends with "/hentai/".
-
-    local cdnUrl = dom.SelectValue('//img[contains(@id,"arf-reader")]/@src')
-
-    cdnUrl = cdnUrl:regex('.+?\\/hentai\\/')
-
-    -- We used to be able to specify the image format by prepending the CDN URL with "/cdn-cgi/image/format=<fornmat>".
-    -- This doesn't seem to be possible anymore.
-
-    -- local imageFormat = module.Settings['Preferred image format'] or GetImageFormats()[1]
-    -- return "/cdn-cgi/image/format=" .. imageFormat:lower() .. "/https://static.hentai.direct/hentai/"
-    
-    return cdnUrl
-
-end
-
-function GetImageFormats() 
-
-    return {
-        "Auto",
-        "Avif",
-        "Jpeg",
-        "WebP",
-    }
 
 end
