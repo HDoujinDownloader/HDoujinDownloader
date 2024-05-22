@@ -1,0 +1,14 @@
+# SPDX-FileCopyrightText: none
+# SPDX-License-Identifier: CC0-1.0
+
+* text=auto
+
+*.gitattributes text eol=lf
+*.gitignore     text eol=lf
+
+# Code
+*.lua           text eol=lf
+
+# Text files
+*.md            text eol=lf
+*.txt           text eol=lf
