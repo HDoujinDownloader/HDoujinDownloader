@@ -6,8 +6,10 @@ function Register()
     module.Strict = false
 
     module.Domains.Add('nude-moon.com')
+    module.Domains.Add('nude-moon.fun')
     module.Domains.Add('nude-moon.me')
     module.Domains.Add('nude-moon.net')
+    module.Domains.Add('nude-moon.org')
 
 end
 
@@ -41,7 +43,7 @@ function Login()
 
     if(not http.Cookies.Contains('fusion_user')) then
 
-        local loginUrl = 'https://'..module.Domain..'/setuser.php'
+        local loginUrl = 'https://' .. module.Domain .. '/setuser.php'
 
         http.Referer = GetRoot(loginUrl)
 
