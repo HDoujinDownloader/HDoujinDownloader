@@ -71,7 +71,7 @@ function Login()
             Fail(Error.LoginFailed)
         end
 
-        global.SetCookies(response.Cookies) 
+        global.SetCookies(response.Cookies)
 
     end
 

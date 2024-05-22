@@ -3,13 +3,13 @@ function Register()
     module.Name = '177漫畫'
     module.Adult = true
 
-    module.Domains.Add('177pic.info', '177漫畫')    
+    module.Domains.Add('177pic.info', '177漫畫')
 
 end
 
 local function CleanTitle(title)
 
-    return RegexReplace(title, '^\\[(.+?)\\]|(?:\\[DL.\\])?(?:\\[\\d+P\\])?$', '')    
+    return RegexReplace(title, '^\\[(.+?)\\]|(?:\\[DL.\\])?(?:\\[\\d+P\\])?$', '')
 
 end
 
@@ -17,7 +17,7 @@ function GetInfo()
 
     info.Title = dom.SelectValue('//h1')
     info.Artist = info.Title:regex('^\\[(.+?)\\]', 1)
-    info.Tags = dom.SelectValues('//div[contains(@class,"entry-content")]//a[contains(@rel,"tag")]')        
+    info.Tags = dom.SelectValues('//div[contains(@class,"entry-content")]//a[contains(@rel,"tag")]')
     info.PageCount = 0
 
     if(tostring(info.Tags):contains('Japanese')) then

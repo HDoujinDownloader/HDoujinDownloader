@@ -63,7 +63,7 @@ function GetChapters()
 
         endpoint = url..'/ajax/chapters/'
 
-    else 
+    else
 
         error('Invalid POST XMLHttpRequest URL : '..url..' to get chapters content list')
 

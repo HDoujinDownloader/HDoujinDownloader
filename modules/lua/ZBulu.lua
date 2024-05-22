@@ -57,6 +57,6 @@ end
 
 function GetPages()
 
-    pages.AddRange(dom.SelectValues('//div[contains(@class, "chapter-content")]//img/@src'))    
+    pages.AddRange(dom.SelectValues('//div[contains(@class, "chapter-content")]//img/@src'))
 
 end

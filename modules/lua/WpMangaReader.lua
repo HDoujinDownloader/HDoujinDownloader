@@ -292,7 +292,7 @@ function GetPages()
     if(module.Domain:startswith('realmscans.') or module.Domain:startswith('rizzcomic.')) then
         pages.Referer = GetRoot(url)
     else
-        pages.Referer = '' 
+        pages.Referer = ''
     end
 
 end

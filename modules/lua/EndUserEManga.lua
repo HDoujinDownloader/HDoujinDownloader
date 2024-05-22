@@ -15,7 +15,7 @@ end
 
 local function CleanTitle(title)
 
-    return RegexReplace(tostring(title), ' Manga$', '')        
+    return RegexReplace(tostring(title), ' Manga$', '')
 
 end
 

@@ -16,7 +16,7 @@ local function GetApiUrl()
 end
 
 local function GetSlug()
-    return url:regex('\\/series\\/(?:comic-)?([^\\/]+)', 1)    
+    return url:regex('\\/series\\/(?:comic-)?([^\\/]+)', 1)
 end
 
 function GetInfo()
@@ -28,7 +28,7 @@ function GetInfo()
     info.Summary = json.SelectValue('data.summary')
 
     if(isempty(info.Title)) then
-        info.Title = dom.SelectValue("//h1") 
+        info.Title = dom.SelectValue("//h1")
     end
 
 end

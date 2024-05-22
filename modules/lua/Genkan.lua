@@ -23,7 +23,7 @@ function GetInfo()
     info.Summary = dom.SelectValue('//div[h6[contains(text(), "Description")]]/following-sibling::text()')
     info.Adult = toboolean(dom.SelectValue('//div[div[contains(text(), "Mature (18+)")]]/following-sibling::div'))
     info.Type = dom.SelectValue('//div[div[contains(text(), "Country of Origin")]]/following-sibling::div')
-    info.Scanlator = module.GetName(url)    
+    info.Scanlator = module.GetName(url)
 
 end
 

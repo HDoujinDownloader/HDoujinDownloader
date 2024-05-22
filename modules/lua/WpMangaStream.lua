@@ -20,7 +20,7 @@ function Register()
     module.Domains.Add('lumitoon.com', 'Luminous Scans')
     module.Domains.Add('www.asurascans.com', 'Asura Scans')
 
-    if(API_VERSION >= 20230823) then      
+    if(API_VERSION >= 20230823) then
         module.DeferHttpRequests = true
     end
 
@@ -40,16 +40,16 @@ end
 
 local function RedirectToNewMangaUrl()
 
-    -- For some manga, the path looks like like this: 
+    -- For some manga, the path looks like like this:
     -- /manga/title/
-    -- But some other manga can only be accessed with a numeric prefix: 
+    -- But some other manga can only be accessed with a numeric prefix:
     -- /manga/1901917615-title/
     -- That numeric prefix changes occassionally, breaking existing URLs in bookmarks or the download queue.
     -- If we hit a 404 page for a manga URL, attempt to find the current numeric ID and update the URL.
     -- See https://github.com/HDoujinDownloader/HDoujinDownloader/issues/238
 
     -- Checks if the URL contains a numeric prefix.
-    
+
     local urlPrefix = url:regex('\\/(?:manga|series)\\/(\\d+)', 1)
 
     if(not isempty(urlPrefix)) then

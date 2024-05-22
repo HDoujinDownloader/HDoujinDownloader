@@ -27,7 +27,7 @@ end
 
 function GetChapters()
 
-    chapters.AddRange(dom.SelectElements('//div[@id="listChuong"]//a'))    
+    chapters.AddRange(dom.SelectElements('//div[@id="listChuong"]//a'))
 
     chapters.Reverse()
 

@@ -35,7 +35,7 @@ end
 local function GetGalleryJson()
 
     local endpoint = GetGalleryApiUrl() .. 'getProjectInfo/' .. GetGalleryId()
-    local json = Json.New(http.Get(endpoint)) 
+    local json = Json.New(http.Get(endpoint))
 
     return json
 
@@ -52,7 +52,7 @@ local function GetChapterJson()
     local chapterId = galleryJson.SelectValue("listChapter[?(@.chapterNo == '" ..chapterNumber .. "')].chapterId")
 
     local endpoint = GetChapterApiUrl() .. FormatString('collectManga/{0}/{1}/{0}_{1}.json', galleryId, chapterId)
-    local json = Json.New(http.Get(endpoint)) 
+    local json = Json.New(http.Get(endpoint))
     
     return json
 
@@ -64,7 +64,7 @@ local function CleanTitle(title)
 
 end
 
-function GetInfo() 
+function GetInfo()
 
     local json = GetGalleryJson()
 

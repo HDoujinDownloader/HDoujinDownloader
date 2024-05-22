@@ -64,7 +64,7 @@ function GetChapters()
         for episodeNode in episodeNodes do
 
             local chapterId = episodeNode.SelectValue('id')
-            local chapterTitle = episodeNode.SelectValue('title')      
+            local chapterTitle = episodeNode.SelectValue('title')
             local chapterUrl = 'https://page.kakao.com/viewer?productId=' .. chapterId
 
             chapters.Add(chapterUrl, chapterTitle)
@@ -97,6 +97,6 @@ function GetPages()
 
     for pageUrl in episodeJson.SelectValues('downloadData.members.files[*].secureUrl') do
         pages.Add(serverUrl .. pageUrl)
-    end 
+    end
 
 end

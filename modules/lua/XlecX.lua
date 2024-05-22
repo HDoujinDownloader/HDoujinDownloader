@@ -7,7 +7,7 @@ function Register()
 
 end
 
-function GetInfo() 
+function GetInfo()
 
     info.Title = dom.SelectValue('//h1')
     info.Circle = dom.SelectValues('//div[contains(text(), "Group:")]/a')

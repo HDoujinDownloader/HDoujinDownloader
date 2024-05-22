@@ -71,7 +71,7 @@ function GetChapters()
         lastPaginationUrl = dom.SelectValue('//a[@rel="next"]/@href')
 
         if(not isempty(lastPaginationUrl)) then
-            dom = dom.New(http.Get(lastPaginationUrl))    
+            dom = dom.New(http.Get(lastPaginationUrl))
         end
 
     until(isempty(lastPaginationUrl) or paginationUrls.Contains(lastPaginationUrl) or chapters.Count() <= 0)

@@ -29,7 +29,7 @@ local function GetSummaryJson()
 
     local slug = url:regex('\\/webtoon\\/([^\\/]+)', 1)
 
-    return GetApiJson(GetApiBase()..'comics/'..slug..'?nsfw=true')   
+    return GetApiJson(GetApiBase()..'comics/'..slug..'?nsfw=true')
 
 end
 
@@ -37,7 +37,7 @@ local function GetChaptersJson()
 
     local slug = url:regex('\\/webtoon\\/([^\\/]+)', 1)
 
-    return GetApiJson(GetApiBase()..'comics/'..slug..'/chapters?nsfw=true')   
+    return GetApiJson(GetApiBase()..'comics/'..slug..'/chapters?nsfw=true')
 
 end
 
@@ -45,7 +45,7 @@ local function GetImagesJson()
 
     local slug = url:regex('\\/webtoon\\/([^\\/]+\\/[^\\/]+)', 1)
 
-    return GetApiJson(GetApiBase()..'comics/'..slug..'/images?nsfw=true')   
+    return GetApiJson(GetApiBase()..'comics/'..slug..'/images?nsfw=true')
 
 end
 

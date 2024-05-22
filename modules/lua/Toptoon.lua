@@ -77,7 +77,7 @@ function Login()
 
         local response = http.PostResponse(loginEndpoint)
 
-        global.SetCookies(response.Cookies) 
+        global.SetCookies(response.Cookies)
 
     end
 

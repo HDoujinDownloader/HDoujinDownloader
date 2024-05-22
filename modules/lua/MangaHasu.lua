@@ -2,7 +2,7 @@ function Register()
 
     module.Name = 'MangaHasu'
     module.Language = 'en'
-    module.Adult = false    
+    module.Adult = false
 
     module.Domains.Add('mangahasu.com')
     module.Domains.Add('mangahasu.se')

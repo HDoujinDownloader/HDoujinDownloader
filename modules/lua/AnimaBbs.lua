@@ -107,7 +107,7 @@ function GetPages()
 
     -- Deobfuscate the image URLs.
 
-    local htmlDataJs = tostring(dom):regex("var\\s*html_data.+?html_data\\+='';")   
+    local htmlDataJs = tostring(dom):regex("var\\s*html_data.+?html_data\\+='';")
 
     js.Execute(htmlDataJs)
 
