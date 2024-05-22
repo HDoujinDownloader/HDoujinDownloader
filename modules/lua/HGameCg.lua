@@ -1,4 +1,4 @@
-function Register() 
+function Register()
 
     module.Name = 'HGameCg'
     module.Type = 'Artist CG'
@@ -16,7 +16,7 @@ local function GetPageCount()
     -- image URLs have the total number of images at the end
 
     local lastPaginationUrl = dom.SelectValue('//div[contains(@class,"imgpagebar")]/a[last()]/@href')
-    local imageCount = lastPaginationUrl:regex('-(\\d+)\\.html', 1) 
+    local imageCount = lastPaginationUrl:regex('-(\\d+)\\.html', 1)
 
     if(isempty(imageCount)) then
         return 0
@@ -71,7 +71,7 @@ function GetPages()
         lastPaginationUrl = dom.SelectValue('//a[contains(., "Next Page")]/@href')
 
         if(not isempty(lastPaginationUrl)) then
-            dom = dom.New(http.Get(lastPaginationUrl))    
+            dom = dom.New(http.Get(lastPaginationUrl))
         end
 
     until(isempty(lastPaginationUrl) or paginationUrls.Contains(lastPaginationUrl) or pages.Count() <= 0)

@@ -59,7 +59,7 @@ local function BuildTeamDict(json)
 
 end
 
-function GetInfo() 
+function GetInfo()
 
     local json = GetApiJson('mangas/' .. GetGalleryId())
 
