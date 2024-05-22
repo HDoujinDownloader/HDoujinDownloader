@@ -142,7 +142,7 @@ local function GetAllPagesRecursively(url, albumPath, recursionDepth)
     -- Recursively add images from each nested album.
 
     for album in GetAllAlbums(url) do
-        GetAllPagesRecursively(album.Url, albumPath .. '\\' .. album.Title, recursionDepth + 1)    
+        GetAllPagesRecursively(album.Url, albumPath .. '\\' .. album.Title, recursionDepth + 1)
     end
 
 end

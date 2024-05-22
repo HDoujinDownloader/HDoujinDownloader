@@ -60,7 +60,7 @@ function GetPages()
 
     -- There's no way to get all of the images at once, so we have to go page-by-page.
 
-    for i = 1, pageCount do 
+    for i = 1, pageCount do
 
         -- Get the image.
 

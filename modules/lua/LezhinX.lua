@@ -100,7 +100,7 @@ function GetInfo()
         info.Summary = json.SelectValue('data.synopsis')
     
         if(isempty(info.Author)) then
-            info.Author = json.SelectValues('data.creators[*].name')        
+            info.Author = json.SelectValues('data.creators[*].name')
         end
 
     end

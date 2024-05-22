@@ -18,7 +18,7 @@ function GetInfo()
     info.Author = dom.SelectValues('//span[@itemprop="author"]')
     info.Status = dom.SelectValue('//span[contains(.,"Status")]/strong')
     info.Tags = dom.SelectValues('//strong[contains(text(),"Categories")]/following-sibling::ul//a')
-    info.Summary = dom.SelectValue('//p[contains(@class,"description")]')    
+    info.Summary = dom.SelectValue('//p[contains(@class,"description")]')
 
 end
 
