@@ -12,7 +12,7 @@ function Register()
 
 end
 
-local function CleanTitle(title) 
+local function CleanTitle(title)
 
     title = tostring(title):trim()
 

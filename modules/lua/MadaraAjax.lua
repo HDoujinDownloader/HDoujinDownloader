@@ -54,7 +54,7 @@ function GetChapters()
     -- We need to make a POST request to get the chapters list.
 
     local mangaParameters = tostring(dom):regex('var\\s*manga\\s*=\\s*({.+?};)', 1)
-    local mangaJson = Json.New(mangaParameters)  
+    local mangaJson = Json.New(mangaParameters)
 
     if(isempty(mangaJson['chapter_slug'])) then
 

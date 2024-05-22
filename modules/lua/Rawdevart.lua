@@ -1,4 +1,4 @@
-function Register() 
+function Register()
 
     module.Name = 'Rawdevart'
     

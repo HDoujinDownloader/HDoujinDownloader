@@ -10,7 +10,7 @@ function Register()
 
 end
 
-local function GetVariableValue(name) 
+local function GetVariableValue(name)
 
     return tostring(dom):regex(name..'\\s*=\\s*(.+?)\\s*;', 1):trim('"')
 

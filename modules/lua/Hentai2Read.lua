@@ -1,4 +1,4 @@
-local function GetImageFormats() 
+local function GetImageFormats()
 
     return {
         "Auto",
