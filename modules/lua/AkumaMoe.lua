@@ -37,9 +37,9 @@ function GetPages()
     local galleryId = url:regex('\\/g\\/([^\\/?#]+)', 1)
     local csrfToken = dom.SelectValue('//meta[@name="csrf-token"]/@content')
 
-    http.Headers['accept'] = '*/*'
-    http.Headers['x-csrf-token'] = csrfToken
-    http.Headers['x-requested-with'] = 'XMLHttpRequest'
+    http.Headers['Accept'] = '*/*'
+    http.Headers['X-CSRF-TOKEN'] = csrfToken
+    http.Headers['X-Requested-With'] = 'XMLHttpRequest'
 
     local imagesJson = Json.New(http.Post('//akuma.moe/g/' .. galleryId))
     local imagesScript = dom.SelectValue('//script[contains(text(),"img_prt")]')

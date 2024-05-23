@@ -30,9 +30,9 @@ end
 
 local function SetUpApiHeaders()
 
-    http.Headers['accept'] = '*/*'
-    http.Headers['origin'] = GetRoot(url):trim('/')
-    http.Headers['referer'] = GetRoot(url)
+    http.Headers['Accept'] = '*/*'
+    http.Headers['Origin'] = GetRoot(url):trim('/')
+    http.Headers['Referer'] = GetRoot(url)
 
 end
 
