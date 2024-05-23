@@ -16,10 +16,10 @@ end
 
 local function SetUpApiHeaders()
 
-    http.Headers['accept'] = 'application/json, text/plain, */*'
+    http.Headers['Accept'] = 'application/json, text/plain, */*'
 
     if(http.Cookies.Contains('XSRF-TOKEN')) then
-        http.Headers['X-Xsrf-Token'] = http.Cookies['XSRF-TOKEN']
+        http.Headers['X-XSRF-TOKEN'] = http.Cookies['XSRF-TOKEN']
     end
     
 end
