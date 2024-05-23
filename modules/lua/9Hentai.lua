@@ -25,14 +25,14 @@ end
 local function GetGalleryJson()
 
     local apiEndpoint = GetApiEndpoint()
-    
-    http.Headers['content-type'] = 'application/json;charset=UTF-8'
-    http.Headers['origin'] = GetRoot(url)
-    http.Headers['x-csrf-token'] = dom.SelectValue('//meta[@name="csrf-token"]/@content')
-    http.Headers['x-requested-with'] = 'XMLHttpRequest'
+
+    http.Headers['Content-Type'] = 'application/json;charset=utf-8'
+    http.Headers['Origin'] = GetRoot(url)
+    http.Headers['X-CSRF-TOKEN'] = dom.SelectValue('//meta[@name="csrf-token"]/@content')
+    http.Headers['X-Requested-With'] = 'XMLHttpRequest'
 
     if(not isempty(http.Cookies.GetCookie('XSRF-TOKEN'))) then
-        http.Headers['x-xsrf-token'] = http.Cookies.GetCookie('XSRF-TOKEN')
+        http.Headers['X-XSRF-TOKEN'] = http.Cookies.GetCookie('XSRF-TOKEN')
     end
 
     local json = http.Post(apiEndpoint, '{"id":'..GetGalleryId()..'}')

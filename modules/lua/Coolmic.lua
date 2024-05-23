@@ -47,8 +47,8 @@ end
 
 local function GetApiJson(id)
 
-    http.Headers['accept'] = 'application/json, text/plain, */*'
-    
+    http.Headers['Accept'] = 'application/json, text/plain, */*'
+
     return Json.New(http.Get(GetApiUrl() .. id))
 
 end
