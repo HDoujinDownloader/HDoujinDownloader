@@ -19,8 +19,8 @@ end
 
 local function GetApiJson(endpoint)
 
-    http.Headers['accept'] = 'application/json, text/javascript, */*; q=0.01'
-    http.Headers['x-requested-with'] = 'XMLHttpRequest'
+    http.Headers['Accept'] = 'application/json, text/javascript, */*; q=0.01'
+    http.Headers['X-Requested-With'] = 'XMLHttpRequest'
 
     return Json.New(http.Get(GetApiUrl() .. endpoint))
 
