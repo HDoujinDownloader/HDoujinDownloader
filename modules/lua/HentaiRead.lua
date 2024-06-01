@@ -28,8 +28,12 @@ function GetPages()
 
     for imageUrl in dom.SelectValues('//div[contains(@class,"image-wrapper")]//img/@data-src') do
 
+        -- Strip any resolution modifiers in the URL so we can get the full-size image.
+
         imageUrl = imageUrl:before('&w=')
             :before('&amp;w=')
+
+        imageUrl = RegexReplace(imageUrl, '(\\-\\d+px)(\\..+?)$', '$2')
 
         pages.Add(imageUrl)
 
