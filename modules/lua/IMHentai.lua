@@ -43,8 +43,10 @@ local function GetImageServerFromGalleryId(galleryId)
         imageServer = 'm6'
     elseif(galleryId > 970098 and galleryId <= 1121113) then
         imageServer = 'm7'
-    else
+    elseif(galleryId > 1121113 and galleryId <= 1259410) then
         imageServer = 'm8'
+    else
+        imageServer = 'm9'
     end
 
     return imageServer
