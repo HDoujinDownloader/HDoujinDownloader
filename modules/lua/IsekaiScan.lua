@@ -26,8 +26,10 @@ function Register()
     module.Domains.Add('reset-scans.us', 'RESET SCANS')
     module.Domains.Add('reset-scans.xyz', 'RESET SCANS')
     module.Domains.Add('tcbscans-manga.com', 'TCB Scans')
+    module.Domains.Add('tcbscans.net', 'TCB Scans')
     module.Domains.Add('theblank.net', 'The Blank')
     module.Domains.Add('www.betafox.net', 'Beta Fox')
+    module.Domains.Add('www.tcbscans.net', 'TCB Scans')
 
     module = Module.New()
 
