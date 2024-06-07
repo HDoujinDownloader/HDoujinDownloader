@@ -37,6 +37,8 @@ function Register()
 
     module.Domains.Add('bokugents.com', 'Bokugen Translations')
     module.Domains.Add('housemangas.com', 'HouseMangas')
+    module.Domains.Add('manhuaespanol.com', 'Manhuas español')
+    module.Domains.Add('mantraz-scan.com', 'Manhuas español')
     module.Domains.Add('mg.mundodrama.site', 'Inmortal scan')
     module.Domains.Add('mhscans.com', 'MHScans')
     module.Domains.Add('ragnarokscanlation.com', 'Ragnarok Scanlation')
