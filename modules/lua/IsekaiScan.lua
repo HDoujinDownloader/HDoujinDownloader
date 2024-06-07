@@ -26,20 +26,26 @@ function Register()
     module.Domains.Add('reset-scans.us', 'RESET SCANS')
     module.Domains.Add('reset-scans.xyz', 'RESET SCANS')
     module.Domains.Add('tcbscans-manga.com', 'TCB Scans')
+    module.Domains.Add('tcbscans.net', 'TCB Scans')
     module.Domains.Add('theblank.net', 'The Blank')
     module.Domains.Add('www.betafox.net', 'Beta Fox')
+    module.Domains.Add('www.tcbscans.net', 'TCB Scans')
 
     module = Module.New()
 
     module.Language = 'Spanish'
 
     module.Domains.Add('bokugents.com', 'Bokugen Translations')
+    module.Domains.Add('hadesnofansub.com', 'HADES NO FANSUB')
     module.Domains.Add('housemangas.com', 'HouseMangas')
+    module.Domains.Add('manhuaespanol.com', 'Manhuas español')
+    module.Domains.Add('mantraz-scan.com', 'Manhuas español')
+    module.Domains.Add('mg.mundodrama.site', 'Inmortal scan')
     module.Domains.Add('mhscans.com', 'MHScans')
     module.Domains.Add('ragnarokscanlation.com', 'Ragnarok Scanlation')
     module.Domains.Add('selevertranslation.com', 'Selever Translation')
     module.Domains.Add('taurusfansub.com', 'Taurus Fansub')
-    module.Domains.Add('taurusmanga.com', 'Templo de las Traducciones')
+    module.Domains.Add('visortecno.com', 'Visor Tecno')
     
     module = Module.New()
     

@@ -5,6 +5,7 @@ function Register()
     module.Adult = false
 
     module.Domains.Add('komikcast.com')
+    module.Domains.Add('komikcast.lol')
 
 end
 

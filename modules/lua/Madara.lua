@@ -72,6 +72,7 @@ function Register()
 
     module.Language = 'Spanish'
 
+    module.Domains.Add('emperorscan.org', 'Emperor Scan')
     module.Domains.Add('manhwa-latino.com', 'Manhwa-latino')
     module.Domains.Add('olympusscanlation.com', 'Olympus Scanlation')
     
@@ -207,6 +208,10 @@ function GetInfo()
             info.Summary = dom.SelectValue('//h5[contains(text(),"Summary")]/following-sibling::div')
     
         end
+
+        if(isempty(info.Summary)) then -- mg.mundodrama.site
+            info.Summary = dom.SelectValue('//div[contains(@class,"manga-summary")]/p')
+        end
     
         if(isempty(info.Language)) then
     
@@ -219,10 +224,13 @@ function GetInfo()
         if(isempty(info.Tags)) then -- mm-scans.org
             info.Tags = dom.SelectValue('//div[h5[contains(text(),"Genre")]]/following-sibling::div')
         end
+
+        if(isempty(info.Tags)) then -- mg.mundodrama.site
+            info.Tags = dom.SelectValues('(//div[contains(@class,"genres-content")])[1]/a')
+        end
     
         info.Title = CleanTitle(info.Title)
     
-
     end
 
 end
