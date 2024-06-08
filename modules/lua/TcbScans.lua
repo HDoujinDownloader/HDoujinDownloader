@@ -6,7 +6,8 @@ function Register()
     module.Domains.Add('onepiecechapters.com')
     module.Domains.Add('tcb-backup.bihar-mirchi.com')
     module.Domains.Add('tcbscans.com')
-
+    module.Domains.Add('tcbscans.me')
+	
 end
 
 function GetInfo()
