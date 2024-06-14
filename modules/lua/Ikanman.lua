@@ -134,7 +134,8 @@ function GetPages()
 
         page.Url = baseUrl..'?e='..tostring(imageData['sl']['e'])..'&m='..tostring(imageData['sl']['m'])
 
-        -- Some galleries will accept image URLs with the "cid" and "md5" parameters in additional to the "e" and "m" parameters (the newer format), the latter of which works universally.
+        -- Some galleries will accept image URLs with the "cid" and "md5" parameters in additional to the "e" and
+        -- "m" parameters (the newer format), the latter of which works universally.
         -- We'll add the old format as a backup URL just in case the primary URL doesn't work.
 
         page.BackupUrls.Add(baseUrl..'?cid='..tostring(imageData['cid'])..'&md5='..tostring(imageData['sl']['m']))
