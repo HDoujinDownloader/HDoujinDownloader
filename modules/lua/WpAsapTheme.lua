@@ -4,6 +4,7 @@ function Register()
     module.Language = 'pt'
     module.Adult = true
 
+    module.Domains.Add('comics18.net', 'COMICSPORNO XXX')
     module.Domains.Add('comics18.org', 'Comics18')
 
 end
