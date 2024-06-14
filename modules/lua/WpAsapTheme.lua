@@ -1,13 +1,14 @@
--- The "Orbital" theme is a near identical variant.
+-- The "Orbital" and "Blocksy" themes are near-identical variants.
 
 function Register()
 
-    module.Name = 'Asap Theme'
+    module.Name = 'Asap'
     module.Language = 'pt'
     module.Adult = true
 
     module.Domains.Add('comics18.net', 'COMICSPORNO XXX')
     module.Domains.Add('comics18.org', 'Comics18')
+    module.Domains.Add('comicsparaadultos.com', 'Comic Porno Erótico XXX')
 
 end
 
@@ -28,6 +29,10 @@ function GetPages()
 
     if(isempty(pages)) then -- Orbital
         pages.AddRange(dom.SelectValues('//div[contains(@class,"entry-content")]//p/img/@src'))
+    end
+
+    if(isempty(pages)) then -- Blocksy
+        pages.AddRange(dom.SelectValues('//div[contains(@class,"entry-content")]//img/@data-src'))
     end
 
 end
