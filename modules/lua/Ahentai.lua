@@ -4,6 +4,7 @@ function Register()
     module.Adult = true
 
     module.Domains.Add('ahentai.top')
+    module.Domains.Add('caitlin.top')
 
 end
 
@@ -22,12 +23,13 @@ function GetInfo()
         info.Title = dom.SelectValue('//h1')
     end
 
+    -- Adjust the URL so that it's pointed at the reader.
+
+    info.Url = url:replace('/article', '/readOnline')
+
 end
 
 function GetPages()
-
-    url = url:replace('/article', '/readOnline')
-    dom = Dom.New(http.Get(url))
 
     local script = dom.SelectValue('//script[contains(text(),"Image_List")]')
     local httpImage = script:regex('HTTP_IMAGE\\s*\\=\\s*\"([^"]+)', 1)
@@ -42,7 +44,7 @@ function GetPages()
         local sort = tonumber(node['sort'])
         local extension = tostring(node['extension'])
 
-        if(extension ~= 'gif') then
+        if(isempty(extension)) then
             extension = 'jpg'
         end
 
