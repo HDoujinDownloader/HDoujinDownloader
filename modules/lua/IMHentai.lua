@@ -3,6 +3,7 @@ function Register()
     module.Name = 'IMHentai'
     module.Adult = true
 
+    module.Domains.Add('comicporn.xxx', 'Comic Porn XXX')
     module.Domains.Add('imhentai.com', 'IMHentai')
     module.Domains.Add('imhentai.xxx', 'IMHentai')
 
@@ -73,6 +74,7 @@ function GetInfo()
     if(url:contains('/gallery/')) then
         
         info.Title = dom.SelectValue('//h1')
+        info.OriginalTitle = dom.SelectValue('//p[contains(@class,"subtitle")]')
         info.Parody = dom.SelectValues('//span[contains(text(),"Parodies")]/following-sibling::a/text()[1]')
         info.Characters = dom.SelectValues('//span[contains(text(),"Characters")]/following-sibling::a/text()[1]')
         info.Tags = dom.SelectValues('//span[contains(text(),"Tags")]/following-sibling::a/text()[1]')
@@ -81,6 +83,22 @@ function GetInfo()
         info.Language = dom.SelectValues('//span[contains(text(),"Languages")]/following-sibling::a/text()[1]')
         info.Type = dom.SelectValues('//span[contains(text(),"Category")]/following-sibling::a/text()[1]')
         info.Url = url
+
+        if(isempty(info.Tags)) then
+            info.Tags = dom.SelectValues('//span[contains(text(),"Tags")]/following-sibling::div//a')
+        end
+
+        if(isempty(info.Artist)) then
+            info.Artist = dom.SelectValues('//span[contains(text(),"Artists")]/following-sibling::div//a')
+        end
+
+        if(isempty(info.Language)) then
+            info.Language = dom.SelectValues('//span[contains(text(),"Languages")]/following-sibling::div//a')
+        end
+
+        if(isempty(info.Type)) then
+            info.Type = dom.SelectValues('//span[contains(text(),"Category")]/following-sibling::div//a')
+        end
 
     else
 
@@ -98,11 +116,27 @@ end
 
 function GetPages()
 
+    -- On the main site, "gallery_id" and "u_id" (from the reader) have the same value.
+    -- But for some variants, they're different, and we need to access the reader to get the latter.
+    
+    local readerUrl = dom.SelectValue('//div[contains(@class,"gthumb")]/a/@href')
+
     local loadDir = dom.SelectValue('//input[@id="load_dir"]/@value')
     local loadId = dom.SelectValue('//input[@id="load_id"]/@value')
     local galleryId = tonumber(dom.SelectValue('//input[@id="gallery_id"]/@value'))
 
-    -- The JSON object has the filenames as the key; the value is a 3-tuple starting with a letter that indicates the file type.
+    if(not isempty(readerUrl)) then
+        
+        url = readerUrl
+        dom = Dom.New(http.Get(url))
+
+        loadDir = dom.SelectValue('//input[@id="image_dir"]/@value')
+        loadId = dom.SelectValue('//input[@id="gallery_id"]/@value')
+        galleryId = tonumber(dom.SelectValue('//input[@id="u_id"]/@value'))
+
+    end
+
+    -- The JSON object has the file names as the key; the value is a 3-tuple starting with a letter that indicates the file type.
 
     local imagesJson = Json.New(tostring(dom):regex("g_th\\s*=\\s*\\$\\.parseJSON\\('(.+?)'\\)", 1))
     local imageServer = GetImageServerFromGalleryId(galleryId)
