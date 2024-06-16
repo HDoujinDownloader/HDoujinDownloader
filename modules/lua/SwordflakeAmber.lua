@@ -9,7 +9,11 @@ function Register()
 
     module.Language = 'Spanish'
 
+    module.Domains.Add('es.ikigaiweb.lat', 'Ikigai Mangas')
+    module.Domains.Add('ikigaimangas.com', 'Ikigai Mangas')
     module.Domains.Add('visorikigai.net', 'Ikigai Mangas')
+
+    -- We need the 'data-saving' so we can access the images (this value loads all images).
 
     global.SetCookie('.' .. module.Domains.First(), "data-saving", "0")
 
@@ -37,7 +41,7 @@ function GetChapters()
             local chapterNode = chapterNodes[i]
             local chapterUrl = chapterNode.SelectValue('./@href')
             local chapterTitle = chapterNode.SelectValue('.//h3')
-            
+            print(chapterUrl)
             if(not seenChapters[chapterUrl]) then
                 chapters.Add(chapterUrl, chapterTitle)
             end
@@ -53,5 +57,22 @@ function GetChapters()
 end
 
 function GetPages()
+
     pages.AddRange(dom.SelectValues('//img[contains(@alt,"Page")]/@src'))
+
+    -- Images are now loaded with qwik/json.
+
+    if(isempty(pages)) then
+
+        local jsonStr = dom.SelectValue('//script[contains(@type,"qwik/json") and contains(text(),"page.identifier")]/text()')
+        local fileNames = jsonStr:regexmany('"(\\d+\\.webp)".', 1)
+        local imageServer = '//media.ikigaimangas.cloud/series/'
+        local imagesPath = imageServer .. jsonStr:regex("page\\.identifier\\s*\\=\\s*'([^']+)'", 1):split('-'):join('/')
+
+        for fileName in fileNames do
+            pages.Add(imagesPath .. '/' .. fileName)
+        end
+        
+    end
+
 end
