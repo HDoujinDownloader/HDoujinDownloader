@@ -3,7 +3,9 @@ function Register()
     module.Name = 'MangaWorld'
     module.Language = 'it'
 
+    module.Domains.Add('mangaworld.ac')
     module.Domains.Add('mangaworld.in')
+    module.Domains.Add('www.mangaworld.ac')
     module.Domains.Add('www.mangaworld.in')
 
 end
