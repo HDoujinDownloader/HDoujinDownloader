@@ -65,6 +65,8 @@ function Register()
     module.Language = 'Portuguese'
 
     module.Domains.Add('neoxscans.net', 'NEOX Scanlator')
+    module.Domains.Add('oldi.sussytoons.com', 'Sussy Scan')
+    module.Domains.Add('sussytoons.com', 'Sussy Scan')
     
     RegisterModule(module)
 
