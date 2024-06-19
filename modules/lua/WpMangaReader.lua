@@ -69,6 +69,14 @@ function Register()
 
     module = Module.New()
 
+    module.Language = 'Portuguese'
+
+    module.Domains.Add('sssscanlator.com.br', 'sssscanlator')
+
+    RegisterModule(module)
+
+    module = Module.New()
+
     module.Language = 'Spanish'
 
     module.Domains.Add('lectorhentai.com', 'Lector Hentai')
