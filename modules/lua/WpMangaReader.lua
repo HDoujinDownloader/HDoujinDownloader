@@ -80,6 +80,7 @@ function Register()
     module.Domains.Add('shadowmangas.com', 'ShadowMangas')
     module.Domains.Add('shotasekai.club', 'Shota Sekai')
     module.Domains.Add('tecnoscann.com', 'Tecno scan')
+    module.Domains.Add('tresdaos.com', 'Tres daos')
 
     RegisterModule(module)
 
