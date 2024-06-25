@@ -75,6 +75,7 @@ function Register()
 
     module.Language = 'Spanish'
 
+    module.Domains.Add('emperor-scan.com', 'Emperor Scan')
     module.Domains.Add('emperorscan.org', 'Emperor Scan')
     module.Domains.Add('manhwa-latino.com', 'Manhwa-latino')
     module.Domains.Add('olympusscanlation.com', 'Olympus Scanlation')
