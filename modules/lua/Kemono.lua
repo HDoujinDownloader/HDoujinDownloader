@@ -105,6 +105,12 @@ function GetPages()
             page.FilenameHint = fileName
         end
 
+        -- Older versions of HDoujin Downloader cannot detect MOV files.
+
+        if(page.Url:endswith('.mov')) then
+            page.FileExtensionHint = '.mov'
+        end
+
     end
 
 end
