@@ -20,6 +20,7 @@ function Register()
     module.Domains.Add('luminousscans.gg', 'Luminous Scans')
     module.Domains.Add('luminousscans.net', 'Luminous Scans')
     module.Domains.Add('lumitoon.com', 'Luminous Scans')
+    module.Domains.Add('manhwafreak.site', 'Manhwa Freak')
     module.Domains.Add('www.asurascans.com', 'Asura Scans')
 
     if(API_VERSION >= 20230823) then
@@ -132,6 +133,28 @@ function GetPages()
 
     if(isempty(pages)) then
         pages.AddRange(dom.SelectValues('//div[@id="readerarea"]//img[@class and not(ancestor::div[contains(@class,"asurascans.rights")])]/@src'))
+    end
+
+    -- manhwafreak.site
+
+    if(isempty(pages)) then
+        local json = Json.New(dom.SelectValue('//script[contains(text(),"ts_reader.run")]'):regex('ts_reader\\.run\\((.+?)\\);', 1))
+        local defaultSource = json.SelectValue('defaultSource')
+        local sourceJson = json.SelectToken("$.sources[?(@.source=='" .. defaultSource .. "')]")
+
+        if(isempty(sourceJson)) then
+            sourceJson = json.SelectToken('$.sources[0]')
+        end
+
+        for imageUrl in sourceJson.SelectValues('images[*]') do
+
+            -- Avoid adding the loading spinner at the bottom of the page.
+
+            if(not imageUrl:contains('/page-views-count/')) then
+                pages.Add(imageUrl)
+            end
+
+        end
     end
 
 end
