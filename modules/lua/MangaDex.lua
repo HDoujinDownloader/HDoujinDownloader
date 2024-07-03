@@ -314,8 +314,14 @@ function GetChapters()
 
     local uuid = GetGalleryUuid()
     local offset = 0
-    local limit = 96
     local total = 0
+
+    -- Reading the feed too quickly causes some requests to get 400 errors.
+    -- To avoid this, we'll get as many chapters per request as possible.
+    -- The maximum value is defined in the API documentation:
+    -- https://api.mangadex.org/docs/redoc.html#tag/Manga/operation/get-manga-id-feed
+    
+    local limit = 500
 
     local preferredLanguages = GetPreferredLanguages()
     local acceptAny = preferredLanguages.Count() <= 0 or preferredLanguages.Contains(GetLanguageId("all"))
