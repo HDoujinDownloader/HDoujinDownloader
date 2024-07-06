@@ -69,25 +69,50 @@ local function GetAllFolders(url)
     
 end
 
-local function GetAllPages(url, folderPath)
+function GetAllPages(url, folderPath)
 
     local createSubfolders = toboolean(module.Settings['Create subfolders'])
-
-    local dom = Dom.New(http.Get(url))
     local pageList = PageList.New()
-    local pageUrls = dom.SelectValues('//li[contains(@class,"gallery-item") and not(.//span[contains(@class,"type-Folder") or contains(@class,"type-Comics")])]//@href')
 
-    for pageUrl in pageUrls do
+      -- Get the pagination index we will start paginating from.
 
-        local page = PageInfo.New(pageUrl)
+      local currentPaginationIndex = GetParameter(url, 'p')
 
-        if(createSubfolders and not isempty(folderPath)) then
-            page.DirectoryPath = folderPath
+      if(isempty(currentPaginationIndex)) then
+          currentPaginationIndex = 1
+      end
+  
+      local paginationIndex = tonumber(currentPaginationIndex)
+
+      local dom = Dom.New(http.Get(url))
+
+      repeat
+
+        local pageUrls = dom.SelectValues('//li[contains(@class,"gallery-item") and not(.//span[contains(@class,"type-Folder") or contains(@class,"type-Comics")])]//@href')
+
+        if(pageUrls.Count() <= 0) then
+            break
         end
 
-        pageList.Add(page)
+        for pageUrl in pageUrls do
+    
+            local page = PageInfo.New(pageUrl)
+    
+            if(createSubfolders and not isempty(folderPath)) then
+                page.DirectoryPath = folderPath
+            end
+    
+            pageList.Add(page)
+    
+        end
 
-    end
+        paginationIndex = paginationIndex + 1
+
+        if(paginationIndex < MaxPagination) then
+            dom = Dom.New(http.Get(SetPaginationIndex(url, paginationIndex)))
+        end
+
+      until(paginationIndex >= MaxPagination)
 
     -- Pages are listed in reverse chronological order.
 
