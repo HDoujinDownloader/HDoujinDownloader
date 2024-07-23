@@ -36,6 +36,7 @@ function Register()
     module.Language = 'Spanish'
 
     module.Domains.Add('bokugents.com', 'Bokugen Translations')
+    module.Domains.Add('dominiomarcial.com', 'Mantraz Scan')
     module.Domains.Add('hadesnofansub.com', 'HADES NO FANSUB')
     module.Domains.Add('housemangas.com', 'HouseMangas')
     module.Domains.Add('lectorespanol.com', 'Lector español')
