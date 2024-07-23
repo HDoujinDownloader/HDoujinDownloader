@@ -12,6 +12,7 @@ function Register()
     module.Domains.Add('es.ikigaiweb.lat', 'Ikigai Mangas')
     module.Domains.Add('ikigaimangas.com', 'Ikigai Mangas')
     module.Domains.Add('visorikigai.net', 'Ikigai Mangas')
+    module.Domains.Add('visualikigai.com', 'Ikigai Mangas')
 
     -- We need the 'data-saving' so we can access the images (this value loads all images).
 
@@ -41,7 +42,7 @@ function GetChapters()
             local chapterNode = chapterNodes[i]
             local chapterUrl = chapterNode.SelectValue('./@href')
             local chapterTitle = chapterNode.SelectValue('.//h3')
-            print(chapterUrl)
+
             if(not seenChapters[chapterUrl]) then
                 chapters.Add(chapterUrl, chapterTitle)
             end
