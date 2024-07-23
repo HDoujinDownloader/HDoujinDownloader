@@ -8,17 +8,41 @@ function Register()
 
 end
 
+local function ParseChapters()
+
+    local chapterList = ChapterList.New()
+
+    for chapterNode in dom.SelectElements('(//div[contains(@class,"episode")])[1]//a') do
+        
+        local chapterTitle = chapterNode.SelectValue('./li/text()[1]')
+        local chapterUrl = chapterNode.SelectValue('./@href')
+
+        chapterList.Add(chapterUrl, chapterTitle)
+
+    end
+
+    return chapterList
+
+end
+
 function GetInfo()
 
     info.Title = dom.SelectValue('//h1')
     info.Author = dom.SelectValues('//div[contains(text(),"Author：")]//a')
     info.Tags = dom.SelectValues('//div[contains(text(),"Tags：")]//a')
-    info.PageCount = dom.SelectValue('//div[contains(text(),"Pages：")]'):regex('\\d+')
+
+    if(ParseChapters().Count() <= 0) then
+        info.PageCount = dom.SelectValue('//div[contains(text(),"Pages：")]'):regex('\\d+')
+    end
 
     if(isempty(info.Title)) then
         info.Title = dom.SelectValue('//div[contains(@class,"panel-heading")]')
     end
 
+end
+
+function GetChapters()
+    chapters.AddRange(ParseChapters())
 end
 
 function GetPages()
