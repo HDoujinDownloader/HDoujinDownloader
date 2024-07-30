@@ -6,13 +6,6 @@ function Register()
     module.Name = 'MangaStream'
     module.Language = 'English'
 
-    module.Domains.Add('asura.gg', 'Asura Scans')
-    module.Domains.Add('asura.nacm.xyz', 'Asura Scans')
-    module.Domains.Add('asuracomic.net', 'Asura Scans')
-    module.Domains.Add('asuracomics.com', 'Asura Scans')
-    module.Domains.Add('asuracomics.gg', 'Asura Scans')
-    module.Domains.Add('asurascans.com', 'Asura Scans')
-    module.Domains.Add('asuratoon.com', 'Asura Scans')
     module.Domains.Add('cosmicscans.com', 'Cosmic Scans')
     module.Domains.Add('cosmic-scans.com', 'Cosmic Scans')
     module.Domains.Add('luminous-scans.com', 'Luminous Scans')
@@ -22,7 +15,6 @@ function Register()
     module.Domains.Add('luminousscans.net', 'Luminous Scans')
     module.Domains.Add('lumitoon.com', 'Luminous Scans')
     module.Domains.Add('manhwafreak.site', 'Manhwa Freak')
-    module.Domains.Add('www.asurascans.com', 'Asura Scans')
 
     if(API_VERSION >= 20230823) then
         module.DeferHttpRequests = true
