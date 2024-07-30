@@ -30,19 +30,22 @@ local function CleanMetadataFieldValue(value)
 
 end
 
-local function RedirectToNewSerieUrl()
+local function RedirectToNewSeriesUrl()
 
-    -- For some serie, the path looks like like this:
-    -- /series/serie-title-name-b075e10b
-    -- That numeric suffix unique id could change occassionally, breaking existing URLs in bookmarks or the download queue.
-    -- If we hit a 404 page for a serie URL, attempt to find the current alphanumeric ID and update the URL.
-    -- See https://github.com/HDoujinDownloader/HDoujinDownloader/issues/158
+    -- Series URLs have a random suffix at the end that changes periodically, invalidating bookmarks (#379).
+    -- e.g. "/series/serie-title-name-b075e10b"
+    -- The random suffix is unique for each series.
+
+    -- For now, just stripping the suffix lets us get the updated series URL.
+
+    url = RegexReplace(url, '(.+-)(.+?)$', '$1')
+    dom = Dom.New(http.Get(url))
 
 end
 
 function GetInfo()
 
-    RedirectToNewSerieUrl()
+    RedirectToNewSeriesUrl()
 
     info.Url = url
     info.Title = dom.SelectValue('//span[contains(@class,"text-xl")]')
@@ -59,7 +62,7 @@ end
 
 function GetChapters()
 
-    RedirectToNewSerieUrl()
+    RedirectToNewSeriesUrl()
 
     for chapterNode in dom.SelectElements('//div//a[contains(@class,"block") and contains(@href, "chapter")]') do
 
@@ -75,7 +78,5 @@ function GetChapters()
 end
 
 function GetPages()
-
     pages.AddRange(dom.SelectValues('//img[contains(@src, "comics")]/@src'))
-
 end
