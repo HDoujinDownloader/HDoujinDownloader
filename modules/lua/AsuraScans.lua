@@ -61,10 +61,10 @@ function GetChapters()
 
     RedirectToNewSerieUrl()
 
-    for chapterNode in dom.SelectElements('//div/a[contains(@class,"block") and contains(@href, "chapter")]') do
+    for chapterNode in dom.SelectElements('//div//a[contains(@class,"block") and contains(@href, "chapter")]') do
 
         local chapterUrl = chapterNode.SelectValue('@href')
-        local chapterTitle = chapterNode.SelectValue('div/h3[1]')
+        local chapterTitle = chapterNode.SelectValue('.')
 
         chapters.Add(chapterUrl, chapterTitle)
 
