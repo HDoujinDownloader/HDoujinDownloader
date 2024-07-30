@@ -98,8 +98,13 @@ function GetPages()
     local dataJson = galleryJson.SelectNode('data.' .. dataIndex)
     local id = dataJson.SelectValue('id')
     local key = dataJson.SelectValue('public_key')
+    local createdAt = galleryJson.SelectValue('created_at')
+    local updatedAt = galleryJson.SelectValue('updated_at')
 
-    local readerJson = GetApiJson('books/data/' .. GetGalleryPath() .. '/' .. id .. '/' .. key, true)
+    local version = isempty(updatedAt) and createdAt or updatedAt
+    local width = dataIndex
+
+    local readerJson = GetApiJson('books/data/' .. GetGalleryPath() .. '/' .. id .. '/' .. key .. '?v=' .. version .. '&w=' .. width)
     local baseUrl = readerJson.SelectValue('base')
 
     for imageUrl in readerJson.SelectValues('entries[*].path') do
