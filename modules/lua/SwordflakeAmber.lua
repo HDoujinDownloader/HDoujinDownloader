@@ -11,6 +11,7 @@ function Register()
 
     module.Domains.Add('es.ikigaiweb.lat', 'Ikigai Mangas')
     module.Domains.Add('ikigaimangas.com', 'Ikigai Mangas')
+    module.Domains.Add('ikigaimangas.meope.com', 'Ikigai Mangas')
     module.Domains.Add('visorikigai.net', 'Ikigai Mangas')
     module.Domains.Add('visualikigai.com', 'Ikigai Mangas')
 
