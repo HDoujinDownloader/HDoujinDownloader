@@ -38,8 +38,9 @@ local function RedirectToNewSeriesUrl()
 
     -- For now, just stripping the suffix lets us get the updated series URL.
 
-    url = RegexReplace(url, '(.+-)(.+?)$', '$1')
-    dom = Dom.New(http.Get(url))
+    local redirectUrl = RegexReplace(url, '(.+-)([a-z0-9]{8})$', '$1')
+
+    dom = Dom.New(http.Get(redirectUrl))
 
 end
 
