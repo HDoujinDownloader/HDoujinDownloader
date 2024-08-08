@@ -1,5 +1,7 @@
 require "ViewComics"
 
+local BaseGetPages = GetPages
+
 function Register()
 
     module.Name = 'ComicExtra'
@@ -20,6 +22,16 @@ function GetInfo()
     info.Author = dom.SelectValue('//dt[contains(text(),"Author:")]/following-sibling::dd')
     info.Tags = dom.SelectValues('//dt[contains(text(),"Genres:")]/following-sibling::dd//a')
     info.Summary = dom.SelectValue('//div[contains(@id,"film-content")]')
+
+end
+
+function GetPages()
+
+    BaseGetPages()
+
+    -- We'll get a 403 error if we set a referer.
+
+    pages.Referer = ''
 
 end
 
