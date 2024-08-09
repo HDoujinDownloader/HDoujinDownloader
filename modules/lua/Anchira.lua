@@ -108,7 +108,7 @@ function GetPages()
     local baseUrl = readerJson.SelectValue('base')
 
     for imageUrl in readerJson.SelectValues('entries[*].path') do
-        pages.Add(baseUrl .. imageUrl)
+        pages.Add(baseUrl .. imageUrl .. '?w=' .. dataIndex)
     end
 
     pages.Headers['Accept'] = '*/*'
