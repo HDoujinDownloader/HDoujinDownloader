@@ -12,9 +12,11 @@ end
 
 local function CleanTags(value)
 
-    return tostring(value)
+    value = RegexReplace(tostring(value), '\\/tag\\/([^\\/]+)\\/?', '$1')
         :replace("_", " ")
         :title()
+
+    return value
 
 end
 
@@ -51,7 +53,7 @@ function GetInfo()
     info.Artist = CleanTags(dom.SelectValues('//label[contains(text(),"artist:")]/following-sibling::a'))
     info.Circle = CleanTags(dom.SelectValues('//label[contains(text(),"group:")]/following-sibling::a'))
     info.Parody = CleanTags(dom.SelectValues('//label[contains(text(),"parody:")]/following-sibling::a'))
-    info.Tags = CleanTags(dom.SelectValues('//label[contains(text(),"male:") or contains(text(),"mixed:")]/following-sibling::a'))
+    info.Tags = CleanTags(dom.SelectValues('//label[contains(text(),"male:") or contains(text(),"mixed:") or contains(text(),"other:")]/following-sibling::a/@href'))
 
 end
 
