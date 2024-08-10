@@ -1,6 +1,7 @@
 function Register()
 
     module.Name = 'Doujindesu'
+    module.Language = 'Indonesian'
     module.Adult = true
 
     module.Domains.Add('doujindesu.tv')
