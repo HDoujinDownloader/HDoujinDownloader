@@ -4,12 +4,13 @@ function Register()
     module.Language = 'es'
 
     module.Domains.Add('nartag.com')
+    module.Domains.Add('visortraduccionesamistosas.com')
 
 end
 
 function GetInfo()
     
-    info.Title = dom.SelectValue('//h2')
+    info.Title = dom.SelectValue('//div[contains(@class,"manga__title")]//h2')
     info.Summary = dom.SelectValue('//div[contains(@class,"manga__description")]')
     info.Tags = dom.SelectValues('//div[contains(@class,"categories__list")]//a')
     info.Status = dom.SelectValue('//div[contains(@class,"manga__status")]//span')
