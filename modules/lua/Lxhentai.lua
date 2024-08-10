@@ -4,6 +4,7 @@ function Register()
     module.Language = 'vn'
     module.Adult = true
 
+    module.Domains.Add('lxmanga.life')
     module.Domains.Add('lxmanga.net')
 
 end
