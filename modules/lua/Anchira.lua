@@ -46,6 +46,24 @@ local function IsGalleryUrl(url)
     return url:contains('/g/') or url:contains('/reader/')
 end
 
+local function GetTagNamespaceName(id)
+
+    id = tostring(id)
+
+    if(id == '8') then
+        return 'male'
+    elseif(id =='9') then
+        return 'female'
+    elseif(id == '10') then
+        return 'mixed'
+    elseif(id == '12') then
+        return 'other'
+    end
+
+    return ''
+
+end
+
 function GetInfo()
 
     if(IsGalleryUrl(url)) then
@@ -54,10 +72,40 @@ function GetInfo()
 
         info.Title = json.SelectValue('title')
         info.Artist = json.SelectValues('tags[?(@.namespace==1)].name')
-        info.Language = json.SelectValues('tags[?(@.namespace==11)].name')
+        info.Circle = json.SelectValues('tags[?(@.namespace==2)].name')
         info.Magazine = json.SelectValues('tags[?(@.namespace==4)].name')
+        info.Uploader = json.SelectValues('tags[?(@.namespace==7)].name')
+        info.Language = json.SelectValues('tags[?(@.namespace==11)].name')
         info.PageCount = json.SelectValues('thumbnails.entries[*]').Count()
-        info.Tags = json.SelectValues('tags[*].name')
+
+        local tags = List.New()
+
+        for tagNode in json.SelectNodes('tags[*]') do
+            
+            -- Include unnamespaced tags, as well as "Male", "Female", "Mixed", and "Other".
+
+            local tagNamespaceId = tagNode.SelectValue('namespace')
+
+            if(isempty(tagNamespaceId) or 
+                tagNamespaceId == '8' or 
+                tagNamespaceId == '9' or 
+                tagNamespaceId == '10' or 
+                tagNamespaceId == '12') then
+
+                local tagNamespace = GetTagNamespaceName(tagNamespaceId)
+                local tagName = tagNode.SelectValue('name')
+
+                if(isempty(tagNamespace)) then
+                    tags.Add(tagName)
+                else
+                    tags.Add(tagNamespace .. ':' .. tagName)
+                end
+
+            end
+
+        end
+
+        info.Tags = tags
         
     else
 
