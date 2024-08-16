@@ -33,6 +33,13 @@ function Register()
 
     module = Module.New()
 
+    module.Language = 'French'
+
+    module.Domains.Add('toonfr.com', 'Toonfr')
+    module.Domains.Add('x-manga.net', 'X-MANGA')
+
+    module = Module.New()
+
     module.Language = 'Spanish'
 
     module.Domains.Add('bokugents.com', 'Bokugen Translations')
