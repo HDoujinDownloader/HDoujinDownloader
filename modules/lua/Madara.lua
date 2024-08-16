@@ -55,6 +55,14 @@ function Register()
     RegisterModule(module)
 
     module = module.New()
+
+    module.Language = 'French'
+
+    module.Domains.Add('epsilonscan.to', 'Epsilon Scan')
+
+    RegisterModule(module)
+
+    module = module.New()
     
     module.Language = 'Korean'
 
