@@ -17,6 +17,7 @@ function Register()
     module.Domains.Add('manga18h.com', 'Manga18h')
     module.Domains.Add('manga18sx.com', 'Manga18SX')
     module.Domains.Add('mangaclash.com', 'Manga Clash')
+    module.Domains.Add('mangadistrict.com', 'MANGA DISTRICT')
     module.Domains.Add('mangadna.com', 'MangaDNA')
     module.Domains.Add('mangalord.com', 'Manga Lord')
     module.Domains.Add('mangapl.com', 'MangaPL')
@@ -345,13 +346,19 @@ function GetPages()
         -- Note that we may get image URLs this way, but they're not guaranteed to be what we want (manhwatop.com).
 
         local possibleImageUrls = dom.SelectValues('//div[input[@id="wp-manga-current-chap"]]//img/@src')
-        local imageUrlsAreValid = not (isempty(pages) or possibleImageUrls[0]:contains('/loader.svg'))
+        local imageUrlsAreValid = not (isempty(pages) or possibleImageUrls[0]:contains('/loader.svg') or possibleImageUrls[0]:contains('/wp-fastest-cache-premium/'))
 
         if(imageUrlsAreValid) then
             pages.AddRange(possibleImageUrls)
         end
 
-        -- Attempt to extract the images from the data-src attribute instead.
+        -- If the website uses the "WP Fastest Cache" plugin, we need to get the images from the "data-wpfc-original-src" attribute.
+
+        if(isempty(pages)) then
+            pages.AddRange(dom.SelectValues('//div[input[@id="wp-manga-current-chap"]]//img/@data-wpfc-original-src')) -- mangadistrict.com
+        end 
+
+        -- Attempt to extract the images from the "data-src" attribute instead.
 
         if(isempty(pages)) then
             pages.AddRange(dom.SelectValues('//div[input[@id="wp-manga-current-chap"]]//img/@data-src')) -- webtoon.xyz
