@@ -1,9 +1,24 @@
 As of version 2021.5.1.0, the changelog will only contain updates made to the HDoujin Downloader application.
 For module updates, see: https://github.com/HDoujinDownloader/HDoujinDownloader/commits/master/modules/lua
 
-[v2024.3.9.25]
+[v2024.8.21.0]
 
-- [NEW] Added setting to enable DPI awareness (Tools > General settings > Advanced)
+- [NEW] Added built-in web browser
+- [NEW] Added drag-and-drop support
+- [NEW] Added option to use lowercase tags (Tools > General settings > Advanced, "Metadata.General.TagCase")
+- [NEW] Made formatting token names more consistent, added additional formatting tokens
+- [NEW] Modules can now specify thumbnail URLs for manga, chapters, and pages
+- [NEW] Themes can now be applied on startup (Tools > General settings > Advanced, "Interface.Main.ApplyThemeOnStartup")
+- [NEW] URLs can now be opened in the user's preferred web browser/in private browsing mode
+- [MISC] Changed JSON info format defaults (outer "manga_info" object is now disabled by default)
+- [MISC] File type detection is now enabled by default
+- [MISC] Improved appearance on high DPI displays (Tools > General settings > Advanced, "Interface.DpiAware")
+- [MISC] Thumbnails are now saved in their respective folders (e.g. chapter thumbnails are saved to chapter folder)
+- [MISC] Various improvements and bug fixes
+
+[v2024.3.25.0]
+
+- [NEW] Added setting to enable DPI awareness (Tools > General settings > Advanced, "Interface.DpiAware")
 - [FIX] Fixed crash when specifying invalid proxy
 - [FIX] Fixed downloading images at original size from exhentai when logging in with cookies
 - [MISC] Various improvements and bug fixes
