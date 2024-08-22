@@ -5,11 +5,13 @@ function Register()
 
     module.Domains.Add('*.mangafreak.me')
     module.Domains.Add('*.mangafreak.net')
+    module.Domains.Add('mangafreak.me')
     module.Domains.Add('mangafreak.net')
     module.Domains.Add('w12.mangafreak.net')
     module.Domains.Add('w13.mangafreak.net')
     module.Domains.Add('w14.mangafreak.net')
     module.Domains.Add('w15.mangafreak.net')
+    module.Domains.Add('ww1.mangafreak.me')
 
 end
 
