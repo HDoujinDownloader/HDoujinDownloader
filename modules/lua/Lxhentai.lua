@@ -18,6 +18,10 @@ function GetInfo()
     info.Translator = dom.SelectValues('//span[contains(text(),"Nhóm dịch")]/following-sibling::span//a')
     info.Status = dom.SelectValues('//span[contains(text(),"Tình trạng")]/following-sibling::a')
 
+    if(API_VERSION > 20240325) then
+        info.ThumbnailUrl = dom.SelectValue('//div[contains(@class,"cover")]//@style'):regex("url\\('([^']+)'\\)", 1)
+    end
+
 end
 
 function GetChapters()
@@ -36,7 +40,5 @@ function GetChapters()
 end
 
 function GetPages()
-
     pages.AddRange(dom.SelectValues('//img[contains(@class,"lazy")]/@src'))
-
 end
