@@ -11,9 +11,7 @@ function Register()
 end
 
 local function GetGalleryJson()
-
-    return Json.New(dom.SelectValue('//script[@id="__NEXT_DATA__"]'))
-
+    return Json.New(dom.SelectValue('//script[@id="__NEXT_DATA__"]'))    
 end
 
 local function SetApiHttpHeaders()
@@ -71,7 +69,7 @@ function GetChapters()
     local json = GetGalleryJson()
     local chaptersJson = json.SelectToken('..entities.chapters')
     local comicId = json.SelectValue('..pageProps.comic.id')
-    local baseUrl = url:before('/comics/')..'/'
+    local baseUrl = url:regex('(^.+?)\\/(?:comic|book)\\/', 1) .. '/'
 
     for chapterId in json.SelectValues('..get-chapters-by-comic-id-'..comicId..'-asc.response.data.result[*]') do
 
@@ -83,7 +81,7 @@ function GetChapters()
             local chapter = ChapterInfo.New()
 
             chapter.Title = chapterJson['title']
-            chapter.Url = baseUrl..'chapters/'..chapterId
+            chapter.Url = baseUrl .. 'chapters/' .. chapterId
     
             chapters.Add(chapter)
 
