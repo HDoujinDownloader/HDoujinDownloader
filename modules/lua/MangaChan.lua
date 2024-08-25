@@ -88,7 +88,16 @@ local function ReadTitleFromMetadata()
     -- We might not have a title yet if added from the reader.
 
     if(isempty(title)) then
+
         title = CleanTitle(dom.Title)
+
+        local chapterSubtitle = dom.SelectValue('//script[contains(text(),\'"volch":\')]')
+            :regex('"volch":"([^"]+)', 1)
+
+        if(not isempty(chapterSubtitle)) then
+            title = title .. ' - ' .. chapterSubtitle
+        end
+
     end
 
     return title
@@ -185,6 +194,10 @@ function GetPages()
     url = SetDevelopmentAccessParameter(url)
 
     pages.AddRange(ParsePages(url))
+
+    -- A referer is required in order to access the images (otherwise we get a 404 error).
+
+    pages.Referer = 'https://' .. module.Domain .. '/'
 
 end
 
