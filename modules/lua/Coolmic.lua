@@ -125,7 +125,7 @@ function GetPages()
     end
 
     local json = GetApiJson(GetChapterId())
-    
+
     local signedCookies = json.SelectToken('signed_cookie')
     local policy = signedCookies.SelectValue('CloudFront-Policy')
     local signature = signedCookies.SelectValue('CloudFront-Signature')
