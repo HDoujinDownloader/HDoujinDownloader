@@ -141,11 +141,29 @@ function GetPages()
 
     local dataSaver = toboolean(module.Settings['Data saver'])
     local galleryJson = GetApiJson('books/detail/' .. GetGalleryPath())
+
+    -- Note that not all galleries will have all resolutions available.
+    -- We can't access images with resolutions that don't have a "public_key" value.
+
+    local resolutions = dataSaver and 
+        { 1280, 980, 780, 1600, 0 } or -- Prefer small resolutions
+        { 0, 1600, 1280, 980, 780 } -- Prefer high resolutions (or original quality)
    
-    local dataIndex = dataSaver and "1280" or "0"
-    local dataJson = galleryJson.SelectNode('data.' .. dataIndex)
-    local id = dataJson.SelectValue('id')
-    local key = dataJson.SelectValue('public_key')
+    local dataJson, dataIndex, id, key
+
+    for _, resolution in ipairs(resolutions) do
+
+        dataJson = galleryJson.SelectNode('data.' .. tostring(resolution))
+        dataIndex = resolution
+        id = dataJson.SelectValue('id')
+        key = dataJson.SelectValue('public_key')
+
+        if(not isempty(key)) then
+            break
+        end
+
+    end
+
     local createdAt = galleryJson.SelectValue('created_at')
     local updatedAt = galleryJson.SelectValue('updated_at')
 
