@@ -23,14 +23,6 @@ local function DetectLoginRequired()
     
 end
 
-local function GetJsonEpisodeObject()
-
-    local episodeObject = dom.SelectValue("//@*[local-name()=':episode-object']")
-
-    return Json.New(episodeObject:replace('&quot;', '\"'))
-
-end
-
 local function GetJsonPageObjects()
 
     local pageObjects = dom.SelectValue("//@*[local-name()=':page-objects']")
@@ -55,7 +47,7 @@ end
 
 local function GetChapterId()
 
-    local episodeJson = GetJsonEpisodeObject().SelectToken('episode')
+    local episodeJson = GetJsonPageObjects().SelectToken('episode')
 
     return episodeJson.SelectValue('id')
 
