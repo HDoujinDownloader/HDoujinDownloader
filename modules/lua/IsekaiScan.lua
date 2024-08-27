@@ -96,7 +96,11 @@ local function GetChaptersFromNode(node, volumeNumber)
 
         end
 
-        chapters.Add(chapterInfo)
+        -- Some sites have download links that we need to ignore (lhtranslation.net).
+
+        if(chapterInfo.Url ~= "#") then
+            chapters.Add(chapterInfo)
+        end
 
     end
 
