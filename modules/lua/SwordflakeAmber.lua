@@ -14,6 +14,7 @@ function Register()
     module.Domains.Add('ikigaimangas.meope.com', 'Ikigai Mangas')
     module.Domains.Add('visorikigai.meope.com', 'Ikigai Mangas')
     module.Domains.Add('visorikigai.net', 'Ikigai Mangas')
+    module.Domains.Add('visorikigai.nipase.com', 'Ikigai Mangas')
     module.Domains.Add('visualikigai.com', 'Ikigai Mangas')
 
     -- We need the 'data-saving' so we can access the images (this value loads all images).
