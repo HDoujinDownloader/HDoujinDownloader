@@ -71,7 +71,6 @@ function GetChapters()
         local chapterTitle = chapterNode.SelectValue('./text()[1]') .. ' ' .. chapterNode.SelectValue('./text()[2]')
         local chapterSubtitle = chapterNode.SelectValue('./span')
 
-
         if(not isempty(chapterSubtitle)) then
             chapterTitle = chapterTitle .. ' - ' .. chapterSubtitle
         end
