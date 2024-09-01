@@ -68,7 +68,12 @@ function GetChapters()
     for chapterNode in dom.SelectElements('//div//a[contains(@class,"block") and contains(@href, "chapter")]') do
 
         local chapterUrl = chapterNode.SelectValue('@href')
-        local chapterTitle = chapterNode.SelectValue('.')
+        local chapterTitle = chapterNode.SelectValue('./text()[1]') .. ' ' .. chapterNode.SelectValue('./text()[2]')
+        local chapterSubtitle = chapterNode.SelectValue('./span')
+
+        if(not isempty(chapterSubtitle)) then
+            chapterTitle = chapterTitle .. ' - ' .. chapterSubtitle
+        end
 
         chapters.Add(chapterUrl, chapterTitle)
 
@@ -79,5 +84,7 @@ function GetChapters()
 end
 
 function GetPages()
+
     pages.AddRange(dom.SelectValues('//img[contains(@src, "comics")]/@src'))
+
 end
