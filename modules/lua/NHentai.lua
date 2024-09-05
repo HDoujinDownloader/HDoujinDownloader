@@ -178,9 +178,10 @@ function Login()
     if(isempty(http.Cookies)) then
 
         local domain = module.Domain
-        local loginUrl = 'https://'..domain..'/login/'
+        local loginUrl = 'https://' .. domain .. '/login/'
 
-        http.Referer = loginUrl
+        http.Headers['Origin'] = 'https://' .. module.Domain
+        http.Headers['Referer'] = 'https://' .. module.Domain .. '/login/?next=/'
         
         local dom = Dom.New(http.Get(loginUrl))
         
@@ -191,7 +192,7 @@ function Login()
 
         local response = http.PostResponse(loginUrl)
 
-        if(not response.Document:contains('<i class=fa fa-sign-out">')) then
+        if(not response.Cookies.Contains('sessionid')) then
             Fail(Error.LoginFailed)
         end
 
