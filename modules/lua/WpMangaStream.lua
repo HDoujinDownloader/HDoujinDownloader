@@ -15,6 +15,7 @@ function Register()
     module.Domains.Add('luminousscans.net', 'Luminous Scans')
     module.Domains.Add('lumitoon.com', 'Luminous Scans')
     module.Domains.Add('manhwafreak.site', 'Manhwa Freak')
+    module.Domains.Add('radiantscans.com', 'Radiant Scans')
 
     if(API_VERSION >= 20230823) then
         module.DeferHttpRequests = true
