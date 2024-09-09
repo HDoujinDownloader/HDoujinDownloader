@@ -9,21 +9,15 @@ function Register()
 end
 
 local function GetMangaId()
-
     return url:regex('\\/manga\\/([^\\/]+)', 1)
-
 end
 
 local function GetChapterId()
-
     return url:regex('\\/chapter\\/([^\\/]+)', 1)
-
 end
 
-local function GetApiEndpoint()
-
+function GetApiEndpoint()
     return '/api/'
-
 end
 
 local function SetUpApiHeaders()
@@ -51,7 +45,9 @@ local function GetApiJson(path)
 
     -- Each API request updates cookies.
 
-    global.SetCookies(http.Cookies)
+    if(API_VERSION > 20240825) then
+        global.SetCookies(http.Cookies)
+    end
 
     return json
 
