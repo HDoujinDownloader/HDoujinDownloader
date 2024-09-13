@@ -40,6 +40,12 @@ function Register()
 
     module = Module.New()
 
+    module.Language = 'Portuguese'
+
+    module.Domains.Add('noindexscan.com', 'No Index Scan')
+
+    module = Module.New()
+
     module.Language = 'Spanish'
 
     module.Domains.Add('bokugents.com', 'Bokugen Translations')
