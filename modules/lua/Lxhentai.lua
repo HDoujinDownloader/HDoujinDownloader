@@ -40,5 +40,11 @@ function GetChapters()
 end
 
 function GetPages()
+
     pages.AddRange(dom.SelectValues('//img[contains(@class,"lazy")]/@src'))
+
+    if(isempty(pages)) then
+        pages.AddRange(dom.SelectValues('//div[@id="image-container"]//@data-src'))
+    end
+
 end
