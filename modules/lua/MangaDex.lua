@@ -252,7 +252,6 @@ function GetInfo()
 
     info.Title = json.SelectValue('data.attributes.title.*')
     info.AlternativeTitle = json.SelectValues('data.attributes.altTitles.*')
-    info.Summary = json.SelectValue('data.attributes.description')
     info.Tags = json.SelectValues('data.attributes.tags[*].attributes.name.*')
     info.DateReleased = json.SelectValue('data.attributes.year')
     info.Type = json.SelectValue('data.attributes.originalLanguage')
@@ -279,11 +278,19 @@ function GetInfo()
 
     end
 
-    -- Default to English if we couldn't find a summary in the user's preferred language.
+    -- If we couldn't find a matching summary, we'll default to English or use the first one available.
+
+    if(isempty(info.Summary)) then       
+        info.Summary = json.SelectValues('data.attributes.description.en')
+    end
 
     if(isempty(info.Summary)) then
-        
-        info.Summary = json.SelectValue('data.attributes.description.en')
+
+        local allSummaryTexts = json.SelectValues('data.attributes.description[*]')
+
+        if(not isempty(allSummaryTexts)) then
+            info.Summary = allSummaryTexts[0]
+        end
 
     end
 
