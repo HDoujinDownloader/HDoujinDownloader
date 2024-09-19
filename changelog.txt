@@ -1,6 +1,21 @@
 As of version 2021.5.1.0, the changelog will only contain updates made to the HDoujin Downloader application.
 For module updates, see: https://github.com/HDoujinDownloader/HDoujinDownloader/commits/master/modules/lua
 
+[v2024.9.19.0]
+
+- [NEW] Added max scraping depth setting (Tools > General settings > Advanced, "Downloads.MaxScrapingDepth")
+- [NEW] Added setting to abort download on any error (Tools > General settings > Advanced, "Downloads.StopOnError")
+- [NEW] Added support for chapter metadata files (Tools > General settings > Advanced, "Metadata.General.WriteChapterMetadataToFile")
+- [NEW] Added support for tag remapping (Tools > General settings > Advanced, "Metadata.General.TagRules")
+- [NEW] Can now configure what metadata fields are written (Tools > General settings > Advanced, "Metadata.General.IncludedFields")
+- [NEW] Implemented ComicInfo Version 2.1 (Tools > General settings > Advanced, "Metadata.ComicInfo.Version")
+- [FIX] Fixed duplicate cookies bug
+- [FIX] Fixed scheduler regression bug
+- [FIX] Fixed error when transferring files to directory with existing files
+- [MISC] Empty metadata fields are now omitted (Tools > General settings > Advanced, "Metadata.General.OmitEmptyFields")
+- [MISC] Rewrote metadata serializers
+- [MISC] Various improvements and bug fixes
+
 [v2024.8.21.0]
 
 - [NEW] Added built-in web browser
@@ -3207,7 +3222,7 @@ For module updates, see: https://github.com/HDoujinDownloader/HDoujinDownloader/
 
 [1.9.9.18]
 - [FIX] Updates for luscious.net ("page collection error" occurred occured with some doujins)
-- [FIX] Updates for luscious.net (“page collection error” occurred when downloading image galleries)
+- [FIX] Updates for luscious.net (�page collection error� occurred when downloading image galleries)
 - [FIX] Updates for mangatown.com (incorrect chapter names; pages sometimes missing)
 - [FIX] Updates for thedoujin.com (heavy optimization during page collection)
 - [FIX] Prevented potentional errors during conversion
