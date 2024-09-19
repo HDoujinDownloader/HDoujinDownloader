@@ -10,6 +10,8 @@ function Register()
     module.Domains.Add('hentaivn.net')
     module.Domains.Add('hentaivn.tv')
 
+    module.Settings.AddChoice('Image server', 'Auto', { 'Auto', 'Server 1', 'Server 2' })
+
 end
 
 local function CleanTitle(title)
@@ -82,13 +84,39 @@ end
 
 function GetPages()
 
-    -- Read the "data-src" attribute first, because the "src" attribute is just a loading spinner.
-    -- The latter is kept just in case there are chapters that haven't been updated to use the new attribute.
+    local imageServer = module.Settings['Image server']
 
-    pages.AddRange(dom.SelectValues('//div[@id="image" or @id="content_chap"]/img/@data-src'))
+    if(imageServer == 'Server 1' or imageServer == 'Auto') then
 
-    if(isempty(pages)) then
-        pages.AddRange(dom.SelectValues('//div[@id="image" or @id="content_chap"]/img/@src'))
+        -- "Server 1" is the default, so we'll just get the images directly from the page.
+
+        -- Read the "data-src" attribute first, because the "src" attribute is just a loading spinner.
+        -- The latter is kept just in case there are chapters that haven't been updated to use the new attribute.
+
+        pages.AddRange(dom.SelectValues('//div[@id="image" or @id="content_chap"]/img/@data-src'))
+
+        if(isempty(pages)) then
+            pages.AddRange(dom.SelectValues('//div[@id="image" or @id="content_chap"]/img/@src'))
+        end
+
+    else
+
+        -- We need to request the images from Server 2.
+
+        local chapterId = url:regex('\\/(?:\\d+)-(\\d+)', 1)
+        local endpoint = '/ajax_load_server.php'
+
+        http.Headers['accept'] = '*/*'
+        http.Headers['origin'] = 'https://' .. module.Domain
+        http.Headers['x-requested-with'] = 'XMLHttpRequest'
+
+        http.PostData['server_id'] = chapterId
+        http.PostData['server_type'] = '2'
+
+        dom = Dom.New(http.Post(endpoint))
+
+        pages.AddRange(dom.SelectValues('//img/@src'))        
+
     end
 
     pages.Referer = url
