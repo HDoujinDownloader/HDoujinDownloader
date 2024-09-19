@@ -83,7 +83,7 @@ local function EnsureOnGalleryPage()
 
 end
 
-local function EnqueueAllGalleries()
+local function EnqueueAllGalleries(dom)
 
     for galleryUrl in dom.SelectValues('//div[contains(@class,"container")][last()]//div[contains(@class,"gallery")]/a/@href') do
         Enqueue(galleryUrl)
@@ -135,7 +135,25 @@ function GetInfo()
 
         info.Ignore = true
 
-        EnqueueAllGalleries()
+        local maxScrapingDepth = global.GetSetting('Downloads.MaxScrapingDepth')
+
+        if(isempty(maxScrapingDepth)) then
+            maxScrapingDepth = 1
+        end
+
+        local depth = 0
+
+        for page in Paginator.New(http, dom, '//section[contains(@class,"pagination")]/a[contains(@class,"next")]/@href') do
+
+            EnqueueAllGalleries(page)
+
+            depth = depth + 1
+
+            if(depth >= tonumber(maxScrapingDepth)) then
+                break
+            end
+
+        end
 
     end
 
