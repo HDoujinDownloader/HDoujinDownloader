@@ -24,7 +24,7 @@ end
 local function IsGalleryUrl()
 
     return url:contains('/g/') or
-        url:contains('/d') -- 3hentai.net
+        url:contains('/d/') -- 3hentai.net
 
 end
 
