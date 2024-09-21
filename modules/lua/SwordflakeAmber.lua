@@ -9,21 +9,43 @@ function Register()
 
     module.Language = 'Spanish'
 
+    if(API_VERSION >= 20240919) then
+        module.Domains.Add('*')
+    end
+
     module.Domains.Add('es.ikigaiweb.lat', 'Ikigai Mangas')
     module.Domains.Add('ikigaimangas.com', 'Ikigai Mangas')
     module.Domains.Add('ikigaimangas.meope.com', 'Ikigai Mangas')
+    module.Domains.Add('lectorikigai.efope.com', 'Ikigai Mangas')
+    module.Domains.Add('lectorikigai.erigu.com', 'Ikigai Mangas')
     module.Domains.Add('visorikigai.meope.com', 'Ikigai Mangas')
     module.Domains.Add('visorikigai.net', 'Ikigai Mangas')
     module.Domains.Add('visorikigai.nipase.com', 'Ikigai Mangas')
     module.Domains.Add('visualikigai.com', 'Ikigai Mangas')
 
-    -- We need the 'data-saving' so we can access the images (this value loads all images).
+end
 
-    global.SetCookie('.' .. module.Domains.First(), "data-saving", "0")
+local function CheckGenericMatch()
+
+    if(API_VERSION < 20240919) then
+        return
+    end
+
+    if(not module.IsGeneric) then
+        return
+    end
+
+    local isGenericMatch = dom.SelectNodes('//footer//span[contains(text(),"Swordflake")]').Count() > 0
+
+    if(not isGenericMatch) then
+        Fail(Error.DomainNotSupported)
+    end
 
 end
 
 function GetInfo()
+
+    CheckGenericMatch()
 
     info.Title = dom.SelectValue('//h1')
     info.Summary = dom.SelectValue('//h1/following-sibling::p')
@@ -33,11 +55,13 @@ function GetInfo()
 end
 
 function GetChapters()
-    
+
+    CheckGenericMatch()
+
     local seenChapters = {}
 
     for page in Paginator.New(http, dom, '//nav[contains(@aria-label,"pagination")]//a[span[contains(@class,"arrow-right")]]/@href') do
-    
+
         local chapterNodes = page.SelectElements('//ul[contains(@class,"grid")]//a[contains(@href,"capitulo")]')
 
         for i = 0, chapterNodes.Count() - 1 do
@@ -62,6 +86,14 @@ end
 
 function GetPages()
 
+    CheckGenericMatch()
+
+    -- We need the 'data-saving' so we can access the images (this value loads all images).
+
+    http.Cookies.Add(GetHost(url), 'data-saving', '0')
+
+    dom = Dom.New(http.Get(url))
+
     pages.AddRange(dom.SelectValues('//img[contains(@alt,"Page")]/@src'))
 
     -- Images are now loaded with qwik/json.
@@ -76,7 +108,7 @@ function GetPages()
         for fileName in fileNames do
             pages.Add(imagesPath .. '/' .. fileName)
         end
-        
+
     end
 
 end
