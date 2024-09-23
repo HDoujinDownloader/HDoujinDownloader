@@ -92,6 +92,7 @@ function Register()
     module.Domains.Add('kns.twobluescans.com', 'Lector KNS')
     module.Domains.Add('manhwa-latino.com', 'Manhwa-latino')
     module.Domains.Add('olympusscanlation.com', 'Olympus Scanlation')
+    module.Domains.Add('seriesemperor.com', 'EmperorScan')
     
     RegisterModule(module)
 
