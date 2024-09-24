@@ -37,10 +37,23 @@ local function RedirectToNewSeriesUrl()
     -- The random suffix is unique for each series.
 
     -- For now, just stripping the suffix lets us get the updated series URL.
+    -- This works most of the time, but will occassionally result in a 500 error.
 
     local redirectUrl = RegexReplace(url, '(.+-)([a-z0-9]{8})$', '$1')
 
-    dom = Dom.New(http.Get(redirectUrl))
+    if(API_VERSION >= 20240919) then
+
+        local response = http.GetResponse(redirectUrl)
+
+        if(response.StatusCode == 200) then
+            dom = Dom.New(response.Body)
+        end
+
+    else
+
+        dom = Dom.New(http.Get(redirectUrl))
+
+    end
 
 end
 
@@ -86,5 +99,9 @@ end
 function GetPages()
 
     pages.AddRange(dom.SelectValues('//img[contains(@src, "comics")]/@src'))
+
+    if(isempty(pages)) then
+        pages.AddRange(dom.SelectValues('//img[contains(@alt,"page")]/@src'))
+    end
 
 end
