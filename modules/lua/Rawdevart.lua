@@ -1,46 +1,94 @@
 function Register()
 
     module.Name = 'Rawdevart'
-    
+    module.Language = 'Japanese'
+    module.Type = 'Manga'
+
+    module.Domains.Add('rawdevart.art', 'Rawdevart')
     module.Domains.Add('rawdevart.com', 'Rawdevart')
+    module.Domains.Add('rawsakura.com', 'RawSakura')
+
+end
+
+local function GetApiUrl()
+    return '/spa/manga/'
+end
+
+local function GetGalleryId()
+    return url:regex('-c(\\d+)(?:\\/|$)', 1)
+end
+
+local function GetChapterId()
+    return url:regex('chapter-(\\d.+)(?:\\/|$)', 1)
+end
+
+local function GetGalleryJson()
+
+    local galleryId = GetGalleryId()
+    local chapterId = GetChapterId()
+    local endpoint = GetApiUrl()
+
+    if(galleryId) then
+        endpoint = endpoint .. galleryId
+    end
+
+    if(chapterId) then
+        endpoint = endpoint .. '/' .. chapterId
+    end
+
+    http.Headers['accept'] = 'application/json, text/plain, */*'
+
+    local jsonStr = http.Get(endpoint)
+
+    return Json.New(jsonStr)
 
 end
 
 function GetInfo()
 
-    info.Title = dom.SelectValue('//h1')
-    info.Tags = dom.SelectValues('//div[contains(@class, "genres")]/a')
-    info.AlternativeTitle = dom.SelectValues('//tr[contains(., "Alt. titles")]/following-sibling::tr')
-    info.Type = dom.SelectValues('//th[contains(text(), "Type")]/following-sibling::td')
-    info.Author = dom.SelectValues('//th[contains(text(), "Author")]/following-sibling::td')
-    info.Artist = dom.SelectValues('//th[contains(text(), "Artist")]/following-sibling::td')
-    info.Status = dom.SelectValues('//th[contains(text(), "Status")]/following-sibling::td')
-    info.Publisher = dom.SelectValues('//th[contains(text(), "Publisher")]/following-sibling::td')
-    info.DateReleased = dom.SelectValues('//th[contains(text(), "Release Year")]/following-sibling::td')
-    info.Summary = dom.SelectValue('//div[contains(@class, "description")]//p[2]')
-    info.Tags = dom.SelectValues('//h6[contains(text(), "Tags")]/following-sibling::a')
-    info.ChapterCount = dom.SelectValue('//div[contains(@class, "manga-top-info")]//i[contains(@class, "fa-book")]/following-sibling::span'):regex('^\\d+')
+    local json = GetGalleryJson()
 
-    -- Make sure we're on the first page of chapters.
+    if(json.SelectNodes('chapter_detail').Count() > 0) then
 
-    info.Url = info.Url:before('?page=')
+        info.Title = json.SelectValue('chapter_detail.manga_name') .. ' ' .. json.SelectValue('chapter_detail.chapter_number')
+        info.Tags = json.SelectValue('tags[*].tag_name')
+
+    else
+
+        info.Title = json.SelectValue('detail.manga_name')
+        info.AlternativeTitle = json.SelectValue('detail.manga_others_name')
+        info.Status = json.SelectValue('detail.manga_status') == 'false' and 'ongoing' or 'completed'
+        info.Summary = json.SelectValue('detail.manga_description')
+        info.DateReleased = json.SelectValue('detail.manga_date_published')
+        info.Tags = json.SelectValue('tags[*].tag_name')
+
+        info.Author = json.SelectValue('authors[*].author_name')
+
+        if(API_VERSION > 20240919) then
+            info.Genres = json.SelectValue('tags[*].tag_name')
+        end
+
+    end
 
 end
 
 function GetChapters()
 
-    for page in Paginator.New(http, dom, '//li[contains(@class, "active")]/following-sibling::li/a/@href') do
+    local json = GetGalleryJson()
 
-        local chapterNodes = page.SelectElements('//div[contains(@class, "list-group")]//a')
+    local chapterUrlBase = dom.SelectValue('//div[contains(@class,"manga-chapters")]//a/@href'):beforelast('/') .. '/'
 
-        for i = 0, chapterNodes.Count() - 1 do
+    for chapterNode in json.SelectNodes('chapters[*]') do
 
-            local chapterUrl = chapterNodes[i].SelectValue('@href')
-            local chapterTitle = chapterNodes[i].SelectValue('span')
+        local chapterTitle = 'Chapter ' .. chapterNode.SelectValue('chapter_number')
+        local chapterSubtitle = chapterNode.SelectValue('chapter_title')
+        local chapterUrl = chapterUrlBase .. 'chapter-' ..  chapterNode.SelectValue('chapter_number')
 
-            chapters.Add(chapterUrl, chapterTitle)
-
+        if(not isempty(chapterSubtitle)) then
+            chapterTitle = chapterTitle .. ' - ' .. chapterSubtitle
         end
+
+        chapters.Add(chapterUrl, chapterTitle)
 
     end
 
@@ -50,6 +98,17 @@ end
 
 function GetPages()
 
-    pages.AddRange(dom.SelectValues('//div[@id="img-container"]//img/@data-src'))
+    local json = GetGalleryJson()
+
+    local server = json.SelectValue('chapter_detail.server')
+    local chapterContent = json.SelectValue('chapter_detail.chapter_content')
+
+    for imagePath in Dom.New(chapterContent).SelectValues('//canvas/@data-srcset') do
+
+        local imageUrl = server .. imagePath
+
+        pages.Add(imageUrl)
+
+    end
  
 end
