@@ -10,19 +10,17 @@ function Register()
 
 end
 
+local function EnqueueAllGalleries(dom)
+
+    for galleryUrl in dom.SelectValues('//div[contains(@class,"manga-grid")]//h3/a[contains(@href,"/hentai/")]/@href') do
+        Enqueue(galleryUrl)
+    end
+
+end
+
 function GetInfo()
 
-    if(url:contains('/collection/')) then
-
-        -- Add all collection entries separately.
-
-        for galleryUrl in dom.SelectValues('//div[contains(@class,"post-title")]//a/@href') do
-            Enqueue(galleryUrl)
-        end
-
-        info.Ignore = true
-
-    else
+    if(url:contains('/hentai/')) then
 
         info.Title = dom.SelectValue('//h1')
         info.OriginalTitle = dom.SelectValue('//h4')
@@ -33,6 +31,32 @@ function GetInfo()
         info.Tags = dom.SelectValues('//span[contains(text(),"Tags")]/following-sibling::span//a/span[contains(@class,"name")]')
         info.Scanlator = dom.SelectValues('//span[contains(text(),"Scanlator")]/following-sibling::span//a/span[contains(@class,"name")]')
         info.DateReleased = dom.SelectValues('//span[contains(text(),"Release Year")]/following-sibling::span//a/span[contains(@class,"name")]')
+
+    else
+
+        -- Add all collection entries separately.
+
+        info.Ignore = true
+
+        local maxScrapingDepth = global.GetSetting('Downloads.MaxScrapingDepth')
+
+        if(isempty(maxScrapingDepth)) then
+            maxScrapingDepth = 1
+        end
+
+        local depth = 0
+
+        for page in Paginator.New(http, dom, '//a[contains(@class,"nextpostslink")]//@href') do
+
+            EnqueueAllGalleries(page)
+
+            depth = depth + 1
+
+            if(depth >= tonumber(maxScrapingDepth)) then
+                break
+            end
+
+        end
 
     end
 
