@@ -10,6 +10,8 @@ function Register()
     module.Domains.Add('pixiv.net')
     module.Domains.Add('www.pixiv.net')
 
+    module.Settings.AddCheck('Use Japanese tags', false)
+
 end
 
 local function GetPreloadJson()
@@ -89,10 +91,43 @@ function GetInfo()
         info.Title = json.SelectValue('illust..illustTitle')
         info.Artist = json.SelectValue('illust..userName')
         info.Summary = json.SelectValue('illust..description')
-        info.Tags = json.SelectValues('illust..tags.tags[*].tag')
         info.DateReleased = json.SelectValue('illust..createDate')
         info.PageCount = json.SelectValue('illust..pageCount')
         info.Adult = List.New(info.Tags).Contains('R-18')
+
+        if(toboolean(module.Settings['Use Japanese tags'])) then
+
+            -- Get Japanese tags.
+
+            info.Tags = json.SelectValues('illust..tags.tags[*].tag')
+
+        else
+
+            -- Get English tags.
+
+            local tagsList = List.New()
+
+            for tagNode in json.SelectNodes('illust..tags.tags[*]') do
+
+                local tagName = tagNode.SelectValue('translation.en')
+
+                if(isempty(tagName)) then
+                    tagName = tagNode.SelectValue('romaji')
+                end
+
+                if(isempty(tagName)) then
+                    tagName = tagNode.SelectValue('tag')
+                end
+
+                if(not isempty(tagName)) then
+                    tagsList.Add(tagName)
+                end
+
+            end
+
+            info.Tags = tagsList
+
+        end
 
     end
 
