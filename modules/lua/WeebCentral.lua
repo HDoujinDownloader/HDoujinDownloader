@@ -8,7 +8,7 @@ function Register()
 end
 
 local function GetGalleryId()
-    return url:regex('\\/(?:series|chapter)\\/([^\\/#?]+)', 1)
+    return url:regex('\\/(?:series|chapters)\\/([^\\/#?]+)', 1)
 end
 
 function GetInfo()
@@ -22,10 +22,18 @@ function GetInfo()
     info.Status = dom.SelectValues('//strong[contains(text(),"Status")]/parent::*//a')
     info.DateReleased = dom.SelectValues('//strong[contains(text(),"Released")]//following-sibling::span')
 
+    if(isempty(info.Title)) then
+        info.Title = dom.Title:before('|')
+    end
+
 end
 
 function GetChapters()
-    
+
+    if(not url:contains('/series/')) then
+        return
+    end
+
     -- We need to make an additional request to get the full chapters list.
 
     local galleryId = GetGalleryId()
@@ -52,5 +60,5 @@ function GetChapters()
 end
 
 function GetPages()
-    pages.AddRange(dom.SelectValues('//img[contains(@alt,"Page")]/@src'))
+    pages.AddRange(dom.SelectValues('//img[contains(@alt,"Page") and not (@x-show)]/@src'))
 end
