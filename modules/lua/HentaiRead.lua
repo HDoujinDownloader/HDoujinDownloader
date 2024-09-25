@@ -40,7 +40,13 @@ end
 
 function GetPages()
 
-    for imageUrl in dom.SelectValues('//div[contains(@class,"image-wrapper")]//img/@data-src') do
+    local imageUrls = dom.SelectValues('//div[contains(@class,"image-wrapper")]//img/@data-src')
+
+    if(isempty(imagUrls)) then
+        imageUrls = dom.SelectValues('//div[contains(@class,"lazy-listing")]//img/@src')
+    end
+
+    for imageUrl in imageUrls do
 
         -- Strip any resolution modifiers in the URL so we can get the full-size image.
 
