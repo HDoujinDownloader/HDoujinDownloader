@@ -6,6 +6,7 @@ function Register()
 
     module.Domains.Add('lectortmo.com', 'TuMangaOnline')
     module.Domains.Add('visortmo.com', 'TuMangaOnline')
+    module.Domains.Add('zonatmo.com', 'TuMangaOnline')
 
 end
 
@@ -31,9 +32,9 @@ end
 function GetChapters()
 
     local chapterNodes = dom.SelectElements('//li[contains(@class,"upload-link")]')
-    
+
     chapterNodes.Reverse()
-    
+
     for chapterNode in chapterNodes do
 
         local chapterTitle = chapterNode.SelectValue('.//h4')
@@ -66,13 +67,13 @@ function GetPages()
 
     -- Note that a referer is required when accessing the reader, or else we'll get a 404.
     -- Follow the redirect and get the final viewer URL.
-    
+
     url = dom.SelectValue('//meta[@property="og:url"]/@content')
 
     -- Switch to "cascade" mode so we can easily access all of the images.
 
     url = RegexReplace(url, '\\/(?:cascade|paginated)$', '/cascade')
-    
+
     dom = dom.New(http.Get(url))
 
     pages.AddRange(dom.SelectValues('//img/@data-src'))
