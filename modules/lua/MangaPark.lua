@@ -15,6 +15,7 @@ function Register()
     module.Name = 'MangaPark'
     module.Language = 'English'
 
+    module.Domains.Add('mangapark.com')
     module.Domains.Add('mangapark.net')
     module.Domains.Add('mangapark.org')
 
@@ -25,9 +26,7 @@ function Register()
 end
 
 local function IsMangaParkV3()
-
     return url:contains('/comic/')
-
 end
 
 function GetInfo()
