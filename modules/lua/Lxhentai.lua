@@ -4,6 +4,7 @@ function Register()
     module.Language = 'vn'
     module.Adult = true
 
+    module.Domains.Add('lxmanga.click')
     module.Domains.Add('lxmanga.life')
     module.Domains.Add('lxmanga.net')
 
@@ -17,6 +18,7 @@ function GetInfo()
     info.Author = dom.SelectValues('//span[contains(text(),"Tác giả")]/following-sibling::span//a')
     info.Translator = dom.SelectValues('//span[contains(text(),"Nhóm dịch")]/following-sibling::span//a')
     info.Status = dom.SelectValues('//span[contains(text(),"Tình trạng")]/following-sibling::a')
+    info.Parody = dom.SelectValues('//span[contains(text(),"Doujinshi")]/following-sibling::span//a')
 
     if(API_VERSION > 20240325) then
         info.ThumbnailUrl = dom.SelectValue('//div[contains(@class,"cover")]//@style'):regex("url\\('([^']+)'\\)", 1)
@@ -29,7 +31,7 @@ function GetChapters()
     for chapterNode in dom.SelectElements('//div[contains(.,"Danh sách chương")]//ul/a') do
 
         local chapterUrl = chapterNode.SelectValue('./@href')
-        local chapterTitle = chapterNode.SelectValue('.//span')
+        local chapterTitle = chapterNode.SelectValue('.//span[last()]')
 
         chapters.Add(chapterUrl, chapterTitle)
 
