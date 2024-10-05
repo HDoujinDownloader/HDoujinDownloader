@@ -66,12 +66,46 @@ function Register()
     module.Domains.Add('taurusfansub.com', 'Taurus Fansub')
     module.Domains.Add('visorscamber-scans.com', 'visorscamber')
     module.Domains.Add('visortecno.com', 'Visor Tecno')
-    
+
     module = Module.New()
-    
+
     module.Language = 'Thai'
 
     module.Domains.Add('fcmanga.com', 'Fcmanga')
+
+    -- Enable generic support for Madara (ajax/chapters) websites.
+
+    module.Domains.Add('*')
+
+end
+
+local function CheckGenericMatch()
+
+    if(API_VERSION < 20240919) then
+        return
+    end
+
+    if(not module.IsGeneric) then
+        return
+    end
+
+    -- We'll assume we've encountered the "ajax/chapters" variant if no chapters are available directly.
+    -- There are other Madara variants this could apply to, but this seems to be the most common one.
+
+    local isGenericMatch = dom.SelectNodes('//link[contains(@href,"/themes/madara/")]').Count() > 0 and
+        dom.SelectNodes('//li[contains(@class,"wp-manga-chapter")]').Count() <= 0
+
+    if(not isGenericMatch) then
+
+        Fail(Error.DomainNotSupported)
+
+    else
+
+        -- Flagging the module as non-generic will prevent the base implementation (Madara) from checking the generic match again.
+
+        module.IsGeneric = false
+
+    end
 
 end
 
@@ -95,7 +129,7 @@ local function GetChaptersFromNode(node, volumeNumber)
         end
 
         if(volumeNumber ~= nil) then
-            
+
             chapterInfo.Volume = volumeNumber
 
             chapterInfo.Title = 'Volume ' .. volumeNumber .. ' ' .. chapterInfo.Title
@@ -114,6 +148,8 @@ end
 
 function GetInfo()
 
+    CheckGenericMatch()
+
     BaseGetInfo()
 
     -- rackusreads.com uses an anti-adblocker that messes with the title.
@@ -125,6 +161,8 @@ function GetInfo()
 end
 
 function GetPages()
+
+    CheckGenericMatch()
 
     BaseGetPages()
 
@@ -145,6 +183,8 @@ end
 
 function GetChapters()
 
+    CheckGenericMatch()
+
     local chapterListNodeCount = dom.SelectElements('//div[@id="manga-chapters-holder" or contains(@class, "chapter-content")]').Count()
 
     if(chapterListNodeCount > 0) then
@@ -160,7 +200,7 @@ function GetChapters()
         local volumeNodes = dom.SelectElements('//li[a[contains(text(),"Volume")]]')
 
         for volumeNode in volumeNodes do
-           
+
             local volumeNumber = volumeNode.SelectValue('./a'):regex('\\d+')
 
             GetChaptersFromNode(volumeNode, volumeNumber)
