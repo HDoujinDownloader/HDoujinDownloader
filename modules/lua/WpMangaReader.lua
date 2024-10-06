@@ -1,3 +1,5 @@
+-- This module is almost the same as (if not identical tostring) "WpMangaStream" (potential duplicate?).
+
 function Register()
 
     module.Name = 'MangaReader'
@@ -133,6 +135,31 @@ function Register()
 
     RegisterModule(module)
 
+    -- Enable generic support for MangaRead/MangaStream websites.
+
+    module.Domains.Add('*')
+
+end
+
+local function CheckGenericMatch()
+
+    if(API_VERSION < 20240919) then
+        return
+    end
+
+    if(not module.IsGeneric) then
+        return
+    end
+
+    -- We'll assume we've encountered the "ajax/chapters" variant if no chapters are available directly.
+    -- There are other Madara variants this could apply to, but this seems to be the most common one.
+
+    local isGenericMatch = dom.SelectNodes('//script[contains(@src,"/themes/mangastream/")]').Count() > 0
+
+    if(not isGenericMatch) then
+        Fail(Error.DomainNotSupported)
+    end
+
 end
 
 local function CleanTitle(title)
@@ -154,6 +181,8 @@ local function GetReaderUrl()
 end
 
 function GetInfo()
+
+    CheckGenericMatch()
 
     info.Title = CleanTitle(dom.SelectValue('//h1'))
     info.AlternativeTitle = dom.SelectValue('//span[contains(@class,"alternative")]')
@@ -226,13 +255,17 @@ function GetInfo()
     if(module.GetName(url):endsWith('Scans') or module.GetName(url):endsWith('Scanlations')) then
         info.Scanlator = module.GetName(url)
     end
-    
+
     if(isempty(info.Tags)) then -- 108read.com
         info.Tags = dom.SelectValues('//span[contains(@class,"mgen")]//a')
     end
 
+    if(not isempty(info.Author) and info.Author:trim() == '-') then
+        info.Author = ''
+    end
+
     if(module.GetName(url) == 'Flame Scans') then
-        
+
         -- The numeric prefix at the beginning of the URL isn't constant, and URLs will be invalidated when it changes.
         -- Strip the numeric prefix to get a permalink.
 
@@ -251,6 +284,8 @@ function GetInfo()
 end
 
 function GetChapters()
+
+    CheckGenericMatch()
 
     local chapterNodes = dom.SelectElements('//div[@id="chapterlist"]//div[contains(@class,"eph-num")]/a')
 
@@ -273,6 +308,8 @@ end
 
 function GetPages()
 
+    CheckGenericMatch()
+
     -- Open the reader URL if we're currently on the summary page (lectorhentai.com).
 
     local readerUrl = GetReaderUrl()
@@ -287,9 +324,9 @@ function GetPages()
     local pagesArray = tostring(dom):regex('"images"\\s*:\\s*(\\[[^\\]]+\\])', 1)
 
     if(not isempty(pagesArray)) then
-        
+
         local pagesJson = Json.New(pagesArray)
-        
+
         pages.AddRange(pagesJson.SelectValues('[*]'))
 
     else
@@ -297,9 +334,9 @@ function GetPages()
         if(isempty(pages)) then
 
             -- manhuascan.us just has the image URLs directly in the HTML.
-    
+
             pages.AddRange(dom.SelectValues('//div[@id="readerarea"]//img/@src'))
-    
+
         end
 
     end
