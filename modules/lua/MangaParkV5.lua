@@ -5,10 +5,6 @@ function Register()
 
 end
 
-local function IsMangaParkV3()
-    return url:contains('/comic/')
-end
-
 local function GetComicId()
     return url:regex('\\/(?:title|comic)\\/(\\d+)', 1)
 end
@@ -23,6 +19,20 @@ local function GetApiJson(postDataStr)
     http.Headers['content-type'] = 'application/json'
 
     return Json.New(http.Post(GetApiUrl(), postDataStr))
+
+end
+
+local function IsReaderImageUrl(imageUrl)
+
+    -- Ignore the primary manga thumbnail.
+
+    if(imageUrl:contains('/mpim/') or imageUrl:contains('/amim/')) then
+        return false
+    end
+
+    return imageUrl:contains('/comic/') or
+        imageUrl:contains('/image/mpup/') or
+        imageUrl:contains('/media/')
 
 end
 
@@ -71,9 +81,7 @@ function GetPages()
 
     for imageUrl in imagesScript:regexmany('"(https:\\/\\/[^"]+)"', 1) do
 
-        -- Ignore thumbnail images.
-
-        if(imageUrl:contains('/comic/') or imageUrl:contains('/image/mpup/') or imageUrl:contains('/media/mpup/')) then
+        if(IsReaderImageUrl(imageUrl)) then
             pages.Add(imageUrl)
         end
 
