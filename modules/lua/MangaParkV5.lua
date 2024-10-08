@@ -73,7 +73,7 @@ function GetPages()
 
         -- Ignore thumbnail images.
 
-        if(imageUrl:contains('/comic/') or imageUrl:contains('/image/mpup/')) then
+        if(imageUrl:contains('/comic/') or imageUrl:contains('/image/mpup/') or imageUrl:contains('/media/mpup/')) then
             pages.Add(imageUrl)
         end
 
