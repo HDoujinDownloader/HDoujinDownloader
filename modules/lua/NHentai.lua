@@ -15,6 +15,7 @@ function Register()
     module.Domains.Add('nhentai.xxx')
     module.Domains.Add('pt.3hentai.net', '3hentai')
     module.Domains.Add('ru.3hentai.net', '3hentai')
+    module.Domains.Add('simplyhentai.org', 'Simply Hentai')
 
     module.Settings.AddCheck('Use pretty titles', false)
         .WithToolTip('Use shorter titles with the artist, series, and language information removed.')
@@ -167,10 +168,12 @@ function GetPages()
 
     local thumbnailUrls = dom.SelectValues('//div[@id="thumbnail-container"]//img/@data-src')
 
-    -- 3hentai.net
-
-    if(isempty(thumbnailUrls)) then
+    if(isempty(thumbnailUrls)) then -- 3hentai.net
         thumbnailUrls = dom.SelectValues('//div[@id="thumbnail-gallery"]//img/@data-src')
+    end
+
+    if(isempty(thumbnailUrls)) then -- simplyhentai.org
+        thumbnailUrls = dom.SelectValues('//div[@class="thumb-container"]//img/@src')
     end
 
     -- Convert the thumbnail URLs to full image URLs.
