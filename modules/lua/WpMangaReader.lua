@@ -151,9 +151,6 @@ local function CheckGenericMatch()
         return
     end
 
-    -- We'll assume we've encountered the "ajax/chapters" variant if no chapters are available directly.
-    -- There are other Madara variants this could apply to, but this seems to be the most common one.
-
     local isGenericMatch = dom.SelectNodes('//script[contains(@src,"/themes/mangastream/")]').Count() > 0
 
     if(not isGenericMatch) then
