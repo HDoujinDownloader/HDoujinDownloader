@@ -37,21 +37,25 @@ function GetChapters()
     -- We need to make an additional request to get the full chapters list.
 
     local galleryId = GetGalleryId()
-    local chapterListEndpoint = '/series/' .. galleryId .. '/full-chapter-list'
+    local endpoint = '/series/' .. galleryId .. '/full-chapter-list'
 
     http.Headers['accept'] = '*/*'
     http.Headers['hx-current-url'] = url
     http.Headers['hx-request'] = 'true'
     http.Headers['hx-target'] = 'chapter-list'
 
-    dom = Dom.New(http.Get(chapterListEndpoint))
+    dom = Dom.New(http.Get(endpoint))
 
     for chapterNode in dom.SelectElements('//a') do
 
         local chapterUrl = chapterNode.SelectValue('@href')
-        local chapterTitle = chapterNode.SelectValue('.//span[contains(@class,"grow")]')
+        local chapterTitle = chapterNode.SelectValue('.//span[@class=""]')
 
-        chapters.Add(chapterUrl, chapterTitle)
+        -- Ignore "back to top" link.
+
+        if(not chapterUrl:startswith('#')) then
+            chapters.Add(chapterUrl, chapterTitle)
+        end
 
     end
 
@@ -60,5 +64,17 @@ function GetChapters()
 end
 
 function GetPages()
+
+    -- We need to make an additional request to get the images list.
+
+    local galleryId = GetGalleryId()
+    local endpoint = '/chapters/' .. galleryId .. '/images?is_prev=False&reading_style=long_strip'
+
+    http.Headers['accept'] = '*/*'
+    http.Headers['hx-current-url'] = url
+    http.Headers['hx-request'] = 'true'
+
+    dom = Dom.New(http.Get(endpoint))
+
     pages.AddRange(dom.SelectValues('//img[contains(@alt,"Page") and not (@x-show)]/@src'))
 end
