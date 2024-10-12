@@ -4,6 +4,7 @@ function Register()
     module.Language = 'es'
     module.Adult = false
 
+    module.Domains.Add('leerolymp.com')
     module.Domains.Add('olympusscans.com')
     module.Domains.Add('olympusv2.gg')
     module.Domains.Add('olympusvisor.com')
@@ -75,5 +76,5 @@ function GetPages()
     if(url:contains('/capitulo/')) then
         pages.AddRange(dom.SelectValues('//img[@loading]/@src'))
     end
-        
+
 end
