@@ -54,6 +54,14 @@ local function GetImageServerFromGalleryId(galleryId)
 
 end
 
+local function EnqueueAllGalleries(dom)
+
+    for galleryUrl in dom.SelectValues('//h2[contains(@class,"gallery_title")]//a/@href') do
+        Enqueue(galleryUrl)
+    end
+
+end
+
 function GetInfo()
 
     if(url:contains('/view/')) then
@@ -104,11 +112,27 @@ function GetInfo()
 
         -- Assume a tag URL was added, and add all galleries to the download queue.
 
-        for galleryUrl in dom.SelectValues('//h2[contains(@class,"gallery_title")]//a/@href') do
-            Enqueue(galleryUrl)
+        info.Ignore = true
+
+        local maxScrapingDepth = global.GetSetting('Downloads.MaxScrapingDepth')
+
+        if(isempty(maxScrapingDepth)) then
+            maxScrapingDepth = 1
         end
 
-        info.Ignore = true
+        local depth = 0
+
+        for page in Paginator.New(http, dom, '//a[contains(@class,"page-link") and contains(text(), "Next")]/@href') do
+
+            EnqueueAllGalleries(page)
+
+            depth = depth + 1
+
+            if(depth >= tonumber(maxScrapingDepth)) then
+                break
+            end
+
+        end
 
     end
 
