@@ -75,7 +75,7 @@ local function GetApiUrl(path)
             result = baseUrl .. path
 
         else
-            
+
             result = path
 
         end
@@ -92,6 +92,11 @@ local function SetUpApiHeaders(version)
 
     local js = JavaScript.New()
     local token = GetToken()
+    local userId = module.Settings['User ID']
+
+    if(isempty(userId)) then
+        userId = '0'
+    end
 
     http.Headers['accept'] = '*/*'
     http.Headers['deviceId'] = GetDeviceId()
@@ -104,7 +109,7 @@ local function SetUpApiHeaders(version)
     http.Headers['timestamp'] = tostring(js.Execute('Date.now()'))
     http.Headers['timezone'] = 'America/California'
     http.Headers['ua'] = 'web'
-    http.Headers['user-id'] = module.Settings['User ID'] or '0'
+    http.Headers['user-id'] = userId
     http.Headers['version'] = '0.1.5a'
     http.Headers['x-api-key'] = 'SUPERCOOLAPIKEY2021#@#('
     http.Headers['x-origin'] = module.Domain
@@ -140,7 +145,7 @@ local function GetComicId()
     -- toptoonplus.com/comic/<comic_id>/
     -- toptoonplus.com/content/<title>/<comic_id>
     -- daycomics.com/content/<comic_id>
-    
+
     return url:regex('\\/(?:comic|content\\/[^\\d]+|content)\\/(\\d+)', 1)
 
 end
@@ -224,11 +229,11 @@ function GetPages()
     pages.AddRange(json.SelectValues("data.episode[*].contentImage.jpeg[*].path"))
 
     if(isempty(pages)) then
-       
+
         -- The episode is only available as WebP.
 
         pages.AddRange(json.SelectValues("data.episode[*].contentImage.webp[*].path"))
-        
+
     end
 
 end
@@ -238,7 +243,7 @@ function Login()
     local token = GetToken()
 
     if(isempty(token)) then
-        
+
         local loginEndpoint = GetApiUrl('auth/generateToken')
 
         SetUpApiHeaders('v2')
