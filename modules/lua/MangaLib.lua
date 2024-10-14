@@ -1,0 +1,120 @@
+function Register()
+
+    module.Name = 'MangaLib'
+    module.Language = 'Russian'
+
+    module.Domains.Add('hentailib.me', 'HentaiLib')
+    module.Domains.Add('mangalib.me', 'MangaLib')
+    module.Domains.Add('mangalib.org', 'MangaLib')
+    module.Domains.Add('ranobelib.me', 'RanobeLib')
+
+end
+
+local function GetGallerySlug()
+   return url:regex('\\/manga\\/([^\\/#?^\\s]+)', 1)
+end
+
+local function GetApiUrl()
+
+    local apiDomain = 'api.' .. module.Domain
+
+    if(module.Name == 'MangaLib') then
+        apiDomain = 'api.mangalib.me'
+    elseif(module.Name == 'HentaiLib') then
+        apiDomain = 'api.lib.social'
+    end
+
+    return '//' .. apiDomain .. '/api/'
+
+end
+
+local function GetApiJson(endpoint)
+
+    http.Headers['accept'] = '*/*'
+    http.Headers['content-type'] = 'application/json'
+    http.Headers['origin'] = 'https://' .. module.Domain
+    http.Headers['referer'] = 'https://' .. module.Domain .. '/'
+
+    local jsonStr = http.Get(endpoint)
+
+    return Json.New(jsonStr)
+
+end
+
+local function GetGalleryJson()
+
+    local slug = GetGallerySlug()
+    local endpoint = GetApiUrl() .. 'manga/' .. slug .. '?fields[]=background&fields[]=eng_name&fields[]=otherNames&fields[]=summary&fields[]=releaseDate&fields[]=type_id&fields[]=caution&fields[]=views&fields[]=close_view&fields[]=rate_avg&fields[]=rate&fields[]=genres&fields[]=tags&fields[]=teams&fields[]=user&fields[]=franchise&fields[]=authors&fields[]=publisher&fields[]=userRating&fields[]=moderated&fields[]=metadata&fields[]=metadata.count&fields[]=metadata.close_comments&fields[]=manga_status_id&fields[]=chap_count&fields[]=status_id&fields[]=artists&fields[]=format'
+
+    return GetApiJson(endpoint)
+
+end
+
+function GetInfo()
+
+    local json = GetGalleryJson()
+
+    info.Title = json.SelectValue('data.rus_name')
+    info.OriginalTitle = json.SelectValue('data.name')
+    info.AlternativeTitle = json.SelectValues('data.otherNames[*]')
+    info.Summary = json.SelectValue('data.summary')
+    info.DateReleased = json.SelectValue('data.releaseDate')
+    info.Translator = json.SelectValues('data.teams[*].name')
+    info.Tags = json.SelectValues('data.genres[*].name')
+
+end
+
+function GetChapters()
+
+    local slug = GetGallerySlug()
+    local json = GetApiJson('manga/' .. slug .. '/chapters')
+
+    for chapterNode in json.SelectNodes('data[*]') do
+
+        local volumeNumber = chapterNode.SelectValue('volume')
+        local chapterNumber = chapterNode.SelectValue('number')
+        local chapterSubtitle = chapterNode.SelectValue('name')
+        local chapterUrl = '/ru/' .. slug .. '/read/v' .. volumeNumber .. '/c' .. chapterNumber
+        local chapterTitle = 'Том ' .. volumeNumber .. ' Глава ' .. chapterNumber
+
+        if(not isempty(chapterSubtitle)) then
+            chapterTitle = chapterTitle .. ' - ' .. chapterSubtitle
+        end
+
+        local chapter = ChapterInfo.New()
+
+        chapter.Title = chapterTitle
+        chapter.Url = chapterUrl
+        chapter.Volume = volumeNumber
+
+        chapters.Add(chapter)
+
+    end
+
+end
+
+function GetPages()
+
+    local slug = GetGallerySlug()
+    local imageServersJson = GetApiJson('constants?fields[]=imageServers')
+
+    local volumeNumber = url:regex('\\/read\\/v(\\d+)', 1)
+    local chapterNumber = url:regex('\\/read\\/.+?\\/c(\\d+)', 1)
+    local chapterJson = GetApiJson('manga/' .. slug .. '/chapter?number=' .. chapterNumber .. '&volume=' .. volumeNumber)
+
+    local mainImageServer = imageServersJson.SelectValue('data.imageServers[0].url')
+    local secondaryImageServer = imageServersJson.SelectValue('data.imageServers[1].url')
+
+    for imageUrl in chapterJson.SelectValues('data.pages[*].url') do
+
+        local page = PageInfo.New()
+
+        page.Url = mainImageServer .. imageUrl
+
+        page.BackupUrls.Add(secondaryImageServer .. imageUrl)
+
+        pages.Add(page)
+
+    end
+
+end
