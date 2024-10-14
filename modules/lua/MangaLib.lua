@@ -4,9 +4,11 @@ function Register()
     module.Language = 'Russian'
 
     module.Domains.Add('hentailib.me', 'HentaiLib')
+    module.Domains.Add('hentailib.org', 'HentaiLib')
     module.Domains.Add('mangalib.me', 'MangaLib')
     module.Domains.Add('mangalib.org', 'MangaLib')
     module.Domains.Add('ranobelib.me', 'RanobeLib')
+    module.Domains.Add('v1.hentailib.org', 'HentaiLib')
 
 end
 
@@ -30,10 +32,16 @@ end
 
 local function GetApiJson(endpoint)
 
-    http.Headers['accept'] = '*/*'
-    http.Headers['content-type'] = 'application/json'
-    http.Headers['origin'] = 'https://' .. module.Domain
-    http.Headers['referer'] = 'https://' .. module.Domain .. '/'
+    http.Headers['Accept'] = '*/*'
+    http.Headers['Content-Type'] = 'application/json'
+    http.Headers['Origin'] = 'https://' .. module.Domain
+    http.Headers['Referer'] = 'https://' .. module.Domain .. '/'
+
+    if(module.Name == 'MangaLib') then
+        http.Headers['Site-Id'] = '1'
+    elseif(module.Name == 'HentaiLib') then
+        http.Headers['Site-Id'] = '4'
+    end
 
     local jsonStr = http.Get(endpoint)
 
