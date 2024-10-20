@@ -13,7 +13,7 @@ function Register()
 end
 
 local function GetGallerySlug()
-   return url:regex('\\/manga\\/([^\\/#?^\\s]+)', 1)
+   return url:regex('\\/(?:ru\\/manga|ru)\\/([^\\/#?^\\s]+)', 1)
 end
 
 local function GetApiUrl()
@@ -58,17 +58,52 @@ local function GetGalleryJson()
 
 end
 
+local function GetChapterJson()
+
+    local slug = GetGallerySlug()
+    local volumeNumber = url:regex('\\/read\\/v(\\d+)', 1)
+    local chapterNumber = url:regex('\\/read\\/.+?\\/c(\\d+)', 1)
+
+    local chapterJson = GetApiJson('manga/' .. slug .. '/chapter?number=' .. chapterNumber .. '&volume=' .. volumeNumber)
+
+    return chapterJson
+
+end
+
 function GetInfo()
 
-    local json = GetGalleryJson()
+    if(url:contains('/read/')) then
 
-    info.Title = json.SelectValue('data.rus_name')
-    info.OriginalTitle = json.SelectValue('data.name')
-    info.AlternativeTitle = json.SelectValues('data.otherNames[*]')
-    info.Summary = json.SelectValue('data.summary')
-    info.DateReleased = json.SelectValue('data.releaseDate')
-    info.Translator = json.SelectValues('data.teams[*].name')
-    info.Tags = json.SelectValues('data.genres[*].name')
+        -- A chapter URL was added.
+
+        local json = GetChapterJson()
+
+        local volumeNumber = json.SelectValue('data.volume')
+        local chapterNumber = json.SelectValue('data.number')
+        local chapterSubtitle = json.SelectValue('data.name')
+        local chapterTitle = 'Том ' .. volumeNumber .. ' Глава ' .. chapterNumber
+
+        if(not isempty(chapterSubtitle)) then
+            chapterTitle = chapterTitle .. ' - ' .. chapterSubtitle
+        end
+
+        info.Title = chapterTitle
+
+    else
+
+        -- A gallery URL was added.
+
+        local json = GetGalleryJson()
+
+        info.Title = json.SelectValue('data.rus_name')
+        info.OriginalTitle = json.SelectValue('data.name')
+        info.AlternativeTitle = json.SelectValues('data.otherNames[*]')
+        info.Summary = json.SelectValue('data.summary')
+        info.DateReleased = json.SelectValue('data.releaseDate')
+        info.Translator = json.SelectValues('data.teams[*].name')
+        info.Tags = json.SelectValues('data.genres[*].name')
+
+    end
 
 end
 
@@ -103,12 +138,8 @@ end
 
 function GetPages()
 
-    local slug = GetGallerySlug()
     local imageServersJson = GetApiJson('constants?fields[]=imageServers')
-
-    local volumeNumber = url:regex('\\/read\\/v(\\d+)', 1)
-    local chapterNumber = url:regex('\\/read\\/.+?\\/c(\\d+)', 1)
-    local chapterJson = GetApiJson('manga/' .. slug .. '/chapter?number=' .. chapterNumber .. '&volume=' .. volumeNumber)
+    local chapterJson = GetChapterJson()
 
     local mainImageServer = imageServersJson.SelectValue('data.imageServers[0].url')
     local secondaryImageServer = imageServersJson.SelectValue('data.imageServers[1].url')
