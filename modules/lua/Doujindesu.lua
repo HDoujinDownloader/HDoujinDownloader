@@ -5,6 +5,7 @@ function Register()
     module.Adult = true
 
     module.Domains.Add('doujindesu.tv')
+    module.Domains.Add('doujindesu.xxx')
 
 end
 
