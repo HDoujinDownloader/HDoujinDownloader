@@ -4,6 +4,7 @@ require "Madara"
 
 local BaseGetInfo = GetInfo
 local BaseGetPages = GetPages
+local BaseGetChapters = GetChapters
 
 function Register()
 
@@ -93,22 +94,12 @@ local function CheckGenericMatch()
         return
     end
 
-    -- We'll assume we've encountered the "ajax/chapters" variant if no chapters are available directly.
-    -- There are other Madara variants this could apply to, but this seems to be the most common one.
+    -- We'll detect Madara here, and delegate to other flavors if necessary.
 
-    local isGenericMatch = dom.SelectNodes('//link[contains(@href,"/themes/madara/")]').Count() > 0 and
-        dom.SelectNodes('//li[contains(@class,"wp-manga-chapter")]').Count() <= 0
+    local isGenericMatch = dom.SelectNodes('//script[contains(@src,"/themes/madara/")]|//link[contains(@href,"/themes/madara/")]').Count() > 0
 
     if(not isGenericMatch) then
-
         Fail(Error.DomainNotSupported)
-
-    else
-
-        -- Flagging the module as non-generic will prevent the base implementation (Madara) from checking the generic match again.
-
-        module.IsGeneric = false
-
     end
 
 end
@@ -189,35 +180,43 @@ function GetChapters()
 
     CheckGenericMatch()
 
-    local chapterListNodeCount = dom.SelectElements('//div[@id="manga-chapters-holder" or contains(@class, "chapter-content")]').Count()
+    if(module.IsGeneric and dom.SelectNodes('//li[contains(@class,"wp-manga-chapter")]').Count() > 0) then
 
-    if(chapterListNodeCount > 0) then
+        -- If this is a generic Madara match and chapters are directly available, delegate to the base Madara implementation.
 
-        local endpoint = url:trim('/') .. '/ajax/chapters/'
+        BaseGetChapters()
 
-        http.Headers['x-requested-with'] = 'XMLHttpRequest'
+    else
 
-        dom = Dom.New(http.Post(endpoint, ' '))
+        local chapterListNodeCount = dom.SelectElements('//div[@id="manga-chapters-holder" or contains(@class, "chapter-content")]').Count()
 
-        -- Chapters may be split up into separate volumes.
+        if(chapterListNodeCount > 0) then
 
-        local volumeNodes = dom.SelectElements('//li[a[contains(text(),"Volume")]]')
+            local endpoint = url:trim('/') .. '/ajax/chapters/'
 
-        for volumeNode in volumeNodes do
+            http.Headers['x-requested-with'] = 'XMLHttpRequest'
 
-            local volumeNumber = volumeNode.SelectValue('./a'):regex('\\d+')
+            dom = Dom.New(http.Post(endpoint, ' '))
 
-            GetChaptersFromNode(volumeNode, volumeNumber)
+            -- Chapters may be split up into separate volumes.
+
+            local volumeNodes = dom.SelectElements('//li[a[contains(text(),"Volume")]]')
+
+            for volumeNode in volumeNodes do
+
+                local volumeNumber = volumeNode.SelectValue('./a'):regex('\\d+')
+
+                GetChaptersFromNode(volumeNode, volumeNumber)
+
+            end
+
+            if(volumeNodes.Count() <= 0) then
+                GetChaptersFromNode(dom)
+            end
+
+            chapters.Reverse()
 
         end
-
-        if(volumeNodes.Count() <= 0) then
-
-            GetChaptersFromNode(dom)
-
-        end
-
-        chapters.Reverse()
 
     end
 
