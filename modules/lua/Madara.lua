@@ -94,6 +94,7 @@ function Register()
     module.Domains.Add('manhwa-latino.com', 'Manhwa-latino')
     module.Domains.Add('olympusscanlation.com', 'Olympus Scanlation')
     module.Domains.Add('seriesemperor.com', 'EmperorScan')
+    module.Domains.Add('zonaemperor.com', 'EmperorScan')
 
     RegisterModule(module)
 
@@ -124,29 +125,6 @@ function Register()
 
     RegisterModule(module)
 
-    -- Enable generic support for Madara websites.
-
-    module.Domains.Add('*')
-
-end
-
-local function CheckGenericMatch()
-
-    if(API_VERSION < 20240919) then
-        return
-    end
-
-    if(not module.IsGeneric) then
-        return
-    end
-
-    local isGenericMatch = dom.SelectNodes('//link[contains(@href,"/themes/madara/")]').Count() > 0 and
-        dom.SelectNodes('//li[contains(@class,"wp-manga-chapter")]').Count() > 0
-
-    if(not isGenericMatch) then
-        Fail(Error.DomainNotSupported)
-    end
-
 end
 
 local function CleanTitle(title)
@@ -174,8 +152,6 @@ local function IsTagPage()
 end
 
 function GetInfo()
-
-    CheckGenericMatch()
 
     if(IsTagPage()) then
 
@@ -281,8 +257,6 @@ end
 
 function GetChapters()
 
-    CheckGenericMatch()
-
     -- Sometimes chapters are grouped into volumes (e.g. araznovel.com).
     -- Note that it's possible to still have ungrouped chapters even when some chapters are grouped (#321).
     -- If both grouped and ungrouped chapters are present, the ungrouped chapters should be listed first.
@@ -368,8 +342,6 @@ end
 
 function GetPages()
 
-    CheckGenericMatch()
-
     local src = http.Get(url)
 
     -- Sometimes the images are stored in an array (www.porncomixonline.net).
@@ -438,8 +410,16 @@ function GetPages()
         end
 
         -- Sometimes the image URLs are in the "<p></p>" tag (manhuaplus.com) due to manga type especially for "Video Chapter" or for another reason.
+        
         if(isempty(pages)) then
             pages.AddRange(dom.SelectValues('//div[contains(@id, "chapter-video-frame") or contains(@class, "reading-content") or contains(@class, "blocks-gallery-grid")]//img/@src'))
+        end
+
+        -- If all else fails, just get all the images inside of the reader content div (zonaemperor.com).
+        -- This should be last, because it's possible to get unwanted images this way.
+
+        if(isempty(pages)) then
+            pages.AddRange(dom.SelectValues('//div[contains(@class,"reading-content")]//img/@src'))
         end
 
     end
