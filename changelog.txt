@@ -1,6 +1,20 @@
 As of version 2021.5.1.0, the changelog will only contain updates made to the HDoujin Downloader application.
 For module updates, see: https://github.com/HDoujinDownloader/HDoujinDownloader/commits/master/modules/lua
 
+[v2024.10.26.0]
+
+- [NEW] Added home/end shortcuts for download queue
+- [NEW] Added option to flag downloads as hidden (Tools > General settings > Advanced, "Downloads.FlagDownloadedFilesAsHidden")
+- [NEW] Added support for %PTITLE% token, corresponding to image titles (Pixiv, etc.)
+- [NEW] Manga/gallery URLs can now be ignored/blacklisted
+- [FIX] Fixed download for exhentai.org
+- [FIX] Fixed incorrect chapter metadata in metadata files
+- [FIX] Improved Cloudflare bypass in some scenarios
+- [FIX] Improved metadata parsing
+- [FIX] Various UI consistency fixes
+- [MISC] Main window can now be restored by single-clicking tray icon
+- [MISC] Various improvements and bug fixes
+
 [v2024.9.19.0]
 
 - [NEW] Added max scraping depth setting (Tools > General settings > Advanced, "Downloads.MaxScrapingDepth")
