@@ -7,10 +7,9 @@ function Register()
 
 end
 
+
 local function GetPageCount()
-
     return tonumber(dom.SelectValue('//span[contains(@class, "pages")]'):after(':'))
-
 end
 
 function GetInfo()
@@ -70,6 +69,8 @@ function GetPages()
             pageExtension = '.png'
         elseif(pageExtension == 'g') then
             pageExtension = '.gif'
+        elseif(pageExtension == 'w') then
+            pageExtension = '.webp'
         else
             pageExtension = '.jpg'
         end
