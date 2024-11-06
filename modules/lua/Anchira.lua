@@ -5,6 +5,10 @@ function Register()
 
     module.Domains.Add('anchira.to', 'Anchira')
     module.Domains.Add('koharu.to', 'Koharu')
+    module.Domains.Add('niyaniya.moe', 'Koharu')
+    module.Domains.Add('schale.network', 'Koharu')
+    module.Domains.Add('seia.to', 'Koharu')
+    module.Domains.Add('shupogaki.moe', 'Koharu')
 
     module.Settings.AddCheck('Data saver', false)
 
