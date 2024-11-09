@@ -16,17 +16,11 @@ function Register()
     module.Domains.Add('mangaseinen.com', 'mangaseinen.com')
     module.Domains.Add('mangatensei.com', 'MangaTensei.com')
     module.Domains.Add('mangatoto.com', 'BATO.TO')
+    module.Domains.Add('mto.to', 'BATOTO')
     module.Domains.Add('rawmanga.info', 'raw manga')
     module.Domains.Add('wto.to', 'BATO.TO')
     module.Domains.Add('zbato.net', 'BATO.TO')
     module.Domains.Add('zbato.org', 'BATO.TO')
-
-end
-
-local function IsAnyAcgV2()
-
-    return url:contains('/series/') or
-    url:contains('/chapter/')
 
 end
 
@@ -64,7 +58,7 @@ function GetChapters()
 
     else
 
-        chapters.AddRange(dom.SelectElements('//div[contains(@name,"chapter-list")]//a[contains(@href,"/title/")]'))
+        chapters.AddRange(dom.SelectElements('//div[contains(@name,"chapter-list")]//a[contains(@href,"/title/")]'))    
 
     end
 
@@ -84,5 +78,12 @@ function GetPages()
         pages.AddRange(imagesJson.SelectValues('[*][1]'))
 
     end
+
+end
+
+function IsAnyAcgV2()
+
+    return url:contains('/series/') or
+    url:contains('/chapter/')
 
 end
