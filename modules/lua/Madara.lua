@@ -11,7 +11,6 @@ function Register()
 
     module.Domains.Add('1stkissmanga.io', '1ST KISS MANGA')
     module.Domains.Add('allporncomic.com', 'AllPornComic.com')
-    module.Domains.Add('hiper.cool', 'Hipercool')
     module.Domains.Add('kunmanga.com', 'KunManga')
     module.Domains.Add('madaradex.org', 'MadaraDex')
     module.Domains.Add('manga18fx.com', 'Manga18fx')
@@ -77,6 +76,7 @@ function Register()
 
     module.Language = 'Portuguese'
 
+    module.Domains.Add('hiper.cool', 'Hipercool')
     module.Domains.Add('neoxscans.net', 'NEOX Scanlator')
     module.Domains.Add('oldi.sussytoons.com', 'Sussy Scan')
     module.Domains.Add('sussyscan.com', 'Sussy Scan')
