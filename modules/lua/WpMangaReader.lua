@@ -30,6 +30,7 @@ function Register()
     module.Domains.Add('night-scans.net', 'Night Scans')
     module.Domains.Add('nightscans.net', 'Night Scans')
     module.Domains.Add('nightscans.org', 'Night Scans')
+    module.Domains.Add('nightsup.net', 'Night scans')
     module.Domains.Add('nocturnalscans.com', 'Nocturnal Scanlations')
     module.Domains.Add('readkomik.com', 'ReadKomik')
     module.Domains.Add('realmscans.com', 'Realm Scans')
@@ -152,7 +153,7 @@ local function CheckGenericMatch()
         return
     end
 
-    local isGenericMatch = dom.SelectNodes('//script[contains(@src,"/themes/mangastream/")]').Count() > 0
+    local isGenericMatch = dom.SelectNodes('//script[contains(@src,"/themes/mangastream/")]|//script[contains(@src,"/themes/mangareader/")]').Count() > 0
 
     if(not isGenericMatch) then
         Fail(Error.DomainNotSupported)
