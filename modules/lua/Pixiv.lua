@@ -2,7 +2,7 @@ function Register()
 
     module.Name = 'Pixiv'
     module.Type = 'Artist CG'
-    
+
     -- Because artworks can be made up of multiple images, we'll often have more images than expected.
 
     module.Strict = false
@@ -19,9 +19,7 @@ local function GetPreloadJson()
     local jsonStr = dom.SelectValue('//meta[@id="meta-preload-data"]/@content')
 
     if(isempty(jsonStr)) then
-
         Fail(Error.LoginRequired)
-
     end
 
     return Json.New(jsonStr)
@@ -51,6 +49,25 @@ local function GetArtworkImagesJson(artworkId)
     local apiEndpoint = '/ajax/illust/' .. artworkId .. '/pages'
 
     return Json.New(http.Get(apiEndpoint))
+
+end
+
+local function GetArtworkImagesPages(artworkId)
+
+    local preloadJson = GetPreloadJson()
+    local json = GetArtworkImagesJson(artworkId)
+
+    local artworkTitle = preloadJson.SelectValue('illust..illustTitle')
+
+    for imageUrl in json.SelectValues('body[*].urls.original') do
+
+        local pageInfo = PageInfo.New(imageUrl)
+
+        pageInfo.Title = artworkTitle
+
+        pages.Add(pageInfo)
+
+    end
 
 end
 
@@ -140,13 +157,34 @@ function GetPages()
         -- Added user gallery.
 
         local json = GetUserArtworksJson()
+        local artworkIds = {}
 
         for node in json.SelectToken('body.illusts') do
+            table.insert(artworkIds, node.Key)
+        end
 
-            local artworkId = node.Key
-            local artworkJson = GetArtworkImagesJson(artworkId)
+        if(API_VERSION < 20241109) then
 
-            pages.AddRange(artworkJson.SelectValues('body[*].urls.original'))
+            -- This is the "old" way of enumerating the artwork images.
+            -- Newer versions of HDoujin don't require us to get all of the image URLs upfront.
+
+            for _, artworkId in ipairs(artworkIds) do
+
+                local artworkImagesJson = GetArtworkImagesJson(artworkId)
+
+                pages.AddRange(artworkImagesJson.SelectValues('body[*].urls.original'))
+
+            end
+
+        else
+
+            -- Enumerate the artwork URLs and get the direct image URLs later.
+
+            local baseUrl = url:before('/users/') .. '/artworks/'
+
+            for _, artworkId in ipairs(artworkIds) do
+                pages.Add(baseUrl .. artworkId)
+            end
 
         end
 
@@ -158,9 +196,7 @@ function GetPages()
 
         -- Added a single illustration/manga.
 
-        local json = GetArtworkImagesJson()
-
-        pages.AddRange(json.SelectValues('body[*].urls.original'))
+        GetArtworkImagesPages()
 
         -- If the artwork is NSFW, we won't be able to get any images without signing in.
 
@@ -228,5 +264,17 @@ function GetChapters()
     -- Reverse the chapter list so that older items are listed first.
 
     chapters.Reverse()
+
+end
+
+function BeforeDownloadPage()
+
+    if(not url:contains('/artworks/')) then
+        return
+    end
+
+    -- Get the direct image URLs.
+
+    GetArtworkImagesPages()
 
 end
