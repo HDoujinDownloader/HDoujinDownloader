@@ -11,6 +11,7 @@ function Register()
 
     module.Domains.Add('1stkissmanga.io', '1ST KISS MANGA')
     module.Domains.Add('allporncomic.com', 'AllPornComic.com')
+    module.Domains.Add('hiper.cool', 'Hipercool')
     module.Domains.Add('kunmanga.com', 'KunManga')
     module.Domains.Add('madaradex.org', 'MadaraDex')
     module.Domains.Add('manga18fx.com', 'Manga18fx')
@@ -410,7 +411,7 @@ function GetPages()
         end
 
         -- Sometimes the image URLs are in the "<p></p>" tag (manhuaplus.com) due to manga type especially for "Video Chapter" or for another reason.
-        
+
         if(isempty(pages)) then
             pages.AddRange(dom.SelectValues('//div[contains(@id, "chapter-video-frame") or contains(@class, "reading-content") or contains(@class, "blocks-gallery-grid")]//img/@src'))
         end
