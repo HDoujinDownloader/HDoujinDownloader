@@ -1,6 +1,18 @@
 As of version 2021.5.1.0, the changelog will only contain updates made to the HDoujin Downloader application.
 For module updates, see: https://github.com/HDoujinDownloader/HDoujinDownloader/commits/master/modules/lua
 
+[v2024.11.9.0]
+
+- [NEW] Added "$event" token for middlware
+- [NEW] Added "Downloaded" column to show if a gallery has been downloaded already
+- [NEW] Added basic support for booru websites (Danbooru, Gelbooru)
+- [NEW] CBW conversion now uses latest ComicInfo.xml spec
+- [FIX] Fixed E-Hentai/ExHentai download not working with MPV enabled
+- [FIX] Fixed issue with file hiding not hiding all files
+- [FIX] Fixed long paths not being shortened correctly under certain conditions
+- [MISC] Improved column selection UI
+- [MISC] Various improvements and bug fixes
+
 [v2024.10.26.0]
 
 - [NEW] Added home/end shortcuts for download queue
