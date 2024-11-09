@@ -19,6 +19,8 @@ local function GetFileExtensionFromKey(key)
         return '.bmp'
     elseif(key == 'g') then
         return '.gif'
+    elseif(key == 'w') then
+        return '.webp'
     else
         return '.jpg' -- default to .jpg
     end
