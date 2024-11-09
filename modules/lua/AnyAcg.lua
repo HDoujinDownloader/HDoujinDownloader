@@ -24,6 +24,13 @@ function Register()
 
 end
 
+function IsAnyAcgV2()
+
+    return url:contains('/series/') or
+    url:contains('/chapter/')
+
+end
+
 function GetInfo()
 
     if(IsAnyAcgV2()) then
@@ -58,7 +65,7 @@ function GetChapters()
 
     else
 
-        chapters.AddRange(dom.SelectElements('//div[contains(@name,"chapter-list")]//a[contains(@href,"/title/")]'))    
+        chapters.AddRange(dom.SelectElements('//div[contains(@name,"chapter-list")]//a[contains(@href,"/title/")]'))
 
     end
 
@@ -74,16 +81,9 @@ function GetPages()
 
         local json = Json.New(dom.SelectValue('//astro-island[contains(@props,"imageFiles")]/@props'):replace('&quot;', '\"'))
         local imagesJson = Json.New(json.SelectValue('imageFiles[1]'))
-       
+
         pages.AddRange(imagesJson.SelectValues('[*][1]'))
 
     end
-
-end
-
-function IsAnyAcgV2()
-
-    return url:contains('/series/') or
-    url:contains('/chapter/')
 
 end
