@@ -28,6 +28,34 @@ local function GetNextResultsUrl()
     return dom.SelectValue('//a[contains(@class,"paginator-next")]/@href')
 end
 
+local function GetPostCount()
+
+    if(isempty(GetNextResultsUrl())) then
+
+        -- If there is only one page, we can trivially get the post count.
+
+        return GetPostUrlsFromResultPage().Count()
+
+    else
+
+        -- We can get the post count from the "count" page.
+
+        local countPageUrl = dom.SelectValue('//ul[@id="related-list"]//a[contains(text(),"Count")]/@href')
+
+        if(not isempty(countPageUrl)) then
+
+            local countPageDom = Dom.New(http.Get(countPageUrl))
+
+            return countPageDom.SelectValue('//div[contains(@id,"a-posts")]/text()[last()]'):regex('\\d+')
+
+        end
+
+    end
+
+    return '?'
+
+end
+
 function GetInfo()
 
     InitializeDom()
@@ -37,10 +65,7 @@ function GetInfo()
     info.Artist = dom.SelectValues('//li[contains(@class,"tag-type-1")]/a[last()]')
     info.Parody = dom.SelectValues('//li[contains(@class,"tag-type-3")]/a[last()]')
     info.Characters = dom.SelectValues('//li[contains(@class,"tag-type-4")]/a[last()]')
-
-    if(isempty(GetNextResultsUrl())) then
-        info.PageCount = GetPostUrlsFromResultPage().Count()
-    end
+    info.PageCount = GetPostCount()
 
 end
 
