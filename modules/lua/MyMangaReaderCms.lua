@@ -18,16 +18,6 @@ function Register()
     
     RegisterModule(module)
 
-    -- Korean
-
-    module = Module.New()
-
-    module.Language = 'Korean'
-
-    module.Domains.Add('manhwas.men', 'MANHWAS MEN')
-    
-    RegisterModule(module)
-
     -- Turkish
 
     module = Module.New()
