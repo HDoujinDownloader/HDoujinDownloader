@@ -12,15 +12,13 @@ function GetInfo()
 
     info.Title = dom.SelectValue('//h1')
     info.AlternativeTitle = dom.SelectValue('//h2')
-    Log(info.AlternativeTitle)
     info.Summary = dom.SelectValue('//p[@class="sinopsis"]')
     info.Tags = dom.SelectValues('//*[@class="genres"]/span/a')
-    info.Type = dom.SelectValues('//*[@class="meta"]/span')
+    info.Type = dom.SelectValues('//*[@class="meta"]/span[1]')
+    info.Status = dom.SelectValues('//*[@class="meta"]/span[2]')
 
-    if (info.Type:contains('complete')) then
-        info.Status = 'completed'
-    else
-        info.Status = 'ongoing'
+    if(info.Title:lower():trim():endswith("raw")) then
+        info.Language = 'Korean'
     end
 
 end
@@ -41,7 +39,5 @@ function GetChapters()
 end
 
 function GetPages()
-
     pages.AddRange(dom.SelectValues('//div[@id="chapter_imgs"]//img/@src'))
-
 end
