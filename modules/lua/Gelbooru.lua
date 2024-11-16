@@ -60,7 +60,7 @@ function GetPages()
 end
 
 function BeforeDownloadPage()
-    print(url)
+
     local pageType = GetParameter(url, "s")
 
     if(pageType == 'view') then
