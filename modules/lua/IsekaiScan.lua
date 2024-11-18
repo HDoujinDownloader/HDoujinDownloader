@@ -96,7 +96,7 @@ local function CheckGenericMatch()
 
     -- We'll detect Madara here, and delegate to other flavors if necessary.
 
-    local isGenericMatch = dom.SelectNodes('//script[contains(@src,"/themes/madara/")]|//link[contains(@href,"/themes/madara/")]').Count() > 0
+    local isGenericMatch = dom.SelectNodes('//meta[contains(@name,"generator") and contains(@content,"Madara")]|//script[contains(@src,"/themes/madara/")]|//link[contains(@href,"/themes/madara/")]').Count() > 0
 
     if(not isGenericMatch) then
         Fail(Error.DomainNotSupported)
