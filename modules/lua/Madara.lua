@@ -343,7 +343,15 @@ end
 
 function GetPages()
 
-    local src = http.Get(url)
+    -- Check if we need to log in to access this content (e.g. "theblank.net").
+
+    local loginRequired = dom.SelectElements('//div[contains(@class,"reading-content")]//div[contains(@class,"login-required")]').Count() > 0
+
+    if(loginRequired) then
+        Fail(Error.LoginRequired)
+    end
+
+    local src = tostring(dom)
 
     -- Sometimes the images are stored in an array (www.porncomixonline.net).
 
