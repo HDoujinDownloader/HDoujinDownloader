@@ -5,6 +5,7 @@ function Register()
     module.Adult = true
 
     module.Domains.Add('fakku.cc')
+    module.Domains.Add('fakkuonion.airdns.org')
     module.Domains.Add('hentalk.pw')
     module.Domains.Add('spy.fakku.cc')
 
@@ -18,7 +19,13 @@ local function GetGalleryJson()
     local js = JavaScript.New(galleryDataScript)
     local galleryJson = js.Execute('data[2]').ToJson()
 
-    return galleryJson.SelectToken('..archive')
+    local galleryNode = galleryJson.SelectTokens('data.archive')
+
+    if(isempty(galleryNode)) then
+        galleryNode = galleryJson.SelectToken('data.gallery')
+    end
+
+    return galleryNode
 
 end
 
@@ -38,7 +45,7 @@ function GetInfo()
         local namespace = tagNode.SelectValue('namespace')
         local name = tagNode.SelectValue('name')
 
-        if(not isempty(namespace)) then
+        if(not isempty(namespace) and namespace ~= 'tag') then
             tags.Add(namespace .. ':' .. name)
         else
             tags.Add(name)
@@ -55,15 +62,28 @@ function GetPages()
     local json = GetGalleryJson()
     local hash = json.SelectValue('hash')
 
+    local hostname = url:regex('\\/\\/([^\\/]+)', 1)
     local cdnUrl = dom.SelectValue('//script[contains(text(),"PUBLIC_CDN_URL")]')
         :regex('"PUBLIC_CDN_URL":"([^"]+)"', 1)
 
-        if(isempty(cdnUrl)) then
-            cdnUrl = '//cdn.fakku.cc'
+    if(isempty(cdnUrl)) then
+        cdnUrl = '//' .. hostname
+    end
+
+    if(module.Domain == 'fakkuonion.airdns.org') then
+
+        -- Request images by page number instead of file name. 
+
+        for pageNumber in json.SelectValues('images[*].pageNumber') do
+            pages.Add(cdnUrl .. '/image/' .. hash .. '/' .. pageNumber)
         end
 
-    for fileName in json.SelectValues('images[*].filename') do
-        pages.Add(cdnUrl .. '/image/' .. hash .. '/' .. fileName)
+    else
+
+        for fileName in json.SelectValues('images[*].filename') do
+            pages.Add(cdnUrl .. '/image/' .. hash .. '/' .. fileName)
+        end
+
     end
 
 end
