@@ -191,7 +191,7 @@ function GetPages()
         -- Newer galleries on NHentai will have ".webp" appended to the original file extension (e.g. ".jpg.webp").
         -- We need to strip the extraneous file extension.
 
-        fullImageUrl = RegexReplace(fullImageUrl, "\\.(jpg|png)\\.webp$", ".$1")
+        fullImageUrl = RegexReplace(fullImageUrl, "\\.(jpg|png|webp)\\.webp$", ".$1")
 
         pages.Add(fullImageUrl)
 
