@@ -181,14 +181,19 @@ function GetPages()
     for thumbnailUrl in thumbnailUrls do
 
         local fullImageUrl = thumbnailUrl
-        
+
         if(module.Domain ~= 'nhentai.to') then
             fullImageUrl = RegexReplace(fullImageUrl, '\\/\\/t\\d?\\.', '//i.')
         end
 
         fullImageUrl = RegexReplace(fullImageUrl, '(\\d+)t(.+?)$', '$1$2')
 
-       pages.Add(fullImageUrl)
+        -- Newer galleries on NHentai will have ".webp" appended to the original file extension (e.g. ".jpg.webp").
+        -- We need to strip the extraneous file extension.
+
+        fullImageUrl = RegexReplace(fullImageUrl, "\\.(jpg|png)\\.webp$", ".$1")
+
+        pages.Add(fullImageUrl)
 
     end
 
@@ -203,9 +208,9 @@ function Login()
 
         http.Headers['Origin'] = 'https://' .. module.Domain
         http.Headers['Referer'] = 'https://' .. module.Domain .. '/login/?next=/'
-        
+
         local dom = Dom.New(http.Get(loginUrl))
-        
+
         http.PostData.Add('username_or_email', username)
         http.PostData.Add('password', password)
         http.PostData.Add('csrfmiddlewaretoken', dom.SelectValue('//input[@name="csrfmiddlewaretoken"]/@value'))
