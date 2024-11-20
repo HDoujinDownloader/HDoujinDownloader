@@ -78,7 +78,7 @@ function GetChapters()
 
     RedirectToNewSeriesUrl()
 
-    for chapterNode in dom.SelectElements('//div//a[contains(@class,"block") and contains(@href, "chapter")]') do
+    for chapterNode in dom.SelectElements('//div/h3/a[contains(@href,"/chapter/")]') do
 
         local chapterUrl = chapterNode.SelectValue('@href')
         local chapterTitle = chapterNode.SelectValue('./text()[1]') .. ' ' .. chapterNode.SelectValue('./text()[2]')
@@ -102,6 +102,14 @@ function GetPages()
 
     if(isempty(pages)) then
         pages.AddRange(dom.SelectValues('//img[contains(@alt,"page")]/@src'))
+    end
+
+    if(isempty(pages)) then
+
+        local nextDataScript = dom.SelectValue('//script[contains(text(),"published_at")]')
+
+        pages.AddRange(nextDataScript:regexmany('"url\\\\":\\\\"([^"]+)\\\\"', 1))
+
     end
 
 end
