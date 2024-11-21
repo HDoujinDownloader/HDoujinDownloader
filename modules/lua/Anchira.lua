@@ -15,7 +15,7 @@ function Register()
 end
 
 local function GetApiUrl()
-    return '//api.' .. module.Domain .. '/'
+    return '//api.schale.network/'
 end
 
 local function GetApiJson(path, post)
