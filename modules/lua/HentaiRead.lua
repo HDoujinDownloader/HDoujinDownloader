@@ -79,6 +79,7 @@ function GetPages()
             :before('&amp;w=')
 
         imageUrl = RegexReplace(imageUrl, '(\\-\\d+px)(\\..+?)$', '$2')
+        imageUrl = RegexReplace(imageUrl, '\\/\\/hencover\\.xyz\\/preview\\/', '//henread.xyz/')
 
         pages.Add(imageUrl)
 
