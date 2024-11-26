@@ -106,7 +106,7 @@ function GetPages()
 
     if(isempty(pages)) then
 
-        local nextDataScript = dom.SelectValue('//script[contains(text(),"published_at")]')
+        local nextDataScript = dom.SelectValue('//script[contains(text(),"published_at")][last()]')
 
         pages.AddRange(nextDataScript:regexmany('"url\\\\":\\\\"([^"]+)\\\\"', 1))
 
