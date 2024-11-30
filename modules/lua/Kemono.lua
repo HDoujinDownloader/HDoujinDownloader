@@ -10,54 +10,127 @@ function Register()
 
 end
 
-local function GetAttachmentsAndFiles()
+local function GetApiUrl()
+    return '/api/v1/'
+end
 
-    -- Some posts display the same file twice, so make sure we only download it once.
-    -- The order these selectors appear are the same order they appear on the page.
-    
-    local items = List.New()
+local function GetApiJson(endpoint)
 
-    for item in dom.SelectValues('//div[contains(@class,"post__content")]//img/@src') do
+    http.Headers['Accept'] = '*/*'
+    http.Headers['Referer'] = url
 
-        if(not items.Contains(item)) then
-            items.Add(item)
+    endpoint = GetApiUrl() .. endpoint
+
+    return Json.New(http.Get(endpoint))
+
+end
+
+local function GetProfilePath()
+    return url:regex('\\/\\/.+?\\/(.+?\\/user\\/\\d+)', 1)
+end
+
+local function GetPostId()
+    return url:regex('\\/post\\/(\\d+)', 1)
+end
+
+local function GetPostsJson(offset)
+
+    local endpoint = GetProfilePath() .. '/posts-legacy'
+
+    if(offset ~= nil and offset > 0) then
+        endpoint = SetParameter(endpoint, 'o', offset)
+    end
+
+    return GetApiJson(endpoint)
+
+end
+
+local function GetPostJson()
+    return GetApiJson(GetProfilePath() .. '/post/' .. GetPostId())
+end
+
+local function GetAttachmentsAndFiles(json, pages)
+
+    pages = pages or PageList.New()
+
+    -- Posts have "Downloads", "Content", and "Files", in that order.
+    -- For image-only posts, all the image URLs will be in the "previews" node.
+
+    -- We may encounter URLs more than once, so ignore any duplicates.
+
+    local seenUrls = {}
+
+    for attachmentNode in json.SelectNodes('attachments[*]') do
+
+        local attachmentFileName = attachmentNode.SelectValue('name')
+        local attachmentPath = attachmentNode.SelectValue('path')
+        local attachmentServer = attachmentNode.SelectValue('server')
+        local attachmentUrl = attachmentServer .. '/data' .. attachmentPath
+
+        if(not seenUrls[attachmentUrl]) then
+
+            seenUrls[attachmentUrl] = true
+
+            local pageInfo = PageInfo.New(attachmentUrl)
+
+            pageInfo.FilenameHint = attachmentFileName
+            pageInfo.Referer = 'https://' .. module.Domain .. '/'
+
+            pages.Add(pageInfo)
+
         end
 
     end
 
-    for item in dom.SelectValues('//li[contains(@class,"post__attachment")]//@href') do
+    for attachmentNode in json.SelectNodes('previews[*]') do
 
-        if(not items.Contains(item)) then
-            items.Add(item)
+        local attachmentFileName = attachmentNode.SelectValue('name')
+        local attachmentPath = attachmentNode.SelectValue('path')
+        local attachmentServer = attachmentNode.SelectValue('server')
+        local attachmentType = attachmentNode.SelectValue('type')
+        local attachmentUrl = attachmentServer .. '/data' .. attachmentPath
+
+        -- Don't attempt to download embeds (e.g. YouTube videos).
+
+        if(attachmentType ~= "embed" and not seenUrls[attachmentUrl]) then
+
+            seenUrls[attachmentUrl] = true
+
+            local pageInfo = PageInfo.New(attachmentUrl)
+
+            pageInfo.FilenameHint = attachmentFileName
+            pageInfo.Referer = 'https://' .. module.Domain .. '/'
+
+            pages.Add(pageInfo)
+
         end
 
     end
 
-    for item in dom.SelectValues('//div[contains(@class,"post__thumbnail")]//@href') do
-
-        if(not items.Contains(item)) then
-            items.Add(item)
-        end
-
-    end
-
-    return items
+    return pages
 
 end
 
 function GetInfo()
 
-    info.Title = dom.SelectValue('//h1')
-
     if(url:contains('/post/')) then
 
-        info.Artist = dom.SelectValue('//a[contains(@class,"post__user-name")]')
-        info.PageCount = GetAttachmentsAndFiles().Count()
+        local json = GetPostJson()
+
+        info.Title = json.SelectValue('post.title')
+        info.Description = dom.SelectValue('post.content')
+        info.Publisher = json.SelectValue('post.service'):title()
+        info.DateReleased = json.SelectValue('post.published')
+        info.Tags = json.SelectValues('post.tags[*]')
+        info.PageCount = GetAttachmentsAndFiles(json).Count()
 
     else
 
+        local json = GetPostsJson()
+
+        info.Title = json.SelectValue('props.artist.name')
         info.Artist = info.Title
-        info.ChapterCount = dom.SelectValue('//div[contains(@class,"paginator")]//small'):after('of')
+        info.Publisher = json.SelectValue('props.artist.service'):title()
 
     end
 
@@ -65,24 +138,32 @@ end
 
 function GetChapters()
 
-    -- Make sure we're on the first page of posts.
+    -- Posts are paginated in sets of 50.
 
-    url = SetParameter(url, 'o', '0')
-    dom = Dom.New(http.Get(url))
+    local offset = 0
+    local postCount = nil
 
-    for page in Paginator.New(http, dom, '//div[contains(@class,"paginator")]//a[contains(@class,"next")]/@href') do
-    
-        local postCards = page.SelectElements('//article[contains(@class,"post-card")]')
+    while(postCount == nil or offset < postCount) do
 
-        for i = 0, postCards.Count() - 1 do
+        local json = GetPostsJson(offset)
 
-            local postCard = postCards[i]
-            local postUrl = postCard.SelectValue('./a/@href')
-            local postTitle = postCard.SelectValue('.//header')
+        if(postCount == nil) then
+            postCount = tonumber(json.SelectValue('props.count'))
+        end
 
-            chapters.Add(postUrl, postTitle)
+        for postNode in json.SelectNodes('results[*]') do
+
+            local userId = postNode.SelectValue('user')
+            local service = postNode.SelectValue('service')
+            local postId = postNode.SelectValue('id')
+            local chapterTitle = postNode.SelectValue('title')
+            local chapterUrl = '/' .. service .. '/user/' .. userId .. '/post/' .. postId
+
+            chapters.Add(chapterUrl, chapterTitle)
 
         end
+
+        offset = offset + tonumber(json.SelectValue('props.limit'))
 
     end
 
@@ -92,25 +173,8 @@ end
 
 function GetPages()
 
-    pages.AddRange(GetAttachmentsAndFiles())
+    local json = GetPostJson()
 
-    for page in pages do
-
-        -- The file name is specified in the content-disposition header.
-        -- Newer versions of HDoujin Downloader will read this header, but older versions won't.
-
-        local fileName = GetParameter(page.Url, 'f')
-
-        if(not isempty(fileName)) then
-            page.FilenameHint = fileName
-        end
-
-        -- Older versions of HDoujin Downloader cannot detect MOV files.
-
-        if(page.Url:endswith('.mov')) then
-            page.FileExtensionHint = '.mov'
-        end
-
-    end
+    GetAttachmentsAndFiles(json, pages)
 
 end
