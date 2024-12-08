@@ -182,9 +182,13 @@ function GetPages()
 
         local fullImageUrl = thumbnailUrl
 
+        -- Adjust the image server from the thumbnail server (t1) to the image server (i1).
+
         if(module.Domain ~= 'nhentai.to') then
-            fullImageUrl = RegexReplace(fullImageUrl, '\\/\\/t\\d?\\.', '//i.')
+            fullImageUrl = RegexReplace(fullImageUrl, '\\/\\/t(\\d?)\\.', '//i$1.')
         end
+
+        -- Remove the thumbnail prefix from the file name.
 
         fullImageUrl = RegexReplace(fullImageUrl, '(\\d+)t(.+?)$', '$1$2')
 
