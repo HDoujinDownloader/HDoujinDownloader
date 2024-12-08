@@ -11,6 +11,8 @@ function Register()
     module.Language = 'en'
 
     module.Domains.Add('manhwahentai.me', 'ManhwaHentai.me')
+    module.Domains.Add('manytoon.club', 'ManyToon')
+    module.Domains.Add('manytoon.com', 'ManyToon')
 
 end
 
@@ -19,7 +21,7 @@ function GetChapters()
     local mangaParameters = dom.SelectValue('//script[contains(text(),"comicObj")]')
         :regex('comicObj\\s*=\\s*([^;]+)', 1)
 
-    local mangaJson = Json.New(mangaParameters)   
+    local mangaJson = Json.New(mangaParameters)
 
     if(isempty(mangaJson['chapter_slug'])) then
 
@@ -27,13 +29,13 @@ function GetChapters()
 
         http.PostData['action'] = 'ajax_chap'
         http.PostData['post_id'] = mangaJson['post_id']
-    
+
         local endpoint = 'https://'..GetHost(url)..'/wp-admin/admin-ajax.php'
-    
+
         dom = Dom.New(http.Post(endpoint))
-    
+
         chapters.AddRange(dom.SelectElements('//li[contains(@class,"wp-manga-chapter")]/a'))
-    
+
         chapters.Reverse()
 
     end
