@@ -78,17 +78,21 @@ function GetChapters()
 
     RedirectToNewSeriesUrl()
 
-    for chapterNode in dom.SelectElements('//div/h3/a[contains(@href,"/chapter/")]') do
+    for chapterNode in dom.SelectElements('//div[contains(@class,"scrollbar")]//a[contains(@href,"/chapter/")]') do
 
         local chapterUrl = chapterNode.SelectValue('@href')
-        local chapterTitle = chapterNode.SelectValue('./text()[1]') .. ' ' .. chapterNode.SelectValue('./text()[2]')
+        local chapterTitle = chapterNode.SelectValue('./h3[1]')
         local chapterSubtitle = chapterNode.SelectValue('./span')
 
         if(not isempty(chapterSubtitle)) then
             chapterTitle = chapterTitle .. ' - ' .. chapterSubtitle
         end
 
-        chapters.Add(chapterUrl, chapterTitle)
+        -- Skip over chapters that haven't been released yet.
+
+        if(chapterNode.SelectNodes('.//svg[circle]').Count() <= 0) then
+            chapters.Add(chapterUrl, chapterTitle)
+        end
 
     end
 
@@ -109,6 +113,45 @@ function GetPages()
         local nextDataScript = dom.SelectValue('//script[contains(text(),"published_at")][last()]')
 
         pages.AddRange(nextDataScript:regexmany('"url\\\\":\\\\"([^"]+)\\\\"', 1))
+
+    end
+
+end
+
+if(API_VERSION > 20241117) then
+
+    function Login()
+
+        if(http.Cookies.Contains('asurascans_session')) then
+            return
+        end
+
+        -- We need to access the cookie endpoint first.
+
+        http.Headers['accept'] = 'application/json'
+        http.Headers['origin'] = 'https://' .. module.Domain
+        http.Headers['referer'] = '//' .. module.Domain .. '/'
+        http.Headers['x-requested-with'] = 'XMLHttpRequest'
+
+        http.Get('//gg.' .. module.Domain .. '/sanctum/csrf-cookie/')
+
+        -- Make the login request.
+
+        http.Headers['content-type'] = 'application/json'
+
+        local payload = Json.New({
+            email = username,
+            password = password,
+            remember = true,
+        })
+
+        local response = http.PostResponse('//gg.' .. module.Domain .. '/api/login', payload)
+
+        if(response.StatusCode ~= 200) then
+            Fail(Error.LoginFailed)
+        end
+
+        global.SetCookies(response.Cookies)
 
     end
 
