@@ -11,6 +11,10 @@ function Register()
     module.Name = 'IsekaiScan'
     module.Language = 'English'
 
+    -- Enable generic support for Madara (ajax/chapters) websites.
+
+    module.Domains.Add('*')
+
     module.Domains.Add('betafox.net', 'Beta Fox')
     module.Domains.Add('dark-scan.com', 'Dark scan')
     module.Domains.Add('disasterscans.com', 'Disaster Scans')
@@ -77,10 +81,7 @@ function Register()
     module.Language = 'Thai'
 
     module.Domains.Add('fcmanga.com', 'Fcmanga')
-
-    -- Enable generic support for Madara (ajax/chapters) websites.
-
-    module.Domains.Add('*')
+    module.Domains.Add('mangasuper.com', 'Mangasuper.com')
 
 end
 
