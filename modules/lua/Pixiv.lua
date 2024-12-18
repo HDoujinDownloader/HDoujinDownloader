@@ -26,6 +26,14 @@ local function GetPreloadJson()
 
 end
 
+local function GetArtworkId()
+
+    local json = GetPreloadJson()
+
+    return json.SelectValue('illust..illustId')
+
+end
+
 local function GetUserArtworksJson()
 
     local json = GetPreloadJson()
@@ -38,15 +46,19 @@ end
 
 local function GetArtworkImagesJson(artworkId)
 
-    if(artworkId == nil) then
-
-        local json = GetPreloadJson()
-
-        artworkId = json.SelectValue('illust..illustId')
-
-    end
+    artworkId = artworkId or GetArtworkId()
 
     local apiEndpoint = '/ajax/illust/' .. artworkId .. '/pages'
+
+    return Json.New(http.Get(apiEndpoint))
+
+end
+
+local function GetUgoiraMetadataJson(artworkId)
+
+    artworkId = artworkId or GetArtworkId()
+
+    local apiEndpoint = '/ajax/illust/' .. artworkId .. '/ugoira_meta'
 
     return Json.New(http.Get(apiEndpoint))
 
@@ -55,17 +67,38 @@ end
 local function GetArtworkImagesPages(artworkId)
 
     local preloadJson = GetPreloadJson()
-    local json = GetArtworkImagesJson(artworkId)
 
     local artworkTitle = preloadJson.SelectValue('illust..illustTitle')
+    local artworkType = preloadJson.SelectValue('illust..illustType')
 
-    for imageUrl in json.SelectValues('body[*].urls.original') do
+    if(tostring(artworkType) == '2') then
 
-        local pageInfo = PageInfo.New(imageUrl)
+        -- We have a Ugoira artwork.
+
+        local json = GetUgoiraMetadataJson(artworkId)
+        local archiveUrl = json.SelectValue('body.originalSrc')
+
+        local pageInfo = PageInfo.New(archiveUrl)
 
         pageInfo.Title = artworkTitle
 
         pages.Add(pageInfo)
+
+    else
+
+        -- We have a single image/multiple image artwork.
+
+        local json = GetArtworkImagesJson(artworkId)
+
+        for imageUrl in json.SelectValues('body[*].urls.original') do
+
+            local pageInfo = PageInfo.New(imageUrl)
+
+            pageInfo.Title = artworkTitle
+
+            pages.Add(pageInfo)
+
+        end
 
     end
 
