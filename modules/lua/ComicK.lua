@@ -69,36 +69,42 @@ function GetChapters()
         local json = GetApiJson('comic/' .. GetComicSlug())
         local slug = json.SelectValue('comic.slug')
         local hid = json.SelectValue('comic.hid')
-    
+
         json = GetApiJson('comic/' .. hid .. '/chapters?page=' .. chapterPageNumber)
 
-        totalChapters = tonumber(json.SelectValue('total'))
+        totalChapters = tonumber(json.SelectValue('total')) or 0
 
         local chapterNodes = json.SelectNodes('chapters[*]')
-    
+
         if(chapterNodes.Count() <= 0) then
             return
         end
 
         for chapterNode in chapterNodes do
-    
+
             local title = chapterNode.SelectValue('title')
             local chapterNumber = chapterNode.SelectValue('chap')
             local volumeNumber = chapterNode.SelectValue('vol')
             local translator = chapterNode.SelectValues('group_name[*]')
             local language = chapterNode.SelectValue('lang')
-            local hid = chapterNode.SelectValue('hid')
-            
+            local chapterHid = chapterNode.SelectValue('hid')
+
             local chapterInfo = ChapterInfo.New()
-    
-            chapterInfo.Title = 'Ch. ' .. chapterNumber .. ' ' .. title
+
+            chapterInfo.Title = 'Ch. ' .. chapterNumber
+
+            if(not isempty(volumeNumber)) then
+                chapterInfo.Title = chapterInfo.Title .. ' Vol. ' .. volumeNumber
+            end
+
+            chapterInfo.Title = chapterInfo.Title .. ' ' .. title
             chapterInfo.Volume = volumeNumber
             chapterInfo.Translator = translator
             chapterInfo.Language = language
-            chapterInfo.Url = '/comic/' .. slug .. '/' .. hid .. '-chapter-' .. chapterNumber .. '-' .. language
-    
+            chapterInfo.Url = '/comic/' .. slug .. '/' .. chapterHid .. '-chapter-' .. chapterNumber .. '-' .. language
+
             chapters.Add(chapterInfo)
-    
+
         end
 
         chapterPageNumber = chapterPageNumber + 1
@@ -119,11 +125,11 @@ function GetPages()
     end
 
     for fileName in json.SelectValues('chapter.md_images[*].b2key') do
-    
+
         local imageUrl = imagesPath .. fileName
 
         pages.Add(imageUrl)
 
     end
-    
+
 end
