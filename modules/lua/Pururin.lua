@@ -5,29 +5,9 @@ function Register()
     module.Adult = true
 
     module.Domains.Add('pururin.io')
+    module.Domains.Add('pururin.me')
     module.Domains.Add('pururin.to')
     module.Domains.Add('pururin.us')
-
-end
-
-local function GetGalleryId()
-
-    return url:regex('\\/(?:gallery|read)\\/(\\d+)', 1)
-
-end
-
-local function RedirectToSummaryPage()
-
-    -- If a reader URL was added, go back to the summary page.
-
-    if(url:contains('/read/')) then
-        
-        local galleryId = GetGalleryId()
-
-        url = GetRooted('/gallery/' .. galleryId .. '/', url)
-        dom = Dom.New(http.Get(url))
-
-    end
 
 end
 
@@ -66,13 +46,34 @@ function GetPages()
         local imageUrl = thumbnailNode.SelectValue('./@src')
 
         if(isempty(imageUrl)) then
-            imageUrl = thumbnailNode.SelectValue('./@data-src')
+            imageUrl = thumbnailNode.SelectValue('./@data-src') 
         end
         
         imageUrl = RegexReplace(imageUrl, '\\/(\\d+)t\\.', '/$1.')
 
         pages.Add(imageUrl)
         
+    end
+
+end
+
+function GetGalleryId()
+
+    return url:regex('\\/(?:gallery|read)\\/(\\d+)', 1)
+
+end
+
+function RedirectToSummaryPage()
+
+    -- If a reader URL was added, go back to the summary page.
+
+    if(url:contains('/read/')) then
+        
+        local galleryId = GetGalleryId()
+
+        url = GetRooted('/gallery/' .. galleryId .. '/', url)
+        dom = Dom.New(http.Get(url))
+
     end
 
 end
