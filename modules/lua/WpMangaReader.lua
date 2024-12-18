@@ -4,6 +4,10 @@ function Register()
 
     module.Name = 'MangaReader'
 
+    -- Enable generic support for MangaRead/MangaStream websites.
+
+    module.Domains.Add('*')
+
     module = Module.New()
 
     module.Language = 'English'
@@ -128,18 +132,16 @@ function Register()
     module.Domains.Add('rom-manga.com', 'ROM-Manga')
     module.Domains.Add('slow-manga.com', 'SLOW-MANGA')
     module.Domains.Add('spy-manga.com', 'Spy-manga')
+    module.Domains.Add('up-manga.com', 'Up-Manga')
     module.Domains.Add('webtoonmanga.com', 'webtoonmanga')
     module.Domains.Add('www.eye-manga.com', 'EYE-Manga')
     module.Domains.Add('www.flash-manga.com', 'Flash-Manga')
     module.Domains.Add('www.inu-manga.com', 'Inu Manga')
     module.Domains.Add('www.rom-manga.com', 'ROM-Manga')
     module.Domains.Add('www.slow-manga.com', 'SLOW-MANGA')
+    module.Domains.Add('www.up-manga.com', 'Up-Manga')
 
     RegisterModule(module)
-
-    -- Enable generic support for MangaRead/MangaStream websites.
-
-    module.Domains.Add('*')
 
 end
 
@@ -183,7 +185,7 @@ function GetInfo()
 
     CheckGenericMatch()
 
-    info.Title = CleanTitle(dom.SelectValue('//h1'))
+    info.Title = CleanTitle(dom.SelectValue('//h1[contains(@class,"entry-title")]|h1'))
     info.AlternativeTitle = dom.SelectValue('//span[contains(@class,"alternative")]')
     info.Summary = dom.SelectValue('//div[@itemprop="description"]')
     info.Status = dom.SelectValue('//div[@class="imptdt" and (contains(.,"Status") or contains(.,"สถานะ") or contains(.,"Estado"))]/*[last()]')
@@ -204,7 +206,7 @@ function GetInfo()
     end
 
     if(isempty(info.Author)) then
-        info.Author = dom.SelectValue('//td[contains(text(),"Author")]/following-sibling::td')
+        info.Author = dom.SelectValue('//td[contains(text(),"Author") or contains(text(),"ผู้เขียน")]/following-sibling::td')
     end
 
     if(isempty(info.Author)) then -- 108read.com
@@ -227,8 +229,12 @@ function GetInfo()
         info.Artist = dom.SelectValue('//div[contains(.,"الرسام")]/span')
     end
 
+    if(isempty(info.Artist)) then
+        info.DateReleased = dom.SelectValue('//td[contains(text(),"Artist") or contains(text(),"ผู้แต่ง")]/following-sibling::td')
+    end
+
     if(isempty(info.DateReleased)) then
-        info.DateReleased = dom.SelectValue('//td[contains(text(),"Released")]/following-sibling::td')
+        info.DateReleased = dom.SelectValue('//td[contains(text(),"Released") or contains(text(),"ปีที่ปล่อย")]/following-sibling::td')
     end
 
     if(isempty(info.DateReleased)) then -- nightscans.org
@@ -249,6 +255,10 @@ function GetInfo()
 
     if(isempty(info.Summary)) then -- rizzcomic.com
         info.Summary = dom.SelectValue('//div[contains(@id,"description-container")]')
+    end
+
+    if(isempty(info.Status)) then
+        info.Status = dom.SelectValue('//td[contains(text(),"Status") or contains(text(),"สถานะ")]/following-sibling::td')
     end
 
     if(module.GetName(url):endsWith('Scans') or module.GetName(url):endsWith('Scanlations')) then
