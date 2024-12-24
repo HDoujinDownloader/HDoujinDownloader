@@ -1,5 +1,9 @@
 -- This module is almost the same as (if not identical tostring) "WpMangaStream" (potential duplicate?).
 
+require "TSReader"
+
+local TSReaderGetPages = GetPages
+
 function Register()
 
     module.Name = 'MangaReader'
@@ -108,6 +112,7 @@ function Register()
     module.Language = 'Thai'
 
     module.Domains.Add('108read.com', '108Read')
+    module.Domains.Add('doujin-y.com', 'Doujin-Y')
     module.Domains.Add('eye-manga.com', 'EYE-Manga')
     module.Domains.Add('flash-manga.com', 'Flash-Manga')
     module.Domains.Add('god-doujin.com', 'God-Doujin')
@@ -127,6 +132,7 @@ function Register()
     module.Domains.Add('spy-manga.com', 'Spy-manga')
     module.Domains.Add('up-manga.com', 'Up-Manga')
     module.Domains.Add('webtoonmanga.com', 'webtoonmanga')
+    module.Domains.Add('www.doujin-y.com', 'Doujin-Y')
     module.Domains.Add('www.eye-manga.com', 'EYE-Manga')
     module.Domains.Add('www.flash-manga.com', 'Flash-Manga')
     module.Domains.Add('www.inu-manga.com', 'Inu Manga')
@@ -149,6 +155,12 @@ local function CheckGenericMatch()
     end
 
     local isGenericMatch = dom.SelectNodes('//script[contains(@src,"/themes/mangastream/")]|//script[contains(@src,"/themes/mangareader/")]').Count() > 0
+
+    -- If we can't detect the theme directly, look for "eph-num" chapter nodes.
+
+    if(not isGenericMatch) then
+        isGenericMatch = dom.SelectNodes('//div[@id="chapterlist"]//div[contains(@class,"eph-num")]/a').Count() > 0
+    end
 
     if(not isGenericMatch) then
         Fail(Error.DomainNotSupported)
@@ -182,11 +194,12 @@ function GetInfo()
     info.AlternativeTitle = dom.SelectValue('//span[contains(@class,"alternative")]')
     info.Summary = dom.SelectValue('//div[@itemprop="description"]')
     info.Status = dom.SelectValue('//div[@class="imptdt" and (contains(.,"Status") or contains(.,"สถานะ") or contains(.,"Estado"))]/*[last()]')
-    info.Type = dom.SelectValue('//div[@class="imptdt" and (contains(.,"Type") or contains(.,"ประเภทการ์ตูน") or contains(.,"พิมพ์") or contains(.,"Tipo"))]/*[last()]')
+    info.Type = dom.SelectValue('//div[@class="imptdt" and (contains(.,"Type") or contains(.,"ประเภทการ์ตูน") or contains(.,"พิมพ์") or contains(.,"Tipo") or contains(.,"ประเภท"))]/*[last()]')
     info.Publisher = dom.SelectValue('//div[@class="imptdt" and (contains(.,"Serialization") or contains(.,"การทำให้เป็นอนุกรม"))]/*[last()]')
-    info.Author = dom.SelectValue('//div[@class="imptdt" and (contains(.,"Author") or contains(.,"ผู้เขียน") or contains(.,"Autor"))]/*[last()]')
-    info.Artist = dom.SelectValue('//div[@class="imptdt" and (contains(.,"Artist") or contains(.,"ศิลปิน"))]/*[last()]')
+    info.Author = dom.SelectValue('//div[@class="imptdt" and (contains(.,"Author") or contains(.,"ผู้เขียน") or contains(.,"Autor") or contains(.,"ผู้แต่ง"))]/*[last()]')
+    info.Artist = dom.SelectValue('//div[@class="imptdt" and (contains(.,"Artist") or contains(.,"ศิลปิน") or contains(.,"ผู้วาด"))]/*[last()]')
     info.Tags = dom.SelectValues('//div[contains(@class,"seriestugenre")]/a')
+    info.DateReleased = dom.SelectValue('//div[@class="imptdt" and (contains(.,"วันที่ปล่อย"))]/*[last()]')
 
     -- Some sites have their metadata in a grid instead (e.g. kiryuu.id).
 
@@ -318,16 +331,18 @@ function GetPages()
 
         pages.AddRange(pagesJson.SelectValues('[*]'))
 
-    else
+    end
 
-        if(isempty(pages)) then
+    -- ManhuaScan (manhuascan.us) just has the image URLs directly in the HTML.
 
-            -- manhuascan.us just has the image URLs directly in the HTML.
+    if(isempty(pages)) then
+        pages.AddRange(dom.SelectValues('//div[@id="readerarea"]//img/@src'))
+    end
 
-            pages.AddRange(dom.SelectValues('//div[@id="readerarea"]//img/@src'))
+    -- Doujin-Y (doujin-y.com) uses "ts_reader".
 
-        end
-
+    if(isempty(pages)) then
+        TSReaderGetPages()
     end
 
     -- Some sites use external image hosts from which downloads will fail if we set a referer.
