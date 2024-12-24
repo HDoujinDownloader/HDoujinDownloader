@@ -20,13 +20,7 @@ function Register()
     module.Domains.Add('arvenscans.org', 'Arven Scans')
     module.Domains.Add('constellarscans.com', 'Constellar Scans')
     module.Domains.Add('edoujin.net', 'edoujin')
-    module.Domains.Add('flamecomics.com', 'Flame Comics')
-    module.Domains.Add('flamecomics.me', 'Flame Comics')
-    module.Domains.Add('flamecomics.xyz', 'Flame Comics')
-    module.Domains.Add('flamescans.org', 'Flame Scans')
     module.Domains.Add('hentai20.io', 'Hentai20.io')
-    module.Domains.Add('hivescans.com', 'Void Scans')
-    module.Domains.Add('hivetoon.com', 'Void Scans')
     module.Domains.Add('lunarscan.org', 'Lunar Scans')
     module.Domains.Add('mangagalaxy.me', 'Manga Galaxy')
     module.Domains.Add('manhuascan.us', 'Manhuascan.us')
@@ -44,7 +38,6 @@ function Register()
     module.Domains.Add('rizzcomic.com', 'Rizz Comics')
     module.Domains.Add('rizzfables.com', 'Rizz Fables')
     module.Domains.Add('suryascans.com', 'Surya Scans')
-    module.Domains.Add('void-scans.com', 'Void Scans')
     module.Domains.Add('xcalibrscans.com', 'xCaliBR Scans')
 
     RegisterModule(module)
@@ -273,15 +266,6 @@ function GetInfo()
         info.Author = ''
     end
 
-    if(module.GetName(url) == 'Flame Scans') then
-
-        -- The numeric prefix at the beginning of the URL isn't constant, and URLs will be invalidated when it changes.
-        -- Strip the numeric prefix to get a permalink.
-
-        info.Url = RegexReplace(url, '\\/\\d+-', '/')
-
-    end
-
     -- Get the page count if we're on a site that doesn't use chapters (lectorhentai.com).
 
     local pageCount = GetPageCount()
@@ -297,10 +281,6 @@ function GetChapters()
     CheckGenericMatch()
 
     local chapterNodes = dom.SelectElements('//div[@id="chapterlist"]//div[contains(@class,"eph-num")]/a')
-
-    if(isempty(chapterNodes)) then -- flamecomics.com
-        chapterNodes = dom.SelectElements('//div[@id="chapterlist"]//li[@data-num]/a')
-    end
 
     for chapterNode in chapterNodes do
 
