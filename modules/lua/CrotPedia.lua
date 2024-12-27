@@ -16,6 +16,8 @@ function Register()
     module.Domains.Add('oremanga.net', 'Oremanga')
     module.Domains.Add('skoiiz-manga.com', 'skoiiz-manga')
     module.Domains.Add('www.oremanga.net', 'Oremanga')
+    module.Domains.Add('www.xn--72ca0fgy7cem.com', 'มังงะวาย.com')
+    module.Domains.Add('xn--72ca0fgy7cem.com', 'มังงะวาย.com')
 
 end
 
