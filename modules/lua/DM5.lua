@@ -2,18 +2,19 @@ function Register()
 
     module.Name = 'DM5'
     module.Language = 'Chinese'
-    
+
+    module.Domains.Add('dm5.cn')
     module.Domains.Add('dm5.com')
+    module.Domains.Add('www.dm5.cn')
     module.Domains.Add('www.dm5.com')
 
-    global.SetCookie('www.dm5.com', "isAdult", "1")
+    global.SetCookie('.dm5.cn', 'isAdult', '1')
+    global.SetCookie('.dm5.com', 'isAdult', '1')
 
 end
 
 local function GetVariableValue(name)
-
     return tostring(dom):regex(name..'\\s*=\\s*(.+?)\\s*;', 1):trim('"')
-
 end
 
 function GetInfo()
@@ -24,7 +25,7 @@ function GetInfo()
     info.Tags = dom.SelectValue('//span[contains(text(),"题材")]/a')
     info.Summary = dom.SelectValue('//div[contains(@class,"info")]/p[contains(@class,"content")]')
     info.Adult = info.Tags:contains('限制级')
-    
+
     local pageCount = GetVariableValue('DM5_IMAGE_COUNT')
 
     if(not isempty(pageCount)) then
@@ -35,7 +36,7 @@ function GetInfo()
         info.PageCount = pageCount
 
     end
-    
+
 end
 
 function GetChapters()
@@ -44,7 +45,7 @@ function GetChapters()
     -- The site won't offer up the chapters unless we provide an Accept-Language header.
 
     http.Headers['Accept-Language'] = "en-US,en;q=0.5"
-    
+
     dom = dom.New(http.Get(url))
 
     for chapterNode in dom.SelectElements('//div[@id="chapterlistload"]/ul[1]//li/a') do
@@ -70,7 +71,7 @@ function GetPages()
 
     http.Referer = url
     http.Headers['Accept-Language'] = "en-US,en;q=0.5"
-    
+
     dom = dom.New(http.Get(url))
 
     -- To get the pages, we need to make a GET request to "chapterfun.ashx" with the chapter parameters.
@@ -82,7 +83,7 @@ function GetPages()
     local COMIC_MID = GetVariableValue('COMIC_MID')
     local DM5_VIEWSIGN_DT = GetVariableValue('DM5_VIEWSIGN_DT')
     local DM5_VIEWSIGN = GetVariableValue('DM5_VIEWSIGN')
-    
+
     -- Sometimes we don't get a response when querying for the pages, so make more than one attempt.
 
     local maxQueryAttempts = 5
