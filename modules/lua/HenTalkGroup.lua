@@ -13,19 +13,22 @@ end
 
 local function GetGalleryJson()
 
-    local galleryDataScript = dom.SelectValue('//script[contains(text(),"const data")]')
-        :regex('const\\s*data\\s*=\\s.+?;')
+    local galleryInitJs = dom.SelectValue('//script[contains(text(),"data:")]')
+    local galleryDataJs = galleryInitJs:regex('data\\s*:\\s*(\\[.+}]),', 1)
 
-    local js = JavaScript.New(galleryDataScript)
-    local galleryJson = js.Execute('data[2]').ToJson()
-
-    local galleryNode = galleryJson.SelectTokens('data.archive')
-
-    if(isempty(galleryNode)) then
-        galleryNode = galleryJson.SelectToken('data.gallery')
+    if(not isempty(galleryDataJs)) then
+        galleryDataJs = 'const data = ' .. galleryDataJs
     end
 
-    return galleryNode
+    local js = JavaScript.New(galleryDataJs)
+    local galleryDataJson = js.Execute('data[2]').ToJson()
+
+    local archiveNode = galleryDataJson.SelectToken('..archive')
+    local galleryNode = galleryDataJson.SelectToken('..gallery')
+
+    return isempty(archiveNode) and
+        galleryNode or
+        archiveNode
 
 end
 
