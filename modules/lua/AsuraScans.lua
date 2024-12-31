@@ -81,8 +81,8 @@ function GetChapters()
     for chapterNode in dom.SelectElements('//div[contains(@class,"scrollbar")]//a[contains(@href,"/chapter/")]') do
 
         local chapterUrl = chapterNode.SelectValue('@href')
-        local chapterTitle = chapterNode.SelectValue('./h3[1]')
-        local chapterSubtitle = chapterNode.SelectValue('./span')
+        local chapterTitle = 'Chapter ' .. chapterNode.SelectValue('./h3[1]/span/preceding-sibling::span/preceding-sibling::text()[1]')
+        local chapterSubtitle = chapterNode.SelectValue('./h3[1]/span[1]'):gsub("%-", "")
 
         if(not isempty(chapterSubtitle)) then
             chapterTitle = chapterTitle .. ' - ' .. chapterSubtitle
