@@ -47,6 +47,7 @@ function Register()
 
     module.Language = 'Portuguese'
 
+    module.Domains.Add('argoscomic.com', 'Argos Comics')
     module.Domains.Add('noindexscan.com', 'No Index Scan')
 
     module = Module.New()
