@@ -1,6 +1,18 @@
 As of version 2021.5.1.0, the changelog will only contain updates made to the HDoujin Downloader application.
 For module updates, see: https://github.com/HDoujinDownloader/HDoujinDownloader/commits/master/modules/lua
 
+[v2025.1.6.0]
+
+- [NEW] Added fallbacks for ComicInfo.xml "writer" field (Author > Circle > Artist)
+- [NEW] Added global "preferred languages" setting for chapters (Tools > General settings > Advanced, "Downloads.Chapters.PreferredLanguages")
+- [NEW] Added option to only run scheduled task once
+- [NEW] Added setting to enable multiple instances (Tools > General settings > Advanced, "Interface.SingleInstance")
+- [NEW] Improve gallery type extraction for E-Hentai/ExHentai
+- [FIX] Fixed module synchronization failure
+- [FIX] Fixed some ComicInfo.xml fields missing when configuring included fields
+- [FIX] Manga title is now copied from bookmarks when downloading new chapters
+- [MISC] Various improvements and bug fixes
+
 [v2024.11.17.0]
 
 - [NEW] Added original file name metadata for E-Hentai/ExHentai
