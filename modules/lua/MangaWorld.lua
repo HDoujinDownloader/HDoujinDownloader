@@ -10,7 +10,34 @@ function Register()
 
 end
 
+local function DoJavaScriptCookieCheck()
+
+    local aesScriptUrl = '/aes.min.js'
+    local cookieScript = dom.SelectValue('//script[contains(text(),"slowAES")]')
+
+    if(not isempty(cookieScript)) then
+
+        local js = JavaScript.New()
+
+        js.Execute(http.Get(aesScriptUrl))
+        js.Execute('document = location = {}')
+        js.Execute(cookieScript)
+
+        local cookiesStr = js.GetObject('document.cookie').ToString()
+        local redirectUrl = js.GetObject('location.href').ToString()
+        local mwCookieValue = cookiesStr:regex('MWCookie=([^;,\\s]+)', 1)
+
+        http.Cookies['MWCookie'] = mwCookieValue
+
+        dom = Dom.New(http.Get(redirectUrl))
+
+    end
+
+end
+
 function GetInfo()
+
+    DoJavaScriptCookieCheck()
 
     info.Title = dom.SelectValue('//h1')
     info.AlternativeTitle = dom.SelectValue('//span[contains(text(),"Titoli alternativi")]/following-sibling::text()'):split(',')
@@ -26,6 +53,8 @@ function GetInfo()
 end
 
 function GetChapters()
+
+    DoJavaScriptCookieCheck()
 
     -- Note that not all manga will have chapters organized by volume.
 
@@ -71,6 +100,8 @@ function GetChapters()
 end
 
 function GetPages()
+
+    DoJavaScriptCookieCheck()
 
     local baseUrl = dom.SelectValue('//div[contains(@id,"image-loader")]/following-sibling::img/@src')
         :beforelast('/')
