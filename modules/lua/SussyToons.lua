@@ -4,11 +4,16 @@ function Register()
     module.Language = 'pt-br'
 
     module.Domains.Add('new.sussytoons.site')
+    module.Domains.Add('oldi.sussytoons.com')
+    module.Domains.Add('sussyscan.com')
+    module.Domains.Add('sussyscan.com')
+    module.Domains.Add('sussytoons.com')
+    module.Domains.Add('www.sussyscan.com')
 
 end
 
 local function GetApiUrl()
-    return 'https://api-dev.' .. GetDomain(module.Domain) .. '/'
+    return 'https://api-dev.sussytoons.site/'
 end
 
 local function GetApiJson(endpoint)
@@ -25,16 +30,21 @@ local function GetApiJson(endpoint)
 
 end
 
-local function GetGalleryId()
-    return url:regex('\\/(?:obra|capitulo)\\/([^\\/]+)', 1)
-end
-
 local function GetGalleryJson()
-    return GetApiJson('obras/' .. GetGalleryId())
+
+    local mangaId = url:regex('\\/obra\\/(\\d+)', 1)
+
+    return GetApiJson('obras/' .. mangaId)
+
 end
 
 local function GetReaderJson()
-    return GetApiJson('capitulos/' .. GetGalleryId())
+
+    local match = Regex.Match(url, '\\/capitulo\\/(?<chapterPrefix>\\d+)\\/(?<chapterId>\\d+)')
+    local chapterPrefix = match['chapterPrefix']
+    local chapterId = match['chapterId']
+
+    return GetApiJson(chapterPrefix .. '/capitulos/' .. chapterId)
 end
 
 function GetInfo()
@@ -55,7 +65,7 @@ function GetChapters()
     for chapterNode in json.SelectNodes('resultado.capitulos[*]') do
 
         local chapterId = chapterNode.SelectValue('cap_id')
-        local chapterUrl = '/capitulo/' .. chapterId
+        local chapterUrl = '/capitulo/638819/' .. chapterId
         local chapterTitle = chapterNode.SelectValue('cap_nome')
 
         chapters.Add(chapterUrl, chapterTitle)
@@ -68,18 +78,28 @@ end
 
 function GetPages()
 
-    local cdnRootUrl = '//oldi.' .. GetDomain(module.Domain) .. '/'
+    local cdnRootUrl = '//cdn.sussytoons.site/'
     local json = GetReaderJson()
+
+    local mangaId = json.SelectValue('resultado.obra.obr_id')
+    local scanId = json.SelectValue('resultado.obra.scan_id')
+    local chapterNumber = json.SelectValue('resultado.cap_numero')
 
     for imageNode in json.SelectNodes('resultado.cap_paginas[*]') do
 
         local imageUrl = imageNode.SelectValue('src')
+        local pageInfo = PageInfo.New()
 
-        if(not imageUrl:startswith('http')) then
-            imageUrl = cdnRootUrl .. 'wp-content/uploads/WP-manga/data/' .. imageUrl
+        if(imageUrl:startswith('http')) then
+            pageInfo.Url = imageUrl
+        else
+
+            pageInfo.Url = cdnRootUrl .. 'scans/' .. scanId .. '/obras/' .. mangaId .. '/capitulos/' .. chapterNumber .. '/' .. imageUrl
+            pageInfo.BackupUrls.Add(cdnRootUrl .. 'wp-content/uploads/WP-manga/data/' .. imageUrl)
+
         end
 
-        pages.Add(imageUrl)
+        pages.Add(pageInfo)
 
     end
 
