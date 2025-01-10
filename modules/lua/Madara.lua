@@ -76,9 +76,6 @@ function Register()
 
     module.Domains.Add('hiper.cool', 'Hipercool')
     module.Domains.Add('neoxscans.net', 'NEOX Scanlator')
-    module.Domains.Add('oldi.sussytoons.com', 'Sussy Scan')
-    module.Domains.Add('sussyscan.com', 'Sussy Scan')
-    module.Domains.Add('sussytoons.com', 'Sussy Scan')
 
     RegisterModule(module)
 
