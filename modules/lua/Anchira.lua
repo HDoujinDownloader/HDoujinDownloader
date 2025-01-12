@@ -4,6 +4,7 @@ function Register()
     module.Adult = true
 
     module.Domains.Add('anchira.to', 'Anchira')
+    module.Domains.Add('hdoujin.net', 'HDoujin')
     module.Domains.Add('koharu.to', 'Koharu')
     module.Domains.Add('niyaniya.moe', 'Koharu')
     module.Domains.Add('schale.network', 'Koharu')
@@ -15,7 +16,7 @@ function Register()
 end
 
 local function GetApiUrl()
-    return '//api.schale.network/'
+    return '//api.' .. module.Domain .. '/'
 end
 
 local function GetApiJson(path, post)
@@ -31,15 +32,15 @@ local function GetApiJson(path, post)
     local jsonStr = post and http.Post(path) or http.Get(path)
 
     if(not jsonStr:startswith('{')) then
-        
-        -- We're probably encountering a reader catcha.
+
+        -- We're probably encountering a reader captcha.
 
         Fail(Error.CaptchaRequired.WithHelpLink("https://github.com/HDoujinDownloader/HDoujinDownloader/wiki/Downloading-from-Anchira"))
 
     end
 
     return Json.New(jsonStr)
-    
+
 end
 
 local function GetGalleryPath()
@@ -85,15 +86,15 @@ function GetInfo()
         local tags = List.New()
 
         for tagNode in json.SelectNodes('tags[*]') do
-            
+
             -- Include unnamespaced tags, as well as "Male", "Female", "Mixed", and "Other".
 
             local tagNamespaceId = tagNode.SelectValue('namespace')
 
-            if(isempty(tagNamespaceId) or 
-                tagNamespaceId == '8' or 
-                tagNamespaceId == '9' or 
-                tagNamespaceId == '10' or 
+            if(isempty(tagNamespaceId) or
+                tagNamespaceId == '8' or
+                tagNamespaceId == '9' or
+                tagNamespaceId == '10' or
                 tagNamespaceId == '12') then
 
                 local tagNamespace = GetTagNamespaceName(tagNamespaceId)
@@ -110,7 +111,7 @@ function GetInfo()
         end
 
         info.Tags = tags
-        
+
     else
 
         -- Assume that we added a search/tag URL instead.
@@ -122,7 +123,7 @@ function GetInfo()
 
             local endpoint = '/books?s=' .. searchParameter
             local json = GetApiJson(endpoint)
-           
+
             for entryNode in json.SelectNodes('entries[*]') do
 
                 local id = entryNode.SelectValue('id')
@@ -144,21 +145,25 @@ end
 function GetPages()
 
     local dataSaver = toboolean(module.Settings['Data saver'])
-    local galleryJson = GetApiJson('books/detail/' .. GetGalleryPath())
+    local usePostMethod = module.Domain:contains('hdoujin.net')
 
-    -- Note that not all galleries will have all resolutions available.
+    local galleryJson = GetApiJson('books/detail/' .. GetGalleryPath(), usePostMethod)
+
+    -- Get the metadata for the resolution we intend to download.
+    -- Not all galleries will have all resolutions available.
     -- We can't access images with resolutions that don't have a "public_key" value.
 
-    local resolutions = dataSaver and 
+    local resolutions = dataSaver and
         { 1280, 980, 780, 1600, 0 } or -- Prefer small resolutions
         { 0, 1600, 1280, 980, 780 } -- Prefer high resolutions (or original quality)
-   
+
     local dataJson, dataIndex, id, key
 
     for _, resolution in ipairs(resolutions) do
 
         dataJson = galleryJson.SelectNode('data.' .. tostring(resolution))
         dataIndex = resolution
+
         id = dataJson.SelectValue('id')
         key = dataJson.SelectValue('public_key')
 
@@ -168,13 +173,25 @@ function GetPages()
 
     end
 
-    local createdAt = galleryJson.SelectValue('created_at')
-    local updatedAt = galleryJson.SelectValue('updated_at')
+    -- Get the image URLs for the resolution we've selected.
+    -- There are two different ways of archieving this depending on where we're downloading from.
 
-    local version = isempty(updatedAt) and createdAt or updatedAt
-    local width = dataIndex
+    local readerJson
 
-    local readerJson = GetApiJson('books/data/' .. GetGalleryPath() .. '/' .. id .. '/' .. key .. '?v=' .. version .. '&w=' .. width)
+    if(usePostMethod) then
+
+        readerJson = GetApiJson('books/data/' .. dataIndex)
+
+    else
+
+        local createdAt = galleryJson.SelectValue('created_at')
+        local updatedAt = galleryJson.SelectValue('updated_at')
+        local version = isempty(updatedAt) and createdAt or updatedAt
+
+        readerJson = GetApiJson('books/data/' .. GetGalleryPath() .. '/' .. id .. '/' .. key .. '?v=' .. version .. '&w=' .. dataIndex)
+
+    end
+
     local baseUrl = readerJson.SelectValue('base')
 
     for imageUrl in readerJson.SelectValues('entries[*].path') do
