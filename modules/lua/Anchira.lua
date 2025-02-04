@@ -5,6 +5,7 @@ function Register()
 
     module.Domains.Add('anchira.to', 'Anchira')
     module.Domains.Add('hdoujin.net', 'HDoujin')
+    module.Domains.Add('hdoujin.org', 'HDoujin')
     module.Domains.Add('koharu.to', 'Koharu')
     module.Domains.Add('niyaniya.moe', 'Koharu')
     module.Domains.Add('schale.network', 'Koharu')
@@ -16,7 +17,13 @@ function Register()
 end
 
 local function GetApiUrl()
-    return '//api.' .. module.Domain .. '/'
+
+    if(module.Domain:startswith("hdoujin.")) then
+        return '//api.' .. module.Domain .. '/'
+    else
+        return '//api.schale.network/'
+    end
+
 end
 
 local function GetApiJson(path, post)
@@ -146,7 +153,6 @@ function GetPages()
 
     local dataSaver = toboolean(module.Settings['Data saver'])
     local usePostMethod = module.Domain:contains('hdoujin.net')
-
     local galleryJson = GetApiJson('books/detail/' .. GetGalleryPath(), usePostMethod)
 
     -- Get the metadata for the resolution we intend to download.
