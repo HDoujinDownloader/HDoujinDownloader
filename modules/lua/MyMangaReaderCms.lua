@@ -15,7 +15,7 @@ function Register()
     module.Domains.Add('readcomicsonline.ru', 'Read Comics Online')
     module.Domains.Add('readhent.ai', 'ReadHentai')
     module.Domains.Add('www.hentaishark.com', 'Hentai Shark')
-    
+
     RegisterModule(module)
 
     -- Turkish
@@ -31,9 +31,11 @@ function Register()
 end
 
 local function CleanTitle(title)
-
     return RegexReplace(title, '(?:^(?:\\s*↛\\s*)|(?:\\:\\s*)$)', '')
+end
 
+local function IsBase64Encoded(str)
+    return #str % 4 == 0 and Regex.IsMatch(str, "^[A-Za-z0-9+/]+={0,2}$")
 end
 
 function GetInfo()
@@ -64,7 +66,7 @@ function GetInfo()
     if(isempty(info.Title)) then
         info.Title = dom.Title:before(' - ')
     end
-    
+
 end
 
 function GetChapters()
@@ -93,8 +95,6 @@ function GetPages()
     local baseUrl = scriptContent:regex('base_url\\s*=\\s*\"([^"]+)', 1)
     local images = scriptContent:regex('pages\\s*=\\s*(\\[[^]]+\\])', 1)
 
-    local imagesJson = Json.New(images)
-
     -- Some domains replace the base_url value with their own CDN.
 
     local alternativeBaseUrl1 = scriptContent:regex("[^\\/]jQuery\\('\\.scan-page'\\)\\.attr\\('src',\\s*'([^']+)", 1)
@@ -113,7 +113,7 @@ function GetPages()
         -- On mangas.in, some content uses their own CDN, while some content uses an external CDN (like Blogspot).
         -- When an external CDN is used, the URL is obfuscated using EncodeURIComponent and then btoa.
 
-        if(module.Domain == 'mangas.in' and tostring(image['external']) == '1') then
+        if(tostring(image['external']) == '1' and IsBase64Encoded(imageUrl:after('//'))) then
             imageUrl = DecodeUriComponent(DecodeBase64(imageUrl:after('//')))
         end
 
