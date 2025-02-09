@@ -23,21 +23,14 @@ function Register()
 end
 
 local function IsGalleryUrl()
-
-    return url:contains('/g/') or
-        url:contains('/d/') -- 3hentai.net
-
+    return url:contains('/g/') or url:contains('/d/') -- 3hentai.net
 end
 
 local function GetGalleryId()
-
-    -- 3hentai.net uses "/d/" instead of "/g/"
-
-    return url:regex('\\/[gd]\\/(\\d+)', 1)
-
+    return url:regex('\\/[gd]\\/(\\d+)', 1) -- 3hentai.net uses "/d/" instead of "/g/"
 end
 
-local function GetPrettyTitle()
+local function GetGalleryPrettyTitle()
 
     local prettyTitle = dom.SelectValue('//span[contains(@class,"pretty")]')
 
@@ -53,31 +46,76 @@ local function GetPrettyTitle()
         prettyTitle = RegexReplace(dom.SelectValue('//div[@id="bigcontainer"]//h1'):trim(), '(?i)(?:^Nhentai|hentai$)', '')
     end
 
-    return prettyTitle
+    -- nhentai.xxx
+
+    if(isempty(prettyTitle)) then
+
+        -- nhentai.xxx doesn't have a "pretty" title, but we can extract the English title instead.
+
+        prettyTitle = dom.SelectValue('//h1'):after('|')
+
+    end
+
+    return tostring(prettyTitle):trim()
 
 end
 
-local function GetTagsFromTagGroup(groupName)
+local function GetGalleryTitle()
 
-    local tags = dom.SelectValues('//div[contains(@class, "tag-container") and contains(text(), "'..groupName..'")]//span[@class="name"]')
+    local title
+
+    if(toboolean(module.Settings['Use pretty titles'])) then
+        title = GetGalleryPrettyTitle()
+    end
+
+    if(isempty(info.Title)) then -- nhentai.uk
+        title = dom.SelectValue('//div[@id="info"]/h1')
+    end
+
+    if(isempty(info.Title)) then
+        title = dom.SelectValue('//h1')
+    end
+
+    -- Fall back to the gallery ID if we can't get a title.
+
+    if(isempty(title)) then
+        title = GetGalleryId()
+    end
+
+    return title
+
+end
+
+local function GetGalleryTags(groupName)
+
+    local tags = dom.SelectValues('//div[contains(@class, "tag-container") and contains(text(), "' .. groupName .. '")]//span[@class="name"]')
 
     -- For sites using the old nhentai theme, we'll need to get the tags differently.
 
     if(isempty(tags)) then
-        tags = dom.SelectValues('//div[contains(@class, "tag-container") and contains(text(), "'..groupName..'")]//a')
+        tags = dom.SelectValues('//div[contains(@class, "tag-container") and contains(text(), "' .. groupName .. '")]//a')
+    end
+
+    if(isempty(tags)) then -- nhentai.xxx
+        tags = dom.SelectValues('//span[contains(text(),"' .. groupName .. '")]/following-sibling::a//span[contains(@class,"tag_name")]')
     end
 
     return tags
 
 end
 
-local function EnsureOnGalleryPage()
+local function RedirectToGalleryPage()
 
     local backToGalleryUrl = dom.SelectValue('//*[contains(@class,"back-to-gallery") or contains(@class,"go-back")]//@href')
+
+    if(isempty(backToGalleryUrl)) then -- nhentai.xxx
+        backToGalleryUrl = dom.SelectValue('//a[contains(@class,"back_btn")]/@href')
+    end
 
     if(not isempty(backToGalleryUrl)) then
 
         local src = http.Get(backToGalleryUrl)
+
         dom = Dom.New(src)
 
     end
@@ -92,43 +130,45 @@ local function EnqueueAllGalleries(dom)
 
 end
 
+local function GetThumbnailUrls()
+
+    local thumbnailUrls = dom.SelectValues('//div[@id="thumbnail-container"]//img/@data-src')
+
+    if(isempty(thumbnailUrls)) then -- 3hentai.net
+        thumbnailUrls = dom.SelectValues('//div[@id="thumbnail-gallery"]//img/@data-src')
+    end
+
+    if(isempty(thumbnailUrls)) then -- simplyhentai.org
+        thumbnailUrls = dom.SelectValues('//div[@class="thumb-container"]//img/@src')
+    end
+
+    if(isempty(thumbnailUrls)) then -- nhentai.xxx
+        thumbnailUrls = dom.SelectValues('//div[contains(@class,"gallery_thumbs")]//img/@data-src')
+    end
+
+    return thumbnailUrls
+
+end
+
+local function GetReaderUrls()
+    return dom.SelectValues('//div[contains(@class,"gallery_thumbs")]//a/@href')
+end
+
 function GetInfo()
 
     if(IsGalleryUrl()) then
 
-        EnsureOnGalleryPage()
+        RedirectToGalleryPage()
 
-        -- Get the gallery's title.
-
-        if(toboolean(module.Settings['Use pretty titles'])) then
-            info.Title = GetPrettyTitle()
-        end
-
-        if(isempty(info.Title)) then -- nhentai.uk
-            info.Title = dom.SelectValue('//div[@id="info"]/h1')
-        end
-
-        if(isempty(info.Title)) then
-            info.Title = dom.SelectValue('//h1')
-        end
-
-        -- Fall back to the gallery ID if we can't get a title.
-
-        if(isempty(info.Title)) then
-            info.Title = GetGalleryId()
-        end
-
-        info.OriginalTitle = dom.SelectValue('//div[@id="info"]/h2')
-
-        -- Get the gallery's tags.
-
-        info.Tags = GetTagsFromTagGroup('Tags')
-        info.Circle = tostring(GetTagsFromTagGroup('Groups')):title()
-        info.Artist = tostring(GetTagsFromTagGroup('Artists')):title()
-        info.Parody = tostring(GetTagsFromTagGroup('Parodies')):title()
-        info.Characters = GetTagsFromTagGroup('Characters')
-        info.Language = GetTagsFromTagGroup('Languages')
-        info.Type = GetTagsFromTagGroup('Categories')
+        info.Title = GetGalleryTitle()
+        info.OriginalTitle = dom.SelectValue('//div[@id="info" or @class="info"]/h2')
+        info.Tags = GetGalleryTags('Tags')
+        info.Circle = tostring(GetGalleryTags('Groups')):title()
+        info.Artist = tostring(GetGalleryTags('Artists')):title()
+        info.Parody = tostring(GetGalleryTags('Parodies')):title()
+        info.Characters = GetGalleryTags('Characters')
+        info.Language = GetGalleryTags('Languages')
+        info.Type = GetGalleryTags('Categories')
 
     else
 
@@ -162,44 +202,64 @@ end
 
 function GetPages()
 
-    EnsureOnGalleryPage()
+    RedirectToGalleryPage()
 
-    -- Get the thumbnail URLs.
+    local replaceImageServer = module.Domain ~= 'nhentai.to'
+    local deferImageUrl = module.Domain == 'nhentai.xxx'
 
-    local thumbnailUrls = dom.SelectValues('//div[@id="thumbnail-container"]//img/@data-src')
+    if(deferImageUrl) then
 
-    if(isempty(thumbnailUrls)) then -- 3hentai.net
-        thumbnailUrls = dom.SelectValues('//div[@id="thumbnail-gallery"]//img/@data-src')
-    end
+        -- We can't determine the full image URL from the thumbnail, so we'll get it later (nhentai.xxx).
+        -- This is because the file extension can vary (.webp, .png, etc.).
 
-    if(isempty(thumbnailUrls)) then -- simplyhentai.org
-        thumbnailUrls = dom.SelectValues('//div[@class="thumb-container"]//img/@src')
-    end
+        for pageUrl in GetReaderUrls() do
 
-    -- Convert the thumbnail URLs to full image URLs.
+            local pageInfo = PageInfo.New(pageUrl)
 
-    for thumbnailUrl in thumbnailUrls do
+            pageInfo.Data['lazy'] = true
 
-        local fullImageUrl = thumbnailUrl
+            pages.Add(pageInfo)
 
-        -- Adjust the image server from the thumbnail server (t1) to the image server (i1).
-
-        if(module.Domain ~= 'nhentai.to') then
-            fullImageUrl = RegexReplace(fullImageUrl, '\\/\\/t(\\d?)\\.', '//i$1.')
         end
 
-        -- Remove the thumbnail prefix from the file name.
+    else
 
-        fullImageUrl = RegexReplace(fullImageUrl, '(\\d+)t(.+?)$', '$1$2')
+        -- Convert the thumbnail URLs to full image URLs.
 
-        -- Newer galleries on NHentai will have ".webp" appended to the original file extension (e.g. ".jpg.webp").
-        -- We need to strip the extraneous file extension.
+        for thumbnailUrl in GetThumbnailUrls() do
 
-        fullImageUrl = RegexReplace(fullImageUrl, "\\.(jpg|png|webp)\\.webp$", ".$1")
+            local fullImageUrl = thumbnailUrl
 
-        pages.Add(fullImageUrl)
+            -- Adjust the image server from the thumbnail server to the image server (e.g. "t1" -> "i1").
+
+            if(replaceImageServer) then
+                fullImageUrl = RegexReplace(fullImageUrl, '\\/\\/t(\\d?)\\.', '//i$1.')
+            end
+
+            -- Remove the thumbnail prefix from the file name.
+
+            fullImageUrl = RegexReplace(fullImageUrl, '(\\d+)t(.+?)$', '$1$2')
+
+            -- Newer galleries on NHentai will have ".webp" appended to the original file extension (e.g. ".jpg.webp").
+            -- We need to strip the extraneous file extension.
+
+            fullImageUrl = RegexReplace(fullImageUrl, "\\.(jpg|png|webp)\\.webp$", ".$1")
+
+            pages.Add(fullImageUrl)
+
+        end
 
     end
+
+end
+
+function BeforeDownloadPage()
+
+    if(not page.Data or isempty(page.Data['lazy'])) then
+        return
+    end
+
+    page.Url = dom.SelectValue('//img[contains(@id,"fimg")]/@data-src')
 
 end
 
