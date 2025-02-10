@@ -34,26 +34,18 @@ local function GetGalleryPrettyTitle()
 
     local prettyTitle = dom.SelectValue('//span[contains(@class,"pretty")]')
 
-    -- 3hentai.net
-
-    if(isempty(prettyTitle)) then
+    if(isempty(prettyTitle)) then -- 3hentai.net
         prettyTitle = dom.SelectValue('//span[contains(@class,"middle-title")]')
     end
 
-    -- nhentai.uk
-
-    if(isempty(prettyTitle)) then
+    if(isempty(prettyTitle)) then -- nhentai.uk
         prettyTitle = RegexReplace(dom.SelectValue('//div[@id="bigcontainer"]//h1'):trim(), '(?i)(?:^Nhentai|hentai$)', '')
     end
 
-    -- nhentai.xxx
+    -- nhentai.xxx doesn't have a "pretty" title, but we can extract the English title instead.
 
-    if(isempty(prettyTitle)) then
-
-        -- nhentai.xxx doesn't have a "pretty" title, but we can extract the English title instead.
-
+    if(isempty(prettyTitle)) then -- nhentai.xxx
         prettyTitle = dom.SelectValue('//h1'):after('|')
-
     end
 
     return tostring(prettyTitle):trim()
@@ -104,6 +96,58 @@ local function GetGalleryTags(groupName)
 
 end
 
+local function GetGalleryPageCount()
+    return dom.SelectValue('//span[contains(@class,"tag_name") and contains(@class,"pages")]') -- nhentai.xxx
+end
+
+local function GetGalleryThumbnailUrls()
+
+    local thumbnailUrls = dom.SelectValues('//div[@id="thumbnail-container"]//img/@data-src')
+
+    if(isempty(thumbnailUrls)) then -- 3hentai.net
+        thumbnailUrls = dom.SelectValues('//div[@id="thumbnail-gallery"]//img/@data-src')
+    end
+
+    if(isempty(thumbnailUrls)) then -- simplyhentai.org
+        thumbnailUrls = dom.SelectValues('//div[@class="thumb-container"]//img/@src')
+    end
+
+    if(isempty(thumbnailUrls)) then -- nhentai.xxx
+        thumbnailUrls = dom.SelectValues('//div[contains(@class,"gallery_thumbs")]//img/@data-src')
+    end
+
+    return thumbnailUrls
+
+end
+
+local function GetGalleryReaderUrls()
+
+    -- Get the reader URLs for each image in the gallery.
+    -- nhentai.xxx uses the same thumbnail loader as AsmHentai, so we can't extract them all from the page without an API call.
+
+    local pageCount = tonumber(GetGalleryPageCount())
+    local pageList = List.New()
+
+    if(pageCount) then
+
+        local baseUrl = url:trim('/')
+
+        for i = 1, pageCount do
+            pageList.Add(baseUrl .. '/' .. tostring(i) .. '/')
+        end
+
+        return pageList
+
+    else
+
+        -- Extract the reader URLS directly from the page.
+
+        return dom.SelectValues('//div[contains(@class,"gallery_thumbs")]//a/@href') -- nhentai.xxx
+
+    end
+
+end
+
 local function RedirectToGalleryPage()
 
     local backToGalleryUrl = dom.SelectValue('//*[contains(@class,"back-to-gallery") or contains(@class,"go-back")]//@href')
@@ -128,30 +172,6 @@ local function EnqueueAllGalleries(dom)
         Enqueue(galleryUrl)
     end
 
-end
-
-local function GetThumbnailUrls()
-
-    local thumbnailUrls = dom.SelectValues('//div[@id="thumbnail-container"]//img/@data-src')
-
-    if(isempty(thumbnailUrls)) then -- 3hentai.net
-        thumbnailUrls = dom.SelectValues('//div[@id="thumbnail-gallery"]//img/@data-src')
-    end
-
-    if(isempty(thumbnailUrls)) then -- simplyhentai.org
-        thumbnailUrls = dom.SelectValues('//div[@class="thumb-container"]//img/@src')
-    end
-
-    if(isempty(thumbnailUrls)) then -- nhentai.xxx
-        thumbnailUrls = dom.SelectValues('//div[contains(@class,"gallery_thumbs")]//img/@data-src')
-    end
-
-    return thumbnailUrls
-
-end
-
-local function GetReaderUrls()
-    return dom.SelectValues('//div[contains(@class,"gallery_thumbs")]//a/@href')
 end
 
 function GetInfo()
@@ -212,7 +232,7 @@ function GetPages()
         -- We can't determine the full image URL from the thumbnail, so we'll get it later (nhentai.xxx).
         -- This is because the file extension can vary (.webp, .png, etc.).
 
-        for pageUrl in GetReaderUrls() do
+        for pageUrl in GetGalleryReaderUrls() do
 
             local pageInfo = PageInfo.New(pageUrl)
 
@@ -226,7 +246,7 @@ function GetPages()
 
         -- Convert the thumbnail URLs to full image URLs.
 
-        for thumbnailUrl in GetThumbnailUrls() do
+        for thumbnailUrl in GetGalleryThumbnailUrls() do
 
             local fullImageUrl = thumbnailUrl
 
