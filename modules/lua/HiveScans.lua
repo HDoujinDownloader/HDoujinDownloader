@@ -82,4 +82,12 @@ function GetPages()
 
     pages.AddRange(dom.SelectValues('//img[contains(@src, "/upload/series/")]/@src'))
 
+    if(isempty(pages)) then
+
+        local nextDataScript = dom.SelectValue('//script[contains(text(), "/upload/series/")]')
+
+        pages.AddRange(nextDataScript:regexmany('"url\\\\":\\\\"([^"]+)\\\\"', 1))
+
+    end
+
 end
