@@ -139,6 +139,7 @@ function Register()
     module.Domains.Add('www.rom-manga.com', 'ROM-Manga')
     module.Domains.Add('www.slow-manga.com', 'SLOW-MANGA')
     module.Domains.Add('www.up-manga.com', 'Up-Manga')
+    module.Domains.Add('xenon-manga.com', 'xenon-manga.com')
 
     RegisterModule(module)
 
@@ -162,6 +163,12 @@ local function CheckGenericMatch()
         isGenericMatch = dom.SelectNodes('//div[@id="chapterlist"]//div[contains(@class,"eph-num")]/a').Count() > 0
     end
 
+    -- Attempt to handle individual chapters that use "ts_reader".
+
+    if(not isGenericMatch) then
+        isGenericMatch = dom.SelectNodes('//script[contains(text(), "ts_reader.run")]').Count() > 0
+    end
+
     if(not isGenericMatch) then
         Fail(Error.DomainNotSupported)
     end
@@ -169,21 +176,15 @@ local function CheckGenericMatch()
 end
 
 local function CleanTitle(title)
-
     return RegexReplace(title, '(?i)Bahasa Indonesia$', '')
-
 end
 
 local function GetPageCount()
-
     return dom.SelectElements('//div[@id="chapterlist"]//div[contains(@class,"bsx")]').Count()
-
 end
 
 local function GetReaderUrl()
-
     return dom.SelectValue('//div[contains(@class,"releases")]//a/@href')
-
 end
 
 function GetInfo()
