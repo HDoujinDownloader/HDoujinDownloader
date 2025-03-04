@@ -44,6 +44,37 @@ local function GetUserArtworksJson()
 
 end
 
+local function GetUserArtworkIds()
+
+    local json = GetUserArtworksJson()
+    local artworkIds = {}
+
+    local includeManga = url:contains('/manga')
+    local includeIllustrations = url:contains('/illustrations')
+    local includeAll = not (includeManga or includeIllustrations)
+
+    if(includeManga or includeAll) then
+
+        for node in json.SelectToken('body.manga') do
+            table.insert(artworkIds, tonumber(node.Key))
+        end
+
+    end
+
+    if(includeIllustrations or includeAll) then
+
+        for node in json.SelectToken('body.illusts') do
+            table.insert(artworkIds, tonumber(node.Key))
+        end
+
+    end
+
+    table.sort(artworkIds)
+
+    return artworkIds
+
+end
+
 local function GetArtworkImagesJson(artworkId)
 
     artworkId = artworkId or GetArtworkId()
@@ -115,7 +146,7 @@ function GetInfo()
         info.Artist = json.SelectValue('user..name')
         info.Summary = json.SelectValue('user..comment')
 
-        json = GetUserArtworksJson()
+        local artworkIds = GetUserArtworkIds()
 
         if(url:contains('/manga')) then
 
@@ -123,14 +154,21 @@ function GetInfo()
             -- Treat each manga as its own chapter.
 
             info.Title = info.Artist .. '\'s manga'
-            info.ChapterCount = json.SelectToken('body.manga').Count()
+            info.ChapterCount = #artworkIds
 
-        else
+        elseif(url:contains('/illustrations')) then
 
             -- Added "illustrations" tab.
 
             info.Title = info.Artist .. '\'s illustrations'
-            info.PageCount = json.SelectToken('body.illusts').Count()
+            info.PageCount = #artworkIds
+
+        else
+
+            -- Consider all artworks (e.g. "Home" tab, or "artworks" page).
+
+            info.Title = info.Artist
+            info.PageCount = #artworkIds
 
         end
 
@@ -189,12 +227,7 @@ function GetPages()
 
         -- Added user gallery.
 
-        local json = GetUserArtworksJson()
-        local artworkIds = {}
-
-        for node in json.SelectToken('body.illusts') do
-            table.insert(artworkIds, node.Key)
-        end
+        local artworkIds = GetUserArtworkIds()
 
         if(API_VERSION < 20241109) then
 
@@ -220,10 +253,6 @@ function GetPages()
             end
 
         end
-
-        -- Reverse the image list so that oldest images are listed first.
-
-        pages.Reverse()
 
     elseif(url:contains('/artworks/')) then
 
