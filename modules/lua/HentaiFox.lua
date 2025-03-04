@@ -54,8 +54,11 @@ function GetPages()
 
     dom = dom.New(http.Get(url))
 
+    -- The image URL logic is inside main.js.
+
     local imageDir = dom.SelectValue('//input[@name="image_dir"]/@value')
     local galleryId = dom.SelectValue('//input[@name="gallery_id"]/@value')
+    local uniqueId = dom.SelectValue('//input[@name="unique_id"]/@value')
 
     local thumbnailsJsonStr = tostring(dom):regex("var\\s*g_th\\s*=\\s*\\$\\.parseJSON\\('(.+?)'\\);", 1)
     local thumbnailsJson = Json.New(thumbnailsJsonStr)
@@ -64,6 +67,12 @@ function GetPages()
 
         local pageNumber = key
         local pageExtension = tostring(thumbnailsJson[key]):split(',').First()
+        local imageServers = { "i", "i2" }
+        local imageServer = imageServers[math.random(1, #imageServers)]
+
+        if(tonumber(uniqueId) > 140236) then
+            imageServer = "i3"
+        end
 
         if(pageExtension == 'p') then
             pageExtension = '.png'
@@ -75,7 +84,8 @@ function GetPages()
             pageExtension = '.jpg'
         end
 
-        pages.Add(FormatString('//i.{0}/{1}/{2}/{3}{4}', module.Domain, imageDir, galleryId, pageNumber, pageExtension))
+        pages.Add(FormatString('//{0}.{1}/{2}/{3}/{4}{5}',
+            imageServer, module.Domain, imageDir, galleryId, pageNumber, pageExtension))
 
     end
 
