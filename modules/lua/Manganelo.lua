@@ -12,18 +12,22 @@ function Register()
     module.Domains.Add('mangabat.com', 'MangaBat')
     module.Domains.Add('mangakakalot.city', 'Mangakakalot')
     module.Domains.Add('mangakakalot.com', 'Mangakakalot')
+    module.Domains.Add('mangakakalot.gg', 'Mangakakalot')
     module.Domains.Add('mangakakalot.to', 'Mangakakalot')
     module.Domains.Add('mangakakalot.tv', 'Mangakakalot')
     module.Domains.Add('manganato.com', 'Manganato')
     module.Domains.Add('manganelo.com', 'Manganelo')
     module.Domains.Add('manganelo.tv', 'Manganelo')
     module.Domains.Add('mangawk.com', 'MangaWK')
+    module.Domains.Add('natomanga.com', 'MangaNato')
     module.Domains.Add('readmangabat.com', 'MangaBat')
     module.Domains.Add('readmanganato.com', 'Manganato')
+    module.Domains.Add('www.mangakakalot.gg', 'Mangakakalot')
+    module.Domains.Add('www.natomanga.com', 'MangaNato')
 
     module.Settings.AddCheck('Try other image servers', true)
         .WithToolTip('If enabled, the image URLs from the alternative image server(s) will be used as backup.')
-    
+
 end
 
 local function FollowRedirect()
@@ -83,27 +87,19 @@ local function GetImageUrls()
 end
 
 local function CleanTitle(title)
-
     return RegexReplace(title, '(?i)^Read\\s| manga on Mangakakalot$', '')
-
 end
 
 local function GetMangaId()
-
     return dom.SelectValue('//div[@id="main"]/@data-id')
-
 end
 
 local function GetChapterId()
-
     return dom.SelectValue('//div[@id="reading"]/@data-reading-id')
-
 end
 
 local function GetApiEndpoint()
-
     return GetRoot(url) .. 'ajax/manga/'
-
 end
 
 local function GetApiResponse(path)
@@ -198,7 +194,7 @@ function GetChapters()
         for chapter in chapters do
             chapter.Language = language
         end
-        
+
     end
 
     chapters.Reverse()
@@ -231,23 +227,21 @@ function GetPages()
         local contentServerUrls = dom.SelectValues('//a[contains(@class,"server-image-btn")]/@data-l')
 
         if(not isempty(contentServerUrls)) then
-    
+
             local contentServerUrl = contentServerUrls.First()
-    
+
             -- This request sets the "content_server" cookie and updates the list of images.
-    
+
             http.Get(contentServerUrl)
 
             dom = Dom.New(http.Get(url))
-    
+
             local backupImageUrls = GetImageUrls()
-            
+
             for i = 0, math.min(backupImageUrls.Count(), pages.Count()) - 1 do
-
                 pages[i].BackupUrls.Add(backupImageUrls[i])
-
             end
-            
+
         end
 
     end
