@@ -44,7 +44,7 @@ end
 
 function GetPages()
 
-    pages.AddRange(dom.SelectValues('//img[contains(@class,"document_img")]/@data-src'))
+    pages.AddRange(dom.SelectValues('//section[contains(@class, "imgWrap")]/div[contains(@class, "cImg")]/img/@data-src'))
 
 end
 
