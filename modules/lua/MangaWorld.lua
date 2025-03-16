@@ -5,8 +5,10 @@ function Register()
 
     module.Domains.Add('mangaworld.ac')
     module.Domains.Add('mangaworld.in')
+    module.Domains.Add('mangaworld.nz')
     module.Domains.Add('www.mangaworld.ac')
     module.Domains.Add('www.mangaworld.in')
+    module.Domains.Add('www.mangaworld.nz')
 
 end
 
@@ -42,8 +44,8 @@ function GetInfo()
     info.Title = dom.SelectValue('//h1')
     info.AlternativeTitle = dom.SelectValue('//span[contains(text(),"Titoli alternativi")]/following-sibling::text()'):split(',')
     info.Tags = dom.SelectValues('//span[contains(text(),"Generi")]/following-sibling::a')
-    info.Author = dom.SelectValues('//span[contains(text(),"Autore")]/following-sibling::a')
-    info.Author = dom.SelectValues('//span[contains(text(),"Autore")]/following-sibling::a')
+    info.Author = dom.SelectValues('//span[contains(text(),"Autore") or contains(text(),"Autori")]/following-sibling::a')
+    info.Artist = dom.SelectValues('//span[contains(text(),"Artisti")]/following-sibling::a')
     info.Type = dom.SelectValue('//span[contains(text(),"Tipo")]/following-sibling::a')
     info.Status = dom.SelectValue('//span[contains(text(),"Stato")]/following-sibling::a')
     info.DateReleased = dom.SelectValue('//span[contains(text(),"Anno di uscita")]/following-sibling::a')
