@@ -99,6 +99,7 @@ function Register()
     module.Language = 'Thai'
 
     module.Domains.Add('dokimori.com', 'DokiMori')
+    module.Domains.Add('manga-lc.net', 'Manga-Lc')
     module.Domains.Add('manga-post.com', 'Manga-Post')
 
     RegisterModule(module)
