@@ -60,11 +60,11 @@ local function GetGalleryTitle()
         title = GetGalleryPrettyTitle()
     end
 
-    if(isempty(info.Title)) then -- nhentai.uk
+    if(isempty(title)) then -- nhentai.uk
         title = dom.SelectValue('//div[@id="info"]/h1')
     end
 
-    if(isempty(info.Title)) then
+    if(isempty(title)) then
         title = dom.SelectValue('//h1')
     end
 
