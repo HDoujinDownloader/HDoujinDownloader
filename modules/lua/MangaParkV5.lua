@@ -26,8 +26,13 @@ local function IsReaderImageUrl(imageUrl)
 
     -- Ignore the primary manga thumbnail.
 
-    if(imageUrl:contains('/mpim/') or imageUrl:contains('/amim/')) then
+    if(imageUrl:contains('/mpim/') or
+        imageUrl:contains('/amim/') or
+        imageUrl:contains('/mpav/') or
+        imageUrl:contains('/ampi/')) then
+
         return false
+
     end
 
     return imageUrl:contains('/comic/') or
@@ -52,9 +57,7 @@ function GetChapters()
     -- We have to query the API to get the chapter list.
 
     local comicId = GetComicId()
-
     local payload = '{"query":"query get_comicChapterList($comicId: ID!) {\\n    get_comicChapterList(comicId: $comicId){\\n      id\\n      data {\\n        \\n  id comicId\\n\\n  isFinal\\n  \\n  volume\\n  serial\\n\\n  dname\\n  title\\n\\n  urlPath\\n\\n  sfw_result\\n\\n      }\\n      # sser_read\\n      # sser_read_serial\\n    }\\n  }","variables":{"comicId":"' .. comicId .. '"}}'
-
     local chaptersJson = GetApiJson(payload)
 
     for chapterNode in chaptersJson.SelectTokens('data.get_comicChapterList[*].data') do
@@ -66,6 +69,12 @@ function GetChapters()
         chapterInfo.Url = chapterNode.SelectValue('urlPath')
         chapterInfo.Version = chapterNode.SelectValue('srcTitle')
         chapterInfo.Language = chapterNode.SelectValue('lang')
+
+        local subtitle = chapterNode.SelectValue('title')
+
+        if(not isempty(subtitle)) then
+            chapterInfo.Title = chapterInfo.Title .. ' : ' .. subtitle    
+        end
 
         chapters.Add(chapterInfo)
 
