@@ -10,7 +10,7 @@ function Register()
 
 end
 
-local function RedirectBackToGallery()
+local function redirectBackToGallery()
 
     local backToGalleryUrl = dom.SelectValue('//a[contains(@class,"return_btn") or contains(@class,"back_btn")]/@href')
 
@@ -23,7 +23,7 @@ local function RedirectBackToGallery()
 
 end
 
-local function GetFileExtensionFromKey(key)
+local function getFileExtensionFromKey(key)
 
     if(key == 'j') then
         return '.jpg'
@@ -33,6 +33,8 @@ local function GetFileExtensionFromKey(key)
         return '.bmp'
     elseif(key == 'g') then
         return '.gif'
+    elseif(key == 'w') then
+        return '.webp'
     else
         return '.jpg'
     end
@@ -41,7 +43,7 @@ end
 
 function GetInfo()
 
-    RedirectBackToGallery()
+    redirectBackToGallery()
 
     info.Title = dom.SelectValue('//h1')
     info.OriginalTitle = dom.SelectValue('//p[contains(@class,"subtitle")]')
@@ -67,11 +69,13 @@ function GetPages()
     if(not isempty(imageBaseUrl) and not isempty(imagesJsonStr)) then
 
         local imagesJson = Json.New(imagesJsonStr)
-        
+
         for key in imagesJson.Keys do
 
+            -- Image data is represented as a 3-tuple in the form "format,width,height".
+
             local fileExtensionKey = tostring(imagesJson[key]):split(',')[0]
-            local fileExtension = GetFileExtensionFromKey(fileExtensionKey)
+            local fileExtension = getFileExtensionFromKey(fileExtensionKey)
             local imageUrl = imageBaseUrl .. key .. fileExtension
 
             pages.Add(imageUrl)
