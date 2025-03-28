@@ -17,6 +17,7 @@ function Register()
 
     module.Domains.Add('comicpark.org')
     module.Domains.Add('mangapark.com')
+    module.Domains.Add('mangapark.io')
     module.Domains.Add('mangapark.net')
     module.Domains.Add('mangapark.org')
 
