@@ -32,7 +32,7 @@ function Register()
 
 end
 
-local function FollowRedirect()
+local function followRedirect()
 
     -- Mangakakalot (mangakakalot.com) has some URLs redirecting to new ones.
     -- https://doujindownloader.com/forum/viewtopic.php?f=9&t=1612
@@ -48,7 +48,7 @@ local function FollowRedirect()
 
 end
 
-local function GetImageUrls()
+local function getImageUrlsFromHtml()
 
     local imageList = List.New()
 
@@ -88,25 +88,25 @@ local function GetImageUrls()
 
 end
 
-local function CleanTitle(title)
+local function cleanTitle(title)
     return RegexReplace(title, '(?i)^Read\\s| manga on Mangakakalot$', '')
 end
 
-local function GetMangaId()
+local function getMangaId()
     return dom.SelectValue('//div[@id="main"]/@data-id')
 end
 
-local function GetChapterId()
+local function getChapterId()
     return dom.SelectValue('//div[@id="reading"]/@data-reading-id')
 end
 
-local function GetApiEndpoint()
+local function getApiEndpoint()
     return GetRoot(url) .. 'ajax/manga/'
 end
 
-local function GetApiResponse(path)
+local function getApiResponse(path)
 
-    local endpoint = GetApiEndpoint() .. path
+    local endpoint = getApiEndpoint() .. path
 
     http.Headers['accept'] = '*/*'
     http.Headers['x-requested-with'] = 'XMLHttpRequest'
@@ -117,12 +117,12 @@ end
 
 function GetInfo()
 
-    FollowRedirect()
+    followRedirect()
 
     info.Title = dom.SelectValue('//div[contains(@class,"db-info")]//h3[contains(@class,"manga-name")]') -- mangakakalot.to
 
     if(isempty(info.Title)) then
-        info.Title = CleanTitle(dom.SelectValue('//h1'):title())
+        info.Title = cleanTitle(dom.SelectValue('//h1'):title())
     end
 
     info.AlternativeTitle = dom.SelectValue('//td[contains(., "Alternative")]/following-sibling::td/text()')
@@ -173,7 +173,7 @@ end
 
 function GetChapters()
 
-    FollowRedirect()
+    followRedirect()
 
     chapters.AddRange(dom.SelectElements('//div[contains(@class, "chapter-list")]//a'))
 
@@ -183,8 +183,8 @@ function GetChapters()
 
     if(isempty(chapters)) then -- mangakakalot.to
 
-        local apiUrl = 'list-chapter-volume?id=' .. GetMangaId()
-        local apiResponse = GetApiResponse(apiUrl)
+        local apiUrl = 'list-chapter-volume?id=' .. getMangaId()
+        local apiResponse = getApiResponse(apiUrl)
 
         dom = Dom.New(apiResponse)
 
@@ -207,16 +207,16 @@ function GetPages()
 
     -- Get all image URLs for the current image server.
 
-    pages.AddRange(GetImageUrls())
+    pages.AddRange(getImageUrlsFromHtml())
 
     if(isempty(pages)) then -- mangakakalot.to
 
-        local apiUrl = 'images?id=' .. GetChapterId() .. '&type=chap'
-        local apiResponse = GetApiResponse(apiUrl)
+        local apiUrl = 'images?id=' .. getChapterId() .. '&type=chap'
+        local apiResponse = getApiResponse(apiUrl)
 
         dom = Dom.New(apiResponse)
 
-        pages.AddRange(GetImageUrls())
+        pages.AddRange(getImageUrlsFromHtml())
 
     end
 
@@ -238,7 +238,7 @@ function GetPages()
 
             dom = Dom.New(http.Get(url))
 
-            local backupImageUrls = GetImageUrls()
+            local backupImageUrls = getImageUrlsFromHtml()
 
             for i = 0, math.min(backupImageUrls.Count(), pages.Count()) - 1 do
                 pages[i].BackupUrls.Add(backupImageUrls[i])
