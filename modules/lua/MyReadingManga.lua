@@ -1,20 +1,8 @@
-function Register()
-
-    module.Name = 'MyReadingManga'
-    module.Language = 'English'
-    module.Adult = true
-    
-    module.Domains.Add('myreadingmanga.info', 'MyReadingManga')
-
-end
-
-local function IsTagsPage()
-
+local function isTagsPage()
     return isempty(dom.SelectElement('//h1[contains(@class,"entry-title")]'))
-
 end
 
-local function EnqueueAllEntriesForTag()
+local function enqueueAllEntriesForTag()
 
     for entryUrl in dom.SelectValues('//a[contains(@class,"entry-title-link")]/@href') do
 
@@ -32,11 +20,21 @@ local function EnqueueAllEntriesForTag()
 
 end
 
+function Register()
+
+    module.Name = 'MyReadingManga'
+    module.Language = 'English'
+    module.Adult = true
+
+    module.Domains.Add('myreadingmanga.info', 'MyReadingManga')
+
+end
+
 function GetInfo()
 
-    if(IsTagsPage()) then
+    if(isTagsPage()) then
 
-        EnqueueAllEntriesForTag()
+        enqueueAllEntriesForTag()
 
         info.Ignore = true
 
@@ -50,23 +48,17 @@ function GetInfo()
         info.Type = dom.SelectValue('//span[contains(text(),"Filed Under:")]/a')
         info.Status = dom.SelectValue('//span[contains(text(),"Status:")]/a')
         info.Summary = dom.SelectValues('//div[contains(@class,"entry-content")]/p'):join('\n')
-        
+
         if(isempty(info.Artist)) then
-
             info.Artist = info.Title:regex('^\\[(.+?)\\]', 1)
-
         end
 
         if(isempty(info.Author)) then
-
             info.Author = info.Summary:regex('\\Author:\\s*(.+?)\n', 1)
-
         end
 
         if(isempty(info.Circle)) then
-
             info.Circle = info.Summary:regex('\\bCircle:\\s*(.+?)\n', 1)
-            
         end
 
         -- Some entries have multiple chapters.
@@ -108,6 +100,10 @@ function GetPages()
 
     if(isempty(pages)) then
         pages.AddRange(dom.SelectValues('//div[contains(@class,"entry-content")]//img/@data-lazy-src'))
+    end
+
+    if(isempty(pages)) then
+        pages.AddRange(dom.SelectValues('//div[contains(@class,"entry-content")]//img/@src'))
     end
 
 end
