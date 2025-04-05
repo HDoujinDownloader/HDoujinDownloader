@@ -1,32 +1,29 @@
+local function getApiUrl()
+    return '/api/'
+end
+
+local function getApiJson(endpoint)
+
+    http.Headers['accept'] = 'application/json, text/plain, */*'
+
+    return Json.New(http.Get(getApiUrl() .. endpoint))
+
+end
+
+local function getComidId()
+    return dom.SelectValue('//script[contains(text(),"postId")]')
+end
+
 function Register()
 
     module.Name = 'Hive Scans'
     module.Language = 'English'
     module.Adult = false
 
+    module.Domains.Add('hivecomic.com', 'Void Scans')
     module.Domains.Add('hivescans.com', 'Hive Scans')
     module.Domains.Add('hivetoon.com', 'Hive Scans')
     module.Domains.Add('void-scans.com', 'Hive Scans')
-
-end
-
-local function GetApiUrl()
-
-    return '//hivetoon.com/api/'
-
-end
-
-local function GetApiJson(endpoint)
-
-    http.Headers['accept'] = 'application/json, text/plain, */*'
-
-    return Json.New(http.Get(GetApiUrl() .. endpoint))
-
-end
-
-local function GetComicId()
-
-    return dom.SelectValue('//script[contains(text(),"postId")]')
 
 end
 
@@ -40,7 +37,7 @@ end
 
 function GetChapters()
 
-    local seriesId = GetComicId():regex('postId\\\\":(\\d+)}', 1)
+    local seriesId = getComidId():regex('postId\\\\":(\\d+)}', 1)
 
     if(isempty(seriesId)) then
         return
@@ -53,16 +50,27 @@ function GetChapters()
     repeat
 
         local endpoint = 'chapters?postId=' .. seriesId .. '&skip=' .. chaptersOffset .. '&take=' .. chaptersPerRequest .. '&order=desc'
-        local json = GetApiJson(endpoint)
+        local json = getApiJson(endpoint)
 
         totalChapters = tonumber(json.SelectValue('totalChapterCount'))
 
-        for chapterJson in json.SelectTokens('post.chapters[*]') do
+        local chapterNodes = json.SelectTokens('post.chapters[*]')
 
-            if(chapterJson.SelectValue('price') == '0') then
+        if(isempty(chapterNodes)) then
+            break
+        end
+
+        for chapterJson in chapterNodes do
+
+            if(toboolean(chapterJson.SelectValue('isAccessible'))) then
 
                 local chapterUrl = GetRoot(url) .. 'series/' .. chapterJson.SelectValue('mangaPost.slug') .. '/' .. chapterJson.SelectValue('slug')
                 local chapterTitle = 'Chapter ' .. tostring(chapterJson.SelectValue('number'))
+                local chapterSubtitle = chapterJson.SelectValue('title')
+
+                if(not isempty(chapterSubtitle)) then
+                    chapterTitle = chapterTitle .. ' - ' .. chapterSubtitle
+                end
 
                 chapters.Add(chapterUrl, chapterTitle)
 
@@ -72,7 +80,7 @@ function GetChapters()
 
         chaptersOffset = chaptersOffset + chaptersPerRequest
 
-    until (chapters.Count() >= totalChapters)
+    until(chapters.Count() >= totalChapters or chaptersOffset >= totalChapters)
 
     chapters.Reverse()
 
