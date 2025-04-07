@@ -59,11 +59,32 @@ end
 function GetPages()
 
     local json = getReaderJson()
+    local dom = Dom.New(json.SelectValue('html'))
 
-    for imageUrl in Dom.New(json.SelectValue('html')).SelectValues('//a[contains(@class,"readImg")]//img/@src') do
+    -- The images are returned out of order and need to be sorted by their "data-index" attribute.
+
+    local imageLookup = {}
+    local maxIndex = 0
+
+    for imageNode in dom.SelectElements('//div[@data-index]') do
+
+        local dataIndex = tonumber(imageNode.SelectValue('./@data-index'))
+        local imageUrl = imageNode.SelectValue('.//img/@src')
 
         if(not imageUrl:contains('/rawwkuro.jpg')) then
-            pages.Add(imageUrl)
+
+            imageLookup[dataIndex] = imageUrl
+
+            maxIndex = math.max(maxIndex, dataIndex)
+
+        end
+
+    end
+
+    for i = 0, maxIndex - 1 do
+
+        if(not isempty(imageLookup[i])) then
+            pages.Add(imageLookup[i])
         end
 
     end
