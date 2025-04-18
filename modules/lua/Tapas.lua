@@ -53,22 +53,22 @@ function GetChapters()
 
         local apiEndpoint = '/series/'..seriesId..'/episodes?&page='..paginationIndex..'&sort=OLDEST&max_limit='..chaptersPerRequest
         local chaptersJson = Json.New(http.Get(apiEndpoint))
-		
-		totalChapters = tonumber(chaptersJson.SelectValue('data.pagination.total'))
-		local episodes = Json.New(chaptersJson.SelectValue('data.episodes'))
-		if(episodes.Count() <= 0) then
-			break
-		end
-		for chapterJson in episodes do
-			if(chapterJson.SelectValue('scene') ~= '0') then -- Remove unreleased chapters
-				if(chapterJson.SelectValue('free') == "true" or chapterJson.SelectValue('unlocked') == "true") then -- only load accessable chapters
-					local episodeNum = chapterJson.SelectValue('pending_scene')
-					local chapterUrl = '/episode/' .. chapterJson.SelectValue('id')
-					local chapterTitle = episodeNum .. ' - ' .. chapterJson.SelectValue('title')
-					chapters.Add(chapterUrl, chapterTitle)
-				end
-			end
-		end
+        
+	    totalChapters = tonumber(chaptersJson.SelectValue('data.pagination.total'))
+        local episodes = Json.New(chaptersJson.SelectValue('data.episodes'))    
+        if(episodes.Count() <= 0) then
+            break
+        end
+        for chapterJson in episodes do
+            if(chapterJson.SelectValue('scene') ~= '0') then -- Remove unreleased chapters
+                if(chapterJson.SelectValue('free') == "true" or chapterJson.SelectValue('unlocked') == "true") then -- only load accessable chapters
+                    local episodeNum = chapterJson.SelectValue('pending_scene')
+                    local chapterUrl = '/episode/' .. chapterJson.SelectValue('id')
+                    local chapterTitle = episodeNum .. ' - ' .. chapterJson.SelectValue('title')
+                    chapters.Add(chapterUrl, chapterTitle)
+                end
+            end
+        end
 
         paginationIndex = paginationIndex + 1
 
