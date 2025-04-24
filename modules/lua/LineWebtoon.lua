@@ -41,16 +41,27 @@ function GetInfo()
     -- https://www.webtoons.com/en/challenge/cherry-comic/list?title_no=8760 (challenge)
     -- https://translate.webtoons.com/webtoonVersion?webtoonNo=468&language=ARA&teamVersion=0&page=2 (translate)
 
-    info.Title = dom.SelectValue('//h1[contains(@class,"subj")]/text()[1]')
+    if isempty(info.Title) then
+        local tags = {"h1", "h3"} -- Tags to check
+        info.Title = ""
+        for _, tag in ipairs(tags) do
+            local i = 1
+            while true do
+                local part = dom.SelectValue(string.format('//%s[contains(@class,"subj")]/text()[%d]', tag, i))
+                if isempty(part) then break end
+                info.Title = string.format('%s %s', info.Title, part)
+                i = i + 1
+            end
+        end
+        -- Clean up spaces and trim the result
+        info.Title = info.Title:gsub('%s+', ' '):match('^%s*(.-)%s*$')
+    end
+    
     info.Language = url:regex('\\/([a-z]{2})\\/', 1)
     info.Status = dom.SelectValue('//span[contains(@class,"txt_ico_")]')
     info.Author = dom.SelectValue('//meta[contains(@property,"author")]/@content'):split('/')
     info.Summary = dom.SelectValue('//p[contains(@class,"summary")]')
     info.Tags = dom.SelectValues('//h2[contains(@class,"genre")]')
-    
-    if(isempty(info.Title)) then
-        info.Title = dom.SelectValue('//h3[contains(@class,"subj")]/text()[1]')
-    end
 
     if(isempty(info.Language)) then
         info.Language = dom.SelectValue('//p[contains(@class,"flag")]')
