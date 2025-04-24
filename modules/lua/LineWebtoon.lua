@@ -41,21 +41,19 @@ function GetInfo()
     -- https://www.webtoons.com/en/challenge/cherry-comic/list?title_no=8760 (challenge)
     -- https://translate.webtoons.com/webtoonVersion?webtoonNo=468&language=ARA&teamVersion=0&page=2 (translate)
 
-    if isempty(info.Title) then
-        local tags = {"h1", "h3"} -- Tags to check
-        info.Title = ""
-        for _, tag in ipairs(tags) do
-            local i = 1
-            while true do
-                local part = dom.SelectValue(string.format('//%s[contains(@class,"subj")]/text()[%d]', tag, i))
-                if isempty(part) then break end
-                info.Title = string.format('%s %s', info.Title, part)
-                i = i + 1
-            end
+    local tags = {"h1", "h3"} -- Tags to check
+    info.Title = ""
+    for _, tag in ipairs(tags) do
+        local i = 1
+        while true do
+            local part = dom.SelectValue(string.format('//%s[contains(@class,"subj")]/text()[%d]', tag, i))
+            if isempty(part) then break end
+            info.Title = string.format('%s %s', info.Title, part)
+            i = i + 1
         end
-        -- Clean up spaces and trim the result
-        info.Title = info.Title:gsub('%s+', ' '):match('^%s*(.-)%s*$')
     end
+    -- Clean up spaces and trim the result
+    info.Title = info.Title:gsub('%s+', ' '):match('^%s*(.-)%s*$')
     
     info.Language = url:regex('\\/([a-z]{2})\\/', 1)
     info.Status = dom.SelectValue('//span[contains(@class,"txt_ico_")]')
