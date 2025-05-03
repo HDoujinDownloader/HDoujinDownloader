@@ -176,7 +176,9 @@ function GetPages()
         end
 
     end
-
+    if(pages.Count() <= 0) then
+        Fail(Error.CaptchaRequired)
+    end
 end
 
 function GetChapters()
@@ -220,7 +222,11 @@ function GetChapters()
             chapters.Reverse()
 
         end
+        if(chapters.Count() <= 0) then
+            Fail(Error.CaptchaRequired)
+        end
 
     end
 
 end
+
