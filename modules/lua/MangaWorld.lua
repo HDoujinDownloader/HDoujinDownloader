@@ -10,9 +10,12 @@ function Register()
     module.Domains.Add('www.mangaworld.in')
     module.Domains.Add('www.mangaworld.nz')
 
+    module.Settings.AddCheck('Download by volume', false)
+        .WithToolTip('If enabled, manga will be downloaded by volume instead of by chapter.')
+
 end
 
-local function DoJavaScriptCookieCheck()
+local function doJavaScriptCookieCheck()
 
     local aesScriptUrl = '/aes.min.js'
     local cookieScript = dom.SelectValue('//script[contains(text(),"slowAES")]')
@@ -37,9 +40,44 @@ local function DoJavaScriptCookieCheck()
 
 end
 
+local function isDownloadByVolumeEnabled()
+    return toboolean(module.Settings['Download by volume'])
+end
+
+local function getVolumeNodeByVolumeTitle(volumeTitle)
+    return dom.SelectElement('//div[contains(@class,"volume-element") and .//p[contains(.,"' .. volumeTitle .. '")]]')
+end
+
+local function getChaptersFromVolumeNode(volumeNode)
+
+    local chaptersXPath = './/a[contains(@class,"chap")]'
+
+    local volumeTitle = volumeNode.SelectValue('.//p')
+    local volumeNumber = volumeTitle:regex('0*(\\d+)$', 1)
+    local chapterNodes = volumeNode.SelectElements(chaptersXPath)
+
+    local result = {}
+
+    for i = 0, chapterNodes.Count() - 1 do
+
+        local chapterNode = chapterNodes[i]
+        local chapter = ChapterInfo.New()
+
+        chapter.Title = chapterNode.SelectValue('span[1]')
+        chapter.Url = chapterNode.SelectValue('@href')
+        chapter.Volume = volumeNumber
+
+        table.insert(result, chapter)
+
+    end
+
+    return result
+
+end
+
 function GetInfo()
 
-    DoJavaScriptCookieCheck()
+    doJavaScriptCookieCheck()
 
     info.Title = dom.SelectValue('//h1')
     info.AlternativeTitle = dom.SelectValue('//span[contains(text(),"Titoli alternativi")]/following-sibling::text()'):split(',')
@@ -56,7 +94,7 @@ end
 
 function GetChapters()
 
-    DoJavaScriptCookieCheck()
+    doJavaScriptCookieCheck()
 
     -- Note that not all manga will have chapters organized by volume.
 
@@ -65,24 +103,28 @@ function GetChapters()
 
     for volumeNode in dom.SelectElements(volumesXPath) do
 
-        local volumeNumber = volumeNode.SelectValue('.//p'):regex('0*(\\d+)$', 1)
-        local chapterNodes = volumeNode.SelectElements(chaptersXPath)
+        if(isDownloadByVolumeEnabled()) then
 
-        for i = 0, chapterNodes.Count() - 1 do
+            -- Add each volume as a chapter instead.
 
-            local chapterNode = chapterNodes[i]
-            local chapter = ChapterInfo.New()
+            local volumeTitle = volumeNode.SelectValue('.//p')
+            local volumeUrl = url .. '#' .. volumeTitle
 
+            chapters.Add(volumeUrl, volumeTitle)
 
-            chapter.Title = chapterNode.SelectValue('span[1]')
-            chapter.Url = chapterNode.SelectValue('@href')
-            chapter.Volume = volumeNumber
+        else
 
-            chapters.Add(chapter)
+            local chapterData = getChaptersFromVolumeNode(volumeNode)
+
+            for i = 1, #chapterData do
+                chapters.Add(chapterData[i])
+            end
 
         end
 
     end
+
+    -- If we fail to find any volumes, just get the chapter list directly instead.
 
     if(isempty(chapters)) then
 
@@ -103,24 +145,66 @@ end
 
 function GetPages()
 
-    DoJavaScriptCookieCheck()
+    if(isDownloadByVolumeEnabled() and url:contains("#")) then
 
-    local baseUrl = dom.SelectValue('//div[contains(@id,"image-loader")]/following-sibling::img/@src')
-        :beforelast('/')
+        -- Add each chapter in this volume as a "page".
 
-    if(isempty(baseUrl)) then
-        return
+        local volumeTitle = url:after("#")
+        local volumeNode = getVolumeNodeByVolumeTitle(volumeTitle)
+        local chapterData = volumeNode and getChaptersFromVolumeNode(volumeNode)
+
+        if(chapterData) then
+
+            for i = 1, #chapterData do
+                pages.Add(chapterData[i].Url)
+            end
+
+            return
+
+        end
+
+    else
+
+        -- Get all pages for the current chapter.
+
+        doJavaScriptCookieCheck()
+
+        local baseUrl = dom.SelectValue('//div[contains(@id,"image-loader")]/following-sibling::img/@src')
+            :beforelast('/')
+
+        if (not isempty(baseUrl)) then
+
+            -- Get images from the pages array.
+            -- We use this method for the "Pagina" view.
+
+            local pagesArray = dom.SelectValue('//script[contains(text(),\'"pages":["\')]')
+                :regex('"pages":\\s*(\\[[^\\]]+?\\])', 1)
+
+            for fileName in Json.New(pagesArray) do
+
+                local imageUrl = baseUrl .. '/' .. tostring(fileName)
+
+                pages.Add(imageUrl)
+                
+            end
+
+        else
+
+            -- Get images directly from the HTML.
+            -- We use this method for the "Lista" view.
+
+            pages.AddRange(dom.SelectValues('//img[contains(@id,"page-")]/@src'))
+
+        end
+
     end
 
-    local pagesArray = dom.SelectValue('//script[contains(text(),\'"pages":["\')]')
-        :regex('"pages":\\s*(\\[[^\\]]+?\\])', 1)
+end
 
-    for filename in Json.New(pagesArray) do
+function BeforeDownloadPage()
 
-        local imageUrl = baseUrl .. '/' .. tostring(filename)
-
-        pages.Add(imageUrl)
-
+    if(isDownloadByVolumeEnabled() and url:contains('/read/')) then
+        GetPages()
     end
 
 end
