@@ -159,6 +159,8 @@ function GetPages()
                 pages.Add(chapterData[i].Url)
             end
 
+            pages.Reverse()
+
             return
 
         end
@@ -185,7 +187,7 @@ function GetPages()
                 local imageUrl = baseUrl .. '/' .. tostring(fileName)
 
                 pages.Add(imageUrl)
-                
+
             end
 
         else
