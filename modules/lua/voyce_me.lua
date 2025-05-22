@@ -24,13 +24,14 @@ function GetChapters()
     
     
     local chaptersJson = Json.New(http.Get(apiUrl))
-    for chapterJson in Json.New(chaptersJson.SelectValues('data')).Reverse() do
+    for chapterJson in Json.New(chaptersJson.SelectValues('data')) do
         if(chapterJson.SelectValue('guest_locked') == "false") then
             local chapterUrl = '/series/' .. slug .. '/' .. chapterJson.SelectValue('id')
             local chapterTitle = chapterJson.SelectValue('title')
             chapters.Add(chapterUrl, chapterTitle)
         end
     end
+    chapters..Reverse()
 end
 
 function GetPages()
