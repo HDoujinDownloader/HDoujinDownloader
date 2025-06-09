@@ -49,31 +49,25 @@ function GetChapters()
     local chaptersPerRequest = 20
     local paginationIndex = 1
     local totalChapters = -1
-
     repeat
 
         local apiEndpoint = '/series/'..seriesId..'/episodes?&page='..paginationIndex..'&sort=OLDEST&max_limit='..chaptersPerRequest
         local chaptersJson = Json.New(http.Get(apiEndpoint))
-        local chaptersDom = Dom.New(chaptersJson.SelectValue('data.body'))
-
-        totalChapters = tonumber(chaptersJson.SelectValue('data.pagination.total'))
-
-        -- Make sure that we ignore the unreleased ("coming soon") chapters.
-
-        local chapterNodes = chaptersDom.SelectElements('//li[contains(@id,"ep") and not(contains(@class,"js-coming-soon"))]')
-
-        if(chapterNodes.Count() <= 0) then
+        
+	    totalChapters = tonumber(chaptersJson.SelectValue('data.pagination.total'))
+        local episodes = Json.New(chaptersJson.SelectValue('data.episodes'))    
+        if(episodes.Count() <= 0) then
             break
         end
-
-        for chapterNode in chapterNodes do
-
-            local episodeNum = chapterNode.SelectValue('.//a[contains(@class,"label")]')
-            local chapterUrl = chapterNode.SelectValue('@data-href')
-            local chapterTitle = episodeNum .. ' - ' .. chapterNode.SelectValue('.//a[contains(@class,"title")]')
-
-            chapters.Add(chapterUrl, chapterTitle)
-
+        for chapterJson in episodes do
+            if(chapterJson.SelectValue('scene') ~= '0') then -- Remove unreleased chapters
+                if(chapterJson.SelectValue('free') == "true" or chapterJson.SelectValue('unlocked') == "true") then -- only load accessable chapters
+                    local episodeNum = chapterJson.SelectValue('pending_scene')
+                    local chapterUrl = '/episode/' .. chapterJson.SelectValue('id')
+                    local chapterTitle = episodeNum .. ' - ' .. chapterJson.SelectValue('title')
+                    chapters.Add(chapterUrl, chapterTitle)
+                end
+            end
         end
 
         paginationIndex = paginationIndex + 1
