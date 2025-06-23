@@ -52,6 +52,13 @@ function Register()
     RegisterModule(module)
 
     module = Module.New()
+    module.Language = "French"
+
+    module.Domains:Add("sushiscan.net", "SushiScan")
+
+    RegisterModule(module)
+
+    module = Module.New()
     module.Language = 'Indonesian'
 
     module.Domains:Add('159.223.38.69', 'sasangeyou')
@@ -318,10 +325,12 @@ function GetPages()
 
     -- Some sites use external image hosts from which downloads will fail if we set a referer.
     -- However, some other sites require a referer in order to download.
+    -- TODO: Use a blacklist instead of a whitelist when downloading images from affected domains.
     local refererRequiredDomains = {
         "manga1688.",
         "realmscans.",
         "rizzcomic.",
+        "sushiscan.",
     }
     local refererRequired = false
 
