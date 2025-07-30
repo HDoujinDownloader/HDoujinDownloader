@@ -81,6 +81,6 @@ end
 
 function GetPages()
 
-    pages.AddRange(dom.SelectValues('//img[contains(@src, "cdn.flamecomics.xyz/series/")]/@src'))
+    pages.AddRange(dom.SelectValues('//img[contains(@src, "cdn.flamecomics.xyz/uploads/images/series/")]/@src'))
 
 end
