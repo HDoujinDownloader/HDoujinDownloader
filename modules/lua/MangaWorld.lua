@@ -9,6 +9,7 @@ function Register()
     module.Domains.Add('www.mangaworld.ac')
     module.Domains.Add('www.mangaworld.in')
     module.Domains.Add('www.mangaworld.nz')
+    module.Domains.Add('www.mangaworld.cx')
 
     module.Settings.AddCheck('Download by volume', false)
         .WithToolTip('If enabled, manga will be downloaded by volume instead of by chapter.')
