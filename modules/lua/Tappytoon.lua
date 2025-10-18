@@ -11,11 +11,24 @@ function Register()
 end
 
 local function GetGalleryJson()
-    return Json.New(dom.SelectValue('//script[@id="__NEXT_DATA__"]'))    
+    return Json.New(dom.SelectValue('//script[@id="__NEXT_DATA__"]'))
 end
 
 local function SetApiHttpHeaders()
 
+    -- Get headers from current page first
+    local json = GetGalleryJson()
+    local headersJson = json.SelectToken('props.initialState.axios.headers')
+    
+    if(not isempty(headersJson)) then
+
+        for header in headersJson do
+            http.Headers[header.Key] = tostring(headersJson[header.Key])
+        end
+
+    end
+    
+    -- Override with bearer token from settings if provided
     local bearerToken = module.Settings['Bearer token']
 
     if(not isempty(bearerToken)) then
@@ -26,10 +39,10 @@ local function SetApiHttpHeaders()
             authorizationHeader = 'Bearer ' .. authorizationHeader
         end
 
-        http.Headers['authorization'] = authorizationHeader
+        http.Headers['Authorization'] = authorizationHeader
 
     end
-    
+
 end
 
 local function GetApiJson(endpoint)
@@ -43,7 +56,7 @@ end
 function GetInfo()
 
     local json = GetGalleryJson()
-    local comicJson = json.SelectToken('..pageProps.comic')
+    local comicJson = json.SelectToken('props.initialProps.pageProps.comic')
 
     if(not isempty(comicJson)) then
 
@@ -51,15 +64,25 @@ function GetInfo()
         info.Summary = comicJson['longDescription']
         info.Tags = comicJson.SelectValues('genres[*].name')
         info.Author = comicJson.SelectValues('authors[*].name')
+        info.Language = comicJson['locale']
 
     end
-
-    info.Language = json.SelectValues('..locale').First()
     
     -- If a chapter URL was added, we might not have a title.
-
     if(isempty(info.Title)) then
-        info.Title = tostring(dom.Title):beforelast('-')
+
+        local titlePart = tostring(dom.Title):afterlast('-')
+
+        if(not isempty(titlePart)) then
+
+            info.Title = titlePart:beforelast('|'):trim()
+
+        else
+
+            info.Title = tostring(dom.Title):beforelast('|'):trim()
+
+        end
+
     end
 
 end
@@ -67,24 +90,28 @@ end
 function GetChapters()
 
     local json = GetGalleryJson()
-    local chaptersJson = json.SelectToken('..entities.chapters')
-    local comicId = json.SelectValue('..pageProps.comic.id')
+    local comicId = json.SelectValue('props.initialProps.pageProps.comic.id')
+    
     local baseUrl = url:regex('(^.+?)\\/(?:comic|book)\\/', 1) .. '/'
+    
+    -- Make API call to get all chapters
+    local apiResponse = GetApiJson('https://api-global.tappytoon.com/comics/' .. tostring(comicId) .. '/chapters')
+    
+    -- Iterate through all chapters from API
+    for chapterJson in apiResponse.SelectTokens('[*]') do
 
-    for chapterId in json.SelectValues('..get-chapters-by-comic-id-'..comicId..'-asc.response.data.result[*]') do
-
-        local chapterJson = chaptersJson.SelectToken(chapterId)
+        local isAccessible = toboolean(chapterJson['isAccessible'])
         local chapterUnlocked = toboolean(chapterJson['isUserUnlocked']) or toboolean(chapterJson['isFree']) or toboolean(chapterJson['isUserRented'])
-
-        if(chapterUnlocked) then
+        
+        if(isAccessible and chapterUnlocked) then
 
             local chapter = ChapterInfo.New()
 
             chapter.Title = chapterJson['title']
-            chapter.Url = baseUrl .. 'chapters/' .. chapterId
+            chapter.Url = baseUrl .. 'chapters/' .. tostring(chapterJson['id'])
     
             chapters.Add(chapter)
-
+            
         end
 
     end
@@ -94,16 +121,36 @@ end
 function GetPages()
 
     local json = GetGalleryJson()
-    local locale = json.SelectValues('..locale').First()
-    local chapterId = json.SelectValues('..chapterId').First()
-    local headersJson = json.SelectToken('..initialState.axios.headers')
+    local locale = json.SelectValue('props.initialProps.pageProps.comic.locale')
 
-    for node in headersJson do
-        http.Headers[node.Key] = tostring(headersJson[node.Key])
+    if(isempty(locale)) then
+        locale = 'en'
     end
     
-    local apiResponse = GetApiJson('https://api-global.tappytoon.com/chapters/'..chapterId..'?includes=images&locale='..locale)
+    local chapterId = json.SelectValue('props.initialProps.pageProps.chapterId')
+    
+    -- Set headers from the page
+    local headersJson = json.SelectToken('props.initialState.axios.headers')
 
-    pages.AddRange(apiResponse.SelectValues('images[*].url'))
+    for header in headersJson do
+        http.Headers[header.Key] = tostring(headersJson[header.Key])
+    end
+    
+    -- Get comic ID from entities to check quality support
+    local chapterJson = json.SelectToken('props.initialState.entities.chapters.' .. tostring(chapterId))
+    local comicId = chapterJson['comicId']
+    local comicJson = json.SelectToken('props.initialState.entities.comics.' .. tostring(comicId))
+    
+    -- Determine quality
+    local quality = 'high'
+
+    if(not isempty(comicJson) and toboolean(comicJson['isSuperHighQualitySupported'])) then
+        quality = 'super_high'
+    end
+    
+    -- Get images
+    local apiResponse = GetApiJson('https://api-global.tappytoon.com/content-delivery/contents?chapterId=' .. tostring(chapterId) .. '&variant=' .. quality .. '&locale=' .. tostring(locale))
+
+    pages.AddRange(apiResponse.SelectValues('media[*].url'))
 
 end
