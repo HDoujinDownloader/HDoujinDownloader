@@ -22,8 +22,8 @@ local function SetApiHttpHeaders()
     
     if(not isempty(headersJson)) then
 
-        for header in headersJson do
-            http.Headers[header.Key] = tostring(headersJson[header.Key])
+        for node in headersJson do
+            http.Headers[node.Key] = tostring(headersJson[node.Key])
         end
 
     end
@@ -132,8 +132,8 @@ function GetPages()
     -- Set headers from the page
     local headersJson = json.SelectToken('props.initialState.axios.headers')
 
-    for header in headersJson do
-        http.Headers[header.Key] = tostring(headersJson[header.Key])
+    for node in headersJson do
+        http.Headers[node.Key] = tostring(headersJson[node.Key])
     end
     
     -- Get comic ID from entities to check quality support
