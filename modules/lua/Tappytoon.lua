@@ -101,13 +101,13 @@ function GetChapters()
     for chapterJson in apiResponse.SelectTokens('[*]') do
 
         local isAccessible = toboolean(chapterJson['isAccessible'])
-        local chapterUnlocked = toboolean(chapterJson['isUserUnlocked']) or toboolean(chapterJson['isFree']) or toboolean(chapterJson['isUserRented'])
         
-        if(isAccessible and chapterUnlocked) then
+        if(isAccessible) then
 
             local chapter = ChapterInfo.New()
 
             chapter.Title = chapterJson['title']
+            
             chapter.Url = baseUrl .. 'chapters/' .. tostring(chapterJson['id'])
     
             chapters.Add(chapter)
