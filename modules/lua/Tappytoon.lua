@@ -94,10 +94,8 @@ function GetChapters()
     
     local baseUrl = url:regex('(^.+?)\\/(?:comic|book)\\/', 1) .. '/'
     
-    -- Make API call to get all chapters
     local apiResponse = GetApiJson('https://api-global.tappytoon.com/comics/' .. tostring(comicId) .. '/chapters')
     
-    -- Iterate through all chapters from API
     for chapterJson in apiResponse.SelectTokens('[*]') do
 
         local isAccessible = toboolean(chapterJson['isAccessible'])
@@ -148,7 +146,6 @@ function GetPages()
         quality = 'super_high'
     end
     
-    -- Get images
     local apiResponse = GetApiJson('https://api-global.tappytoon.com/content-delivery/contents?chapterId=' .. tostring(chapterId) .. '&variant=' .. quality .. '&locale=' .. tostring(locale))
 
     pages.AddRange(apiResponse.SelectValues('media[*].url'))
