@@ -8,6 +8,8 @@ function Register()
 
     module.Name = 'AnyACG'
 
+    module.Domains.Add('bato.ing', 'BATO.TO')
+    module.Domains.Add('bato.si', 'BATO.TO')
     module.Domains.Add('bato.to', 'BATO.TO')
     module.Domains.Add('batocomic.org', 'BATOTO')
     module.Domains.Add('batotoo.com', 'BATO.TO')
