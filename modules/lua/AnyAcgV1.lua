@@ -1,0 +1,29 @@
+function Register()
+	module.Name = "AnyACG (V1)"
+end
+
+function GetInfo()
+	local json = Json.New(dom.SelectValue('//astro-island[contains(@props,"originalStatus")]/@props'):replace("&quot;", '"')).SelectToken("data[1]")
+
+	info.Title = json.SelectValue("name[1]")
+	info.AlternativeTitle = Json.New(json.SelectValue("altNames[1]")).SelectValues("[*][1]")
+	info.Author = Json.New(json.SelectValue("authors[1]")).SelectValues("[*][1]")
+	info.Artist = Json.New(json.SelectValue("artists[1]")).SelectValues("[*][1]")
+	info.Tags = Json.New(json.SelectValue("genres[1]")).SelectValues("[*][1]")
+	info.Language = json.SelectValue("tranLang[1]")
+	info.Status = json.SelectValue("originalStatus[1]")
+	info.DateReleased = json.SelectValue("originalPubFrom[1]")
+	info.ReadingDirection = json.SelectValue("readDirection[1]")
+	info.Summary = json.SelectValue("summary[1].code[-1:]")
+end
+
+function GetChapters()
+	chapters.AddRange(dom.SelectElements('//div[contains(@name,"chapter-list")]//a[contains(@href,"/title/")]'))
+end
+
+function GetPages()
+	local json = Json.New(dom.SelectValue('//astro-island[contains(@props,"imageFiles")]/@props'):replace("&quot;", '"'))
+	local imagesJson = Json.New(json.SelectValue("imageFiles[1]"))
+
+	pages.AddRange(imagesJson.SelectValues("[*][1]"))
+end
