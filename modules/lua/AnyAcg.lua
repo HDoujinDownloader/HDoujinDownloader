@@ -33,6 +33,16 @@ end
 function Register()
 	module.Name = "AnyACG"
 
+	module.Domains:Add("xbat.la", "XBATCAT")
+	module.Domains:Add("xbat.si", "XBATCAT")
+	module.Domains:Add("xbat.app", "XBATCAT")
+	module.Domains:Add("xbat.io", "XBATCAT")
+	module.Domains:Add("xbat.tv", "XBATCAT")
+	module.Domains:Add("xbat.me", "XBATCAT")
+	module.Domains:Add("xcat.tv", "XBATCAT")
+	module.Domains:Add("xcat.si", "XBATCAT")
+
+	-- Legacy/deprecated domains
 	module.Domains:Add("bato.ing", "BATO.TO")
 	module.Domains:Add("bato.red", "BATOTO")
 	module.Domains:Add("bato.si", "BATOTO")
