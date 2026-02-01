@@ -112,7 +112,7 @@ function GetPages()
 
         local nextDataScript = dom.SelectValue('//script[contains(text(),"published_at")][last()]')
 
-        pages.AddRange(nextDataScript:regexmany('"url\\\\":\\\\"([^"]+)\\\\"', 1))
+        pages.AddRange(nextDataScript:regexmany('\\\\"order\\\\":\\d+,\\\\"url\\\\":\\\\"([^"]+)\\\\"', 1))
 
     end
 
