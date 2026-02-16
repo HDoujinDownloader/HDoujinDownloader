@@ -1,57 +1,44 @@
-function Register()
+local function getLanguageFromTitle(title)
+	title = tostring(title):lower():trim()
 
-    module.Name = 'Manhua18'
-    module.Adult = true
-    module.Language = 'English'
+	if title:endswith("raw") then
+		return "Korean"
+	elseif title:endswith("engsub") then
+		return "English"
+	end
 
-    module.Domains.Add('manhwa18.com')
-    module.Domains.Add('manhwa18.net', 'MyManga')
-
+	return ""
 end
 
-local function GetLanguageFromTitle(title)
+function Register()
+	module.Name = "Manhua18"
+	module.Adult = true
+	module.Language = "English"
 
-    title = tostring(title):lower():trim()
-
-    if(title:endswith('raw')) then
-        return 'Korean'
-    elseif(title:endswith('engsub')) then
-        return 'English'
-    end
-
-    return ''
-
+	module.Domains:Add("manhwa18.com")
 end
 
 function GetInfo()
-
-    info.Title = dom.SelectValue('//span[contains(@class,"series-name")]')
-    info.AlternativeTitle = dom.SelectValue('//span[contains(text(),"Other name")]/following-sibling::span')
-    info.Tags = dom.SelectValues('//span[contains(text(),"Genre")]/following-sibling::span/a')
-    info.Author = dom.SelectValues('//span[contains(text(),"Author")]/following-sibling::span/a')
-    info.Status = dom.SelectValues('//span[contains(text(),"Status")]/following-sibling::span/a')
-    info.Summary = dom.SelectValue('//div[contains(@class,"summary-content")]')
-    info.Language = GetLanguageFromTitle(info.Title)
-
+	info.Title = dom:SelectValue('//span[contains(@class,"series-name")]')
+	info.AlternativeTitle = dom:SelectValue('//span[contains(text(),"Other name")]/following-sibling::span')
+	info.Tags = dom:SelectValues('//span[contains(text(),"Genre")]/following-sibling::span/a')
+	info.Author = dom:SelectValues('//span[contains(text(),"Author")]/following-sibling::span/a')
+	info.Status = dom:SelectValues('//span[contains(text(),"Status")]/following-sibling::span/a')
+	info.Summary = dom:SelectValue('//div[contains(@class,"summary-content")]')
+	info.Language = getLanguageFromTitle(info.Title)
 end
 
 function GetChapters()
+	for chapterNode in dom:SelectNodes('//ul[contains(@class,"list-chapters")]/a') do
+		local chapterUrl = chapterNode:SelectValue("@href")
+		local chapterTitle = chapterNode.SelectValue('.//div[contains(@class,"chapter-name")]')
 
-    for chapterNode in dom.SelectElements('//ul[contains(@class,"list-chapters")]/a') do
+		chapters.Add(chapterUrl, chapterTitle)
+	end
 
-        local chapterUrl = chapterNode.SelectValue('@href')
-        local chapterTitle = chapterNode.SelectValue('.//div[contains(@class,"chapter-name")]')
-
-        chapters.Add(chapterUrl, chapterTitle)
-
-    end
-
-    chapters.Reverse()
-
+	chapters.Reverse()
 end
 
 function GetPages()
-
-    pages.AddRange(dom.SelectValues('//div[@id="chapter-content"]//img/@data-src'))
-
+	pages.AddRange(dom:SelectValues('//div[@id="chapter-content"]//img/@data-src'))
 end
