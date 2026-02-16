@@ -1,3 +1,9 @@
+local publishingStatusLookup = {
+	["0"] = "Ongoing",
+	["1"] = "Completed",
+	["2"] = "Dropped",
+}
+
 local function getPageDataJson()
 	local pageDataStr = dom:SelectValue('//div[@id="app"]/@data-page')
 
@@ -22,7 +28,7 @@ function GetInfo()
 	info.Title = json:SelectValue("props.manga.name")
 	info.AlternativeTitle = json:SelectValue("props.manga.other_name")
 	info.Summary = json:SelectValue("props.manga.pilot")
-	info.Status = json:SelectValue("props.manga.status_id") == "1" and "Ongoing" or "Completed"
+	info.Status = publishingStatusLookup[tostring(json:SelectValue("props.manga.status_id"))]
 	info.Tags = json:SelectValues("props.manga.genres[*].name")
 	info.Artist = json:SelectValues("props.manga.artists[*].name")
 	info.Characters = json:SelectValues("props.manga.characters[*].name")
