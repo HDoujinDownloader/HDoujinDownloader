@@ -59,9 +59,11 @@ local function getGalleryTags(groupName)
 	for _, tagsPattern in ipairs(tagsPatterns) do
 		local tags = dom:SelectValues(tagsPattern)
 		if not isempty(tags) then
-			return tags
+			return tostring(tags)
 		end
 	end
+
+	return ""
 end
 
 local function getGalleryPageCount()
