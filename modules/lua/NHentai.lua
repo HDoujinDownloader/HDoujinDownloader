@@ -148,9 +148,12 @@ function Register()
 	module.Domains:Add("simplyhentai.org", "Simply Hentai")
 
 	module.Settings.AddCheck("Use pretty titles", false).WithToolTip("Use shorter titles with the artist, series, and language information removed.")
+	module.Settings.AddCheck("Scrape tag URLs", true).WithToolTip("Scrape galleries from tag/artist URLs and add them all to the download queue.")
 end
 
 function GetInfo()
+	local scrapeTagUrls = toboolean(module.Settings["Scrape tag URLs"])
+
 	if isGalleryUrl() then
 		redirectToGalleryPage()
 
@@ -166,6 +169,10 @@ function GetInfo()
 	else
 		-- The user added their favorites, a tag, or a search URL.
 		info.Ignore = true
+
+		if not scrapeTagUrls then
+			return
+		end
 
 		local maxScrapingDepth = global.GetSetting("Downloads.MaxScrapingDepth")
 
