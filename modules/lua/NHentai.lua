@@ -71,7 +71,12 @@ local function getGalleryPageCount()
 end
 
 local function getGalleryThumbnailUrls()
-	local thumbnailUrls = dom:SelectValues('//div[@id="thumbnail-container"]//img/@src')
+	-- nhentai.to uses both data-src and src, however it uses a placeholder blob gif for src and the actual urls for data-src
+	local thumbnailUrls = dom:SelectValues('//div[@id="thumbnail-container"]//img/@data-src')
+
+	if isempty(thumbnailUrls) then -- nhentai.net
+		thumbnailUrls = dom:SelectValues('//div[@id="thumbnail-container"]//img/@src')
+	end
 
 	if isempty(thumbnailUrls) then -- 3hentai.net
 		thumbnailUrls = dom:SelectValues('//div[@id="thumbnail-gallery"]//img/@data-src')
