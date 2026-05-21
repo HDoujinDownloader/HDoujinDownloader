@@ -71,7 +71,7 @@ local function getGalleryPageCount()
 end
 
 local function getGalleryThumbnailUrls()
-	local thumbnailUrls = dom:SelectValues('//div[@id="thumbnail-container"]//img/@data-src')
+	local thumbnailUrls = dom:SelectValues('//div[@id="thumbnail-container"]//img/@src')
 
 	if isempty(thumbnailUrls) then -- 3hentai.net
 		thumbnailUrls = dom:SelectValues('//div[@id="thumbnail-gallery"]//img/@data-src')
