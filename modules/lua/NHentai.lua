@@ -50,20 +50,21 @@ local function getGalleryTitle()
 end
 
 local function getGalleryTags(groupName)
-	local tagsPatterns = {
+	local paths = {
 		'//div[contains(@class, "tag-container") and contains(text(), "' .. groupName .. '")]//span[contains(@class,"name")]',
 		'//div[contains(@class, "tag-container") and contains(text(), "' .. groupName .. '")]//a',
 		'//span[contains(text(),"' .. groupName .. '")]/following-sibling::a//span[contains(@class,"tag_name")]', -- nhentai.xxx
 	}
 
-	for _, tagsPattern in ipairs(tagsPatterns) do
-		local tags = dom:SelectValues(tagsPattern)
-		if not isempty(tags) then
-			return tostring(tags)
+	local result
+	for _, path in ipairs(paths) do
+		result = dom:SelectValues(path)
+		if not isempty(result) then
+			return result
 		end
 	end
 
-	return ""
+	return result
 end
 
 local function getGalleryPageCount()
@@ -71,21 +72,22 @@ local function getGalleryPageCount()
 end
 
 local function getGalleryThumbnailUrls()
-	local thumbnailUrls = dom:SelectValues('//div[@id="thumbnail-container"]//img/@data-src')
+	local paths = {
+		'//div[@id="thumbnail-container"]//img/@data-src',
+		'//div[@id="thumbnail-gallery"]//img/@data-src', -- 3hentai.net
+		'//div[contains(@class,"thumb-container")]//img/@src', -- simplyhentai.org, nhentai.net
+		'//div[contains(@class,"gallery_thumbs")]//img/@data-src', -- nhentai.xxx
+	}
 
-	if isempty(thumbnailUrls) then -- 3hentai.net
-		thumbnailUrls = dom:SelectValues('//div[@id="thumbnail-gallery"]//img/@data-src')
+	local result
+	for _, path in ipairs(paths) do
+		result = dom:SelectValues(path)
+		if not isempty(result) then
+			return result
+		end
 	end
 
-	if isempty(thumbnailUrls) then -- simplyhentai.org
-		thumbnailUrls = dom:SelectValues('//div[@class="thumb-container"]//img/@src')
-	end
-
-	if isempty(thumbnailUrls) then -- nhentai.xxx
-		thumbnailUrls = dom:SelectValues('//div[contains(@class,"gallery_thumbs")]//img/@data-src')
-	end
-
-	return thumbnailUrls
+	return result
 end
 
 local function getGalleryReaderUrls()
