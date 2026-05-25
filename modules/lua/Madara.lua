@@ -91,6 +91,7 @@ function Register()
     module.Domains.Add('olympusscanlation.com', 'Olympus Scanlation')
     module.Domains.Add('seriesemperor.com', 'EmperorScan')
     module.Domains.Add('zonaemperor.com', 'EmperorScan')
+    module.Domains.Add('submanhwa.net', 'SubManhwa')
 
     RegisterModule(module)
 
