@@ -92,6 +92,8 @@ function Register()
     module.Domains.Add('seriesemperor.com', 'EmperorScan')
     module.Domains.Add('zonaemperor.com', 'EmperorScan')
     module.Domains.Add('submanhwa.net', 'SubManhwa')
+    module.Domains.Add('topcomicporno.com', 'TopComicPorno') -- Requires FlareSolverr + Chrome
+    module.Domains.Add('topcomicporno.net', 'TopComicPorno.net') -- Requires FlareSolverr + Chrome
 
     RegisterModule(module)
 
