@@ -1,14 +1,11 @@
 -- LectorXD (lectorxd.com) — HDoujin Downloader module
 -- Spanish manhwa/manga/manhua reader (Astro SSR site).
 -- Series: /manhwa/<slug> , /manga/<slug> or /manhua/<slug> ·  chapter: /<type>/<slug>/leer/<n>
--- Chapters are sequential 1..N: the range is generated from the highest visible number.
-
 function Register()
     module.Name = 'LectorXD'
     module.Language = 'Spanish'
     module.Domains.Add('lectorxd.com', 'LectorXD')
 end
-
 function GetInfo()
     info.Title = tostring(dom.SelectValue('//h1'))
     if(info.Title == '') then
@@ -17,33 +14,28 @@ function GetInfo()
     end
     info.Summary = dom.SelectValue('//div[contains(@class, "description")]')
 end
-
 function GetChapters()
-    -- Extract base path (/<type>/<slug>) and highest chapter number from visible links
+    -- Extract base path (/<type>/<slug>) from any visible chapter link
     local base = ''
-    local maxChapter = 0
-    for node in dom.SelectElements('//a[contains(@href, "/leer/")]') do
-        local href = tostring(node.SelectValue('@href'))
-        if(base == '') then
-            base = href:match('(/%w+/[^/]+)/leer/') or ''
-        end
-        local n = tonumber(href:match('/leer/(%d+)'))
-        if(n ~= nil and n > maxChapter) then
-            maxChapter = n
-        end
+    local firstHref = tostring(dom.SelectValue('//a[contains(@href, "/leer/")]/@href'))
+    if(firstHref ~= '') then
+        base = firstHref:match('(/%w+/[^/]+)/leer/') or ''
     end
-    -- Generate ALL chapters 1..maxChapter (ascending order)
-    for i = 1, maxChapter do
-        chapters.Add(base..'/leer/'..i, 'Capítulo '..i)
+    -- Parse chapters from embedded chaptersList JS array (supports decimals like 37.5, 80.1)
+    local scriptText = tostring(dom.SelectValue('//script[contains(., "chaptersList")]'))
+    local seen = {}
+    for ch in scriptText:gmatch('"chapter":"([^"]+)"') do
+        if(not seen[ch]) then
+            seen[ch] = true
+            chapters.Add(base..'/leer/'..ch, 'Capítulo '..ch)
+        end
     end
 end
-
 function GetPages()
     if(collectPages('//*[contains(@class, "page-container")]//img') == 0) then
         collectPages('//img[contains(@class, "page-image")]') -- fallback
     end
 end
-
 function collectPages(xpath)
     local count = 0
     for node in dom.SelectElements(xpath) do
