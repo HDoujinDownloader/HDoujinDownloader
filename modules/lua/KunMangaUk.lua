@@ -1,11 +1,3 @@
--- KunManga.co.uk module
--- Handles manga downloads from https://www.kunmanga.co.uk/
---
--- Note: kunmanga.co.uk is NOT the classic "admin-ajax.php" Madara theme.
--- It runs the LikeManga platform, which serves the chapter list from a paginated
--- JSON API (/api/comics/{slug}/chapters) rather than embedding it in the page HTML.
--- The manga info and the chapter reader pages are server-rendered, so those use the DOM.
-
 function Register()
 
     module.Name = 'KunManga'
@@ -20,8 +12,6 @@ end
 
 local function GetSlug()
 
-    -- e.g. https://www.kunmanga.co.uk/manga/magic-emperor/ -> "magic-emperor"
-
     return url:regex('/manga/([^/?#]+)', 1)
 
 end
@@ -33,8 +23,6 @@ function GetInfo()
     if(isempty(info.Title)) then
         info.Title = dom.SelectValue('//h1')
     end
-
-    -- Metadata is laid out as <div class="post-content_item"><div class="summary-heading"><h5>Label</h5></div><div class="summary-content">Value</div></div>.
 
     info.AlternativeTitle = dom.SelectValue('//div[contains(h5/text(), "Alternative")]/following-sibling::div')
     info.Author = dom.SelectValues('//div[contains(h5/text(), "Author")]/following-sibling::div//a')
@@ -54,10 +42,6 @@ function GetInfo()
 end
 
 function GetChapters()
-
-    -- Chapters are served by a paginated JSON API, e.g.
-    -- https://www.kunmanga.co.uk/api/comics/magic-emperor/chapters?page=1&per_page=100&order=asc
-    -- "order=asc" returns chapters in reading order, so no reversal is needed.
 
     local host = GetHost(url)
     local slug = GetSlug()
@@ -98,21 +82,18 @@ end
 
 function GetPages()
 
-    -- Check if we need to log in to access this content.
-
     local loginRequired = dom.SelectElements('//div[contains(@class,"reading-content")]//div[contains(@class,"login-required")]').Count() > 0
 
     if(loginRequired) then
         Fail(Error.LoginRequired)
     end
 
-    -- The chapter reader is server-rendered: images live in <div class="reading-content"> as <img class="wp-manga-chapter-img">.
-    -- Both "src" and "data-src" already carry the full CDN URL.
+    pages.Referer = 'https://' .. GetHost(url) .. '/'
 
-    pages.AddRange(dom.SelectValues('//div[contains(@class, "reading-content")]//img/@src'))
+    pages.AddRange(dom.SelectValues('//div[contains(@class, "reading-content")]//img[contains(@class, "wp-manga-chapter-img")]/@src'))
 
     if(isempty(pages)) then
-        pages.AddRange(dom.SelectValues('//div[contains(@class, "reading-content")]//img/@data-src'))
+        pages.AddRange(dom.SelectValues('//div[contains(@class, "reading-content")]//img[contains(@class, "wp-manga-chapter-img")]/@data-src'))
     end
 
     for page in pages do
