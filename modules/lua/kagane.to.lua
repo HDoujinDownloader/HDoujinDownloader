@@ -12,23 +12,6 @@
 --      short-lived signed token embedded in the /books/{id} response
 --      (one token per chapter, shared across all its pages).
 
-function Register()
-    module.Name     = 'Kagane'
-    module.Language = 'English'
-    module.Domains.Add('kagane.to',  'Kagane')
-    module.Domains.Add('kagane.org', 'Kagane')
-
-    -- Currently unused by the main auth flow above (which relies on
-    -- Cloudflare challenge cookies + the integrity token instead). Left
-    -- in place in case a future DRM-gated tier requires a user-supplied
-    -- Bearer token; leave blank otherwise.
-    module.Settings.AddText('Auth Token', '')
-        .WithToolTip(
-            'Optional Bearer token. Not required for standard chapters as of ' ..
-            'the Aug 2026 API update — leave blank unless told otherwise.'
-        )
-end
-
 local API_BASE = 'https://kagane.to/api/v2'
 
 -- Cache of already-fetched /series/{id} JSON, keyed by seriesId, so
@@ -101,19 +84,37 @@ function GetInfo()
     if isempty(seriesId) then return end
     local json = ApiGetSeries(seriesId)
 
-    info.Title = json.SelectValue('title')
+    info.Title            = json.SelectValue('title')
+    info.AlternativeTitle = json.SelectValues('series_alternate_titles[*].title')
+    info.Status           = json.SelectValue('publication_status')
+    info.Summary          = json.SelectValue('description')
+    info.Type             = json.SelectValue('format')
+    info.Language         = json.SelectValue('translated_language')
+    info.DateReleased     = json.SelectValue('start_year')
+    info.Adult            = json.SelectValue('content_rating') ~= 'Safe'
 
-    -- info.Cover and info.AlternateTitles are intentionally not set here:
-    -- this HDD build's MangaInfoUserData binding rejects both fields
-    -- outright (throws "cannot access field ... of userdata"), so setting
-    -- them would crash GetInfo() entirely rather than just losing that data.
+    local genreNames = json.SelectValues('genres[*].genre_name')
+    local tagNames    = json.SelectValues('tags[*].tag_name')
+    local tags = List.New()
+    for i = 0, genreNames.Count() - 1 do
+        tags.Add(genreNames[i])
+    end
+    for i = 0, tagNames.Count() - 1 do
+        tags.Add(tagNames[i])
+    end
+    info.Tags = tags
+
+    info.Author = json.SelectValues('series_staff[*].name')
+    info.Artist = json.SelectValues('series_staff[*].name')
+
+    local groupTitles = json.SelectValues('series_books[*].groups[*].title')
+    if groupTitles.Count() > 0 then
+        info.Translator = groupTitles[0]
+    end
 
     local chapterCount = json.SelectValues('series_books[*].book_id').Count()
-    info.PageCount    = chapterCount  -- HDD's "Pages" column
-    info.ChapterCount = chapterCount  -- HDD's "Chapters" column; also what
-                                      -- enables the "Select Chapters to
-                                      -- Download" dialog once non-empty.
-    info.Scanlator = 'Kagane'
+    info.PageCount    = chapterCount
+    info.ChapterCount = chapterCount
 end
 
 function GetChapters()
