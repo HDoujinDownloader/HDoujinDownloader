@@ -2,7 +2,7 @@ local MaxPagination = 25
 local MaxRecursion = 5
 
 function Register()
-    module.Name = '8muses Gemini (custom)'
+    module.Name = '8muses'
     module.Language = 'en'
     module.Adult = true
     module.Domains.Add('8muses.com')
