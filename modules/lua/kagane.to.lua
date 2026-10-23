@@ -1,26 +1,28 @@
--- kagane.to.lua
--- HDoujinDownloader module for kagane.to (and kagane.org)
--- API backend: https://kagane.to/api/v2/ (same-origin)
---
--- Auth flow:
---   1. Cloudflare gates the whole domain with a Managed Challenge, handled
---      by HDD's FlareSolverr integration (configure under Tools → FlareSolverr).
---   2. The /books/{id} endpoint additionally requires a short-lived
---      "integrity" token (~5 min TTL) fetched fresh via POST /api/integrity
---      and sent as the X-Integrity-Token header on the next request.
---   3. Page images are served from a separate CDN (kstatic.to) using a
---      short-lived signed token embedded in the /books/{id} response
---      (one token per chapter, shared across all its pages).
+function Register()
+    module.Name     = 'Kagane'
+    module.Language = 'English'
+    module.Domains.Add('kagane.net',  'Kagane')
+    module.Domains.Add('kagane.org', 'Kagane')
+    module.Domains.Add('kagane.to',  'Kagane')
 
-local API_BASE = 'https://kagane.to/api/v2'
+end
 
--- Cache of already-fetched /series/{id} JSON, keyed by seriesId, so
--- GetInfo() and GetChapters() (which HDD calls back-to-back for the same
--- series) don't each pay for a separate Cloudflare-challenged request.
+local SITE_BASE = 'https://kagane.net'
+local API_BASE  = SITE_BASE .. '/api/v2'
+
+-- Matches a UUID optionally preceded by a slug ("kaine-<uuid>",
+-- "vol-1-chapter-2-<uuid>") or bare ("<uuid>"). The greedy slug group
+-- backtracks to the last position where a full UUID still fits.
+local UUID_RX = '(?:[^/?#]*-)?([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})'
+
+-- Caches keyed by seriesId, so GetInfo() and GetChapters() (which HDD
+-- calls back-to-back for the same series) don't each pay for a separate
+-- Cloudflare-challenged request.
 local _seriesCache = {}
+local _indexCache  = {}
 
 local function SetHeaders()
-    http.Headers['Referer'] = 'https://kagane.to/'
+    http.Headers['Referer'] = SITE_BASE .. '/'
     local token = tostring(module.Settings['Auth Token'])
     if not isempty(token) then
         http.Headers['Authorization'] = 'Bearer ' .. token
@@ -30,14 +32,14 @@ local function SetHeaders()
 end
 
 local function GetSeriesId()
-    return tostring(url):regex('/series/([^/]+)', 1)
+    return tostring(url):regex('/series/' .. UUID_RX, 1)
 end
 
 local function GetBookId()
-    return tostring(url):regex('/reader/([^/]+)', 1)
+    return tostring(url):regex('/reader/' .. UUID_RX, 1)
 end
 
--- GET wrapper for /series/{id}, transparently cached per seriesId.
+-- GET /series/{id}: metadata only (title, staff, genres, tags...).
 local function ApiGetSeries(seriesId)
     if _seriesCache[seriesId] then
         return _seriesCache[seriesId]
@@ -49,17 +51,64 @@ local function ApiGetSeries(seriesId)
     return json
 end
 
+-- GET /series/{id}/books/index?fields=List: the chapter list.
+-- Shape:
+--   { "count": N,
+--     "fields": ["book_id","sort_no","chapter_no","volume_no","group_ix",
+--                "released_at","title","page_count","published_on",
+--                "internal_release"],
+--     "groups": [ { "group_id": ..., "title": ... }, ... ],
+--     "books":  [ ["<uuid>", 2.0, "2", "1", [0], 1792718279, "Title", 31, ...], ... ] }
+local function ApiGetBookIndex(seriesId)
+    if _indexCache[seriesId] then
+        return _indexCache[seriesId]
+    end
+    SetHeaders()
+    local resp = http.Get(API_BASE .. '/series/' .. seriesId .. '/books/index?fields=List')
+    local json = Json.New(resp)
+    _indexCache[seriesId] = json
+    return json
+end
+
+-- Returns a Lua table mapping field name -> 0-based column index, built
+-- from the index's "fields" header, so we don't hardcode column positions
+-- that the site could reorder.
+local function GetIndexColumns(json)
+    local cols = {}
+    local fields = json.SelectValues('fields[*]')
+    for i = 0, fields.Count() - 1 do
+        cols[tostring(fields[i])] = i
+    end
+    return cols
+end
+
+-- Reads one cell from the columnar books table. Done per-row/per-cell
+-- (rather than SelectValues over a whole column) so a null title in one
+-- row can't shift every later row out of alignment.
+local function IndexCell(json, row, col)
+    if col == nil then return nil end
+    return json.SelectValue('books[' .. row .. '][' .. col .. ']')
+end
+
+-- "2.0" -> "2", "2.5" stays "2.5".
+local function TrimNumber(s)
+    if isempty(s) then return s end
+    s = tostring(s)
+    return (s:gsub('%.0+$', ''))
+end
+
 -- Fetches a fresh integrity token and attaches it as a header before a
--- protected POST call. Tokens expire in ~5 min, so we always fetch a new
--- one rather than caching — a stale token here would otherwise surface
--- as a confusing 401 on the *next* chapter rather than an obvious failure.
--- If the fetch or parse fails, we explicitly clear any previously-set
--- header rather than silently leaving a stale token in place.
+-- protected POST call. Tokens are short-lived, so we always fetch a new
+-- one rather than caching. If the fetch or parse fails, we explicitly
+-- clear any previously-set header rather than leaving a stale token.
+-- The client sends either no body or {"fp": "<fingerprint hash>"}; the
+-- fingerprint is optional.
 local function SetIntegrityHeader()
     SetHeaders()
     http.Headers['X-Integrity-Token'] = nil
+    http.Headers['Content-Type'] = 'application/json'
 
-    local resp = http.Post('https://' .. module.Domain .. '/api/integrity', '')
+    local resp = http.Post(SITE_BASE .. '/api/integrity', '')
     local json = Json.New(resp)
     local token = json.SelectValue('token')
 
@@ -70,12 +119,13 @@ local function SetIntegrityHeader()
     http.Headers['X-Integrity-Token'] = token
 end
 
--- POST wrapper for endpoints that require the integrity token (currently
--- just /books/{id}). Body is a literal '{}', matching what the real site
--- sends (confirmed via HAR capture — the endpoint 400s on a truly empty body).
+-- POST wrapper for the chapter grant endpoint. The current client sends
+-- no body; '{}' was required by the previous API and is kept because the
+-- endpoint accepted it then. If this starts returning 400, try ''.
 local function ApiPost(path)
     SetIntegrityHeader()
     local resp = http.Post(API_BASE .. path, '{}')
+    http.Headers['X-Integrity-Token'] = nil
     return Json.New(resp)
 end
 
@@ -91,10 +141,14 @@ function GetInfo()
     info.Type             = json.SelectValue('format')
     info.Language         = json.SelectValue('translated_language')
     info.DateReleased     = json.SelectValue('start_year')
-    info.Adult            = json.SelectValue('content_rating') ~= 'Safe'
+
+    -- age_rating values seen: Safe, FifteenPlus, EighteenPlus.
+    local ageRating = tostring(json.SelectValue('age_rating'))
+    local porn      = tostring(json.SelectValue('is_pornographic')):lower()
+    info.Adult = (ageRating == 'EighteenPlus') or (porn == 'true')
 
     local genreNames = json.SelectValues('genres[*].genre_name')
-    local tagNames    = json.SelectValues('tags[*].tag_name')
+    local tagNames   = json.SelectValues('tags[*].tag_name')
     local tags = List.New()
     for i = 0, genreNames.Count() - 1 do
         tags.Add(genreNames[i])
@@ -107,12 +161,14 @@ function GetInfo()
     info.Author = json.SelectValues('series_staff[*].name')
     info.Artist = json.SelectValues('series_staff[*].name')
 
-    local groupTitles = json.SelectValues('series_books[*].groups[*].title')
+    local index = ApiGetBookIndex(seriesId)
+
+    local groupTitles = index.SelectValues('groups[*].title')
     if groupTitles.Count() > 0 then
         info.Translator = groupTitles[0]
     end
 
-    local chapterCount = json.SelectValues('series_books[*].book_id').Count()
+    local chapterCount = tonumber(tostring(index.SelectValue('count'))) or 0
     info.PageCount    = chapterCount
     info.ChapterCount = chapterCount
 end
@@ -120,62 +176,81 @@ end
 function GetChapters()
     local seriesId = GetSeriesId()
     if isempty(seriesId) then return end
-    local json    = ApiGetSeries(seriesId)
-    local baseUrl = 'https://' .. module.Domain .. '/series/' .. seriesId .. '/reader/'
+    local index   = ApiGetBookIndex(seriesId)
+    local cols    = GetIndexColumns(index)
+    local baseUrl = SITE_BASE .. '/series/' .. seriesId .. '/reader/'
 
-    -- SelectElements() errors on this JSON library for arrays of objects
-    -- (confirmed via testing), so we pull each field as a flat, index-
-    -- aligned list instead and zip them together by position.
-    local bookIds = json.SelectValues('series_books[*].book_id')
-    local titles  = json.SelectValues('series_books[*].title')
-    local sortNos = json.SelectValues('series_books[*].sort_no')
+    local count = tonumber(tostring(index.SelectValue('count'))) or 0
 
-    -- These SelectValues() results are 0-indexed .NET collections, not
-    -- 1-indexed Lua tables — confirmed via testing (1-indexed looping
-    -- threw ArgumentOutOfRangeException).
-    for i = 0, bookIds.Count() - 1 do
-        local bookId  = bookIds[i]
-        local title   = titles[i]
-        local sortNo  = sortNos[i]
-        local chapterUrl = baseUrl .. bookId
+    for i = 0, count - 1 do
+        local bookId    = IndexCell(index, i, cols['book_id'])
+        local title     = IndexCell(index, i, cols['title'])
+        local chapterNo = IndexCell(index, i, cols['chapter_no'])
+        local volumeNo  = IndexCell(index, i, cols['volume_no'])
+        local sortNo    = IndexCell(index, i, cols['sort_no'])
 
-        local label
-        if not isempty(sortNo) then
-            label = 'Chapter ' .. sortNo
-            if not isempty(title) then
-                label = label .. ' - ' .. title
+        if not isempty(bookId) then
+            local num = chapterNo
+            if isempty(num) then num = TrimNumber(sortNo) end
+
+            local label = ''
+            if not isempty(volumeNo) then
+                label = 'Vol. ' .. volumeNo .. ' '
             end
-        else
-            label = title
-        end
+            if not isempty(num) then
+                label = label .. 'Chapter ' .. num
+                if not isempty(title) then
+                    label = label .. ' - ' .. title
+                end
+            elseif not isempty(title) then
+                label = label .. title
+            else
+                label = bookId
+            end
 
-        chapters.Add(chapterUrl, label)
+            chapters.Add(baseUrl .. bookId, label)
+        end
     end
 
-    -- No chapters.Reverse() here: series_books[] is already returned in
-    -- ascending order by the current API (confirmed via raw JSON dump),
-    -- unlike the old API this module originally targeted.
+    -- No chapters.Reverse(): books/index returned rows in ascending
+    -- sort_no order in the Oct 2026 capture (only a 2-chapter sample, so
+    -- re-check this on a longer series).
 end
 
 function GetPages()
-    local seriesId = GetSeriesId()
-    local bookId   = GetBookId()
-    if isempty(seriesId) or isempty(bookId) then return end
+    local bookId = GetBookId()
+    if isempty(bookId) then return end
 
-    local json = ApiPost('/books/' .. bookId .. '?is_datasaver=false')
+    local json = ApiPost('/books/' .. bookId .. '?intent=Read')
 
-    -- One token covers every page in this chapter (unlike the old API,
-    -- which used a separate token per image).
+    -- One token covers every page in this chapter.
     local token    = json.SelectValue('access_token')
     local cacheUrl = json.SelectValue('cache_url')
-    local pageIds  = json.SelectValues('manifest.pages[*].page_id')
-    local exts     = json.SelectValues('manifest.pages[*].ext')
+    if isempty(cacheUrl) then cacheUrl = 'https://kstatic.to' end
+    cacheUrl = tostring(cacheUrl):gsub('/+$', '')
+
+    if isempty(token) then
+        error('Kagane: grant response had no access_token: ' .. json.ToString())
+    end
+
+    -- The client accepts the manifest either as {"pages": [...]} or as a
+    -- bare array. Try the object form first (what the previous API used).
+    local prefix = 'manifest.pages'
+    local pageIds = json.SelectValues(prefix .. '[*].page_id')
+    if pageIds.Count() == 0 then
+        prefix  = 'manifest'
+        pageIds = json.SelectValues(prefix .. '[*].page_id')
+    end
+    if pageIds.Count() == 0 then
+        error('Kagane: no pages found in grant manifest: ' .. json.ToString())
+    end
 
     for i = 0, pageIds.Count() - 1 do
-        local pageId = pageIds[i]
-        local ext    = exts[i]
+        local pageId = json.SelectValue(prefix .. '[' .. i .. '].page_id')
+        local ext    = json.SelectValue(prefix .. '[' .. i .. '].ext')
         if not isempty(pageId) and not isempty(ext) then
-            local pageUrl = cacheUrl .. '/api/v2/books/page/' .. bookId .. '/' .. pageId .. '.' .. ext .. '?token=' .. token
+            local pageUrl = cacheUrl .. '/api/v2/books/page/' .. bookId .. '/' ..
+                            pageId .. '.' .. ext .. '?token=' .. token
             pages.Add(pageUrl)
         end
     end
