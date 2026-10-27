@@ -22,7 +22,10 @@ function GetInfo()
 end
 
 function GetPages()
+    local articleId = url:match('/articles/(%d+)')
+    local html = http.Get('https://hentaipaw.com/viewer?articleId=' .. articleId .. '&page=1')
 
-    pages.AddRange(dom.SelectValues('//div[contains(@class,"detail-gallery")]//img/@data-src'))
-
+    for imageUrl in html:gmatch('https://cdn%.imagedeliveries%.com/%d+/%x+/%d+%.%a+') do
+        pages.Add(imageUrl)
+    end
 end
